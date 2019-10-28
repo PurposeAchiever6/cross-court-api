@@ -11,7 +11,7 @@ describe 'POST api/v1/users/sign_in', type: :request do
       }
     }
   end
-  let(:user) { create(:user, password: password, tokens: token) }
+  let(:user) { create(:user, :confirmed, password: password, tokens: token) }
 
   context 'with correct params' do
     before do

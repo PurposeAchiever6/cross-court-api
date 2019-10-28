@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'DELETE api/v1/users/sign_out', type: :request do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :confirmed) }
 
   context 'with a valid token' do
     it 'returns a successful response' do
