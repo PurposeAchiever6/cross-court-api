@@ -14,14 +14,13 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :inet
 #  last_sign_in_ip        :inet
-#  first_name             :string           default("")
-#  last_name              :string           default("")
-#  username               :string           default("")
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  provider               :string           default("email"), not null
 #  uid                    :string           default(""), not null
 #  tokens                 :json
+#  name                   :string           default("")
+#  phone_number           :string
 #
 # Indexes
 #
@@ -40,12 +39,6 @@ class User < ApplicationRecord
   validates :uid, uniqueness: { scope: :provider }
 
   before_validation :init_uid
-
-  def full_name
-    return username if first_name.blank?
-
-    "#{first_name} #{last_name}"
-  end
 
   def self.from_social_provider(provider, user_params)
     where(provider: provider, uid: user_params['id']).first_or_create! do |user|

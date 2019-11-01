@@ -5,22 +5,20 @@ describe 'POST api/v1/users/', type: :request do
   let(:failed_response) { 422 }
 
   describe 'POST create' do
-    let(:username)              { 'test' }
     let(:email)                 { 'test@test.com' }
     let(:password)              { '12345678' }
     let(:password_confirmation) { '12345678' }
-    let(:first_name)            { 'Johnny' }
-    let(:last_name)             { 'Perez' }
+    let(:name)                  { 'Johnny' }
+    let(:phone_number)          { '1234567' }
 
     let(:params) do
       {
         user: {
-          username: username,
+          name: name,
           email: email,
           password: password,
           password_confirmation: password_confirmation,
-          first_name: first_name,
-          last_name: last_name
+          phone_number: phone_number
         }
       }
     end
@@ -42,11 +40,10 @@ describe 'POST api/v1/users/', type: :request do
 
       expect(json[:user][:id]).to eq(user.id)
       expect(json[:user][:email]).to eq(user.email)
-      expect(json[:user][:username]).to eq(user.username)
       expect(json[:user][:uid]).to eq(user.uid)
       expect(json[:user][:provider]).to eq('email')
-      expect(json[:user][:first_name]).to eq(user.first_name)
-      expect(json[:user][:last_name]).to eq(user.last_name)
+      expect(json[:user][:name]).to eq(user.name)
+      expect(json[:user][:phone_number]).to eq(user.phone_number)
     end
 
     context 'when the email is not correct' do

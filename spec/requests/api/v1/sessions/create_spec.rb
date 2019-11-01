@@ -32,11 +32,10 @@ describe 'POST api/v1/users/sign_in', type: :request do
     it 'returns the user' do
       expect(json[:user][:id]).to eq(user.id)
       expect(json[:user][:email]).to eq(user.email)
-      expect(json[:user][:username]).to eq(user.username)
       expect(json[:user][:uid]).to eq(user.uid)
       expect(json[:user][:provider]).to eq('email')
-      expect(json[:user][:first_name]).to eq(user.first_name)
-      expect(json[:user][:last_name]).to eq(user.last_name)
+      expect(json[:user][:name]).to eq(user.name)
+      expect(json[:user][:phone_number]).to eq(user.phone_number)
     end
 
     it 'returns a valid client and access token' do

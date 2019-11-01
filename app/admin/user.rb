@@ -1,12 +1,11 @@
 ActiveAdmin.register User do
-  permit_params :email, :first_name, :last_name, :username, :password, :password_confirmation
+  permit_params :email, :name, :phone_number, :password, :password_confirmation
 
   form do |f|
     f.inputs 'Details' do
       f.input :email
-      f.input :first_name
-      f.input :last_name
-      f.input :username
+      f.input :name
+      f.input :phone_number
 
       if f.object.new_record?
         f.input :password
@@ -21,9 +20,8 @@ ActiveAdmin.register User do
     selectable_column
     id_column
     column :email
-    column :first_name
-    column :last_name
-    column :username
+    column :name
+    column :phone_number
     column :sign_in_count
     column :created_at
     column :updated_at
@@ -33,9 +31,7 @@ ActiveAdmin.register User do
 
   filter :id
   filter :email
-  filter :username
-  filter :first_name
-  filter :last_name
+  filter :name
   filter :created_at
   filter :updated_at
 
@@ -43,9 +39,8 @@ ActiveAdmin.register User do
     attributes_table do
       row :id
       row :email
-      row :first_name
-      row :last_name
-      row :username
+      row :name
+      row :phone_number
       row :sign_in_count
       row :created_at
       row :updated_at
