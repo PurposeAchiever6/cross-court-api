@@ -14,14 +14,13 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :inet
 #  last_sign_in_ip        :inet
-#  first_name             :string           default("")
-#  last_name              :string           default("")
-#  username               :string           default("")
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  provider               :string           default("email"), not null
 #  uid                    :string           default(""), not null
 #  tokens                 :json
+#  name                   :string           default("")
+#  phone_number           :string
 #
 # Indexes
 #
@@ -34,7 +33,7 @@ FactoryBot.define do
   factory :user do
     email    { Faker::Internet.unique.email }
     password { Faker::Internet.password(8) }
-    username { Faker::Internet.unique.user_name }
+    name     { Faker::Name.name }
     uid      { Faker::Number.unique.number(10) }
   end
 end
