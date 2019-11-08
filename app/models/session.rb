@@ -21,7 +21,7 @@ class Session < ApplicationRecord
   TIME_FORMAT = '%H:%M'.freeze
 
   serialize :recurring, Hash
-
+ 
   belongs_to :location
 
   validates :name, :start_time, :time, presence: true
