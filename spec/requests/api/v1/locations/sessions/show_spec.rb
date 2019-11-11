@@ -18,7 +18,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
 
   it "returns the session's data" do
     subject
-
+ 
     expect(json[:session]).to include_json(
       id: session.id,
       start_time: session.start_time.iso8601,
