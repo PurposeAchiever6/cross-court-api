@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         get :status, to: 'api#status'
         resource :user, only: %i[update show] do
           get :profile
+          post :resend_confirmation_instructions
         end
       end
     end
