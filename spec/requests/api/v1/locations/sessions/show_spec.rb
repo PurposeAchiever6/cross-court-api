@@ -12,7 +12,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   end
 
   it 'returns success' do
-    subject
+    subject 
     expect(response).to be_successful
   end
 
