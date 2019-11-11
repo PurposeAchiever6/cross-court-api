@@ -17,6 +17,9 @@
 #
 
 class Session < ApplicationRecord
+  DATE_FORMAT = '%d-%m-%Y'.freeze
+  TIME_FORMAT = '%H:%M'.freeze
+
   serialize :recurring, Hash
 
   belongs_to :location
@@ -26,7 +29,7 @@ class Session < ApplicationRecord
   delegate :name, to: :location, prefix: true
 
   scope :for_range, (lambda do |start_date, end_date|
-    where('start_time > ? AND start_time < ?', start_date, end_date)
+    where('start_time >= ? AND start_time <= ?', start_date, end_date)
       .or(where.not(recurring: nil))
   end)
 
@@ -53,7 +56,7 @@ class Session < ApplicationRecord
       [self]
     else
       schedule(start_date).occurrences(end_date).map do |date|
-        Session.new(id: id, name: name, start_time: date)
+        Session.new(id: id, name: name, start_time: date, time: time)
       end
     end
   end

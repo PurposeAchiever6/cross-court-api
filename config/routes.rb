@@ -11,6 +11,11 @@ Rails.application.routes.draw do
     namespace :v1, defaults: { format: :json } do
       devise_scope :user do
         get :status, to: 'api#status'
+        resources :locations, only: [] do
+          scope module: :locations do
+            resources :sessions, only: %i[index show]
+          end
+        end
         resource :user, only: %i[update show] do
           get :profile
           post :resend_confirmation_instructions

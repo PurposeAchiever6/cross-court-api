@@ -1,0 +1,3 @@
+{
+  session: render(partial: 'info', locals: { session: selected_session })
+}

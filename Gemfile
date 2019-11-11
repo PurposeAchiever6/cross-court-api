@@ -54,6 +54,7 @@ end
 
 group :test do
   gem 'faker', '~> 1.7.3'
+  gem 'rspec-json_expectations', '~> 2.2'
   gem 'shoulda-matchers', '~> 3.1.1'
   gem 'simplecov', '~> 0.13.0', require: false
   gem 'webmock', '~> 2.3.2'

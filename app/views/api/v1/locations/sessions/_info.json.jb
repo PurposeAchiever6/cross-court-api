@@ -1,0 +1,6 @@
+{
+  id: session.id,
+  name: session.name,
+  start_time: session.start_time.iso8601,
+  time: session.time.iso8601
+}
