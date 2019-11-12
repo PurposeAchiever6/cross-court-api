@@ -16,6 +16,11 @@ Rails.application.routes.draw do
             resources :sessions, only: %i[index show]
           end
         end
+        resources :sessions, only: [] do
+          scope module: :sessions do
+            resources :user_sessions, only: :create
+          end
+        end
         resource :user, only: %i[update show] do
           get :profile
           post :resend_confirmation_instructions

@@ -388,8 +388,8 @@ GEM
     sendgrid (1.2.4)
       json
     sexp_processor (4.12.1)
-    shoulda-matchers (3.1.3)
-      activesupport (>= 4.0.0)
+    shoulda-matchers (4.1.2)
+      activesupport (>= 4.2.0)
     simple_calendar (2.3.0)
       rails (>= 3.0)
     simplecov (0.13.0)
@@ -480,7 +480,7 @@ DEPENDENCIES
   rspec-rails (~> 3.8.2)
   rubocop-rails (~> 2.3)
   sendgrid (~> 1.2.4)
-  shoulda-matchers (~> 3.1.1)
+  shoulda-matchers (~> 4.1, >= 4.1.2)
   simple_calendar (~> 2.3)
   simplecov (~> 0.13.0)
   spring
