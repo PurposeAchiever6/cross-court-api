@@ -23,7 +23,7 @@ describe UserSession do
 
   describe 'validations' do
     it { is_expected.to validate_presence_of(:state) }
-    it { is_expected.to define_enum_for(:state).with_values([:reserved]) }
+    it { is_expected.to define_enum_for(:state).with_values(%i[reserved canceled]) }
     it { is_expected.to validate_uniqueness_of(:user_id).scoped_to(:session_id) }
   end
 
