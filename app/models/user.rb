@@ -43,6 +43,9 @@ class User < ApplicationRecord
 
   validates :uid, uniqueness: { scope: :provider }
 
+  has_many :user_sessions, dependent: :destroy
+  has_many :sessions, through: :user_sessions
+
   before_validation :init_uid
 
   def self.from_social_provider(provider, user_params)
