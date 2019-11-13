@@ -5,8 +5,8 @@
 #  id         :integer          not null, primary key
 #  name       :string           not null
 #  direction  :string           not null
-#  latitude   :float            not null
-#  longitude  :float            not null
+#  lat        :float            not null
+#  lng        :float            not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -18,7 +18,7 @@ describe Location do
     subject { build :location }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:direction) }
-    it { is_expected.to validate_presence_of(:latitude) }
-    it { is_expected.to validate_presence_of(:longitude) }
+    it { is_expected.to validate_presence_of(:lat) }
+    it { is_expected.to validate_presence_of(:lng) }
   end
 end
