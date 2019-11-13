@@ -22,5 +22,9 @@ FactoryBot.define do
     name       { Faker::Lorem.sentence }
     start_time { Time.current }
     time       { Time.current }
+
+    trait :daily do
+      recurring { IceCube::Rule.daily }
+    end
   end
 end

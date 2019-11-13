@@ -1,0 +1,3 @@
+{
+  sessions: render(partial: 'info', collection: @sessions, as: :session)
+}
