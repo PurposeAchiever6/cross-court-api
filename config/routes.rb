@@ -21,6 +21,9 @@ Rails.application.routes.draw do
             resources :user_sessions, only: :create
           end
         end
+        resources :user_sessions, only: [] do
+          put :cancel
+        end
         resource :user, only: %i[update show] do
           get :profile
           post :resend_confirmation_instructions

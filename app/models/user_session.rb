@@ -17,7 +17,7 @@
 #
 
 class UserSession < ApplicationRecord
-  enum state: { reserved: 0 }
+  enum state: { reserved: 0, canceled: 1 }
 
   belongs_to :user
   belongs_to :session
