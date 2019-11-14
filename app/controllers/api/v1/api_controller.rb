@@ -15,6 +15,7 @@ module Api
       rescue_from ActionController::RoutingError,      with: :render_not_found
       rescue_from AbstractController::ActionNotFound,  with: :render_not_found
       rescue_from ActionController::ParameterMissing,  with: :render_parameter_missing
+      rescue_from InvalidDateException,                with: :render_custom_exception
 
       def status
         render json: { online: true }
@@ -48,6 +49,11 @@ module Api
       def render_parameter_missing(exception)
         logger.info(exception) # for logging
         render json: { error: I18n.t('api.errors.missing_param') }, status: :unprocessable_entity
+      end
+
+      def render_custom_exception(exception)
+        logger.error(exception)
+        render json: { error: exception.message }, status: :bad_request
       end
     end
   end

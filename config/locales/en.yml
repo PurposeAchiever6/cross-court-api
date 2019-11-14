@@ -26,3 +26,15 @@ en:
       not_found: "Couldn't find the record"
       missing_param: 'A required param is missing'
       invalid_content_type: 'Invalid content type header'
+      user_session:
+        invalid_date: 'Invalid date'
+  mailer:
+    greeting: 'Sincerely, CrossCourt Team'
+    session:
+      cancel: 'If you need to cancel the session click'
+      here: 'here'
+      new:
+        welcome: 'Hi %{name}'
+        subject: 'Session confirmation'
+        confirmation: 'A reservation was made for %{session_name}'
+        time: 'Date: %{date}, Time: %{time}'
