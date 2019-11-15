@@ -17,7 +17,7 @@
 #  index_user_sessions_on_user_id                          (user_id)
 #
 
-FactoryBot.define  do
+FactoryBot.define do
   factory :user_session do
     user
     session
