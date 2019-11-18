@@ -6,7 +6,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   let!(:session) { create(:session, location: location) }
 
   subject do
-    get api_v1_location_session_path(location_id: location.id, id: session.id),
+    get api_v1_session_path(location_id: location.id, id: session.id),
         headers: auth_headers,
         as: :json
   end

@@ -6,7 +6,7 @@ describe 'GET api/v1/sessions', type: :request do
   let(:from_date) { Time.current.beginning_of_week.strftime(Session::DATE_FORMAT) }
 
   subject do
-    get api_v1_location_sessions_path(location_id: location.id, from_date: from_date),
+    get api_v1_sessions_path(location_id: location.id, from_date: from_date),
         headers: auth_headers,
         as: :json
   end
