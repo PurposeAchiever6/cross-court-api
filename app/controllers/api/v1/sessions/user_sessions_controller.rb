@@ -3,7 +3,16 @@ module Api
     module Sessions
       class UserSessionsController < Api::V1::ApiController
         def create
-          UserSession.create!(session_id: params[:session_id], user_id: current_user.id)
+          ActiveRecord::Base.transaction do
+            user_session = UserSession.new(
+              session_id: params[:session_id],
+              user_id: current_user.id,
+              date: params[:date]
+            )
+            user_session = UserSessionWithValidDate.new(user_session)
+            user_session = UserSessionEmail.new(user_session)
+            user_session.save!
+          end
         end
       end
     end

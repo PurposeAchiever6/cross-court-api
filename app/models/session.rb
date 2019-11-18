@@ -47,7 +47,7 @@ class Session < ApplicationRecord
     IceCube::Rule.from_hash recurring
   end
 
-  def schedule(start)
+  def schedule(start = Time.current)
     schedule = IceCube::Schedule.new(start)
     schedule.add_recurrence_rule(rule)
     schedule

@@ -20,7 +20,7 @@ FactoryBot.define do
   factory :session do
     location
     name       { Faker::Lorem.sentence }
-    start_time { Time.current }
+    start_time { Date.current }
     time       { Time.current }
 
     trait :daily do

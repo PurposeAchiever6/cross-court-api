@@ -8,12 +8,13 @@
 #  state      :integer          default("reserved"), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  date       :date             not null
 #
 # Indexes
 #
-#  index_user_sessions_on_session_id              (session_id)
-#  index_user_sessions_on_user_id                 (user_id)
-#  index_user_sessions_on_user_id_and_session_id  (user_id,session_id) UNIQUE
+#  index_user_sessions_on_date_and_user_id_and_session_id  (date,user_id,session_id) UNIQUE
+#  index_user_sessions_on_session_id                       (session_id)
+#  index_user_sessions_on_user_id                          (user_id)
 #
 
 class UserSession < ApplicationRecord
@@ -22,6 +23,8 @@ class UserSession < ApplicationRecord
   belongs_to :user
   belongs_to :session
 
-  validates :state, presence: true
-  validates :user_id, uniqueness: { scope: :session_id }
+  validates :state, :date, presence: true
+  validates :date, uniqueness: { scope: %i[session_id user_id] }
+
+  delegate :time, to: :session, prefix: true
 end

@@ -8,12 +8,13 @@
 #  state      :integer          default("reserved"), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  date       :date             not null
 #
 # Indexes
 #
-#  index_user_sessions_on_session_id              (session_id)
-#  index_user_sessions_on_user_id                 (user_id)
-#  index_user_sessions_on_user_id_and_session_id  (user_id,session_id) UNIQUE
+#  index_user_sessions_on_date_and_user_id_and_session_id  (date,user_id,session_id) UNIQUE
+#  index_user_sessions_on_session_id                       (session_id)
+#  index_user_sessions_on_user_id                          (user_id)
 #
 
 require 'rails_helper'
@@ -23,8 +24,9 @@ describe UserSession do
 
   describe 'validations' do
     it { is_expected.to validate_presence_of(:state) }
+    it { is_expected.to validate_presence_of(:date) }
     it { is_expected.to define_enum_for(:state).with_values(%i[reserved canceled]) }
-    it { is_expected.to validate_uniqueness_of(:user_id).scoped_to(:session_id) }
+    it { is_expected.to validate_uniqueness_of(:date).scoped_to(%i[session_id user_id]) }
   end
 
   describe 'associations' do

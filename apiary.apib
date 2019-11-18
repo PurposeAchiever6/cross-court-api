@@ -223,6 +223,42 @@ This route is the destination URL for password reset confirmation
             expiry: 1489009792
             uid: test@test.com
 
+## Sessions [/api/v1/locations/{location_id}/sessions]
+
+### Get sessions [GET]
+
++ Request (application/json)
+    + Parameters
+        + location_id (number, required)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (Session Response)
+
+## User sessions [/api/v1/sessions/{session_id}/user_sessions]
+
+### Reserve session [POST]
+
++ Request (application/json)
+    + Parameters
+        + session_id (number, required)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (Session Request)
+
 # Data Structures
 
 ## Profile Response (object)
@@ -244,3 +280,13 @@ This route is the destination URL for password reset confirmation
 + email: test@test.com (string)
 + name: John Doe (string)
 + phone_number: 1233456 (string)
+
+
+## Session Request (object)
++ date: '20/12/2019' (string)
+
+## Session Response (object)
++ id (number)
++ name (string)
++ start_time: 2019-11-14T14:59:11Z (string)
++ time: 2000-01-01T16:00:00Z (string)
