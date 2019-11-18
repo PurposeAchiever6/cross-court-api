@@ -1,0 +1,7 @@
+{
+  id: location.id,
+  name: location.name,
+  direction: location.direction,
+  lat: location.lat,
+  lng: location.lng
+}
