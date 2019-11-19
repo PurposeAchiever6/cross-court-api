@@ -1,0 +1,3 @@
+{
+  locations: render(partial: 'info', collection: @locations, as: :location)
+}
