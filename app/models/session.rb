@@ -57,7 +57,7 @@ class Session < ApplicationRecord
       [self]
     else
       schedule(start_date).occurrences(end_date).map do |date|
-        Session.new(id: id, start_time: date, time: time)
+        Session.new(id: id, start_time: date, time: time, location_id: location_id)
       end
     end
   end

@@ -5,7 +5,7 @@
 <% end %>
 <%= month_calendar events: sessions do |date, events| %>
   <div class='calendar-day'><strong><%= date.day %></strong></div>
- 
+
   <% events.each do |event| %>
     <div>
       <%= link_to event.time.strftime(Session::TIME_FORMAT), admin_session_path(event.id) %>

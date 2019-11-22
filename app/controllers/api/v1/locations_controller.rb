@@ -2,7 +2,7 @@ module Api
   module V1
     class LocationsController < Api::V1::ApiController
       def index
-        @locations = Location.all
+        @locations = Location.includes(image_attachment: :blob)
       end
     end
   end

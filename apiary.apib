@@ -239,7 +239,7 @@ This route is the destination URL for password reset confirmation
 
     + Attributes (Locations array)
 
-## Sessions [/api/v1/locations/{location_id}/sessions]
+## Sessions [/api/v1/sessions]
 
 ### Get sessions [GET]
 
@@ -256,7 +256,23 @@ This route is the destination URL for password reset confirmation
             expiry: 1489009792
             uid: test@test.com
 
-    + Attributes (Session Response)
+    + Attributes (array[Session short])
+
+### Get session [GET /api/v1/sessions/{id}]
+
++ Request (application/json)
+    + Parameters
+        + id (number, required)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (Session)
 
 ## User sessions [/api/v1/sessions/{session_id}/user_sessions]
 
@@ -301,10 +317,17 @@ This route is the destination URL for password reset confirmation
 ## Session Request (object)
 + date: '20/12/2019' (string)
 
-## Session Response (object)
+## Session (object)
 + id (number)
 + start_time: 2019-11-14T14:59:11Z (string)
 + time: 2000-01-01T16:00:00Z (string)
++ location (Location)
+
+## Session short (object)
++ id (number)
++ start_time: 2019-11-14T14:59:11Z (string)
++ time: 2000-01-01T16:00:00Z (string)
++ location (Location short)
 
 ## Location (object)
 + id (number)
@@ -314,6 +337,10 @@ This route is the destination URL for password reset confirmation
 + lng (number)
 + city (string)
 + zipcode (string)
++ image_url (string)
+
+## Location short (object)
++ name (string)
 
 ## Locations array (object)
 + locations (array[Location])

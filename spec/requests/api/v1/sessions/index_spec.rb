@@ -2,17 +2,17 @@ require 'rails_helper'
 
 describe 'GET api/v1/sessions', type: :request do
   let(:user)      { create(:user) }
-  let(:location)  { create(:location) }
   let(:from_date) { Time.current.beginning_of_week.strftime(Session::DATE_FORMAT) }
+  let(:params)    { { from_date: from_date } }
 
   subject do
-    get api_v1_sessions_path(location_id: location.id, from_date: from_date),
+    get api_v1_sessions_path(params),
         headers: auth_headers,
         as: :json
   end
 
   context 'when the session is a one time only' do
-    let!(:session) { create(:session, location: location) }
+    let!(:session) { create(:session) }
 
     it 'returns success' do
       subject
@@ -26,7 +26,7 @@ describe 'GET api/v1/sessions', type: :request do
   end
 
   context 'when the session is repeted everyday' do
-    let!(:session) { create(:session, :daily, location: location) }
+    let!(:session) { create(:session, :daily) }
 
     it 'returns success' do
       subject
@@ -40,9 +40,14 @@ describe 'GET api/v1/sessions', type: :request do
   end
 
   context 'when there are sessions for multiple locations' do
+    let(:location)   { create(:location) }
     let(:location_2) { create(:location) }
     let!(:session)   { create(:session, location: location) }
     let!(:session_2) { create(:session, location: location_2) }
+
+    before do
+      params[:location_id] = location.id
+    end
 
     it 'returns success' do
       subject

@@ -15,6 +15,7 @@
 
 class Location < ApplicationRecord
   has_many :sessions, dependent: :destroy
+  has_one_attached :image
 
   validates :name, :direction, :lat, :lng, :city, :zipcode, presence: true
 end

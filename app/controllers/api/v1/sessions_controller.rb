@@ -6,7 +6,8 @@ module Api
       def show; end
 
       def index
-        @sessions = Session.by_location(params[:location_id])
+        @sessions = Session.includes(:location)
+                           .by_location(params[:location_id])
                            .for_range(from_date, to_date)
                            .flat_map do |meeting|
           meeting.calendar_events(from_date, to_date)

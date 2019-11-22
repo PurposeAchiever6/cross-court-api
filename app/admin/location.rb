@@ -1,9 +1,10 @@
 ActiveAdmin.register Location do
-  permit_params :name, :direction, :lat, :lng, :city, :zipcode
+  permit_params :name, :direction, :lat, :lng, :city, :zipcode, :image
 
   form do |f|
     f.inputs 'Location Details' do
       f.input :name
+      f.input :image, as: :file
       f.input :city
       f.input :zipcode
       f.input :direction
@@ -14,5 +15,18 @@ ActiveAdmin.register Location do
                default_lng: ENV['DEFAULT_LONGITUDE']
     end
     f.actions
+  end
+
+  show do
+    attributes_table do
+      row :id
+      row :name
+      row :city
+      row :zipcode
+      row :direction
+      row :image do |location|
+        image_tag url_for(location.image)
+      end
+    end
   end
 end
