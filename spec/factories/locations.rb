@@ -9,6 +9,8 @@
 #  lng        :float            not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  city       :string           default(""), not null
+#  zipcode    :string           default(""), not null
 #
 
 FactoryBot.define do
@@ -17,5 +19,7 @@ FactoryBot.define do
     direction { Faker::Address.street_address }
     lat       { Faker::Address.latitude }
     lng       { Faker::Address.longitude }
+    city      { Faker::Address.city }
+    zipcode   { Faker::Address.zip_code }
   end
 end

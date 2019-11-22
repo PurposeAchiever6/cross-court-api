@@ -1,11 +1,10 @@
 class SessionMailer < ApplicationMailer
   HOUR_FORMAT = '%H:%M'.freeze
 
-  def new_session(user, session, date, user_session_id)
+  def new_session(user, time, date, user_session_id)
     @user_name = user.name
-    @session_name = session.name
     @date = date
-    @time = session.time
+    @time = time
     @user_session_id = user_session_id
     mail(
       to: user.email,

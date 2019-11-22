@@ -3,7 +3,6 @@
 # Table name: sessions
 #
 #  id          :integer          not null, primary key
-#  name        :string           not null
 #  start_time  :date             not null
 #  recurring   :text
 #  time        :time             not null
@@ -26,7 +25,7 @@ class Session < ApplicationRecord
   has_many :user_sessions, dependent: :destroy
   has_many :users, through: :user_sessions
 
-  validates :name, :start_time, :time, presence: true
+  validates :start_time, :time, presence: true
 
   delegate :name, to: :location, prefix: true
 
@@ -58,7 +57,7 @@ class Session < ApplicationRecord
       [self]
     else
       schedule(start_date).occurrences(end_date).map do |date|
-        Session.new(id: id, name: name, start_time: date, time: time)
+        Session.new(id: id, start_time: date, time: time)
       end
     end
   end

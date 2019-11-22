@@ -3,7 +3,6 @@
 # Table name: sessions
 #
 #  id          :integer          not null, primary key
-#  name        :string           not null
 #  start_time  :date             not null
 #  recurring   :text
 #  time        :time             not null
@@ -19,7 +18,6 @@
 FactoryBot.define do
   factory :session do
     location
-    name       { Faker::Lorem.sentence }
     start_time { Date.current }
     time       { Time.current }
 
