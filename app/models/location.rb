@@ -9,10 +9,12 @@
 #  lng        :float            not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  city       :string           default(""), not null
+#  zipcode    :string           default(""), not null
 #
 
 class Location < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
-  validates :name, :direction, :lat, :lng, presence: true
+  validates :name, :direction, :lat, :lng, :city, :zipcode, presence: true
 end

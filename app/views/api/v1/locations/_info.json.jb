@@ -3,5 +3,7 @@
   name: location.name,
   direction: location.direction,
   lat: location.lat,
-  lng: location.lng
+  lng: location.lng,
+  city: location.city,
+  zipcode: location.zipcode
 }

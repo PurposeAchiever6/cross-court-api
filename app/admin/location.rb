@@ -1,9 +1,11 @@
 ActiveAdmin.register Location do
-  permit_params :name, :direction, :lat, :lng
+  permit_params :name, :direction, :lat, :lng, :city, :zipcode
 
   form do |f|
     f.inputs 'Location Details' do
       f.input :name
+      f.input :city
+      f.input :zipcode
       f.input :direction
       f.input :lat, as: :hidden
       f.input :lng, as: :hidden

@@ -1,10 +1,9 @@
 ActiveAdmin.register Session do
-  permit_params :name, :location_id, :start_time, :recurring, :time
+  permit_params :location_id, :start_time, :recurring, :time
   includes :location
 
   form do |f|
     f.inputs 'Session Details' do
-      f.input :name
       f.input :location
 
       f.input :start_time, as: :datepicker
@@ -17,7 +16,6 @@ ActiveAdmin.register Session do
   index do
     selectable_column
     id_column
-    column :name
     column :location_name
 
     actions
@@ -26,7 +24,6 @@ ActiveAdmin.register Session do
   show do
     attributes_table do
       row :id
-      row :name
       row :start_time
       row :time
       row :recurring do |session|

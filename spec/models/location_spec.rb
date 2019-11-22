@@ -9,6 +9,8 @@
 #  lng        :float            not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  city       :string           default(""), not null
+#  zipcode    :string           default(""), not null
 #
 
 require 'rails_helper'
@@ -20,5 +22,7 @@ describe Location do
     it { is_expected.to validate_presence_of(:direction) }
     it { is_expected.to validate_presence_of(:lat) }
     it { is_expected.to validate_presence_of(:lng) }
+    it { is_expected.to validate_presence_of(:city) }
+    it { is_expected.to validate_presence_of(:zipcode) }
   end
 end

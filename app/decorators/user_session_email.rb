@@ -9,6 +9,6 @@ class UserSessionEmail
 
   def save!
     user_session.save!
-    SessionMailer.delay.new_session(user, session, user_session.date, user_session.id)
+    SessionMailer.delay.new_session(user, session.time, user_session.date, user_session.id)
   end
 end

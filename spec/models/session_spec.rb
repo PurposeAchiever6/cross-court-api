@@ -3,7 +3,6 @@
 # Table name: sessions
 #
 #  id          :integer          not null, primary key
-#  name        :string           not null
 #  start_time  :date             not null
 #  recurring   :text
 #  time        :time             not null
@@ -21,7 +20,6 @@ require 'rails_helper'
 describe Session do
   describe 'validations' do
     subject { build :session }
-    it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:start_time) }
     it { is_expected.to validate_presence_of(:time) }
     it { is_expected.to belong_to(:location) }

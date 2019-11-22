@@ -36,5 +36,5 @@ en:
       new:
         welcome: 'Hi %{name}'
         subject: 'Session confirmation'
-        confirmation: 'A reservation was made for %{session_name}'
+        confirmation: 'The session was confirmed correctly'
         time: 'Date: %{date}, Time: %{time}'
