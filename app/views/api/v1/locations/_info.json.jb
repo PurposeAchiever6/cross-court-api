@@ -1,4 +1,4 @@
-{
+json = {
   id: location.id,
   name: location.name,
   direction: location.direction,
@@ -7,3 +7,7 @@
   city: location.city,
   zipcode: location.zipcode
 }
+
+json[:image_url] = url_for(location.image) if location.image.attached?
+
+json

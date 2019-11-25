@@ -1,4 +1,4 @@
-json = {
+{
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
@@ -6,7 +6,3 @@ json = {
     name: session.location_name
   }
 }
-
-json[:location][:image_url] = url_for(session.location.image) if session.location.image.attached?
-
-json
