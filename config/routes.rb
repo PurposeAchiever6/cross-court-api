@@ -28,6 +28,7 @@ Rails.application.routes.draw do
           get :profile
           post :resend_confirmation_instructions
         end
+        resources :subscriptions, only: :create
       end
     end
   end
