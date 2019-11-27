@@ -86,6 +86,8 @@ Rails/FilePath:
 
 Rails/SaveBang:
   Enabled: true
+  Exclude:
+    - app/services/stripe_service.rb
 
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining

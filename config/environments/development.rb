@@ -49,6 +49,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  config.hosts = nil
+
   config.after_initialize do
     Bullet.enable = true
     Bullet.alert = false
