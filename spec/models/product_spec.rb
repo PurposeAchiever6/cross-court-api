@@ -2,17 +2,16 @@
 #
 # Table name: products
 #
-#  id             :integer          not null, primary key
-#  stripe_id      :string           not null
-#  credits        :integer          default(0), not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  name           :string           default(""), not null
-#  stripe_plan_id :string
+#  id         :integer          not null, primary key
+#  stripe_id  :string           not null
+#  credits    :integer          default(0), not null
+#  name       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #
-#  index_products_on_stripe_id  (stripe_id) UNIQUE
+#  index_products_on_stripe_id  (stripe_id)
 #
 
 require 'rails_helper'

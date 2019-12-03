@@ -25,16 +25,12 @@
 #  name                   :string           default("")
 #  phone_number           :string
 #  credits                :integer          default(0), not null
-#  product_id             :integer
-#  stripe_id              :string
 #
 # Indexes
 #
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
-#  index_users_on_product_id            (product_id)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#  index_users_on_stripe_id             (stripe_id)
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
 
