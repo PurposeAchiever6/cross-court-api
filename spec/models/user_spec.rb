@@ -19,11 +19,11 @@
 #  provider               :string           default("email"), not null
 #  uid                    :string           default(""), not null
 #  tokens                 :json
-#  name                   :string           default("")
-#  phone_number           :string
 #  confirmation_token     :string
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
+#  name                   :string           default("")
+#  phone_number           :string
 #
 # Indexes
 #

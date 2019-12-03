@@ -24,10 +24,13 @@ class Session < ApplicationRecord
   belongs_to :location
   has_many :user_sessions, dependent: :destroy
   has_many :users, through: :user_sessions
+  has_many :session_exceptions, dependent: :destroy
 
   validates :start_time, :time, presence: true
 
   delegate :name, to: :location, prefix: true
+
+  accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 
   scope :for_range, (lambda do |start_date, end_date|
     where('start_time >= ? AND start_time <= ?', start_date, end_date)
@@ -49,6 +52,9 @@ class Session < ApplicationRecord
   def schedule(start = Time.current)
     schedule = IceCube::Schedule.new(start)
     schedule.add_recurrence_rule(rule)
+    session_exceptions.each do |exception|
+      schedule.add_exception_time(exception.date)
+    end
     schedule
   end
 
