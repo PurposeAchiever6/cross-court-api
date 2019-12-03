@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2019_12_03_175544) do
+=======
+ActiveRecord::Schema.define(version: 2019_12_03_145649) do
+>>>>>>> Change subscriptions to one time payments
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,9 +158,7 @@ ActiveRecord::Schema.define(version: 2019_12_03_175544) do
     t.integer "credits", default: 0, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["product_id"], name: "index_users_on_product_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["stripe_id"], name: "index_users_on_stripe_id"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 

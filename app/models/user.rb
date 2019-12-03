@@ -30,9 +30,7 @@
 #
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
-#  index_users_on_product_id            (product_id)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#  index_users_on_stripe_id             (stripe_id)
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
 
@@ -58,13 +56,6 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.assign_attributes user_params.except('id')
     end
-  end
-
-  def add_credits!
-    raise InvalidChargeException, I18n.t('webhooks.errors.non_existent_product') if product.blank?
-
-    increment(:credits, product.credits)
-    save!
   end
 
   private

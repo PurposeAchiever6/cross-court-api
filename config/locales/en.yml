@@ -38,6 +38,3 @@ en:
         subject: 'Session confirmation'
         confirmation: 'The session was confirmed correctly'
         time: 'Date: %{date}, Time: %{time}'
-  webhooks:
-    errors:
-      non_existent_product: "User doesn't have a product associated"
