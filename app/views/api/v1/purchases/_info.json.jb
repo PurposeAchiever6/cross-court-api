@@ -1,0 +1,5 @@
+{
+  id: purchase.id,
+  price: purchase.price,
+  date: purchase.created_at.iso8601
+}

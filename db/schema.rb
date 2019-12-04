@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2019_12_03_175544) do
-=======
-ActiveRecord::Schema.define(version: 2019_12_03_145649) do
->>>>>>> Change subscriptions to one time payments
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
