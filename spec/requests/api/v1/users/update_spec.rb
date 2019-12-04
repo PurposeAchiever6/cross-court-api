@@ -24,25 +24,6 @@ describe 'PUT api/v1/user/', type: :request do
     end
   end
 
-  context 'with invalid data' do
-    let(:params) { { user: { email: 'notanemail' } } }
-
-    it 'does not return success' do
-      put api_v1_user_path, params: params, headers: auth_headers, as: :json
-      expect(response).to_not have_http_status(:success)
-    end
-
-    it 'does not update the user' do
-      put api_v1_user_path, params: params, headers: auth_headers, as: :json
-      expect(user.reload.email).to_not eq(params[:email])
-    end
-
-    it 'returns the error' do
-      put api_v1_user_path, params: params, headers: auth_headers, as: :json
-      expect(json[:errors][:email]).to include('is not an email')
-    end
-  end
-
   context 'with missing params' do
     it 'returns the missing params error' do
       put api_v1_user_path, params: {}, headers: auth_headers, as: :json

@@ -1,0 +1,6 @@
+{
+  id: user_session.id,
+  date: user_session.date,
+  state: user_session.state,
+  session: render(partial: 'api/v1/sessions/short_info', locals: { session: user_session.session })
+}
