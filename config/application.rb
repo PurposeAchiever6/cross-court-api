@@ -38,7 +38,7 @@ module App
     }
     config.action_mailer.default_url_options = { host: ENV['SERVER_URL'] }
     config.action_mailer.default_options = {
-      from: 'no-reply@api.com'
+      from: 'no-reply@crosscourtball.com'
     }
 
     config.generators do |g|

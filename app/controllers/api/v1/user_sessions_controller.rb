@@ -1,6 +1,6 @@
 module Api
   module V1
-    class UserSessionsController < Api::V1::ApiController
+    class UserSessionsController < Api::V1::ApiUserController
       def cancel
         user_session.canceled!
       end
