@@ -79,6 +79,25 @@ ActiveRecord::Schema.define(version: 2019_12_03_175544) do
     t.string "zipcode", default: "", null: false
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "stripe_id", null: false
+    t.integer "credits", default: 0, null: false
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["stripe_id"], name: "index_products_on_stripe_id"
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "user_id"
+    t.decimal "price", precision: 4, scale: 2, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["product_id"], name: "index_purchases_on_product_id"
+    t.index ["user_id"], name: "index_purchases_on_user_id"
+  end
+
   create_table "session_exceptions", force: :cascade do |t|
     t.bigint "session_id", null: false
     t.datetime "date", null: false
@@ -132,6 +151,7 @@ ActiveRecord::Schema.define(version: 2019_12_03_175544) do
     t.datetime "confirmation_sent_at"
     t.string "name", default: ""
     t.string "phone_number"
+    t.integer "credits", default: 0, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -24,6 +24,7 @@
 #  confirmation_sent_at   :datetime
 #  name                   :string           default("")
 #  phone_number           :string
+#  credits                :integer          default(0), not null
 #
 # Indexes
 #
@@ -39,6 +40,7 @@ describe User do
   describe 'validations' do
     subject { build :user }
     it { is_expected.to validate_uniqueness_of(:uid).scoped_to(:provider) }
+    it { is_expected.to validate_numericality_of(:credits).is_greater_than_or_equal_to(0) }
 
     context 'when was created with regular login' do
       subject { build :user }

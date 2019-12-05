@@ -7,6 +7,10 @@ Rails.application.routes.draw do
     passwords: 'api/v1/passwords'
   }
 
+  namespace :webhooks, defaults: { format: :json } do
+    post :stripe, to: 'stripe#events'
+  end
+
   namespace :api do
     namespace :v1, defaults: { format: :json } do
       devise_scope :user do

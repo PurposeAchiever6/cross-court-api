@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://rails5-api-base.herokuapp.com
+HOST: https://cross-court-testing.herokuapp.com
 
 # API BASE
 
@@ -239,14 +239,15 @@ This route is the destination URL for password reset confirmation
 
     + Attributes (Locations array)
 
-## Sessions [/api/v1/sessions]
+## Sessions [/api/v1/sessions{?from_date,location_id}]
 
 ### Get sessions [GET]
 
++ Parameters
+    + location_id
+    + from_date
+
 + Request (application/json)
-    + Parameters
-        + location_id (number, required)
-        + from_date (string, required)
 
 + Response 200 (application/json)
     + Headers

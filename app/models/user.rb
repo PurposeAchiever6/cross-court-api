@@ -24,6 +24,7 @@
 #  confirmation_sent_at   :datetime
 #  name                   :string           default("")
 #  phone_number           :string
+#  credits                :integer          default(0), not null
 #
 # Indexes
 #
@@ -41,10 +42,12 @@ class User < ApplicationRecord
          :confirmable
   include DeviseTokenAuth::Concerns::User
 
-  validates :uid, uniqueness: { scope: :provider }
-
   has_many :user_sessions, dependent: :destroy
   has_many :sessions, through: :user_sessions
+  has_many :purchases, dependent: :nullify
+
+  validates :uid, uniqueness: { scope: :provider }
+  validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   before_validation :init_uid
 

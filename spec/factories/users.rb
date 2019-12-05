@@ -24,6 +24,7 @@
 #  confirmation_sent_at   :datetime
 #  name                   :string           default("")
 #  phone_number           :string
+#  credits                :integer          default(0), not null
 #
 # Indexes
 #
