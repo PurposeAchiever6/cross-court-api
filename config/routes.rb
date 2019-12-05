@@ -24,6 +24,7 @@ Rails.application.routes.draw do
         resources :user_sessions, only: :index do
           put :cancel
         end
+        resources :purchases, only: :index
         resource :user, only: %i[update show] do
           get :profile
           post :resend_confirmation_instructions
