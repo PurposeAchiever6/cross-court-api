@@ -1,6 +1,10 @@
 module Api
   module V1
     class UserSessionsController < Api::V1::ApiUserController
+      def index
+        @user_sessions = current_user.user_sessions.order(:date).includes(session: :location)
+      end
+
       def cancel
         user_session.canceled!
       end

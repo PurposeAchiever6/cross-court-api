@@ -3,6 +3,7 @@
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   location: {
-    name: session.location_name
+    name: session.location_name,
+    direction: session.location_direction
   }
 }

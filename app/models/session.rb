@@ -28,7 +28,7 @@ class Session < ApplicationRecord
 
   validates :start_time, :time, presence: true
 
-  delegate :name, to: :location, prefix: true
+  delegate :name, :direction, to: :location, prefix: true
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 

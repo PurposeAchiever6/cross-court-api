@@ -21,7 +21,7 @@ Rails.application.routes.draw do
             resources :user_sessions, only: :create
           end
         end
-        resources :user_sessions, only: [] do
+        resources :user_sessions, only: :index do
           put :cancel
         end
         resource :user, only: %i[update show] do
