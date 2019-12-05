@@ -9,8 +9,8 @@ module Api
         @sessions = Session.includes(:location)
                            .by_location(params[:location_id])
                            .for_range(from_date, to_date)
-                           .flat_map do |meeting|
-          meeting.calendar_events(from_date, to_date)
+                           .flat_map do |session_event|
+          session_event.calendar_events(from_date, to_date)
         end
       end
 
