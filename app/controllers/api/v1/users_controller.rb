@@ -1,6 +1,6 @@
 module Api
   module V1
-    class UsersController < Api::V1::ApiController
+    class UsersController < Api::V1::ApiUserController
       skip_before_action :authenticate_user!, only: :resend_confirmation_instructions
 
       def show; end

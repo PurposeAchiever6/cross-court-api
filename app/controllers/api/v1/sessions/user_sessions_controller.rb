@@ -1,7 +1,7 @@
 module Api
   module V1
     module Sessions
-      class UserSessionsController < Api::V1::ApiController
+      class UserSessionsController < Api::V1::ApiUserController
         def create
           ActiveRecord::Base.transaction do
             user_session = UserSession.new(
