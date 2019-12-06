@@ -275,7 +275,7 @@ This route is the destination URL for password reset confirmation
 
     + Attributes (Session)
 
-## User sessions [/api/v1/sessions/{session_id}/user_sessions]
+## New User session [/api/v1/sessions/{session_id}/user_sessions]
 
 ### Reserve session [POST]
 
@@ -292,6 +292,22 @@ This route is the destination URL for password reset confirmation
             uid: test@test.com
 
     + Attributes (Session Request)
+
+## User sessions [/api/v1/user_sessions]
+
+### Get user_sessions [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (UserSessions response)
 
 
 ## Purchases [/api/v1/purchases]
@@ -365,3 +381,13 @@ This route is the destination URL for password reset confirmation
 + id (number)
 + price (number)
 + date (string)
+
+## UserSession (object)
++ id (number)
++ date (string)
++ state (string)
++ session (Session short)
+
+## UserSessions response (object)
++ previous_sessions (array[UserSession])
++ upcoming_sessions (array[UserSession])

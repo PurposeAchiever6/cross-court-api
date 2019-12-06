@@ -27,4 +27,17 @@ class UserSession < ApplicationRecord
   validates :date, uniqueness: { scope: %i[session_id user_id] }
 
   delegate :time, to: :session, prefix: true
+
+  scope :past, (lambda do
+    joins(:session).where('date < :date OR (date = :date AND time::time < :current_time )',
+                          date: Date.current,
+                          current_time: Time.current.strftime(Session::TIME_FORMAT),
+                          date_format: Session::TIME_FORMAT)
+  end)
+  scope :future, (lambda do
+    joins(:session).where('date > :date OR (date = :date AND time::time > :current_time )',
+                          date: Date.current,
+                          current_time: Time.current.strftime(Session::TIME_FORMAT),
+                          date_format: Session::TIME_FORMAT)
+  end)
 end

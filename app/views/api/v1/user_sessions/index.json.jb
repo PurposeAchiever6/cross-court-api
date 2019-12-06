@@ -1,3 +1,4 @@
 {
-  user_sessions: render(partial: 'info', collection: @user_sessions, as: :user_session)
+  previous_sessions: render(partial: 'info', collection: @previous_sessions, as: :user_session),
+  upcoming_sessions: render(partial: 'info', collection: @upcoming_sessions, as: :user_session)
 }
