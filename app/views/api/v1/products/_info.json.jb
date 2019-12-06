@@ -1,0 +1,6 @@
+{
+  name: product.name,
+  description: product.description,
+  price: product.price,
+  stripe_id: product.stripe_id
+}

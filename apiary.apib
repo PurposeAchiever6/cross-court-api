@@ -326,6 +326,23 @@ This route is the destination URL for password reset confirmation
 
     + Attributes (array[Purchase])
 
+
+## Products [/api/v1/products]
+
+### Get products [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (array[Product])
+
 # Data Structures
 
 ## Profile Response (object)
@@ -391,3 +408,9 @@ This route is the destination URL for password reset confirmation
 ## UserSessions response (object)
 + previous_sessions (array[UserSession])
 + upcoming_sessions (array[UserSession])
+
+## Product (object)
++ price (number)
++ name (string)
++ description (string)
++ stripe_id (string)

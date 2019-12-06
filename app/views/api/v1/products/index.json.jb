@@ -1,0 +1,3 @@
+{
+  products: render(partial: 'info', collection: @products, as: :product)
+}
