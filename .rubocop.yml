@@ -24,6 +24,7 @@ Metrics/AbcSize:
   Max: 15
   Exclude:
     - db/migrate/20161011151353_devise_create_users.rb
+    - app/models/session.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?

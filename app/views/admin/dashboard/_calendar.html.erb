@@ -8,7 +8,7 @@
 
   <% events.each do |event| %>
     <div>
-      <%= link_to event.time.strftime(Session::TIME_FORMAT), admin_session_path(event.id) %>
+      <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
     </div>
   <% end %>
 <% end %>

@@ -1,0 +1,21 @@
+<div>
+  <table>
+    <tr>
+      <td>
+        <b>Referee</b>
+      </td>
+      <td>
+        <%= link_to referee.name, admin_user_path(referee.id) %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>SEM</b>
+      </td>
+      <td>
+        <%= link_to sem.name, admin_user_path(sem.id) %>
+      </td>
+    </tr>
+  </table>
+  <%= link_to 'Edit employees', admin_session_path(id: resource.id, date: date, edit_employees: 1) %>
+</div>
