@@ -1,11 +1,14 @@
 ActiveAdmin.register User do
-  permit_params :email, :name, :phone_number, :password, :password_confirmation
+  permit_params :email, :name, :phone_number, :password, :password_confirmation,
+                :is_referee, :is_sem
 
   form do |f|
     f.inputs 'Details' do
       f.input :email
       f.input :name
       f.input :phone_number
+      f.input :is_referee
+      f.input :is_sem
 
       if f.object.new_record?
         f.input :password
@@ -40,6 +43,8 @@ ActiveAdmin.register User do
       row :id
       row :email
       row :name
+      row :is_referee
+      row :is_sem
       row :phone_number
       row :sign_in_count
       row :created_at
