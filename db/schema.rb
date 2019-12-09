@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_03_175544) do
+ActiveRecord::Schema.define(version: 2019_12_09_142326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,8 @@ ActiveRecord::Schema.define(version: 2019_12_03_175544) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
+    t.text "description"
     t.index ["stripe_id"], name: "index_products_on_stripe_id"
   end
 
@@ -152,8 +154,12 @@ ActiveRecord::Schema.define(version: 2019_12_03_175544) do
     t.string "name", default: ""
     t.string "phone_number"
     t.integer "credits", default: 0, null: false
+    t.boolean "is_referee", default: false, null: false
+    t.boolean "is_sem", default: false, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["is_referee"], name: "index_users_on_is_referee"
+    t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
