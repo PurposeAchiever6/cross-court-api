@@ -1,10 +1,13 @@
 ActiveAdmin.register Product do
-  permit_params :credits
-  actions :all, except: %i[new destroy]
+  permit_params :name, :credits, :price, :description
+  actions :all, except: :edit
 
   form do |f|
     f.inputs 'Product details' do
+      f.input :name
       f.input :credits
+      f.input :price
+      f.input :description
     end
     f.actions
   end
@@ -14,6 +17,28 @@ ActiveAdmin.register Product do
       row :id
       row :name
       row :credits
+      row :price
+      row :description
+    end
+  end
+
+  controller do
+    def create
+      sku = StripeService.create_sku(sku_params)
+      Product.create!(sku_params.merge(stripe_id: sku.id))
+      redirect_to admin_products_path, notice: I18n.t('admin.products.created')
+    end
+
+    def destroy
+      StripeService.delete_sku(resource.stripe_id)
+      resource.destroy!
+      redirect_to admin_products_path, notice: I18n.t('admin.products.destroyed')
+    end
+
+    private
+
+    def sku_params
+      params.require(:product).permit(:name, :credits, :price, :description)
     end
   end
 end

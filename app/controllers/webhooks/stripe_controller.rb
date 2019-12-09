@@ -11,16 +11,6 @@ module Webhooks
 
     private
 
-    def handle_sku_created
-      Product.create!(stripe_id: object.product, name: object.attributes.name)
-      head :ok
-    end
-
-    def handle_sku_deleted
-      Product.find_by(stripe_id: @event.data.object.product)&.destroy!
-      head :ok
-    end
-
     def handle_checkout_session_completed
       ActiveRecord::Base.transaction do
         user.increment(:credits, product.credits)

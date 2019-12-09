@@ -21,6 +21,7 @@ Rails.application.routes.draw do
             resources :user_sessions, only: :create
           end
         end
+        resources :products, only: :index
         resources :user_sessions, only: :index do
           put :cancel
         end
