@@ -16,7 +16,9 @@ describe 'GET api/v1/products' do
   end
 
   context 'when there are some products' do
-    let!(:products) { create_list(:product, 2) }
+    let!(:product1) { create(:product, order_number: 2) }
+    let!(:product2) { create(:product, order_number: 3) }
+    let!(:product3) { create(:product, order_number: 1) }
 
     before { subject }
 
@@ -25,7 +27,13 @@ describe 'GET api/v1/products' do
     end
 
     it 'returns the products' do
-      expect(json[:products].count).to eq(2)
+      expect(json[:products].count).to eq(3)
+    end
+
+    it 'returns the products ordered by order_number' do
+      expect(json[:products][0][:stripe_id]).to eq(product3.stripe_id)
+      expect(json[:products][1][:stripe_id]).to eq(product1.stripe_id)
+      expect(json[:products][2][:stripe_id]).to eq(product2.stripe_id)
     end
   end
 end
