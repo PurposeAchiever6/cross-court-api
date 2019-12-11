@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     passwords: 'api/v1/passwords'
   }
 
+  root to: 'admin/dashboard#index'
+
   namespace :webhooks, defaults: { format: :json } do
     post :stripe, to: 'stripe#events'
   end

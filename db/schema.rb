@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_151958) do
+ActiveRecord::Schema.define(version: 2019_12_09_145712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -100,6 +100,28 @@ ActiveRecord::Schema.define(version: 2019_12_06_151958) do
     t.index ["user_id"], name: "index_purchases_on_user_id"
   end
 
+  create_table "referee_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "session_id", null: false
+    t.date "date", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_referee_sessions_on_session_id"
+    t.index ["user_id", "session_id", "date"], name: "index_referee_sessions_on_user_id_and_session_id_and_date", unique: true
+    t.index ["user_id"], name: "index_referee_sessions_on_user_id"
+  end
+
+  create_table "sem_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "session_id", null: false
+    t.date "date", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_sem_sessions_on_session_id"
+    t.index ["user_id", "session_id", "date"], name: "index_sem_sessions_on_user_id_and_session_id_and_date", unique: true
+    t.index ["user_id"], name: "index_sem_sessions_on_user_id"
+  end
+
   create_table "session_exceptions", force: :cascade do |t|
     t.bigint "session_id", null: false
     t.datetime "date", null: false
@@ -154,8 +176,12 @@ ActiveRecord::Schema.define(version: 2019_12_06_151958) do
     t.string "name", default: ""
     t.string "phone_number"
     t.integer "credits", default: 0, null: false
+    t.boolean "is_referee", default: false, null: false
+    t.boolean "is_sem", default: false, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["is_referee"], name: "index_users_on_is_referee"
+    t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
