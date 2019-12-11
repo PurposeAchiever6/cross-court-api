@@ -3,10 +3,10 @@ json = {
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   referee: {
-    name: session.referee&.name
+    name: referee&.name
   },
   sem: {
-    name: session.sem&.name
+    name: sem&.name
   },
   location: {
     name: session.location_name,
@@ -14,7 +14,10 @@ json = {
   }
 }
 
-json[:location][:image_url] = url_for(session.location.image) if session.location.image.attached?
-json[:location][:image_url] = url_for(session.location.image) if session.location.image.attached?
+if session.location.image.attached?
+  json[:location][:image_url] = polymorphic_url(session.location.image)
+end
+json[:referee][:image_url] = polymorphic_url(referee.image) if referee&.image&.attached?
+json[:sem][:image_url] = polymorphic_url(sem.image) if sem&.image&.attached?
 
 json

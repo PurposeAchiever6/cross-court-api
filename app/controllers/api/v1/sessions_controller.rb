@@ -1,7 +1,7 @@
 module Api
   module V1
     class SessionsController < Api::V1::ApiController
-      helper_method :selected_session
+      helper_method :selected_session, :referee, :sem
 
       def show; end
 
@@ -26,6 +26,14 @@ module Api
 
       def selected_session
         @selected_session ||= Session.find(params[:id])
+      end
+
+      def referee
+        @referee = selected_session.referee(params[:date])
+      end
+
+      def sem
+        @sem = selected_session.sem(params[:date])
       end
     end
   end

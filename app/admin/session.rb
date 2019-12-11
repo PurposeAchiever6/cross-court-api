@@ -92,4 +92,4 @@ ActiveAdmin.register Session do
 
     redirect_to admin_root_path, notice: 'Employees assigned successfully'
   end
-end 
+end
