@@ -1,0 +1,22 @@
+<%= form_with(url: assign_employees_admin_session_path(id: resource.id, date: date), method: :put, local: true) do %>
+  <table>
+    <tr>
+      <td>
+        <b>Referee</b>
+      </td>
+      <td>
+        <%= select_tag(:referee_id, options_from_collection_for_select(User.referees, 'id', 'name', referee&.id), include_blank: true) %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>SEM</b>
+      </td>
+      <td>
+        <%= select_tag(:sem_id, options_from_collection_for_select(User.sems, 'id', 'name', sem&.id), include_blank: true) %>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <%= submit_tag('Assign') %>
+<% end %>

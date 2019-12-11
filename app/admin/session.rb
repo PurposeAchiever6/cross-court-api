@@ -25,7 +25,14 @@ ActiveAdmin.register Session do
     actions
   end
 
-  show do
+  show title: proc { |session|
+                date = params[:date]
+                if date.present?
+                  "Session for #{date} at #{session.time.strftime(Session::TIME_FORMAT)}"
+                else
+                  "Session #{session.id}"
+                end
+              } do
     attributes_table do
       row :id
       row :start_time
@@ -40,11 +47,49 @@ ActiveAdmin.register Session do
       row :updated_at
     end
 
+    date = params[:date]
+    if date.present?
+      panel 'Employees' do
+        referee = resource.referee(date)
+        sem = resource.sem(date)
+        if params[:edit_employees].present? || referee.nil? || sem.nil?
+          render partial: 'edit_employees', locals: {
+            selected_session: resource,
+            date: date,
+            referee: referee,
+            sem: sem
+          }
+        else
+          render partial: 'show_employees', locals: {
+            date: date,
+            referee: referee,
+            sem: sem
+          }
+        end
+      end
+    end
+
     panel 'Time exceptions' do
       table_for session.session_exceptions.order(date: :desc) do
         column :id
         column :date
       end
     end
+  end
+
+  member_action :assign_employees, method: :put do
+    referee_id = params[:referee_id]
+    sem_id = params[:sem_id]
+    date = params[:date]
+
+    if referee_id.nil? && sem_id.nil?
+      redirect_to admin_session_path(id: resource.id, date: date),
+                  notice: 'You need to select a Referee or a SEM to assign'
+    end
+
+    resource.referee_sessions.create!(user_id: referee_id, date: date) if referee_id.present?
+    resource.sem_sessions.create!(user_id: sem_id, date: date) if sem_id.present?
+
+    redirect_to admin_root_path, notice: 'Employees assigned successfully'
   end
 end

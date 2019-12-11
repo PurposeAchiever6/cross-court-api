@@ -55,6 +55,9 @@ class User < ApplicationRecord
 
   before_validation :init_uid
 
+  scope :referees, -> { where(is_referee: true) }
+  scope :sems, -> { where(is_sem: true) }
+
   def self.from_social_provider(provider, user_params)
     where(provider: provider, uid: user_params['id']).first_or_create! do |user|
       user.password = Devise.friendly_token[0, 20]

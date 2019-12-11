@@ -19,12 +19,16 @@ class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
   TIME_FORMAT = '%H:%M'.freeze
 
+  attr_accessor :employees_assigned
+
   serialize :recurring, Hash
 
   belongs_to :location
   has_many :user_sessions, dependent: :destroy
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
+  has_many :referee_sessions, dependent: :nullify
+  has_many :sem_sessions, dependent: :nullify
 
   validates :start_time, :time, presence: true
 
@@ -60,11 +64,25 @@ class Session < ApplicationRecord
 
   def calendar_events(start_date, end_date)
     if recurring.empty?
+      self.employees_assigned = referee_sessions.present? && sem_sessions.present?
       [self]
     else
       schedule(start_date).occurrences(end_date).map do |date|
-        Session.new(id: id, start_time: date, time: time, location_id: location_id)
+        Session.new(
+          id: id,
+          start_time: date,
+          time: time,
+          location_id: location_id
+        )
       end
     end
+  end
+
+  def referee(date)
+    referee_sessions.find_by(date: date)&.referee
+  end
+
+  def sem(date)
+    sem_sessions.find_by(date: date)&.sem
   end
 end
