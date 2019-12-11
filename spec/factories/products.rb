@@ -19,7 +19,7 @@
 
 FactoryBot.define do
   factory :product do
-    sequence :stripe_id do |n|
+    sequence :stripe_id do |n| 
       "#{Faker::Lorem.unique}_#{n}"
     end
     name         { Faker::Lorem.word }
