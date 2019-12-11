@@ -24,8 +24,5 @@ FactoryBot.define do
     end
     name         { Faker::Lorem.word }
     credits      { Faker::Number.number(1) }
-    order_number { Faker::Number.number(1) }
-    price        { Faker::Commerce.price }
-    description  { Faker::Lorem.paragraph }
   end
 end
