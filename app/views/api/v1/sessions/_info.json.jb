@@ -2,12 +2,19 @@ json = {
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
+  referee: {
+    name: session.referee&.name
+  },
+  sem: {
+    name: session.sem&.name
+  },
   location: {
     name: session.location_name,
     direction: session.location_direction
   }
 }
 
+json[:location][:image_url] = url_for(session.location.image) if session.location.image.attached?
 json[:location][:image_url] = url_for(session.location.image) if session.location.image.attached?
 
 json

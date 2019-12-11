@@ -9,6 +9,7 @@ ActiveAdmin.register User do
       f.input :phone_number
       f.input :is_referee
       f.input :is_sem
+      f.input :image, as: :file
 
       if f.object.new_record?
         f.input :password
