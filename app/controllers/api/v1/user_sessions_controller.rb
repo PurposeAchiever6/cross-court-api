@@ -2,8 +2,12 @@ module Api
   module V1
     class UserSessionsController < Api::V1::ApiUserController
       def index
-        @previous_sessions = user_sessions.past.order(date: :desc).includes(session: :location)
-        @upcoming_sessions = user_sessions.future.order(:date).includes(session: :location)
+        @previous_sessions = user_sessions.past
+                                          .order(date: :desc)
+                                          .includes(session: [location: [image_attachment: :blob]])
+        @upcoming_sessions = user_sessions.future
+                                          .order(:date)
+                                          .includes(session: [location: [image_attachment: :blob]])
       end
 
       def cancel
