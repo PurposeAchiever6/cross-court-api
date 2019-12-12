@@ -48,5 +48,17 @@ FactoryBot.define do
     trait :confirmed do
       confirmed_at { Time.current }
     end
+
+    trait :referee do
+      is_referee true
+    end
+
+    trait :sem do
+      is_sem true
+    end
+
+    trait :with_image do
+      image { Rack::Test::UploadedFile.new('spec/fixtures/blank.png', 'image/png') }
+    end
   end
 end
