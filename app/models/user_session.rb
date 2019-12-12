@@ -31,8 +31,10 @@ class UserSession < ApplicationRecord
   validates :date, uniqueness: { scope: %i[session_id user_id] }
 
   delegate :time, to: :session, prefix: true
-  delegate :phone_number, to: :user, prefix: true
+  delegate :phone_number, :name, :email, to: :user, prefix: true
 
+  scope :email_not_sent, -> { where(email_reminder_sent: false) }
+  scope :sms_not_sent, -> { where(sms_reminder_sent: false) }
   scope :past, (lambda do
     joins(:session).where('date < :date OR (date = :date AND time::time < :current_time )',
                           date: Date.current,
