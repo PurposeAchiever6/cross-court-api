@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_09_145712) do
+ActiveRecord::Schema.define(version: 2019_12_12_132341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,7 @@ ActiveRecord::Schema.define(version: 2019_12_09_145712) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
     t.text "description"
+    t.integer "order_number", default: 0, null: false
     t.index ["stripe_id"], name: "index_products_on_stripe_id"
   end
 
@@ -148,8 +149,12 @@ ActiveRecord::Schema.define(version: 2019_12_09_145712) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "date", null: false
+    t.boolean "sms_reminder_sent", default: false, null: false
+    t.boolean "email_reminder_sent", default: false, null: false
     t.index ["date", "user_id", "session_id"], name: "index_user_sessions_on_date_and_user_id_and_session_id", unique: true
+    t.index ["email_reminder_sent"], name: "index_user_sessions_on_email_reminder_sent"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
+    t.index ["sms_reminder_sent"], name: "index_user_sessions_on_sms_reminder_sent"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
 
