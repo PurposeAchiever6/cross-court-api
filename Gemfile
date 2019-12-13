@@ -25,6 +25,7 @@ gem 'recurring_select', '~> 2.1'
 gem 'sendgrid', '~> 1.2.4'
 gem 'simple_calendar', '~> 2.3'
 gem 'stripe', '~> 5.11'
+gem 'twilio-ruby', '~> 5.30'
 gem 'webpacker', '~> 4.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

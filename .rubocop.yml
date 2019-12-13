@@ -89,6 +89,11 @@ Rails/SaveBang:
   Enabled: true
   Exclude:
     - app/services/stripe_service.rb
+    - app/services/twilio_service.rb
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - lib/tasks/session_reminders.rake
 
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining

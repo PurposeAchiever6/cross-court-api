@@ -42,3 +42,5 @@ en:
     products:
       created: 'Product created successfully'
       destroyed: 'Product deleted successfully'
+  reminders:
+    sms: 'You have a session for tomorrow. Please confirm it here: %{frontend_url}/sessions/%{session_id}?date=%{date}'
