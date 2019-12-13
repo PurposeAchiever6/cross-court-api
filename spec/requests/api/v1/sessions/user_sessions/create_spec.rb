@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
-  let(:user)    { create(:user) }
+  let(:user)    { create(:user, credits: 1) }
   let(:session) { create(:session, :daily) } # Weekly today
   let(:date)    { Date.tomorrow }
   let(:params)  { { date: date.strftime(Session::DATE_FORMAT) } }
@@ -22,6 +22,10 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
       it 'enrolls the user to the session' do
         expect { subject }.to change { user.reload.sessions.count }.from(0).to(1)
+      end
+
+      it 'consumes one credit from the user' do
+        expect { subject }.to change { user.reload.credits }.from(1).to(0)
       end
     end
 
@@ -49,6 +53,20 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
     it "doesn't enroll the user in the session" do
       expect { subject }.not_to change { user.reload.sessions.count }
+    end
+  end
+
+  context "when the user doesn't have credits" do
+    before { user.update!(credits: 0) }
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'raises an error' do
+      subject
+      expect(json[:error]).to eq I18n.t('api.errors.user_session.not_enough_credits')
     end
   end
 end

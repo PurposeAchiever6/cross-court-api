@@ -28,6 +28,7 @@ en:
       invalid_content_type: 'Invalid content type header'
       user_session:
         invalid_date: 'Invalid date'
+        not_enough_credits: 'Not enough credits. Please buy more.'
   mailer:
     greeting: 'Sincerely, CrossCourt Team'
     session:
