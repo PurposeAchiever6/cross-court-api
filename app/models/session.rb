@@ -18,6 +18,7 @@
 class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
   TIME_FORMAT = '%H:%M'.freeze
+  CANCELATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
 
   attr_accessor :employees_assigned
 

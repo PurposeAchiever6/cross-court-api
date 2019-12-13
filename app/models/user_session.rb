@@ -47,4 +47,12 @@ class UserSession < ApplicationRecord
                           current_time: Time.current.strftime(Session::TIME_FORMAT),
                           date_format: Session::TIME_FORMAT)
   end)
+
+  def in_cancellation_time?
+    today = Date.current
+    max_cancellation_time = (session_time - Session::CANCELATION_PERIOD)
+
+    today < date || today == date && Time.current.strftime(Session::TIME_FORMAT) <
+      max_cancellation_time.strftime(Session::TIME_FORMAT)
+  end
 end
