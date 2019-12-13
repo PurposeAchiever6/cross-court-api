@@ -13,6 +13,7 @@ module Api
       rescue_from AbstractController::ActionNotFound,  with: :render_not_found
       rescue_from ActionController::ParameterMissing,  with: :render_parameter_missing
       rescue_from InvalidDateException,                with: :render_custom_exception
+      rescue_from NotEnoughCreditsException,           with: :render_custom_exception
 
       def status
         render json: { online: true }

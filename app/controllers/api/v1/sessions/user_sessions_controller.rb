@@ -11,6 +11,7 @@ module Api
             )
             user_session = UserSessionWithValidDate.new(user_session)
             user_session = UserSessionEmail.new(user_session)
+            user_session = UserSessionConsumeCredit.new(user_session)
             user_session.save!
           end
         end
