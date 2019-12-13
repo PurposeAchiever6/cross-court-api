@@ -33,14 +33,16 @@ en:
     session:
       cancel: 'If you need to cancel the session click'
       here: 'here'
+      welcome: 'Hi %{name}'
       new:
-        welcome: 'Hi %{name}'
         subject: 'Session confirmation'
         confirmation: 'The session was confirmed correctly'
         time: 'Date: %{date}, Time: %{time}'
+      reminder:
+        subject: 'Session reminder'
   admin:
     products:
       created: 'Product created successfully'
       destroyed: 'Product deleted successfully'
-  reminders:
-    sms: 'You have a session for tomorrow. Please confirm it here: %{frontend_url}/sessions/%{session_id}?date=%{date}'
+  reminder:
+    message: 'You have a session for tomorrow. Please confirm it'

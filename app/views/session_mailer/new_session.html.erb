@@ -1,5 +1,5 @@
 <section>
-  <p><%= t('mailer.session.new.welcome', name: @user_name) %></p>
+  <p><%= t('mailer.session.welcome', name: @user_name) %></p>
   <br>
   <p><%= t('mailer.session.new.confirmation') %></p>
   <p><%= t('mailer.session.new.time', date: @date.strftime(Session::DATE_FORMAT),
