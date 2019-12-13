@@ -1,5 +1,5 @@
 ActiveAdmin.register Product do
-  permit_params :name, :credits, :price, :description
+  permit_params :name, :credits, :price, :description, :order_number
   actions :all, except: :edit
 
   form do |f|
@@ -8,6 +8,7 @@ ActiveAdmin.register Product do
       f.input :credits
       f.input :price
       f.input :description
+      f.input :order_number
     end
     f.actions
   end
@@ -19,6 +20,7 @@ ActiveAdmin.register Product do
       row :credits
       row :price
       row :description
+      row :order_number
     end
   end
 
@@ -38,7 +40,7 @@ ActiveAdmin.register Product do
     private
 
     def sku_params
-      params.require(:product).permit(:name, :credits, :price, :description)
+      params.require(:product).permit(:name, :credits, :price, :description, :order_number)
     end
   end
 end

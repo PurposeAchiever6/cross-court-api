@@ -20,6 +20,6 @@
 class Product < ApplicationRecord
   has_many :purchases, dependent: :nullify
 
-  validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :credits, :order_number, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :stripe_id, presence: true, uniqueness: true
 end
