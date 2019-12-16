@@ -8,15 +8,9 @@ json = {
   sem: {
     name: sem&.name
   },
-  location: {
-    name: session.location_name,
-    direction: session.location_direction
-  }
+  location: render(partial: 'api/v1/locations/info', locals: { location: session.location })
 }
 
-if session.location.image.attached?
-  json[:location][:image_url] = polymorphic_url(session.location.image)
-end
 json[:referee][:image_url] = polymorphic_url(referee.image) if referee&.image&.attached?
 json[:sem][:image_url] = polymorphic_url(sem.image) if sem&.image&.attached?
 

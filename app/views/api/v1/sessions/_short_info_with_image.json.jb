@@ -1,15 +1,6 @@
-json = {
+{
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
-  location: {
-    name: session.location_name,
-    direction: session.location_direction
-  }
+  location: render(partial: 'api/v1/locations/info', locals: { location: session.location })
 }
-
-if session.location.image.attached?
-  json[:location][:image_url] = polymorphic_url(session.location.image)
-end
-
-json

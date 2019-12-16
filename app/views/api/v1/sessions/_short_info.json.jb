@@ -2,8 +2,5 @@
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
-  location: {
-    name: session.location_name,
-    direction: session.location_direction
-  }
+  location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location })
 }
