@@ -8,6 +8,6 @@ json = {
   zipcode: location.zipcode
 }
 
-json[:image_url] = url_for(location.image) if location.image.attached?
+json[:image_url] = polymorphic_url(location.image) if location.image.attached?
 
 json

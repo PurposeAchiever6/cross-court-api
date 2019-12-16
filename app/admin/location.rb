@@ -25,7 +25,7 @@ ActiveAdmin.register Location do
       row :zipcode
       row :direction
       row :image do |location|
-        image_tag url_for(location.image) if location.image.attached?
+        image_tag polymorphic_url(location.image) if location.image.attached?
       end
     end
   end
