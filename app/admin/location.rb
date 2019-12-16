@@ -7,6 +7,7 @@ ActiveAdmin.register Location do
       f.input :image, as: :file
       f.input :city
       f.input :zipcode
+      f.input :time_zone, as: :select, options: ActiveSupport::TimeZone::MAPPING.keys.sort
       f.input :direction
       f.input :lat, as: :hidden
       f.input :lng, as: :hidden
