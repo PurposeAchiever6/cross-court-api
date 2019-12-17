@@ -11,11 +11,12 @@
 #  updated_at :datetime         not null
 #  city       :string           default(""), not null
 #  zipcode    :string           default(""), not null
+#  time_zone  :string           default("America/Los_Angeles"), not null
 #
 
 class Location < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_one_attached :image
 
-  validates :name, :direction, :lat, :lng, :city, :zipcode, presence: true
+  validates :name, :direction, :lat, :lng, :city, :zipcode, :time_zone, presence: true
 end

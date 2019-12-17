@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2019_12_17_131955) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "city", default: "", null: false
     t.string "zipcode", default: "", null: false
+    t.string "time_zone", default: "America/Los_Angeles", null: false
   end
 
   create_table "products", force: :cascade do |t|

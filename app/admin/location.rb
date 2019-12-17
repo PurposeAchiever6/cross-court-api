@@ -1,5 +1,5 @@
 ActiveAdmin.register Location do
-  permit_params :name, :direction, :lat, :lng, :city, :zipcode, :image
+  permit_params :name, :direction, :lat, :lng, :city, :zipcode, :image, :time_zone
 
   form do |f|
     f.inputs 'Location Details' do
@@ -7,6 +7,7 @@ ActiveAdmin.register Location do
       f.input :image, as: :file
       f.input :city
       f.input :zipcode
+      f.input :time_zone, as: :select, collection: ActiveSupport::TimeZone::MAPPING.values.sort
       f.input :direction
       f.input :lat, as: :hidden
       f.input :lng, as: :hidden
@@ -23,6 +24,7 @@ ActiveAdmin.register Location do
       row :name
       row :city
       row :zipcode
+      row :time_zone
       row :direction
       row :image do |location|
         image_tag polymorphic_url(location.image) if location.image.attached?

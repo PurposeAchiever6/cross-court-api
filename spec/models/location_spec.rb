@@ -11,6 +11,7 @@
 #  updated_at :datetime         not null
 #  city       :string           default(""), not null
 #  zipcode    :string           default(""), not null
+#  time_zone  :string           default("America/Los_Angeles"), not null
 #
 
 require 'rails_helper'
