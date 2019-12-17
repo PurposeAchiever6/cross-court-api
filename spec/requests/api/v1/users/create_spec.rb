@@ -1,8 +1,13 @@
 require 'rails_helper'
 
-describe 'POST api/v1/users/', type: :request do
+describe 'POST api/v1/users', type: :request do
   let(:user)            { User.last }
   let(:failed_response) { 422 }
+
+  before do
+    stub_request(:post, %r{stripe.com/v1/customers})
+      .to_return(status: 200, body: File.new('spec/fixtures/customer_creation_ok.json'))
+  end
 
   describe 'POST create' do
     let(:email)                 { 'test@test.com' }

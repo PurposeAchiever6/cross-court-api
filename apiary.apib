@@ -344,6 +344,56 @@ This route is the destination URL for password reset confirmation
 
     + Attributes (array[Product])
 
+
+## Payment methods [/api/v1/payment_methods]
+
+### Get payment methods [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (array[Payment method])
+
+### Create payment method [POST]
+
++ Request (application/json)
+
+    + Body
+
+            {
+              "payment_method": "pm_123456789"
+            }
+
++ Response 204 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+
+### Destroy payment method [DELETE /api/v1/payment_method/{id}]
+
++ Request (application/json)
+    + Parameters
+        + id (string, required)
+
++ Response 204 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
 # Data Structures
 
 ## Profile Response (object)
@@ -421,3 +471,13 @@ This route is the destination URL for password reset confirmation
 ## Employee (object)
 + name (string)
 + image_url (string)
+
+## Payment method (object)
++ id: pm_123456789 (string)
++ card (Card)
+
+## Card (object)
++ last4: 1234 (string)
++ exp_month: 08 (string)
++ exp_year: 2020 (string)
++ brand: Visa (string)

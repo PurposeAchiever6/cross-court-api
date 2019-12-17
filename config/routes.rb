@@ -28,6 +28,7 @@ Rails.application.routes.draw do
           put :cancel
         end
         resources :purchases, only: :index
+        resources :payment_methods, only: %i[create index destroy]
         resource :user, only: %i[update show] do
           get :profile
           post :resend_confirmation_instructions
