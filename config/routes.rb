@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         resources :products, only: :index
         resources :user_sessions, only: :index do
           put :cancel
+          put :confirm
         end
         resources :purchases, only: :index
         resources :payment_methods, only: %i[create index destroy]

@@ -298,7 +298,7 @@ This route is the destination URL for password reset confirmation
 
 ### Get user_sessions [GET]
 
-+ Request (application/json) 
++ Request (application/json)
 
 + Response 200 (application/json)
     + Headers
@@ -309,6 +309,24 @@ This route is the destination URL for password reset confirmation
             uid: test@test.com
 
     + Attributes (UserSessions response)
+
+
+### Cancel user_session [PUT /api/v1/user_sessions/{id}/cancel]
+
++ Request (application/json)
+    + Parameters
+        + id (required, number)
+
++ Response 204 (application/json)
+
+
+### Confirm user_session [PUT /api/v1/user_sessions/{id}/confirm]
+
++ Request (application/json)
+    + Parameters
+        + id (required, number)
+
++ Response 204 (application/json)
 
 
 ## Purchases [/api/v1/purchases]
