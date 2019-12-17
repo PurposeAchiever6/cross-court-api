@@ -21,8 +21,12 @@ describe 'GET api/v1/user_sessions' do
   end
 
   describe 'when the user has already been in sessions' do
+    let(:los_angeles_time) do
+      Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
+    end
+
     before do
-      Timecop.freeze(Time.current.change(hour: 12))
+      Timecop.freeze(los_angeles_time)
     end
 
     after do

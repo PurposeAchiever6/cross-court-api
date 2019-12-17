@@ -30,29 +30,32 @@ class UserSession < ApplicationRecord
   validates :state, :date, presence: true
   validates :date, uniqueness: { scope: %i[session_id user_id] }
 
-  delegate :time, to: :session, prefix: true
+  delegate :time, :time_zone, to: :session
   delegate :phone_number, :name, :email, to: :user, prefix: true
 
   scope :email_not_sent, -> { where(email_reminder_sent: false) }
   scope :sms_not_sent, -> { where(sms_reminder_sent: false) }
   scope :past, (lambda do
-    joins(:session).where('date < :date OR (date = :date AND time::time < :current_time )',
-                          date: Date.current,
-                          current_time: Time.current.strftime(Session::TIME_FORMAT),
-                          date_format: Session::TIME_FORMAT)
+    joins(session: :location)
+      .where('date < (current_timestamp at time zone locations.time_zone)::date OR
+             (date = (current_timestamp at time zone locations.time_zone)::date AND
+             to_char(current_timestamp at time zone locations.time_zone, :time_format) >
+             to_char(time, :time_format))', time_format: Session::QUERY_TIME_FORMAT)
   end)
   scope :future, (lambda do
-    joins(:session).where('date > :date OR (date = :date AND time::time > :current_time )',
-                          date: Date.current,
-                          current_time: Time.current.strftime(Session::TIME_FORMAT),
-                          date_format: Session::TIME_FORMAT)
+    joins(session: :location)
+      .where('date > (current_timestamp at time zone locations.time_zone)::date OR
+             (date = (current_timestamp at time zone locations.time_zone)::date AND
+             to_char(current_timestamp at time zone locations.time_zone, :time_format) <
+             to_char(time, :time_format))', time_format: Session::QUERY_TIME_FORMAT)
   end)
 
   def in_cancellation_time?
-    today = Date.current
-    max_cancellation_time = (session_time - Session::CANCELATION_PERIOD)
+    current_time = Time.current.in_time_zone(time_zone)
+    today = current_time.to_date
+    max_cancellation_time = (time - Session::CANCELATION_PERIOD)
 
-    today < date || today == date && Time.current.strftime(Session::TIME_FORMAT) <
+    today < date || today == date && current_time.strftime(Session::TIME_FORMAT) <
       max_cancellation_time.strftime(Session::TIME_FORMAT)
   end
 end

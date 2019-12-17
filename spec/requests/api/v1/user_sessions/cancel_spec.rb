@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
+  let(:los_angeles_time) do
+    Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
+  end
+
   before do
-    Timecop.freeze(Time.current.change(hour: 12))
+    Timecop.freeze(Time.current)
   end
 
   after do
@@ -17,7 +21,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
 
   context 'when in valid cancellation time' do
     let(:session) do
-      create(:session, :daily, time: Time.current + Session::CANCELATION_PERIOD + 1.minute)
+      create(:session, :daily, time: los_angeles_time + Session::CANCELATION_PERIOD + 1.minute)
     end
     let!(:user_session) { create(:user_session, user: user, session: session) }
 
@@ -37,7 +41,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
 
   context 'when not in valid cancellation time' do
     let(:session) do
-      create(:session, :daily, time: Time.current + Session::CANCELATION_PERIOD - 1.minute)
+      create(:session, :daily, time: los_angeles_time + Session::CANCELATION_PERIOD - 1.minute)
     end
     let!(:user_session) { create(:user_session, user: user, session: session) }
 
