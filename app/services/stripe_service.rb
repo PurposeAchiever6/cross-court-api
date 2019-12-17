@@ -15,4 +15,31 @@ class StripeService
   def self.delete_sku(sku_id)
     Stripe::SKU.delete(sku_id)
   end
+
+  def self.create_user(user)
+    customer = Stripe::Customer.create(
+      email: user.email,
+      name: user.name
+    )
+    user.update!(stripe_id: customer.id)
+  end
+
+  def self.create_payment_method(payment_method, user)
+    Stripe::PaymentMethod.attach(
+      payment_method,
+      customer: user.stripe_id
+    )
+  end
+
+  def self.destroy_payment_method(payment_method)
+    Stripe::PaymentMethod.detach(payment_method)
+  end
+
+  def self.fetch_payment_methods(user)
+    payment_methods = Stripe::PaymentMethod.list(
+      customer: user.stripe_id,
+      type: 'card'
+    )
+    payment_methods.data
+  end
 end

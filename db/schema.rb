@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_12_132341) do
+ActiveRecord::Schema.define(version: 2019_12_17_131955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(version: 2019_12_12_132341) do
     t.integer "credits", default: 0, null: false
     t.boolean "is_referee", default: false, null: false
     t.boolean "is_sem", default: false, null: false
+    t.string "stripe_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_referee"], name: "index_users_on_is_referee"

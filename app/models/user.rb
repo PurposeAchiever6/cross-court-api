@@ -27,6 +27,7 @@
 #  credits                :integer          default(0), not null
 #  is_referee             :boolean          default(FALSE), not null
 #  is_sem                 :boolean          default(FALSE), not null
+#  stripe_id              :string
 #
 # Indexes
 #
