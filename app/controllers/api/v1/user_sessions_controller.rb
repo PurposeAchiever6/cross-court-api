@@ -17,6 +17,13 @@ module Api
         end
       end
 
+      def confirm
+        ActiveRecord::Base.transaction do
+          confirmed_user_session = ConfirmedUserSession.new(user_session)
+          confirmed_user_session.save!
+        end
+      end
+
       private
 
       def user_sessions

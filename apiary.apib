@@ -311,6 +311,24 @@ This route is the destination URL for password reset confirmation
     + Attributes (UserSessions response)
 
 
+### Cancel user_session [PUT /api/v1/user_sessions/{id}/cancel]
+
++ Request (application/json)
+    + Parameters
+        + id (required, number)
+
++ Response 204 (application/json)
+
+
+### Confirm user_session [PUT /api/v1/user_sessions/{id}/confirm]
+
++ Request (application/json)
+    + Parameters
+        + id (required, number)
+
++ Response 204 (application/json)
+
+
 ## Purchases [/api/v1/purchases]
 
 ### Get purchases [GET]
