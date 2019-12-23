@@ -13,7 +13,7 @@ describe 'PUT api/v1/sem/user_sessions/check_in' do
   context 'with valid params' do
     it 'returns success' do
       subject
-      expect(response).to be_successful
+      expect(response).to be_successful 
     end
 
     it 'checks in all user_sessions' do
