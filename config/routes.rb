@@ -28,7 +28,7 @@ Rails.application.routes.draw do
           put :cancel
           put :confirm
         end
-        resources :purchases, only: :index
+        resources :purchases, only: %i[create index]
         resources :payment_methods, only: %i[create index destroy]
         resource :user, only: %i[update show] do
           get :profile
