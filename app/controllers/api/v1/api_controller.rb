@@ -15,7 +15,10 @@ module Api
       rescue_from InvalidDateException,                with: :render_custom_exception
       rescue_from NotEnoughCreditsException,           with: :render_custom_exception
       rescue_from UnauthorizedException,               with: :render_custom_exception
+<<<<<<< HEAD
       rescue_from InvalidActionException,              with: :render_custom_exception
+=======
+>>>>>>> Sem check in users
       rescue_from Stripe::InvalidRequestError,         with: :render_custom_exception
 
       def status
