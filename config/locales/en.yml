@@ -26,6 +26,7 @@ en:
       not_found: "Couldn't find the record"
       missing_param: 'A required param is missing'
       invalid_content_type: 'Invalid content type header'
+      unauthorized: 'User is not sem'
       user_session:
         invalid_date: 'Invalid date'
         not_enough_credits: 'Not enough credits. Please buy more.'

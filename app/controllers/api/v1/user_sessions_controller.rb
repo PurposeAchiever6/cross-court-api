@@ -24,10 +24,6 @@ module Api
         end
       end
 
-      def check_in
-        UserSession.find(params[:user_session_id]).update!(checked_in: true)
-      end
-
       private
 
       def user_sessions
