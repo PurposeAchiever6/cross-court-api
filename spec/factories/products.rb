@@ -23,7 +23,7 @@ FactoryBot.define do
       "#{Faker::Lorem.unique}_#{n}"
     end
     name         { Faker::Lorem.word }
-    credits      { Faker::Number.number(1) }
+    credits      { Faker::Number.between(1, 10) }
     order_number { Faker::Number.number(1) }
     price        { Faker::Commerce.price }
     description  { Faker::Lorem.paragraph }

@@ -3,3 +3,4 @@ PASSWORD_RESET_URL: 'http://localhost:3000'
 CONFIRMATION_URL: 'http://localhost:3000/signup/confirmation'
 STRIPE_SECRET_KEY: ''
 CANCELLATION_PERIOD: 8
+FREE_SESSION_PRICE: 10

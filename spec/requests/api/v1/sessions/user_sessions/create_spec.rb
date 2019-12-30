@@ -27,6 +27,35 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       it 'consumes one credit from the user' do
         expect { subject }.to change { user.reload.credits }.from(1).to(0)
       end
+
+      it "doesn't update user's free_session_state" do
+        expect { subject }.not_to change { user.reload.free_session_state }
+      end
+
+      context 'when using the free session' do
+        before do
+          user.free_session_state = :claimed
+          user.free_session_payment_intent = 'pi_123456789'
+          user.save!
+        end
+
+        it 'returns success' do
+          subject
+          expect(response).to be_successful
+        end
+
+        it 'enrolls the user to the session' do
+          expect { subject }.to change { user.reload.sessions.count }.from(0).to(1)
+        end
+
+        it 'consumes one credit from the user' do
+          expect { subject }.to change { user.reload.credits }.from(1).to(0)
+        end
+
+        it 'updates user free_session_state' do
+          expect { subject }.to change { user.reload.free_session_state }.from('claimed').to('used')
+        end
+      end
     end
 
     context 'with invalid date' do

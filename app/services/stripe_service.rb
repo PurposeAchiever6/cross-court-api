@@ -54,4 +54,17 @@ class StripeService
     user.increment(:credits, product.credits)
     user.save!
   end
+
+  def self.create_free_session_intent(user, payment_method)
+    Stripe::PaymentIntent.create(
+      amount: ENV['FREE_SESSION_PRICE'].to_i * 100,
+      currency: 'usd',
+      payment_method: payment_method,
+      customer: user.stripe_id
+    )
+  end
+
+  def self.confirm_intent(payment_intent)
+    Stripe::PaymentIntent.confirm(payment_intent)
+  end
 end

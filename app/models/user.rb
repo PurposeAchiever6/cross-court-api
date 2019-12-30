@@ -2,32 +2,34 @@
 #
 # Table name: users
 #
-#  id                     :integer          not null, primary key
-#  email                  :string
-#  encrypted_password     :string           default(""), not null
-#  reset_password_token   :string
-#  reset_password_sent_at :datetime
-#  allow_password_change  :boolean          default(FALSE)
-#  remember_created_at    :datetime
-#  sign_in_count          :integer          default(0), not null
-#  current_sign_in_at     :datetime
-#  last_sign_in_at        :datetime
-#  current_sign_in_ip     :inet
-#  last_sign_in_ip        :inet
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  provider               :string           default("email"), not null
-#  uid                    :string           default(""), not null
-#  tokens                 :json
-#  confirmation_token     :string
-#  confirmed_at           :datetime
-#  confirmation_sent_at   :datetime
-#  name                   :string           default("")
-#  phone_number           :string
-#  credits                :integer          default(0), not null
-#  is_referee             :boolean          default(FALSE), not null
-#  is_sem                 :boolean          default(FALSE), not null
-#  stripe_id              :string
+#  id                          :integer          not null, primary key
+#  email                       :string
+#  encrypted_password          :string           default(""), not null
+#  reset_password_token        :string
+#  reset_password_sent_at      :datetime
+#  allow_password_change       :boolean          default(FALSE)
+#  remember_created_at         :datetime
+#  sign_in_count               :integer          default(0), not null
+#  current_sign_in_at          :datetime
+#  last_sign_in_at             :datetime
+#  current_sign_in_ip          :inet
+#  last_sign_in_ip             :inet
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  provider                    :string           default("email"), not null
+#  uid                         :string           default(""), not null
+#  tokens                      :json
+#  confirmation_token          :string
+#  confirmed_at                :datetime
+#  confirmation_sent_at        :datetime
+#  name                        :string           default("")
+#  phone_number                :string
+#  credits                     :integer          default(0), not null
+#  is_referee                  :boolean          default(FALSE), not null
+#  is_sem                      :boolean          default(FALSE), not null
+#  stripe_id                   :string
+#  free_session_state          :integer          default(0), not null
+#  free_session_payment_intent :string
 #
 # Indexes
 #
@@ -47,6 +49,8 @@ class User < ApplicationRecord
          :confirmable
   include DeviseTokenAuth::Concerns::User
 
+  enum free_session_state: { not_claimed: 0, claimed: 1, used: 2 }, _prefix: :free_session
+
   has_many :user_sessions, dependent: :destroy
   has_many :sessions, through: :user_sessions
   has_many :purchases, dependent: :nullify
@@ -54,6 +58,7 @@ class User < ApplicationRecord
 
   validates :uid, uniqueness: { scope: :provider }
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :free_session_state, presence: true
 
   before_validation :init_uid
 
