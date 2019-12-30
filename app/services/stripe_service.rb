@@ -42,4 +42,16 @@ class StripeService
     )
     payment_methods.data
   end
+
+  def self.charge(user, payment_method, product)
+    Stripe::PaymentIntent.create(
+      amount: product.price.to_i * 100,
+      currency: 'usd',
+      payment_method: payment_method,
+      customer: user.stripe_id,
+      confirm: true
+    )
+    user.increment(:credits, product.credits)
+    user.save!
+  end
 end

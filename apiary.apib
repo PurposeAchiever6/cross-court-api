@@ -346,6 +346,26 @@ This route is the destination URL for password reset confirmation
     + Attributes (array[Purchase])
 
 
+### Create purchase [POST]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "payment_method": "pm_123456789",
+                "product_id": 1
+            }
+
++ Response 204 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+
 ## Products [/api/v1/products]
 
 ### Get products [GET]

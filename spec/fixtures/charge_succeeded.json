@@ -1,0 +1,9 @@
+{
+  "id": "pi_1FsvKtEbKIwsJiGZ41Um2U58",
+  "object": "payment_intent",
+  "amount": 10000,
+  "currency": "usd",
+  "customer": "cus_GPkYyxX0HedpJf",
+  "payment_method": "pm_1Fsv2QEbKIwsJiGZFWVc3BY8",
+  "status": "succeeded"
+}
