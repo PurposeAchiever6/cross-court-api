@@ -34,6 +34,11 @@ Rails.application.routes.draw do
           get :profile
           post :resend_confirmation_instructions
         end
+        namespace :sem do
+          resources :user_sessions, only: [] do
+            put :check_in, on: :collection
+          end
+        end
       end
     end
   end

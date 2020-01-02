@@ -11,6 +11,7 @@
 #  date                :date             not null
 #  sms_reminder_sent   :boolean          default(FALSE), not null
 #  email_reminder_sent :boolean          default(FALSE), not null
+#  checked_in          :boolean          default(FALSE), not null
 #
 # Indexes
 #
