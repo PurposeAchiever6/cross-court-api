@@ -17,7 +17,7 @@ describe 'GET api/v1/sessions', type: :request do
 
     it 'returns success' do
       subject
-      expect(response).to be_successful
+      expect(response).to be_successful 
     end
 
     it 'returns the sessions for this week' do
