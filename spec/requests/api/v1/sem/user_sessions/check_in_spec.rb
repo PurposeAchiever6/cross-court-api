@@ -11,7 +11,7 @@ describe 'PUT api/v1/sem/user_sessions/check_in' do
   end
 
   context 'with valid params' do
-    it 'returns success' do 
+    it 'returns success' do
       subject
       expect(response).to be_successful
     end

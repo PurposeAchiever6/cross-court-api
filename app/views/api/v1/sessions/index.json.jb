@@ -1,3 +1,8 @@
 {
-  sessions: render(partial: 'short_info', collection: @sessions, as: :session)
+  sessions: render(
+    partial: 'short_info',
+    collection: @sessions,
+    as: :session,
+    locals: { user_sessions: @user_sessions, user_id: current_user&.id }
+  )
 }

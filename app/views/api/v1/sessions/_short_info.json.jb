@@ -2,5 +2,6 @@
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
+  reservation: user_sessions.select { |item| item.date = session.start_time }.any?,
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location })
 }

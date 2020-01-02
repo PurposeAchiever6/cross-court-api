@@ -17,7 +17,7 @@ module Api
         current_user.free_session_payment_intent = intent.id
         current_user.increment(:credits)
         current_user.save!
-       end
+      end
 
       private
 
