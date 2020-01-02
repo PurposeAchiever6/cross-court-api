@@ -25,7 +25,8 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
       id: session.id,
       start_time: session.start_time.iso8601,
       time: session.time.iso8601,
-      reservation: false
+      reservation: false,
+      full: false
     )
   end
 
@@ -87,6 +88,15 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
     it 'returns reservation on true' do
       subject
       expect(json[:session][:reservation]).to be false
+    end
+  end
+
+  context 'when the session is full' do
+    let!(:user_sessions) { create_list(:user_session, 15, session: session, date: today) }
+
+    it 'returns full on true' do
+      subject
+      expect(json[:session][:full]).to be true
     end
   end
 end

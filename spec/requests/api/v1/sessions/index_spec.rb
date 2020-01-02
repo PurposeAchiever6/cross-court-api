@@ -17,7 +17,7 @@ describe 'GET api/v1/sessions', type: :request do
 
     it 'returns success' do
       subject
-      expect(response).to be_successful 
+      expect(response).to be_successful
     end
 
     it 'returns the sessions for this week' do
@@ -31,6 +31,15 @@ describe 'GET api/v1/sessions', type: :request do
       it 'returns reservation on true' do
         subject
         expect(json[:sessions][0][:reservation]).to be true
+      end
+    end
+
+    context 'when the session is full' do
+      let!(:user_session) { create_list(:user_session, 15, session: session, date: today) }
+
+      it 'retruns reservation on true' do
+        subject
+        expect(json[:sessions][0][:full]).to be true
       end
     end
   end
@@ -51,6 +60,11 @@ describe 'GET api/v1/sessions', type: :request do
     it 'returns reservation on false' do
       subject
       expect(json[:sessions][0][:reservation]).to be false
+    end
+
+    it 'returns full on false' do
+      subject
+      expect(json[:sessions][0][:full]).to be false
     end
   end
 

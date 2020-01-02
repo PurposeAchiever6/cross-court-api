@@ -1,7 +1,11 @@
 {
   session: render(
     partial: 'info', locals: {
-      session: selected_session, referee: referee, sem: sem, reservation: @reservation
+      session: selected_session,
+      referee: referee,
+      sem: sem,
+      reservation: @reservation,
+      full: selected_session.full?(date)
     }
   )
 }
