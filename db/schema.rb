@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_23_190931) do
+ActiveRecord::Schema.define(version: 2019_12_30_143957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,8 @@ ActiveRecord::Schema.define(version: 2019_12_23_190931) do
     t.boolean "sms_reminder_sent", default: false, null: false
     t.boolean "email_reminder_sent", default: false, null: false
     t.boolean "checked_in", default: false, null: false
+    t.boolean "is_free_session", default: false, null: false
+    t.string "free_session_payment_intent"
     t.index ["date", "user_id", "session_id"], name: "index_user_sessions_on_date_and_user_id_and_session_id", unique: true
     t.index ["email_reminder_sent"], name: "index_user_sessions_on_email_reminder_sent"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
@@ -186,6 +188,8 @@ ActiveRecord::Schema.define(version: 2019_12_23_190931) do
     t.boolean "is_referee", default: false, null: false
     t.boolean "is_sem", default: false, null: false
     t.string "stripe_id"
+    t.integer "free_session_state", default: 0, null: false
+    t.string "free_session_payment_intent"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_referee"], name: "index_users_on_is_referee"

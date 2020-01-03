@@ -28,7 +28,9 @@ Rails.application.routes.draw do
           put :cancel
           put :confirm
         end
-        resources :purchases, only: %i[create index]
+        resources :purchases, only: %i[create index] do
+          put :claim_free_session, on: :collection
+        end
         resources :payment_methods, only: %i[create index destroy]
         resource :user, only: %i[update show] do
           get :profile

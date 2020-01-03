@@ -2,16 +2,18 @@
 #
 # Table name: user_sessions
 #
-#  id                  :integer          not null, primary key
-#  user_id             :integer          not null
-#  session_id          :integer          not null
-#  state               :integer          default("reserved"), not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  date                :date             not null
-#  sms_reminder_sent   :boolean          default(FALSE), not null
-#  email_reminder_sent :boolean          default(FALSE), not null
-#  checked_in          :boolean          default(FALSE), not null
+#  id                          :integer          not null, primary key
+#  user_id                     :integer          not null
+#  session_id                  :integer          not null
+#  state                       :integer          default("reserved"), not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  date                        :date             not null
+#  sms_reminder_sent           :boolean          default(FALSE), not null
+#  email_reminder_sent         :boolean          default(FALSE), not null
+#  checked_in                  :boolean          default(FALSE), not null
+#  is_free_session             :boolean          default(FALSE), not null
+#  free_session_payment_intent :string
 #
 # Indexes
 #
@@ -49,6 +51,11 @@ class UserSession < ApplicationRecord
              (date = (current_timestamp at time zone locations.time_zone)::date AND
              to_char(current_timestamp at time zone locations.time_zone, :time_format) <
              to_char(time, :time_format))', time_format: Session::QUERY_TIME_FORMAT)
+  end)
+
+  scope :for_yesterday, (lambda do
+    joins(session: :location)
+      .where('date = (current_timestamp at time zone locations.time_zone)::date - 1')
   end)
 
   def in_cancellation_time?
