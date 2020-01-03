@@ -4,6 +4,7 @@ describe 'GET api/v1/sessions', type: :request do
   let(:user)      { create(:user) }
   let(:from_date) { Time.current.beginning_of_week.strftime(Session::DATE_FORMAT) }
   let(:params)    { { from_date: from_date } }
+  let(:today)     { Date.current.to_s }
 
   subject do
     get api_v1_sessions_path(params),
@@ -23,6 +24,15 @@ describe 'GET api/v1/sessions', type: :request do
       subject
       expect(json[:sessions].count).to eq(1)
     end
+
+    context 'when the user has a reservation for today' do
+      let!(:user_session) { create(:user_session, user: user, session: session, date: today) }
+
+      it 'returns reservation on true' do
+        subject
+        expect(json[:sessions][0][:reservation]).to be true
+      end
+    end
   end
 
   context 'when the session is repeted everyday' do
@@ -36,6 +46,11 @@ describe 'GET api/v1/sessions', type: :request do
     it 'returns the sessions for this week' do
       subject
       expect(json[:sessions].count).to eq(7)
+    end
+
+    it 'returns reservation on false' do
+      subject
+      expect(json[:sessions][0][:reservation]).to be false
     end
   end
 

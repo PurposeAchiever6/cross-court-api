@@ -1,7 +1,7 @@
 {
   session: render(
     partial: 'info', locals: {
-      session: selected_session, referee: referee, sem: sem
+      session: selected_session, referee: referee, sem: sem, reservation: @reservation
     }
   )
 }
