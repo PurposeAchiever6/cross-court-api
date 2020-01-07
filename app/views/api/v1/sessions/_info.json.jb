@@ -3,6 +3,7 @@ json = {
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   reservation: reservation,
+  full: full,
   referee: {
     name: referee&.name
   },

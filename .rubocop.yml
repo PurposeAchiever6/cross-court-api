@@ -26,6 +26,7 @@ Metrics/AbcSize:
     - db/migrate/20161011151353_devise_create_users.rb
     - app/models/session.rb
     - app/decorators/user_session_consume_credit.rb
+    - app/controllers/api/v1/sessions_controller.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?

@@ -3,7 +3,7 @@ module Api
     class SessionsController < Api::V1::ApiController
       include DeviseTokenAuth::Concerns::SetUserByToken
 
-      helper_method :selected_session, :referee, :sem
+      helper_method :selected_session, :referee, :sem, :date
 
       before_action :log_user
 
@@ -21,14 +21,18 @@ module Api
                            .by_location(params[:location_id])
                            .for_range(from_date, to_date)
                            .flat_map do |session_event|
-          session_event.calendar_events(from_date, to_date)
-        end
+                             session_event.calendar_events(from_date, to_date)
+                           end
+        @user_sessions_count = UserSession.where(date: (from_date..to_date))
+                                          .group(:session_id, :date)
+                                          .count
       end
 
       private
 
       def date
-        @date ||= params[:date]
+        @date = params[:date]
+        @date ||= Date.parse(@date) if @date.present?
       end
 
       def from_date
@@ -40,7 +44,7 @@ module Api
       end
 
       def selected_session
-        @selected_session ||= Session.find(params[:id])
+        @selected_session ||= Session.find(params[:id]).decorate
       end
 
       def referee

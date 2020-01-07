@@ -6,4 +6,8 @@ class SessionDecorator < Draper::Decorator
     text += ' (EM)' unless referee(date).present? && sem(date).present?
     text
   end
+
+  def full?(date)
+    date.present? && user_sessions.by_date(date).count == Session::MAX_CAPACITY
+  end
 end

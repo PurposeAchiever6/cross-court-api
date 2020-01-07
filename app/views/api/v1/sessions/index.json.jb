@@ -3,6 +3,10 @@
     partial: 'short_info',
     collection: @sessions,
     as: :session,
-    locals: { user_sessions: @user_sessions, user_id: current_user&.id }
+    locals: {
+      user_sessions: @user_sessions,
+      user_id: current_user&.id,
+      user_sessions_count: @user_sessions_count
+    }
   )
 }
