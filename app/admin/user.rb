@@ -1,12 +1,13 @@
 ActiveAdmin.register User do
   permit_params :email, :name, :phone_number, :password, :password_confirmation,
-                :is_referee, :is_sem, :image
+                :is_referee, :is_sem, :image, :credits
 
   form do |f|
     f.inputs 'Details' do
       f.input :email
       f.input :name
       f.input :phone_number
+      f.input :credits
       f.input :is_referee
       f.input :is_sem
       f.input :image, as: :file
@@ -26,6 +27,7 @@ ActiveAdmin.register User do
     column :email
     column :name
     column :phone_number
+    column :credits
     column :sign_in_count
     column :created_at
     column :updated_at
@@ -47,9 +49,10 @@ ActiveAdmin.register User do
       row :image do |user|
         image_tag url_for(user.image) if user.image.attached?
       end
+      row :phone_number
+      row :credits
       row :is_referee
       row :is_sem
-      row :phone_number
       row :sign_in_count
       row :created_at
       row :updated_at
