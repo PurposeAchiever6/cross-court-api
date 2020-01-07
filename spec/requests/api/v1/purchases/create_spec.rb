@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'POST api/v1/purchases' do
   let!(:user)    { create(:user) }
   let!(:product) { create(:product) }
-  let(:params)   { { product_id: product.id, payment_method: 'pm123456789' } }
+  let(:params)   { { product_id: product.stripe_id, payment_method: 'pm123456789' } }
 
   subject do
     post api_v1_purchases_path, params: params, headers: auth_headers, as: :json
