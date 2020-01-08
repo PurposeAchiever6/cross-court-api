@@ -4,7 +4,7 @@
       session: selected_session,
       referee: referee,
       sem: sem,
-      reservation: @reservation,
+      user_session: @user_session,
       full: selected_session.full?(date)
     }
   )
