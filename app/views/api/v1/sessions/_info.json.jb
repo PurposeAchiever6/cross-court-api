@@ -2,7 +2,7 @@ json = {
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
-  reservation: reservation,
+  user_session_id: user_session&.id,
   full: full,
   referee: {
     name: referee&.name

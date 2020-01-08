@@ -2,7 +2,7 @@
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
-  reservation: user_sessions.select { |item| item.date = session.start_time }.any?,
+  user_session_id: user_sessions.detect { |item| item.date = session.start_time }&.id,
   full: user_sessions_count.values_at([session.id, session.start_time]).sum ==
     Session::MAX_CAPACITY,
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location })

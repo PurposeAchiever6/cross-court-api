@@ -25,7 +25,6 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
       id: session.id,
       start_time: session.start_time.iso8601,
       time: session.time.iso8601,
-      reservation: false,
       full: false
     )
   end
@@ -58,9 +57,9 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   context 'when the user has a reservation for the same day' do
     let!(:user_session) { create(:user_session, user: user, session: session, date: today) }
 
-    it 'returns reservation on true' do
+    it 'returns an user_session_id' do
       subject
-      expect(json[:session][:reservation]).to be true
+      expect(json[:session][:user_session_id]).not_to be nil
     end
   end
 
@@ -73,9 +72,9 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
           as: :json
     end
 
-    it 'returns reservation on false' do
+    it "doesn't return an user_session_id" do
       subject
-      expect(json[:session][:reservation]).to be false
+      expect(json[:session][:user_session_id]).to be nil
     end
   end
 
@@ -85,9 +84,9 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
           as: :json
     end
 
-    it 'returns reservation on true' do
+    it "doesn't return an user_session_id" do
       subject
-      expect(json[:session][:reservation]).to be false
+      expect(json[:session][:user_session_id]).to be nil
     end
   end
 

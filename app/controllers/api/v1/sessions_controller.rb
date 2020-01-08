@@ -8,11 +8,11 @@ module Api
       before_action :log_user
 
       def show
-        @reservation = date.present? && current_user.present? &&
-                       selected_session.user_sessions
-                                       .by_user(current_user)
-                                       .by_date(date)
-                                       .present?
+        @user_session = selected_session.user_sessions
+                                        .by_user(current_user)
+                                        .by_date(date)
+                                        .reserved
+                                        .first
       end
 
       def index
