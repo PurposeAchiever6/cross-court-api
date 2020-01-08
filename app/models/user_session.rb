@@ -31,7 +31,7 @@ class UserSession < ApplicationRecord
   belongs_to :session
 
   validates :state, :date, presence: true
-  validates :date, uniqueness: { scope: %i[session_id user_id] }
+  validates :date, uniqueness: { scope: %i[session_id user_id state] }
 
   delegate :time, :time_zone, to: :session
   delegate :phone_number, :name, :email, to: :user, prefix: true
