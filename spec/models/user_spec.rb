@@ -28,7 +28,7 @@
 #  is_referee                  :boolean          default(FALSE), not null
 #  is_sem                      :boolean          default(FALSE), not null
 #  stripe_id                   :string
-#  free_session_state          :integer          default(0), not null
+#  free_session_state          :integer          default("not_claimed"), not null
 #  free_session_payment_intent :string
 #
 # Indexes
