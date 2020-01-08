@@ -17,11 +17,10 @@
 #
 # Indexes
 #
-#  index_user_sessions_on_date_user_id_state_session_id  (date,user_id,state,session_id) UNIQUE
-#  index_user_sessions_on_email_reminder_sent            (email_reminder_sent)
-#  index_user_sessions_on_session_id                     (session_id)
-#  index_user_sessions_on_sms_reminder_sent              (sms_reminder_sent)
-#  index_user_sessions_on_user_id                        (user_id)
+#  index_user_sessions_on_email_reminder_sent  (email_reminder_sent)
+#  index_user_sessions_on_session_id           (session_id)
+#  index_user_sessions_on_sms_reminder_sent    (sms_reminder_sent)
+#  index_user_sessions_on_user_id              (user_id)
 #
 
 require 'rails_helper'
@@ -33,7 +32,6 @@ describe UserSession do
     it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:date) }
     it { is_expected.to define_enum_for(:state).with_values(%i[reserved canceled confirmed]) }
-    it { is_expected.to validate_uniqueness_of(:date).scoped_to(%i[session_id user_id state]) }
   end
 
   describe 'associations' do

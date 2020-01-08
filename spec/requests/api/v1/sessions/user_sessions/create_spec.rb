@@ -72,19 +72,6 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
     end
   end
 
-  context 'when the user is already enrolled in the session' do
-    let!(:user_session) { create(:user_session, user: user, session: session, date: date) }
-
-    it 'returns bad request' do
-      subject
-      expect(response).to have_http_status(:bad_request)
-    end
-
-    it "doesn't enroll the user in the session" do
-      expect { subject }.not_to change { user.reload.sessions.count }
-    end
-  end
-
   context "when the user doesn't have credits" do
     before { user.update!(credits: 0) }
 

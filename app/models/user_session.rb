@@ -17,11 +17,10 @@
 #
 # Indexes
 #
-#  index_user_sessions_on_date_user_id_state_session_id  (date,user_id,state,session_id) UNIQUE
-#  index_user_sessions_on_email_reminder_sent            (email_reminder_sent)
-#  index_user_sessions_on_session_id                     (session_id)
-#  index_user_sessions_on_sms_reminder_sent              (sms_reminder_sent)
-#  index_user_sessions_on_user_id                        (user_id)
+#  index_user_sessions_on_email_reminder_sent  (email_reminder_sent)
+#  index_user_sessions_on_session_id           (session_id)
+#  index_user_sessions_on_sms_reminder_sent    (sms_reminder_sent)
+#  index_user_sessions_on_user_id              (user_id)
 #
 
 class UserSession < ApplicationRecord
@@ -31,7 +30,6 @@ class UserSession < ApplicationRecord
   belongs_to :session
 
   validates :state, :date, presence: true
-  validates :date, uniqueness: { scope: %i[session_id user_id state] }
 
   delegate :time, :time_zone, to: :session
   delegate :phone_number, :name, :email, to: :user, prefix: true
