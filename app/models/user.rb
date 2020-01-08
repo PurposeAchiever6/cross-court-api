@@ -52,6 +52,7 @@ class User < ApplicationRecord
   enum free_session_state: { not_claimed: 0, claimed: 1, used: 2 }, _prefix: :free_session
 
   has_many :user_sessions, dependent: :destroy
+  has_many :sem_sessions, dependent: :destroy
   has_many :sessions, through: :user_sessions
   has_many :purchases, dependent: :nullify
   has_one_attached :image

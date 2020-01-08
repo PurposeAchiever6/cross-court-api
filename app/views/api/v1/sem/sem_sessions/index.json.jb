@@ -1,0 +1,3 @@
+{
+  upcoming_sessions: render(partial: 'info', collection: @upcoming_sessions, as: :sem_session)
+}

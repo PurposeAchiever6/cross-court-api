@@ -37,6 +37,7 @@ Rails.application.routes.draw do
           post :resend_confirmation_instructions
         end
         namespace :sem do
+          resources :sem_sessions, only: :index
           resources :user_sessions, only: [] do
             put :check_in, on: :collection
           end

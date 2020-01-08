@@ -25,6 +25,11 @@ class SemSession < ApplicationRecord
 
   after_validation :destroy_previous_assignment
 
+  scope :future, (lambda do
+    joins(session: :location)
+      .where('date >= (current_timestamp at time zone locations.time_zone)::date')
+  end)
+
   private
 
   def destroy_previous_assignment
