@@ -338,6 +338,20 @@ This route is the destination URL for password reset confirmation
 
 + Response 204 (application/json)
 
+### Get sem sessions [GET /api/v1/sem/sem_sessions]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (array[SemSession])
+
 
 ## Purchases [/api/v1/purchases]
 
@@ -515,6 +529,11 @@ This route is the destination URL for password reset confirmation
 ## UserSessions response (object)
 + previous_sessions (array[UserSession])
 + upcoming_sessions (array[UserSession])
+
+## SemSession (object)
++ id (number)
++ date (string)
++ session (Session)
 
 ## Product (object)
 + price (number)
