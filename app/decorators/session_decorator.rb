@@ -8,6 +8,6 @@ class SessionDecorator < Draper::Decorator
   end
 
   def full?(date)
-    date.present? && user_sessions.by_date(date).count == Session::MAX_CAPACITY
+    date.present? && user_sessions.reserved.by_date(date).count == Session::MAX_CAPACITY
   end
 end
