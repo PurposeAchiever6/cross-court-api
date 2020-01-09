@@ -57,6 +57,7 @@ class UserSession < ApplicationRecord
   end)
   scope :by_user, ->(user_id) { where(user_id: user_id) }
   scope :by_date, ->(date) { where(date: date) }
+  scope :by_session, ->(session_id) { where(session_id: session_id) }
 
   def in_cancellation_time?
     current_time = Time.current.in_time_zone(time_zone)
