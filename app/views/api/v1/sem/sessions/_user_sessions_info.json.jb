@@ -1,0 +1,4 @@
+{
+  id: user_session.id,
+  name: user_session.user_name
+}
