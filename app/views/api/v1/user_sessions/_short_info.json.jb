@@ -1,0 +1,6 @@
+{
+  id: user_session.id,
+  date: user_session.date.iso8601,
+  state: user_session.state,
+  in_cancellation_time: user_session.in_cancellation_time?
+}

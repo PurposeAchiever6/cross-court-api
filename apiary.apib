@@ -504,7 +504,7 @@ This route is the destination URL for password reset confirmation
 + start_time: 2019-11-14T14:59:11Z (string)
 + time: 2000-01-01T16:00:00Z (string)
 + location (Location)
-+ user_session_id (number)
++ user_session (Short user session)
 + full (boolean)
 + sem (Employee)
 + referee (Employee)
@@ -574,8 +574,14 @@ This route is the destination URL for password reset confirmation
 
 ## Sem session response (object)
 + session (Session short)
-+ users (array[Short user session])
++ users (array[Short sem user session])
+
+## Short sem user session (object)
++ id (number)
++ name (string)
 
 ## Short user session (object)
 + id (number)
-+ name (string)
++ state (string)
++ in_cancellation_time (boolean)
++ date (string)
