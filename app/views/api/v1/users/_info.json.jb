@@ -3,5 +3,7 @@
   email: user.email,
   name: user.name,
   phone_number: user.phone_number,
-  credits: user.credits
+  credits: user.credits,
+  is_sem: user.is_sem,
+  is_referee: user.is_referee
 }
