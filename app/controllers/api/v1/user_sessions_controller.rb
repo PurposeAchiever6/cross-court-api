@@ -8,6 +8,12 @@ module Api
         @upcoming_sessions = user_sessions.future
                                           .order(:date)
                                           .includes(session: [location: [image_attachment: :blob]])
+        @sem_upcoming_sessions = current_user.sem_sessions
+                                             .future
+                                             .order(:date)
+                                             .includes(session: [
+                                                         location: [image_attachment: :blob]
+                                                       ])
       end
 
       def cancel
