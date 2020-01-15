@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  session_id :integer          not null
+#  session_id :integer
 #  date       :date             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -18,7 +18,7 @@
 
 class RefereeSession < ApplicationRecord
   belongs_to :user
-  belongs_to :session
+  belongs_to :session, optional: true
   alias_attribute :referee, :user
 
   validates :date, presence: true
