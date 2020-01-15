@@ -57,9 +57,14 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   context 'when the user has a reservation for the same day' do
     let!(:user_session) { create(:user_session, user: user, session: session, date: today) }
 
-    it 'returns an user_session_id' do
+    it 'returns an user_session' do
       subject
-      expect(json[:session][:user_session_id]).not_to be nil
+      expect(json[:session][:user_session]).to include_json(
+        id: user_session.id,
+        date: user_session.date.iso8601,
+        state: user_session.state,
+        in_cancellation_time: user_session.in_cancellation_time?
+      )
     end
   end
 
@@ -72,9 +77,9 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
           as: :json
     end
 
-    it "doesn't return an user_session_id" do
+    it "doesn't return an user_session" do
       subject
-      expect(json[:session][:user_session_id]).to be nil
+      expect(json[:session][:user_session]).to be nil
     end
   end
 
@@ -84,9 +89,9 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
           as: :json
     end
 
-    it "doesn't return an user_session_id" do
+    it "doesn't return an user_session" do
       subject
-      expect(json[:session][:user_session_id]).to be nil
+      expect(json[:session][:user_session]).to be nil
     end
   end
 
