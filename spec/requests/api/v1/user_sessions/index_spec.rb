@@ -50,6 +50,21 @@ describe 'GET api/v1/user_sessions' do
       subject
       expect(json[:previous_sessions].count).to eq(3)
       expect(json[:upcoming_sessions].count).to eq(2)
+      expect(json[:sem_upcoming_sessions].count).to eq(0)
+    end
+  end
+
+  context 'when the user is a sem' do
+    before do
+      user.update!(is_sem: true)
+    end
+
+    let(:s1)           { create(:session, time: Time.current) }
+    let!(:sem_session) { create(:sem_session, session: s1, user: user, date: Date.tomorrow) }
+
+    it 'returns sem_upcoming_sessions' do
+      subject
+      expect(json[:sem_upcoming_sessions].count).to eq(1)
     end
   end
 end
