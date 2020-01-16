@@ -2,6 +2,9 @@ require 'rails_helper'
 
 describe 'GET api/v1/user_sessions' do
   let!(:user) { create(:user) }
+  let(:los_angeles_time) do
+    Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
+  end
 
   subject do
     get api_v1_user_sessions_path, headers: auth_headers, as: :json
@@ -21,10 +24,6 @@ describe 'GET api/v1/user_sessions' do
   end
 
   describe 'when the user has already been in sessions' do
-    let(:los_angeles_time) do
-      Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
-    end
-
     before do
       Timecop.freeze(los_angeles_time)
     end
@@ -59,12 +58,34 @@ describe 'GET api/v1/user_sessions' do
       user.update!(is_sem: true)
     end
 
-    let(:s1)           { create(:session, time: Time.current) }
-    let!(:sem_session) { create(:sem_session, session: s1, user: user, date: Date.tomorrow) }
+    context 'when the session is not in starting time' do
+      let(:s1)           { create(:session, time: los_angeles_time) }
+      let!(:sem_session) { create(:sem_session, session: s1, user: user, date: Date.tomorrow) }
 
-    it 'returns sem_upcoming_sessions' do
-      subject
-      expect(json[:sem_upcoming_sessions].count).to eq(1)
+      it 'returns sem_upcoming_sessions' do
+        subject
+        expect(json[:sem_upcoming_sessions].count).to eq(1)
+      end
+
+      it 'returns in_start_time in false' do
+        subject
+        expect(json[:sem_upcoming_sessions][0][:in_start_time]).to be(false)
+      end
+    end
+
+    context 'when the session is in the starting time' do
+      let(:s1)           { create(:session, time: los_angeles_time) }
+      let!(:sem_session) { create(:sem_session, session: s1, user: user, date: Date.current) }
+
+      it 'returns sem_upcoming_sessions' do
+        subject
+        expect(json[:sem_upcoming_sessions].count).to eq(1)
+      end
+
+      it 'returns in_start_time in true' do
+        subject
+        expect(json[:sem_upcoming_sessions][0][:in_start_time]).to be(true)
+      end
     end
   end
 end
