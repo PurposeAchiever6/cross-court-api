@@ -1,5 +1,4 @@
 ActiveAdmin.register Product do
-  permit_params :name, :credits, :price, :description, :order_number
   actions :all, except: :edit
 
   form do |f|
@@ -9,6 +8,7 @@ ActiveAdmin.register Product do
       f.input :price
       f.input :description
       f.input :order_number
+      f.input :image, as: :file
     end
     f.actions
   end
@@ -21,6 +21,9 @@ ActiveAdmin.register Product do
       row :price
       row :description
       row :order_number
+      row :image do |location|
+        image_tag polymorphic_url(location.image) if location.image.attached?
+      end
     end
   end
 
@@ -40,7 +43,7 @@ ActiveAdmin.register Product do
     private
 
     def sku_params
-      params.require(:product).permit(:name, :credits, :price, :description, :order_number)
+      params.require(:product).permit(:name, :credits, :price, :description, :order_number, :image)
     end
   end
 end
