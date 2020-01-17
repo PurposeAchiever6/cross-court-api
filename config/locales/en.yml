@@ -31,6 +31,7 @@ en:
         invalid_date: 'Invalid date'
         not_enough_credits: 'Not enough credits. Please buy more.'
       free_session: 'Free session already claimed'
+      legal: 'Invalid param'
   mailer:
     greeting: 'Sincerely, CrossCourt Team'
     session:

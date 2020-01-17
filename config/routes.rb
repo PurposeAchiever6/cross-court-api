@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     namespace :v1, defaults: { format: :json } do
       devise_scope :user do
         get :status, to: 'api#status'
+        resources :legals, only: :show, param: :title
         resources :locations, only: :index
         resources :sessions, only: %i[index show] do
           scope module: :sessions do
