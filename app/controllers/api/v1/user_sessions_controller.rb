@@ -5,6 +5,7 @@ module Api
         @previous_sessions = user_sessions.past
                                           .order(date: :desc)
                                           .includes(session: [location: [image_attachment: :blob]])
+                                          .take(3)
         @upcoming_sessions = user_sessions.future
                                           .order(:date)
                                           .includes(session: [location: [image_attachment: :blob]])
