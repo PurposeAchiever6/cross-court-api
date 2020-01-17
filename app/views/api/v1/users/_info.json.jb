@@ -5,5 +5,6 @@
   phone_number: user.phone_number,
   credits: user.credits,
   is_sem: user.is_sem,
-  is_referee: user.is_referee
+  is_referee: user.is_referee,
+  free_session_state: user.free_session_state
 }
