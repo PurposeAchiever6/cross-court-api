@@ -462,6 +462,17 @@ This route is the destination URL for password reset confirmation
             expiry: 1489009792
             uid: test@test.com
 
+
+### Legals [GET /api/v1/legals/{title}]
+
++ Request (application/json)
+    + Parameters
+        + title (string, required)
+
++ Response 204 (application/json)
+    + Attributes (Legal)
+
+
 # Data Structures
 
 ## Profile Response (object)
@@ -573,3 +584,6 @@ This route is the destination URL for password reset confirmation
 + state (string)
 + in_cancellation_time (boolean)
 + date (string)
+
+## Legal
++ text (string)

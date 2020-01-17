@@ -16,6 +16,7 @@ module Api
       rescue_from NotEnoughCreditsException,           with: :render_custom_exception
       rescue_from UnauthorizedException,               with: :render_custom_exception
       rescue_from InvalidActionException,              with: :render_custom_exception
+      rescue_from WrongParameterException,             with: :render_custom_exception
       rescue_from Stripe::InvalidRequestError,         with: :render_custom_exception
 
       def status
