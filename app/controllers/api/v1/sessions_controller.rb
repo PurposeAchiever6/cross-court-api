@@ -11,7 +11,7 @@ module Api
         @user_session = selected_session.user_sessions
                                         .by_user(current_user)
                                         .by_date(date)
-                                        .reserved
+                                        .visible_for_player
                                         .first
       end
 
