@@ -63,7 +63,8 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
         id: user_session.id,
         date: user_session.date.iso8601,
         state: user_session.state,
-        in_cancellation_time: user_session.in_cancellation_time?
+        in_cancellation_time: user_session.in_cancellation_time?,
+        in_confirmation_time: user_session.in_confirmation_time?
       )
     end
   end

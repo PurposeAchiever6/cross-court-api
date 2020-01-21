@@ -36,6 +36,7 @@ class UserSession < ApplicationRecord
 
   scope :email_not_sent, -> { where(email_reminder_sent: false) }
   scope :sms_not_sent, -> { where(sms_reminder_sent: false) }
+  scope :visible_for_player, -> { where.not(state: :canceled) }
   scope :past, (lambda do
     joins(session: :location)
       .where('date < (current_timestamp at time zone locations.time_zone)::date OR

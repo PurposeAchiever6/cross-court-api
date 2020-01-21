@@ -44,8 +44,9 @@ class StripeService
   end
 
   def self.charge(user, payment_method, product)
+    price = product.price.to_i * 100
     Stripe::PaymentIntent.create(
-      amount: product.price.to_i * 100,
+      amount: price,
       currency: 'usd',
       payment_method: payment_method,
       customer: user.stripe_id,
@@ -53,6 +54,7 @@ class StripeService
     )
     user.increment(:credits, product.credits)
     user.save!
+    user.purchases.create!(product_id: product.id, price: price)
   end
 
   def self.create_free_session_intent(user, payment_method)
