@@ -40,6 +40,8 @@ class Session < ApplicationRecord
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 
+  after_update :remove_orphan_employee_sessions
+
   scope :for_range, (lambda do |start_date, end_date|
     where('start_time >= ? AND start_time <= ?', start_date, end_date)
       .or(where.not(recurring: nil))
@@ -88,5 +90,13 @@ class Session < ApplicationRecord
 
   def sem(date)
     sem_sessions.find_by(date: date)&.sem
+  end
+
+  private
+
+  def remove_orphan_employee_sessions
+    return unless saved_change_to_attribute?(:recurring)
+
+    RemoveOrphanSessions.call(session: self)
   end
 end

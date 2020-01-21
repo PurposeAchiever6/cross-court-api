@@ -26,6 +26,10 @@ class RefereeSession < ApplicationRecord
   after_validation :destroy_previous_assignment
 
   scope :by_date, ->(date) { where(date: date) }
+  scope :future, (lambda do
+    joins(session: :location)
+      .where('date >= (current_timestamp at time zone locations.time_zone)::date')
+  end)
 
   private
 
