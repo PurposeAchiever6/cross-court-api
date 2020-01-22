@@ -3,12 +3,12 @@ module Api
     class ApiSemController < ApiController
       include DeviseTokenAuth::Concerns::SetUserByToken
 
-      before_action :authenticate_user!, :authorize_user!
+      before_action :authenticate_user!, :authorize_employee!
 
       private
 
-      def authorize_user!
-        return if current_user.is_sem
+      def authorize_employee!
+        return if current_user.employee?
 
         raise UnauthorizedException, I18n.t('api.errors.unauthorized')
       end
