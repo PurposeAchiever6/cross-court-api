@@ -53,6 +53,7 @@ class User < ApplicationRecord
 
   has_many :user_sessions, dependent: :destroy
   has_many :sem_sessions, dependent: :destroy
+  has_many :referee_sessions, dependent: :destroy
   has_many :sessions, through: :user_sessions
   has_many :purchases, dependent: :nullify
   has_one_attached :image
@@ -71,6 +72,10 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.assign_attributes user_params.except('id')
     end
+  end
+
+  def employee?
+    is_sem || is_referee
   end
 
   private

@@ -17,23 +17,7 @@
 #
 
 class RefereeSession < ApplicationRecord
-  belongs_to :user
-  belongs_to :session, optional: true
+  include EmployeeSession
+
   alias_attribute :referee, :user
-
-  validates :date, presence: true
-
-  after_validation :destroy_previous_assignment
-
-  scope :by_date, ->(date) { where(date: date) }
-  scope :future, (lambda do
-    joins(session: :location)
-      .where('date >= (current_timestamp at time zone locations.time_zone)::date')
-  end)
-
-  private
-
-  def destroy_previous_assignment
-    RefereeSession.where(session_id: session_id, date: date).where.not(id: id).destroy_all
-  end
 end
