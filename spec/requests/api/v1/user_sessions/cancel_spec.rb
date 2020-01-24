@@ -21,7 +21,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
 
   context 'when in valid cancellation time' do
     let(:session) do
-      create(:session, :daily, time: los_angeles_time + Session::CANCELATION_PERIOD + 1.minute)
+      create(:session, :daily, time: los_angeles_time + Session::CANCELLATION_PERIOD + 1.minute)
     end
     let!(:user_session) { create(:user_session, user: user, session: session) }
 
@@ -41,7 +41,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
 
   context 'when not in valid cancellation time' do
     let(:session) do
-      create(:session, :daily, time: los_angeles_time + Session::CANCELATION_PERIOD - 1.minute)
+      create(:session, :daily, time: los_angeles_time + Session::CANCELLATION_PERIOD - 1.minute)
     end
     let!(:user_session) { create(:user_session, user: user, session: session) }
 

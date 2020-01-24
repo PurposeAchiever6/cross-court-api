@@ -32,6 +32,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         expect { subject }.not_to change { user.reload.free_session_state }
       end
 
+      it "doesn't confirm the user_session" do
+        subject
+        expect(UserSession.first.state).to eq('reserved')
+      end
+
       context 'when using the free session' do
         before do
           user.free_session_state = :claimed
@@ -54,6 +59,16 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
         it 'updates user free_session_state' do
           expect { subject }.to change { user.reload.free_session_state }.from('claimed').to('used')
+        end
+      end
+
+      context 'when reserving after the cancellation time' do
+        let(:date)    { Date.current }
+        let(:session) { create(:session, :daily, time: Time.current - 1.hour) }
+
+        it 'confirms the session automatically' do
+          subject
+          expect(UserSession.first.state).to eq('confirmed')
         end
       end
     end
