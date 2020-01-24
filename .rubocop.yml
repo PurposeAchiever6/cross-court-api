@@ -97,6 +97,7 @@ Rails/SaveBang:
 Rails/SkipsModelValidations:
   Exclude:
     - lib/tasks/session_reminders.rake
+    - lib/tasks/cancel_unconfirmed_sessions.rake
     - app/controllers/api/v1/sem/user_sessions_controller.rb
 
 Style/BlockDelimiters:

@@ -51,7 +51,6 @@ class UserSession < ApplicationRecord
              to_char(current_timestamp at time zone locations.time_zone, :time_format) <
              to_char(time, :time_format))', time_format: Session::QUERY_TIME_FORMAT)
   end)
-
   scope :for_yesterday, (lambda do
     joins(session: :location)
       .where('date = (current_timestamp at time zone locations.time_zone)::date - 1')
