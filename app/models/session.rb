@@ -19,7 +19,7 @@ class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
   TIME_FORMAT = '%H:%M'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
-  CANCELATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
+  CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
   MAX_CAPACITY = ENV['MAX_CAPACITY'].to_i.freeze
 
   attr_accessor :employees_assigned
