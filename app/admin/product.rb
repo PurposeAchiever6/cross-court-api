@@ -1,5 +1,6 @@
 ActiveAdmin.register Product do
   actions :all, except: :edit
+  permit_params :name, :credits, :price, :description, :order_number, :image
 
   form do |f|
     f.inputs 'Product details' do
@@ -29,8 +30,9 @@ ActiveAdmin.register Product do
 
   controller do
     def create
-      sku = StripeService.create_sku(sku_params)
-      Product.create!(sku_params.merge(stripe_id: sku.id))
+      product_params = permitted_params[:product]
+      sku = StripeService.create_sku(product_params)
+      Product.create!(product_params.merge(stripe_id: sku.id))
       redirect_to admin_products_path, notice: I18n.t('admin.products.created')
     end
 
@@ -38,12 +40,6 @@ ActiveAdmin.register Product do
       StripeService.delete_sku(resource.stripe_id)
       resource.destroy!
       redirect_to admin_products_path, notice: I18n.t('admin.products.destroyed')
-    end
-
-    private
-
-    def sku_params
-      params.require(:product).permit(:name, :credits, :price, :description, :order_number, :image)
     end
   end
 end
