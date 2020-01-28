@@ -66,6 +66,20 @@ describe 'GET api/v1/sessions', type: :request do
       subject
       expect(json[:sessions][0][:full]).to be false
     end
+
+    context 'when the session has an end_time' do
+      let!(:session) { create(:session, :daily, end_time: 2.days.from_now) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it 'returns the sessions until the end_time' do
+        subject
+        expect(json[:sessions].count).to eq(4)
+      end
+    end
   end
 
   context 'when there are sessions for multiple locations' do

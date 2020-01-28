@@ -40,7 +40,7 @@ class Session < ApplicationRecord
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 
-  after_update :remove_orphan_employee_sessions
+  after_update :remove_orphan_sessions
 
   scope :for_range, (lambda do |start_date, end_date|
     where('start_time >= ? AND start_time <= ?', start_date, end_date)
@@ -61,7 +61,7 @@ class Session < ApplicationRecord
 
   def schedule(start = Time.current.in_time_zone(time_zone))
     schedule = IceCube::Schedule.new(start)
-    schedule.add_recurrence_rule(rule)
+    schedule.add_recurrence_rule(rule.until(end_time))
     session_exceptions.each do |exception|
       schedule.add_exception_time(exception.date)
     end
@@ -94,8 +94,8 @@ class Session < ApplicationRecord
 
   private
 
-  def remove_orphan_employee_sessions
-    return unless saved_change_to_attribute?(:recurring)
+  def remove_orphan_sessions
+    return unless saved_change_to_recurring? || saved_change_to_end_time?
 
     RemoveOrphanSessions.call(session: self)
   end

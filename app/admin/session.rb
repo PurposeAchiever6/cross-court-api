@@ -1,5 +1,7 @@
 ActiveAdmin.register Session do
-  permit_params :location_id, :start_time, :recurring, :time,
+  actions :all, except: :destroy
+
+  permit_params :location_id, :start_time, :end_time, :recurring, :time,
                 session_exceptions_attributes: %i[id date _destroy]
   includes :location
 
@@ -7,7 +9,8 @@ ActiveAdmin.register Session do
     f.inputs 'Session Details' do
       f.input :location
 
-      f.input :start_time, as: :datepicker
+      f.input :start_time, as: :datepicker, datepicker_options: { min_date: Date.current }
+      f.input :end_time, as: :datepicker, datepicker_options: { min_date: Date.current }
       f.input :time
       f.select_recurring :recurring, nil, allow_blank: true
       f.has_many :session_exceptions, allow_destroy: true do |p|
@@ -36,6 +39,7 @@ ActiveAdmin.register Session do
     attributes_table do
       row :id
       row :start_time
+      row :end_time
       row :time do |session|
         session.time.strftime(Session::TIME_FORMAT)
       end
