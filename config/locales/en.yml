@@ -44,9 +44,12 @@ en:
         time: 'Date: %{date}, Time: %{time}'
       reminder:
         subject: 'Session reminder'
+      ultimatum:
+        subject: 'Session ultimatum'
   admin:
     products:
       created: 'Product created successfully'
       destroyed: 'Product deleted successfully'
   reminder:
     message: 'You have a session for tomorrow. Please confirm it'
+    ultimatum: 'You have a session for today. You must confirm it or we will cancel the reservation.'

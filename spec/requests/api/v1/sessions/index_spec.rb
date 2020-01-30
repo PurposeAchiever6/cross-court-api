@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 describe 'GET api/v1/sessions', type: :request do
-  let(:user)      { create(:user) }
-  let(:from_date) { Time.current.beginning_of_week.strftime(Session::DATE_FORMAT) }
-  let(:params)    { { from_date: from_date } }
-  let(:today)     { Date.current.to_s }
+  let(:user)              { create(:user) }
+  let(:beginning_of_week) { Time.current.beginning_of_week }
+  let(:from_date)         { beginning_of_week.strftime(Session::DATE_FORMAT) }
+  let(:params)            { { from_date: from_date } }
+  let(:today)             { Date.current.to_s }
 
   subject do
     get api_v1_sessions_path(params),
@@ -68,7 +69,7 @@ describe 'GET api/v1/sessions', type: :request do
     end
 
     context 'when the session has an end_time' do
-      let!(:session) { create(:session, :daily, end_time: 2.days.from_now) }
+      let!(:session) { create(:session, :daily, end_time: beginning_of_week + 2.days) }
 
       it 'returns success' do
         subject
@@ -77,7 +78,7 @@ describe 'GET api/v1/sessions', type: :request do
 
       it 'returns the sessions until the end_time' do
         subject
-        expect(json[:sessions].count).to eq(4)
+        expect(json[:sessions].count).to eq(3)
       end
     end
   end

@@ -64,7 +64,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
       context 'when reserving after the cancellation time' do
         let(:date)    { Date.current }
-        let(:session) { create(:session, :daily, time: Time.current - 1.hour) }
+        let(:session) do
+          create(:session, :daily,
+                 time: Time.current.in_time_zone('America/Los_Angeles') -
+                 Session::CANCELLATION_PERIOD - 1.minute)
+        end
 
         it 'confirms the session automatically' do
           subject
