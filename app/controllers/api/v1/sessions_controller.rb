@@ -36,7 +36,7 @@ module Api
       end
 
       def from_date
-        @from_date ||= Date.parse(params[:from_date])
+        @from_date ||= Date.parse(params[:from_date]).beginning_of_week
       end
 
       def to_date
