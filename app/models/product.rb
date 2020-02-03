@@ -9,7 +9,6 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  price        :decimal(10, 2)   default(0.0), not null
-#  description  :text
 #  order_number :integer          default(0), not null
 #
 # Indexes
