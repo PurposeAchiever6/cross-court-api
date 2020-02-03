@@ -1,6 +1,6 @@
 json = {
   name: product.name,
-  description: product.description,
+  credits: product.credits,
   price: product.price,
   stripe_id: product.stripe_id
 }

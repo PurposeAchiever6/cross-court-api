@@ -8,6 +8,8 @@
 #  price      :decimal(10, 2)   not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  credits    :integer          not null
+#  name       :string           not null
 #
 # Indexes
 #
@@ -20,4 +22,5 @@ class Purchase < ApplicationRecord
   belongs_to :user, optional: true
 
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :credits, :name, presence: true
 end
