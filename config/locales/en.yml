@@ -40,7 +40,7 @@ en:
       welcome: 'Hi %{name}'
       new:
         subject: 'Session confirmation'
-        confirmation: 'The session was confirmed correctly'
+        confirmation: 'The session was booked successfully'
         time: 'Date: %{date}, Time: %{time}'
       reminder:
         subject: 'Session reminder'

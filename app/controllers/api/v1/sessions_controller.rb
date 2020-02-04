@@ -17,7 +17,7 @@ module Api
 
       def index
         @user_sessions = UserSession.future.by_user(current_user)
-        @sessions = Session.includes(:location)
+        @sessions = Session.includes(:location, :session_exceptions)
                            .by_location(params[:location_id])
                            .for_range(from_date, to_date)
                            .flat_map do |session_event|
