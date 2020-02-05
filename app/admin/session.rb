@@ -3,7 +3,7 @@ ActiveAdmin.register Session do
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time,
                 session_exceptions_attributes: %i[id date _destroy]
-  includes :location
+  includes :location, :session_exceptions
 
   form do |f|
     f.inputs 'Session Details' do

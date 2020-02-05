@@ -1,8 +1,9 @@
 ActiveAdmin.register User do
   permit_params :email, :name, :phone_number, :password, :password_confirmation,
-                :is_referee, :is_sem, :image, :credits
+                :is_referee, :is_sem, :image, :credits, :confirmed_at
 
   form do |f|
+    f.object.confirmed_at = Time.current
     f.inputs 'Details' do
       f.input :email
       f.input :name
@@ -11,6 +12,7 @@ ActiveAdmin.register User do
       f.input :is_referee
       f.input :is_sem
       f.input :image, as: :file
+      f.input :confirmed_at, as: :hidden
 
       if f.object.new_record?
         f.input :password

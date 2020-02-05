@@ -46,7 +46,7 @@ describe 'GET api/v1/sessions', type: :request do
   end
 
   context 'when the session is repeted everyday' do
-    let!(:session) { create(:session, :daily) }
+    let!(:session) { create(:session, :daily, start_time: Time.current.beginning_of_week) }
 
     it 'returns success' do
       subject
@@ -69,7 +69,10 @@ describe 'GET api/v1/sessions', type: :request do
     end
 
     context 'when the session has an end_time' do
-      let!(:session) { create(:session, :daily, end_time: beginning_of_week + 2.days) }
+      let!(:session) do
+        create(:session, :daily, start_time: Time.current.beginning_of_week,
+                                 end_time: beginning_of_week + 2.days)
+      end
 
       it 'returns success' do
         subject

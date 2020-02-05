@@ -60,8 +60,8 @@ class Session < ApplicationRecord
     IceCube::Rule.from_hash recurring
   end
 
-  def schedule(start = Time.current.in_time_zone(time_zone))
-    schedule = IceCube::Schedule.new(start)
+  def schedule
+    schedule = IceCube::Schedule.new(start_time)
     schedule.add_recurrence_rule(rule.until(end_time))
     session_exceptions.each do |exception|
       schedule.add_exception_time(exception.date)
@@ -74,7 +74,7 @@ class Session < ApplicationRecord
       self.employees_assigned = referee_sessions.present? && sem_sessions.present?
       [self]
     else
-      schedule(start_date).occurrences(end_date).map do |date|
+      schedule.occurrences_between(start_date, end_date).map do |date|
         Session.new(
           id: id,
           start_time: date,

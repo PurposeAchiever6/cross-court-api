@@ -6,7 +6,9 @@ ActiveAdmin.register_page 'Dashboard' do
     start_date = start_date_param ? Date.parse(start_date_param) : Time.current
     from = start_date.beginning_of_month.beginning_of_week
     to = start_date.end_of_month.end_of_week
-    sessions = Session.by_location(params[:location]).for_range(from, to).flat_map do |session|
+    sessions = Session.includes(:session_exceptions)
+                      .by_location(params[:location])
+                      .for_range(from, to).flat_map do |session|
       session.calendar_events(from, to)
     end
     render partial: 'calendar', locals: {
