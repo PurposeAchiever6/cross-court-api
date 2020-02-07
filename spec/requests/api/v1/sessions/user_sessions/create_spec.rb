@@ -62,6 +62,19 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         end
       end
 
+      context 'when the session is full' do
+        let!(:user_session) { create_list(:user_session, 15, session: session, date: date) }
+
+        it 'returns bad request' do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "doesn't create the user_session" do
+          expect { subject }.not_to change(UserSession, :count)
+        end
+      end
+
       context 'when reserving after the cancellation time' do
         let(:date)    { Date.current }
         let(:session) do
