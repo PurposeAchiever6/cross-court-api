@@ -93,6 +93,10 @@ class Session < ApplicationRecord
     sem_sessions.find_by(date: date)&.sem
   end
 
+  def full?(date)
+    user_sessions.visible_for_player.by_date(date).count == MAX_CAPACITY
+  end
+
   private
 
   def remove_orphan_sessions

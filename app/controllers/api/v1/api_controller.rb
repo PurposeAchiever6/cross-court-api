@@ -17,6 +17,7 @@ module Api
       rescue_from UnauthorizedException,               with: :render_custom_exception
       rescue_from InvalidActionException,              with: :render_custom_exception
       rescue_from WrongParameterException,             with: :render_custom_exception
+      rescue_from FullSessionException,                with: :render_custom_exception
       rescue_from Stripe::InvalidRequestError,         with: :render_custom_exception
       rescue_from Stripe::CardError,                   with: :render_custom_exception
 

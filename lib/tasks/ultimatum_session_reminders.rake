@@ -1,4 +1,4 @@
-task session_reminders: :environment do
+task ultimatum_session_reminders: :environment do
   user_sessions = UltimatumReadyQuery.new.confirmation_pending
   user_sessions.find_each do |user_session|
     email = user_session.user_email

@@ -13,6 +13,7 @@ module Api
             user_session = UserSessionConfirmed.new(user_session)
             user_session = UserSessionEmail.new(user_session)
             user_session = UserSessionConsumeCredit.new(user_session)
+            user_session = UserSessionNotFull.new(user_session)
             user_session.save!
           end
         end

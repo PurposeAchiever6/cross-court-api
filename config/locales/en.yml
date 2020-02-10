@@ -32,6 +32,8 @@ en:
         not_enough_credits: 'Not enough credits. Please buy more.'
       free_session: 'Free session already claimed'
       legal: 'Invalid param'
+      session:
+        full: 'Session is full'
   mailer:
     greeting: 'Sincerely, CrossCourt Team'
     session:
