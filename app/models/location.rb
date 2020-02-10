@@ -12,11 +12,17 @@
 #  city       :string           default(""), not null
 #  zipcode    :string           default(""), not null
 #  time_zone  :string           default("America/Los_Angeles"), not null
+#  deleted_at :datetime
+#
+# Indexes
+#
+#  index_locations_on_deleted_at  (deleted_at)
 #
 
 class Location < ApplicationRecord
-  has_many :sessions, dependent: :destroy
-  has_one_attached :image
+  acts_as_paranoid
+  has_many :sessions
+  has_one_attached :image, dependent: :purge_now
 
   validates :name, :direction, :lat, :lng, :city, :zipcode, :time_zone, presence: true
 end
