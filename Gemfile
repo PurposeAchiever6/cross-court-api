@@ -7,6 +7,7 @@ gem 'rails', '~> 6.0.0'
 gem 'active_storage_base64', '~> 1.0.0'
 gem 'activeadmin', '~> 2.2'
 gem 'activeadmin_latlng', '~> 1.5'
+gem 'acts_as_paranoid', '~> 0.6.3'
 gem 'aws-sdk-s3', '~> 1', require: false
 gem 'bootsnap', '~> 1.3.0'
 gem 'delayed_job_active_record', '~> 4.1.3'

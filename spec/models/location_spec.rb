@@ -12,6 +12,11 @@
 #  city       :string           default(""), not null
 #  zipcode    :string           default(""), not null
 #  time_zone  :string           default("America/Los_Angeles"), not null
+#  deleted_at :datetime
+#
+# Indexes
+#
+#  index_locations_on_deleted_at  (deleted_at)
 #
 
 require 'rails_helper'
