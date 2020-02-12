@@ -9,10 +9,6 @@ Rails.application.routes.draw do
 
   root to: 'admin/dashboard#index'
 
-  namespace :webhooks, defaults: { format: :json } do
-    post :stripe, to: 'stripe#events'
-  end
-
   namespace :api do
     namespace :v1, defaults: { format: :json } do
       devise_scope :user do
