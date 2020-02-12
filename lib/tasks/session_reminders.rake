@@ -20,7 +20,7 @@ def send_sms_reminders
     formatted_date = Date.tomorrow.strftime(Session::DATE_FORMAT)
     confirmation_url = "#{ENV['FRONTENT_URL']}/sessions/#{session_id}?date=#{formatted_date}"
 
-    message = I18n.t('reminder.message')
+    message = I18n.t('mailer.session.reminder.message')
     twilio_service.send_message(user_session.user_phone_number, "#{message} #{confirmation_url}")
     sleep 1 # Twilio has 1 message per second limit
   end
