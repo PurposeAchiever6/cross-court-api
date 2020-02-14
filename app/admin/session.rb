@@ -24,6 +24,7 @@ ActiveAdmin.register Session do
     selectable_column
     id_column
     column :location_name
+    column :time
 
     actions
   end
