@@ -4,7 +4,7 @@ AllCops:
   Exclude:
     - db/schema.rb
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
 Layout/ClassStructure:
@@ -24,6 +24,11 @@ Metrics/AbcSize:
   Max: 15
   Exclude:
     - db/migrate/20161011151353_devise_create_users.rb
+    - app/models/session.rb
+    - app/models/concerns/employee_session.rb
+    - app/decorators/user_session_consume_credit.rb
+    - app/controllers/api/v1/sessions_controller.rb
+    - app/controllers/api/v1/sessions/user_sessions_controller.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
@@ -86,6 +91,19 @@ Rails/FilePath:
 
 Rails/SaveBang:
   Enabled: true
+  Exclude:
+    - app/services/stripe_service.rb
+    - app/services/twilio_service.rb
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - lib/tasks/session_reminders.rake
+    - lib/tasks/cancel_unconfirmed_sessions.rake
+    - app/controllers/api/v1/sem/user_sessions_controller.rb
+
+Rails/HasManyOrHasOneDependent:
+  Exclude:
+    - app/models/location.rb
 
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining

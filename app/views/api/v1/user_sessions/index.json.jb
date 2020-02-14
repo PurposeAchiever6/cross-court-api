@@ -1,0 +1,9 @@
+{
+  previous_sessions: render(partial: 'info', collection: @previous_sessions, as: :user_session),
+  upcoming_sessions: render(partial: 'info', collection: @upcoming_sessions, as: :user_session),
+  sem_upcoming_sessions: render(
+    partial: 'api/v1/sem/sem_sessions/info',
+    collection: @employee_upcoming_sessions,
+    as: :sem_session
+  )
+}

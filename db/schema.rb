@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_02_142200) do
+ActiveRecord::Schema.define(version: 2020_02_10_181431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,111 @@ ActiveRecord::Schema.define(version: 2018_11_02_142200) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "legals", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "text", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["title"], name: "index_legals_on_title"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "direction", null: false
+    t.float "lat", null: false
+    t.float "lng", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "city", default: "", null: false
+    t.string "zipcode", default: "", null: false
+    t.string "time_zone", default: "America/Los_Angeles", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_locations_on_deleted_at"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "stripe_id", null: false
+    t.integer "credits", default: 0, null: false
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "order_number", default: 0, null: false
+    t.index ["stripe_id"], name: "index_products_on_stripe_id"
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "user_id"
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "credits", null: false
+    t.string "name", null: false
+    t.index ["product_id"], name: "index_purchases_on_product_id"
+    t.index ["user_id"], name: "index_purchases_on_user_id"
+  end
+
+  create_table "referee_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "session_id"
+    t.date "date", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_referee_sessions_on_session_id"
+    t.index ["user_id", "session_id", "date"], name: "index_referee_sessions_on_user_id_and_session_id_and_date", unique: true
+    t.index ["user_id"], name: "index_referee_sessions_on_user_id"
+  end
+
+  create_table "sem_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "session_id"
+    t.date "date", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_sem_sessions_on_session_id"
+    t.index ["user_id", "session_id", "date"], name: "index_sem_sessions_on_user_id_and_session_id_and_date", unique: true
+    t.index ["user_id"], name: "index_sem_sessions_on_user_id"
+  end
+
+  create_table "session_exceptions", force: :cascade do |t|
+    t.bigint "session_id", null: false
+    t.datetime "date", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["date", "session_id"], name: "index_session_exceptions_on_date_and_session_id"
+    t.index ["session_id"], name: "index_session_exceptions_on_session_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.date "start_time", null: false
+    t.text "recurring"
+    t.time "time", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "location_id", null: false
+    t.date "end_time"
+    t.index ["location_id"], name: "index_sessions_on_location_id"
+  end
+
+  create_table "user_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "session_id", null: false
+    t.integer "state", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.date "date", null: false
+    t.boolean "sms_reminder_sent", default: false, null: false
+    t.boolean "email_reminder_sent", default: false, null: false
+    t.boolean "checked_in", default: false, null: false
+    t.boolean "is_free_session", default: false, null: false
+    t.string "free_session_payment_intent"
+    t.index ["email_reminder_sent"], name: "index_user_sessions_on_email_reminder_sent"
+    t.index ["session_id"], name: "index_user_sessions_on_session_id"
+    t.index ["sms_reminder_sent"], name: "index_user_sessions_on_sms_reminder_sent"
+    t.index ["user_id"], name: "index_user_sessions_on_user_id"
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password", default: "", null: false
@@ -80,15 +185,26 @@ ActiveRecord::Schema.define(version: 2018_11_02_142200) do
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
-    t.string "first_name", default: ""
-    t.string "last_name", default: ""
-    t.string "username", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.json "tokens"
+    t.string "name", default: ""
+    t.string "phone_number"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.integer "credits", default: 0, null: false
+    t.boolean "is_referee", default: false, null: false
+    t.boolean "is_sem", default: false, null: false
+    t.string "stripe_id"
+    t.integer "free_session_state", default: 0, null: false
+    t.string "free_session_payment_intent"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["is_referee"], name: "index_users_on_is_referee"
+    t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

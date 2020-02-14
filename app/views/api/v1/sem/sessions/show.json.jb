@@ -1,0 +1,10 @@
+{
+  session: render(
+    partial: 'api/v1/sessions/short_info_with_image',
+    locals: { session: @selected_session }
+  ),
+  users: render(
+    partial: 'user_sessions_info',
+    collection: @user_sessions, as: :user_session
+  )
+}

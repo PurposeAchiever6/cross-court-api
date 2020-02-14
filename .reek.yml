@@ -108,7 +108,7 @@ detectors:
     accept: []
   UncommunicativeVariableName:
     enabled: true
-    exclude: []
+    exclude: ['StripeController#load_event']
     reject:
       - "/^.$/"
       - "/[0-9]$/"

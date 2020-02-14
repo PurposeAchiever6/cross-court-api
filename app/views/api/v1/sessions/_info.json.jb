@@ -1,0 +1,23 @@
+json = {
+  id: session.id,
+  start_time: session.start_time.iso8601,
+  time: session.time.iso8601,
+  full: full,
+  referee: {
+    name: referee&.name
+  },
+  sem: {
+    name: sem&.name
+  },
+  location: render(partial: 'api/v1/locations/info', locals: { location: session.location })
+}
+
+json[:referee][:image_url] = polymorphic_url(referee.image) if referee&.image&.attached?
+json[:sem][:image_url] = polymorphic_url(sem.image) if sem&.image&.attached?
+if user_session.present?
+  json[:user_session] = render(
+    partial: 'api/v1/user_sessions/short_info',
+    locals: { user_session: user_session }
+  )
+end
+json

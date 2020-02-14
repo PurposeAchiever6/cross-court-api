@@ -1,0 +1,9 @@
+{
+  id: sem_session.id,
+  date: sem_session.date.iso8601,
+  in_start_time: sem_session.in_start_time?,
+  session: render(
+    partial: 'api/v1/sessions/short_info_with_image',
+    locals: { session: sem_session.session }
+  )
+}

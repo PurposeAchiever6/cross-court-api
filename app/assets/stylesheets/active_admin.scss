@@ -10,8 +10,35 @@
 // Active Admin's got SASS!
 @import "active_admin/mixins";
 @import "active_admin/base";
+@import "recurring_select";
+@import "font-awesome";
 
-// Overriding any non-variable SASS must be done after the fact.
-// For example, to change the default status-tag color:
-//
-//   .status_tag { background: #6090DB; }
+.calendar-title {
+  font-size: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.simple-calendar {
+  .prev-month {
+    background-color: #DDDDDD
+  }
+  .next-month {
+    background-color: #DDDDDD
+  }
+  .today {
+    background-color: #FFFFCC
+  }
+}
+
+.day {
+  height: 100px;
+}
+
+.calendar-day {
+  margin-bottom: 10px;
+}
+
+.odd-row {
+  background-color: #F9F9F9
+}

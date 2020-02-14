@@ -1,0 +1,7 @@
+{
+  id: purchase.id,
+  name: purchase.name,
+  credits: purchase.credits,
+  price: purchase.price,
+  date: purchase.created_at.iso8601
+}

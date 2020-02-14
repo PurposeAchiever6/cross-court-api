@@ -49,6 +49,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  config.hosts = nil
+
   config.after_initialize do
     Bullet.enable = true
     Bullet.alert = false
@@ -56,5 +58,8 @@ Rails.application.configure do
     Bullet.console = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Session', association: :location
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Session',
+                         association: :session_exceptions
   end
 end

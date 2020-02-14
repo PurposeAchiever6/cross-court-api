@@ -1,12 +1,18 @@
 ActiveAdmin.register User do
-  permit_params :email, :first_name, :last_name, :username, :password, :password_confirmation
+  permit_params :email, :name, :phone_number, :password, :password_confirmation,
+                :is_referee, :is_sem, :image, :credits, :confirmed_at
 
   form do |f|
+    f.object.confirmed_at = Time.current
     f.inputs 'Details' do
       f.input :email
-      f.input :first_name
-      f.input :last_name
-      f.input :username
+      f.input :name
+      f.input :phone_number
+      f.input :credits
+      f.input :is_referee
+      f.input :is_sem
+      f.input :image, as: :file
+      f.input :confirmed_at, as: :hidden
 
       if f.object.new_record?
         f.input :password
@@ -21,9 +27,9 @@ ActiveAdmin.register User do
     selectable_column
     id_column
     column :email
-    column :first_name
-    column :last_name
-    column :username
+    column :name
+    column :phone_number
+    column :credits
     column :sign_in_count
     column :created_at
     column :updated_at
@@ -33,9 +39,7 @@ ActiveAdmin.register User do
 
   filter :id
   filter :email
-  filter :username
-  filter :first_name
-  filter :last_name
+  filter :name
   filter :created_at
   filter :updated_at
 
@@ -43,9 +47,14 @@ ActiveAdmin.register User do
     attributes_table do
       row :id
       row :email
-      row :first_name
-      row :last_name
-      row :username
+      row :name
+      row :image do |user|
+        image_tag url_for(user.image) if user.image.attached?
+      end
+      row :phone_number
+      row :credits
+      row :is_referee
+      row :is_sem
       row :sign_in_count
       row :created_at
       row :updated_at

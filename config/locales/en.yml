@@ -26,3 +26,32 @@ en:
       not_found: "Couldn't find the record"
       missing_param: 'A required param is missing'
       invalid_content_type: 'Invalid content type header'
+      unauthorized: 'User is not sem'
+      user_session:
+        invalid_date: 'Invalid date'
+        not_enough_credits: 'Not enough credits. Please buy more.'
+      free_session: 'Free session already claimed'
+      legal: 'Invalid param'
+      session:
+        full: 'Session is full'
+  mailer:
+    greeting: 'Sincerely, CrossCourt Team'
+    session:
+      cancel: 'If you need to cancel the session click'
+      here: 'here'
+      welcome: 'Hi %{name}'
+      new:
+        subject: 'Session confirmation'
+        confirmation: 'The session was booked successfully'
+        time: 'Date: %{date}, Time: %{time}'
+      reminder:
+        subject: 'Session reminder'
+        message: 'You have a session for tomorrow. Please confirm it'
+      ultimatum:
+        subject: 'Session ultimatum'
+        message: 'You have a session for today. You must confirm it or we will cancel the reservation.'
+
+  admin:
+    products:
+      created: 'Product created successfully'
+      destroyed: 'Product deleted successfully'

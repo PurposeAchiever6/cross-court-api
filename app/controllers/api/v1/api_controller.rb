@@ -2,9 +2,6 @@ module Api
   module V1
     class ApiController < ApplicationController
       include Api::Concerns::ActAsApiRequest
-      include DeviseTokenAuth::Concerns::SetUserByToken
-
-      before_action :authenticate_user!, except: :status
 
       layout false
       respond_to :json
@@ -15,6 +12,14 @@ module Api
       rescue_from ActionController::RoutingError,      with: :render_not_found
       rescue_from AbstractController::ActionNotFound,  with: :render_not_found
       rescue_from ActionController::ParameterMissing,  with: :render_parameter_missing
+      rescue_from InvalidDateException,                with: :render_custom_exception
+      rescue_from NotEnoughCreditsException,           with: :render_custom_exception
+      rescue_from UnauthorizedException,               with: :render_custom_exception
+      rescue_from InvalidActionException,              with: :render_custom_exception
+      rescue_from WrongParameterException,             with: :render_custom_exception
+      rescue_from FullSessionException,                with: :render_custom_exception
+      rescue_from Stripe::InvalidRequestError,         with: :render_custom_exception
+      rescue_from Stripe::CardError,                   with: :render_custom_exception
 
       def status
         render json: { online: true }
@@ -48,6 +53,11 @@ module Api
       def render_parameter_missing(exception)
         logger.info(exception) # for logging
         render json: { error: I18n.t('api.errors.missing_param') }, status: :unprocessable_entity
+      end
+
+      def render_custom_exception(exception)
+        logger.error(exception)
+        render json: { error: exception.message }, status: :bad_request
       end
     end
   end

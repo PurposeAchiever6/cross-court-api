@@ -10,4 +10,7 @@
  *
  *= require_self
  *= require_tree .
- */
+ *= require simple_calendar
+ *= require recurring_select
+ *= require font-awesome
+*/

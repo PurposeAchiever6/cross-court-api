@@ -1,0 +1,14 @@
+<%= form_with(url: admin_dashboard_path, method: :get, local: true) do %>
+  <%= label_tag(:location, 'Filter by location:') %>
+  <%= select_tag(:location, options_from_collection_for_select(locations, 'id', 'name', selected_location), include_blank: true) %>
+  <%= submit_tag('Filter') %>
+<% end %>
+<%= month_calendar events: sessions do |date, events| %>
+  <div class='calendar-day'><strong><%= date.day %></strong></div>
+
+  <% events.each do |event| %>
+    <div>
+      <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
+    </div>
+  <% end %>
+<% end %>
