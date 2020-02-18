@@ -8,7 +8,12 @@ module Api
       end
 
       def create
-        PlacePurchase.call(product: product, user: current_user, payment_method: payment_method)
+        PlacePurchase.call(
+          product: product,
+          user: current_user,
+          payment_method: payment_method,
+          promo_code: promo_code
+        )
       end
 
       def claim_free_session
@@ -23,6 +28,10 @@ module Api
 
       def product
         Product.find_by(stripe_id: params[:product_id])
+      end
+
+      def promo_code
+        PromoCode.find_by(code: params[:promo_code])
       end
 
       def payment_method

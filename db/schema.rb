@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_181431) do
+ActiveRecord::Schema.define(version: 2020_02_18_210952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,15 @@ ActiveRecord::Schema.define(version: 2020_02_10_181431) do
     t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
     t.integer "order_number", default: 0, null: false
     t.index ["stripe_id"], name: "index_products_on_stripe_id"
+  end
+
+  create_table "promo_codes", force: :cascade do |t|
+    t.integer "discount", default: 0, null: false
+    t.string "code", null: false
+    t.string "type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["code"], name: "index_promo_codes_on_code", unique: true
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -190,11 +199,11 @@ ActiveRecord::Schema.define(version: 2020_02_10_181431) do
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.json "tokens"
-    t.string "name", default: ""
-    t.string "phone_number"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.string "name", default: ""
+    t.string "phone_number"
     t.integer "credits", default: 0, null: false
     t.boolean "is_referee", default: false, null: false
     t.boolean "is_sem", default: false, null: false
