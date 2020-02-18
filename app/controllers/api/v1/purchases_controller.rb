@@ -8,7 +8,7 @@ module Api
       end
 
       def create
-        StripeService.charge(current_user, payment_method, product)
+        PlacePurchase.call(product: product, user: current_user, payment_method: payment_method)
       end
 
       def claim_free_session
