@@ -1,5 +1,6 @@
 {
   id: session.id,
+  level: session.level,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   user_session_id: user_sessions.detect { |item| item.date = session.start_time }&.id,

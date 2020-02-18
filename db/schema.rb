@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 2020_02_18_210952) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "location_id", null: false
     t.date "end_time"
+    t.integer "level", default: 0, null: false
     t.index ["location_id"], name: "index_sessions_on_location_id"
   end
 

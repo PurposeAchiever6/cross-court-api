@@ -10,6 +10,7 @@
 #  updated_at  :datetime         not null
 #  location_id :integer          not null
 #  end_time    :date
+#  level       :integer          default(0), not null
 #
 # Indexes
 #

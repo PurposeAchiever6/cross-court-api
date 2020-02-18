@@ -10,6 +10,7 @@
 #  updated_at  :datetime         not null
 #  location_id :integer          not null
 #  end_time    :date
+#  level       :integer          default(0), not null
 #
 # Indexes
 #
@@ -22,6 +23,8 @@ class Session < ApplicationRecord
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
   MAX_CAPACITY = ENV['MAX_CAPACITY'].to_i.freeze
+
+  enum level: { basic: 0, advanced: 1 }
 
   attr_accessor :employees_assigned
 

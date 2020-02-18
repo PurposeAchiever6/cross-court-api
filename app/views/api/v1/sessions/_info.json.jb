@@ -1,5 +1,6 @@
 json = {
   id: session.id,
+  level: session.level,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   full: full,
