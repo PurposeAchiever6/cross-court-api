@@ -22,7 +22,7 @@ describe 'GET api/v1/purchases' do
   end
 
   context 'when the user has purchases' do
-    let!(:purchases) { create_list(:purchase, 2, user: user) }
+    let!(:purchase) { create(:purchase, user: user) }
 
     before do
       subject
@@ -33,7 +33,15 @@ describe 'GET api/v1/purchases' do
     end
 
     it 'returns purchases' do
-      expect(json[:purchases].count).to eq(2)
+      expect(json[:purchases].count).to eq(1)
+    end
+
+    context 'when the purchase has a discount' do
+      let!(:purchase) { create(:purchase, user: user, price: 100, discount: 20) }
+
+      it 'returns the purchase with the right value' do
+        expect(json[:purchases][0][:price].to_i).to eq(80)
+      end
     end
   end
 end
