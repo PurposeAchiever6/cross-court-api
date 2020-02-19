@@ -82,7 +82,8 @@ class Session < ApplicationRecord
           id: id,
           start_time: date,
           time: time,
-          location_id: location_id
+          location_id: location_id,
+          level: level
         )
       end
     end
