@@ -21,7 +21,7 @@ module Api
 
       def confirm
         ActiveRecord::Base.transaction do
-          confirmed_user_session = ConfirmedUserSession.new(user_session)
+          confirmed_user_session = UserSessionConfirmed.new(user_session)
           confirmed_user_session.save!
         end
       end

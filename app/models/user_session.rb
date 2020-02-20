@@ -69,13 +69,9 @@ class UserSession < ApplicationRecord
   end
 
   def in_confirmation_time?
-    current_time = Time.current.in_time_zone(time_zone)
-    today = current_time.to_date
-    current_time_formatted = current_time.strftime(Session::TIME_FORMAT)
-    session_time_formatted = time.strftime(Session::TIME_FORMAT)
-    tomorrow = today + 1.day
-
-    (today == date && current_time_formatted < session_time_formatted) ||
-      (tomorrow == date && current_time_formatted > session_time_formatted)
+    current_time = Time.current.utc
+    session_time = "#{date} #{time}".to_datetime
+    time_difference = session_time.to_i - current_time.to_i
+    time_difference < 24.hours
   end
 end

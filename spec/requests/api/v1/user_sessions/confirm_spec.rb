@@ -45,14 +45,9 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
 
   context 'when not in valid confirmation time' do
     context 'when the session is in more the 24 hours' do
-      let(:session) { create(:session, :daily, time: los_angeles_time + 1.minute) }
+      let(:session) { create(:session, :daily) }
       let!(:user_session) do
         create(:user_session, user: user, date: Date.tomorrow, session: session)
-      end
-
-      it 'returns bad_request' do
-        subject
-        expect(response).to have_http_status(:bad_request)
       end
 
       it "doesn't change the user_session state" do
@@ -61,14 +56,9 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
     end
 
     context 'when the session is in the past' do
-      let(:session)       { create(:session, :daily, time: los_angeles_time - 1.minute) }
+      let(:session) { create(:session, :daily, start_time: Date.yesterday) }
       let!(:user_session) do
-        create(:user_session, user: user, date: Time.current.to_date, session: session)
-      end
-
-      it 'returns bad_request' do
-        subject
-        expect(response).to have_http_status(:bad_request)
+        create(:user_session, user: user, date: Date.yesterday, session: session)
       end
 
       it "doesn't change the user_session state" do
