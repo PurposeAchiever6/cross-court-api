@@ -8,7 +8,7 @@ ActiveAdmin.register Session do
   form do |f|
     f.inputs 'Session Details' do
       f.input :location
-      f.input :level
+      f.input :level, include_blank: false
       f.input :start_time, as: :datepicker, datepicker_options: { min_date: Date.current }
       f.input :end_time, as: :datepicker, datepicker_options: { min_date: Date.current }
       f.input :time
