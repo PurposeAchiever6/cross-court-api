@@ -16,7 +16,7 @@ class SessionMailer < ApplicationMailer
   def reminder(email, user_name, session_id, date)
     @user_name = user_name
     formatted_date = date.strftime(Session::DATE_FORMAT)
-    @confirmation_url = "#{ENV['FRONTENT_URL']}/sessions/#{session_id}/#{formatted_date}"
+    @confirmation_url = "#{ENV['FRONTENT_URL']}/session/#{session_id}/#{formatted_date}"
     mail(
       to: email,
       subject: t('mailer.session.reminder.subject')
@@ -26,7 +26,7 @@ class SessionMailer < ApplicationMailer
   def ultimatum(email, user_name, session_id, date)
     @user_name = user_name
     formatted_date = date.strftime(Session::DATE_FORMAT)
-    @confirmation_url = "#{ENV['FRONTENT_URL']}/sessions/#{session_id}/#{formatted_date}"
+    @confirmation_url = "#{ENV['FRONTENT_URL']}/session/#{session_id}/#{formatted_date}"
     mail(
       to: email,
       subject: t('mailer.session.ultimatum.subject')
