@@ -25,6 +25,7 @@ module Api
                            end
         @user_sessions_count = UserSession.where(date: (from_date..to_date))
                                           .group(:session_id, :date)
+                                          .visible_for_player
                                           .count
       end
 
