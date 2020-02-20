@@ -18,7 +18,7 @@ def send_sms_reminders
   user_sessions = ReminderReadyQuery.new.sms_pending
   user_sessions.find_each do |user_session|
     formatted_date = Date.tomorrow.strftime(Session::DATE_FORMAT)
-    confirmation_url = "#{ENV['FRONTENT_URL']}/sessions/#{session_id}?date=#{formatted_date}"
+    confirmation_url = "#{ENV['FRONTENT_URL']}/session/#{session_id}?date=#{formatted_date}"
 
     message = I18n.t('mailer.session.reminder.message')
     twilio_service.send_message(user_session.user_phone_number, "#{message} #{confirmation_url}")
