@@ -8,7 +8,9 @@ class UserSessionConfirmed
   end
 
   def save!
-    user_session.state = :confirmed unless in_cancellation_time?
+    raise InvalidDateException, I18n.t('api.errors.user_session.invalid_date') if date.past?
+
+    user_session.state = :confirmed if user_session.in_confirmation_time? && user_session.reserved?
     user_session.save!
   end
 end
