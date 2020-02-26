@@ -28,7 +28,6 @@ gem 'recurring_select', '~> 2.1'
 gem 'sendgrid', '~> 1.2.4'
 gem 'simple_calendar', '~> 2.3'
 gem 'stripe', '~> 5.11'
-gem 'twilio-ruby', '~> 5.30'
 gem 'webpacker', '~> 4.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
@@ -42,7 +41,7 @@ group :development, :test do
   gem 'bullet', '~> 6.0.2'
   gem 'factory_bot_rails', '~> 4.8.2'
   gem 'pry-byebug', '~> 3.3.0', platform: :mri
-  gem 'rspec-rails', '~> 3.8.2'
+  gem 'rspec-rails', '~> 3.9'
 end
 
 group :development do

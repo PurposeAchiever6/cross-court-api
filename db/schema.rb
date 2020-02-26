@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_19_195431) do
+ActiveRecord::Schema.define(version: 2020_02_26_163658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,14 +173,10 @@ ActiveRecord::Schema.define(version: 2020_02_19_195431) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "date", null: false
-    t.boolean "sms_reminder_sent", default: false, null: false
-    t.boolean "email_reminder_sent", default: false, null: false
     t.boolean "checked_in", default: false, null: false
     t.boolean "is_free_session", default: false, null: false
     t.string "free_session_payment_intent"
-    t.index ["email_reminder_sent"], name: "index_user_sessions_on_email_reminder_sent"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
-    t.index ["sms_reminder_sent"], name: "index_user_sessions_on_sms_reminder_sent"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
 

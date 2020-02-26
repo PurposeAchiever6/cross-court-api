@@ -14,7 +14,7 @@ describe 'POST api/v1/purchases' do
     before do
       stub_request(:post, %r{stripe.com/v1/payment_intents})
         .to_return(status: 200, body: File.new('spec/fixtures/charge_succeeded.json'))
-      allow_any_instance_of(KlaviyoService).to receive(:purchase_placed).and_return(1)
+      allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
     end
 
     it 'returns success' do
@@ -31,7 +31,7 @@ describe 'POST api/v1/purchases' do
     end
 
     it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:purchase_placed).and_return(1)
+      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
       subject
     end
 

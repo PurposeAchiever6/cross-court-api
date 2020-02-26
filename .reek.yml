@@ -10,7 +10,7 @@ detectors:
     exclude: []
   ControlParameter:
     enabled: true
-    exclude: []
+    exclude: ['KlaviyoService#specific_event_attributes']
   DataClump:
     enabled: true
     exclude: []
@@ -66,7 +66,7 @@ detectors:
     exclude: []
   TooManyConstants:
     enabled: true
-    exclude: []
+    exclude: ['Event']
     max_constants: 5
   TooManyInstanceVariables:
     enabled: true
