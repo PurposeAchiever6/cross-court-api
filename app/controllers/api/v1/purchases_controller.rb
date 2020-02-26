@@ -4,7 +4,7 @@ module Api
       before_action :validate_free_session, only: :claim_free_session
 
       def index
-        @purchases = current_user.purchases.order(id: :desc)
+        @purchases = current_user.purchases.order(id: :desc).decorate
       end
 
       def create
