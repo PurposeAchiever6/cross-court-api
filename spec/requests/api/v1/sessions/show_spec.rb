@@ -67,6 +67,11 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
         in_confirmation_time: user_session.in_confirmation_time?
       )
     end
+
+    it 'returns the number of spots left' do
+      subject
+      expect(json[:sessions][0][:spots_left]).to eq(session.spots_left(today))
+    end
   end
 
   context 'when the user has a reservation for another day' do

@@ -101,6 +101,10 @@ class Session < ApplicationRecord
     user_sessions.visible_for_player.by_date(date).count == MAX_CAPACITY
   end
 
+  def spots_left(date)
+    MAX_CAPACITY - user_sessions.visible_for_player.by_date(date).count
+  end
+
   private
 
   def remove_orphan_sessions
