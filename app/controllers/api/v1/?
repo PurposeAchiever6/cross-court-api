@@ -13,7 +13,10 @@ module Api
       end
 
       def promo_code
-        @promo_code ||= PromoCode.find_by!(code: params[:promo_code])
+        @promo_code ||= PromoCode.find_by(code: params[:promo_code])
+        return @promo_code if @promo_code.present/
+
+        raise ActiveRecord::RecordNotFound, I18n.t('api.errors.promo_code.invalid')
       end
     end
   end

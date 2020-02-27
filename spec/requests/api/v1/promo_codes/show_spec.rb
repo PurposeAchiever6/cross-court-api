@@ -10,9 +10,9 @@ describe 'GET api/v1/promo_code' do
   context "when the promo_code doesn't exists" do
     let(:code) { '12345678' }
 
-    it 'returns the same price' do
+    it 'raises an exception' do
       subject
-      expect(json[:price]).to eq(price)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
