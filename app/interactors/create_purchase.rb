@@ -10,7 +10,7 @@ class CreatePurchase
       price: product_price,
       credits: product.credits,
       name: product.name,
-      user_id: context.user,
+      user_id: context.user.id,
       discount: discount
     )
     context.purchase = purchase
