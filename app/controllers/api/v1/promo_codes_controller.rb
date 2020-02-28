@@ -9,7 +9,7 @@ module Api
       private
 
       def price
-        @price ||= params[:price]
+        @price ||= params[:price].to_i
       end
 
       def promo_code
