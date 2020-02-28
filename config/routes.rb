@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   mount_devise_token_auth_for 'User', at: '/api/v1/users', controllers: {
     registrations: 'api/v1/registrations',
+    confirmations: 'api/v1/confirmations',
     sessions: 'api/v1/devise_sessions',
     passwords: 'api/v1/passwords'
   }

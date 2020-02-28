@@ -2,6 +2,6 @@ class SendPurchasePlacedEvent
   include Interactor
 
   def call
-    KlaviyoService.new.purchase_placed(context.purchase)
+    KlaviyoService.new.event(Event::PURCHASE_PLACED, context.user, purchase: context.purchase)
   end
 end

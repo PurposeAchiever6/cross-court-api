@@ -7,6 +7,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
 
   before do
     Timecop.freeze(Time.current)
+    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
   end
 
   after do

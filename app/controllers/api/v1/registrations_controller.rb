@@ -7,6 +7,7 @@ module Api
 
       def create
         super
+        KlaviyoService.new.event(Event::SIGN_UP, @resource)
       end
 
       private

@@ -7,6 +7,7 @@ describe 'PUT api/v1/purchases/claim_free_session' do
   before do
     stub_request(:post, %r{stripe.com/v1/payment_intents})
       .to_return(status: 200, body: File.new('spec/fixtures/charge_succeeded.json'))
+    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
   end
 
   subject do
@@ -30,6 +31,11 @@ describe 'PUT api/v1/purchases/claim_free_session' do
 
     it 'updates user free_session_payment_intent' do
       expect { subject }.to change { user.reload.free_session_payment_intent }
+    end
+
+    it 'calls the klaviyo service' do
+      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+      subject
     end
   end
 
