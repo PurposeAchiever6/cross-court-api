@@ -70,7 +70,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
 
     it 'returns the number of spots left' do
       subject
-      expect(json[:sessions][0][:spots_left]).to eq(session.spots_left(today))
+      expect(json[:session][:spots_left]).to eq(session.spots_left(today))
     end
   end
 

@@ -16,7 +16,7 @@
 
 class SpecificAmountDiscount < PromoCode
   def apply_discount(amount)
-    discount > amount ? amount - discount : 0
+    discount < amount ? amount - discount : 0
   end
 
   def discount_amount(_)
