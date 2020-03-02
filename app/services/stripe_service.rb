@@ -42,24 +42,15 @@ class StripeService
     payment_methods.data
   end
 
-  def self.charge(user, payment_method, product)
-    product_price = product.price
-    price = product_price.to_i * 100
+  def self.charge(user, payment_method, product, promo_code)
+    price = product.price.to_i * 100
+    price = promo_code.apply_discount(price) if promo_code.present?
     Stripe::PaymentIntent.create(
       amount: price,
       currency: 'usd',
       payment_method: payment_method,
       customer: user.stripe_id,
       confirm: true
-    )
-    credits = product.credits
-    user.increment(:credits, credits)
-    user.save!
-    user.purchases.create!(
-      product_id: product.id,
-      price: product_price,
-      credits: credits,
-      name: product.name
     )
   end
 

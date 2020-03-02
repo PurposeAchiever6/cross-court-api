@@ -5,7 +5,8 @@
       referee: referee,
       sem: sem,
       user_session: @user_session,
-      full: selected_session.full?(date)
+      full: selected_session.full?(date),
+      spots_left: selected_session.spots_left(date)
     }
   )
 }

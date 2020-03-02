@@ -11,12 +11,4 @@ class ReminderReadyQuery
                    AND to_char(current_timestamp at time zone locations.time_zone, :date_format) =
                    to_char(time, :date_format)", date_format: QUERY_TIME_FORMAT)
   end
-
-  def email_pending
-    tomorrow_user_sessions.email_not_sent
-  end
-
-  def sms_pending
-    tomorrow_user_sessions.sms_not_sent
-  end
 end

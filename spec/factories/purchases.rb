@@ -10,6 +10,7 @@
 #  updated_at :datetime         not null
 #  credits    :integer          not null
 #  name       :string           not null
+#  discount   :decimal(10, 2)   default(0.0), not null
 #
 # Indexes
 #

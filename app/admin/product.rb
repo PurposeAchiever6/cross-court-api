@@ -1,12 +1,11 @@
 ActiveAdmin.register Product do
-  actions :all, except: :edit
   permit_params :name, :credits, :price, :order_number, :image
 
   form do |f|
     f.inputs 'Product details' do
-      f.input :name
-      f.input :credits
-      f.input :price
+      f.input :name, input_html: { disabled: resource.persisted? }
+      f.input :credits, input_html: { disabled: resource.persisted? }
+      f.input :price, input_html: { disabled: resource.persisted? }
       f.input :order_number
       f.input :image, as: :file
     end

@@ -4,11 +4,16 @@ module Api
       before_action :validate_free_session, only: :claim_free_session
 
       def index
-        @purchases = current_user.purchases.order(id: :desc)
+        @purchases = current_user.purchases.order(id: :desc).decorate
       end
 
       def create
-        StripeService.charge(current_user, payment_method, product)
+        PlacePurchase.call(
+          product: product,
+          user: current_user,
+          payment_method: payment_method,
+          promo_code: promo_code
+        )
       end
 
       def claim_free_session
@@ -17,12 +22,17 @@ module Api
         current_user.free_session_payment_intent = intent.id
         current_user.increment(:credits)
         current_user.save!
+        KlaviyoService.new.event(Event::CLAIMED_FREE_SESSION, current_user)
       end
 
       private
 
       def product
         Product.find_by(stripe_id: params[:product_id])
+      end
+
+      def promo_code
+        PromoCode.find_by(code: params[:promo_code])
       end
 
       def payment_method

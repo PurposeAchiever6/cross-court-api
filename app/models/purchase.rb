@@ -10,6 +10,7 @@
 #  updated_at :datetime         not null
 #  credits    :integer          not null
 #  name       :string           not null
+#  discount   :decimal(10, 2)   default(0.0), not null
 #
 # Indexes
 #
@@ -23,4 +24,6 @@ class Purchase < ApplicationRecord
 
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :credits, :name, presence: true
+
+  delegate :name, :email, :phone_number, to: :user, prefix: true
 end

@@ -26,6 +26,11 @@ describe 'GET api/v1/sessions', type: :request do
       expect(json[:sessions].count).to eq(1)
     end
 
+    it 'returns the number of spots left' do
+      subject
+      expect(json[:sessions][0][:spots_left]).to eq(Session::MAX_CAPACITY)
+    end
+
     context 'when the user has a reservation for today' do
       let!(:user_session) { create(:user_session, user: user, session: session, date: today) }
 

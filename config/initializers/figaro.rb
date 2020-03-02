@@ -7,6 +7,7 @@ variables = %w[
   CANCELLATION_PERIOD
   CONFIRMATION_PERIOD
   ULTIMATUM_PERIOD
+  KLAVIYO_API_KEY
 ]
 
 unless Rails.env.test?

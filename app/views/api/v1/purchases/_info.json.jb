@@ -2,6 +2,6 @@
   id: purchase.id,
   name: purchase.name,
   credits: purchase.credits,
-  price: purchase.price,
+  price: purchase.final_price,
   date: purchase.created_at.iso8601
 }

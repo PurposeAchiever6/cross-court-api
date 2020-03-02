@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_181431) do
+ActiveRecord::Schema.define(version: 2020_02_26_163658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,15 @@ ActiveRecord::Schema.define(version: 2020_02_10_181431) do
     t.index ["stripe_id"], name: "index_products_on_stripe_id"
   end
 
+  create_table "promo_codes", force: :cascade do |t|
+    t.integer "discount", default: 0, null: false
+    t.string "code", null: false
+    t.string "type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["code"], name: "index_promo_codes_on_code", unique: true
+  end
+
   create_table "purchases", force: :cascade do |t|
     t.bigint "product_id"
     t.bigint "user_id"
@@ -109,6 +118,7 @@ ActiveRecord::Schema.define(version: 2020_02_10_181431) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "credits", null: false
     t.string "name", null: false
+    t.decimal "discount", precision: 10, scale: 2, default: "0.0", null: false
     t.index ["product_id"], name: "index_purchases_on_product_id"
     t.index ["user_id"], name: "index_purchases_on_user_id"
   end
@@ -152,6 +162,7 @@ ActiveRecord::Schema.define(version: 2020_02_10_181431) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "location_id", null: false
     t.date "end_time"
+    t.integer "level", default: 0, null: false
     t.index ["location_id"], name: "index_sessions_on_location_id"
   end
 
@@ -162,14 +173,10 @@ ActiveRecord::Schema.define(version: 2020_02_10_181431) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "date", null: false
-    t.boolean "sms_reminder_sent", default: false, null: false
-    t.boolean "email_reminder_sent", default: false, null: false
     t.boolean "checked_in", default: false, null: false
     t.boolean "is_free_session", default: false, null: false
     t.string "free_session_payment_intent"
-    t.index ["email_reminder_sent"], name: "index_user_sessions_on_email_reminder_sent"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
-    t.index ["sms_reminder_sent"], name: "index_user_sessions_on_sms_reminder_sent"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
 
@@ -190,11 +197,11 @@ ActiveRecord::Schema.define(version: 2020_02_10_181431) do
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.json "tokens"
-    t.string "name", default: ""
-    t.string "phone_number"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.string "name", default: ""
+    t.string "phone_number"
     t.integer "credits", default: 0, null: false
     t.boolean "is_referee", default: false, null: false
     t.boolean "is_sem", default: false, null: false
