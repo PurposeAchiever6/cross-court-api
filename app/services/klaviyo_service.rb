@@ -27,7 +27,9 @@ class KlaviyoService
       customer_properties: {
         email: user_email,
         first_name: user.name,
-        phone_number: user.phone_number
+        phone_number: user.phone_number,
+        credits: user.credits,
+        upcoming_sessions: user_sessions.future.visible_for_player.count
       }
     }
   end

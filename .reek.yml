@@ -23,7 +23,7 @@ detectors:
     allow_calls: []
   FeatureEnvy:
     enabled: true
-    exclude: ['CreatePurchase#call', 'KlaviyoService#purchase_placed']
+    exclude: ['CreatePurchase#call', 'KlaviyoService#purchase_placed', 'KlaviyoService#general_event_attributes']
   InstanceVariableAssumption:
     enabled: false
   IrresponsibleModule:
