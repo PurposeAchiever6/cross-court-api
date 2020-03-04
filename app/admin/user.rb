@@ -28,11 +28,12 @@ ActiveAdmin.register User do
     id_column
     column :email
     column :name
+    column :is_sem
+    column :is_referee
     column :phone_number
     column :credits
     column :sign_in_count
     column :created_at
-    column :updated_at
 
     actions
   end
@@ -40,8 +41,9 @@ ActiveAdmin.register User do
   filter :id
   filter :email
   filter :name
+  filter :is_sem
+  filter :is_referee
   filter :created_at
-  filter :updated_at
 
   show do
     attributes_table do

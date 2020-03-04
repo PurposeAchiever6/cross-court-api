@@ -6,6 +6,10 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:date)    { Date.tomorrow }
   let(:params)  { { date: date.strftime(Session::DATE_FORMAT) } }
 
+  before do
+    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+  end
+
   subject do
     post api_v1_session_user_sessions_path(session_id: session.id),
          headers: auth_headers,
@@ -26,6 +30,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
       it 'consumes one credit from the user' do
         expect { subject }.to change { user.reload.credits }.from(1).to(0)
+      end
+
+      it 'calls the klaviyo service' do
+        expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+        subject
       end
 
       it "doesn't update user's free_session_state" do
@@ -75,12 +84,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         end
       end
 
-      context 'when reserving after the cancellation time' do
-        let(:date)    { Date.current }
+      context 'when reserving in the confirmation time' do
+        let(:date)    { Date.tomorrow }
         let(:session) do
           create(:session, :daily,
-                 time: Time.current.in_time_zone('America/Los_Angeles') -
-                 Session::CANCELLATION_PERIOD - 1.minute)
+                 time: Time.current.in_time_zone('America/Los_Angeles') - 1.minute)
         end
 
         it 'confirms the session automatically' do

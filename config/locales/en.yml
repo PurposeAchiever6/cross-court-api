@@ -34,6 +34,8 @@ en:
       legal: 'Invalid param'
       session:
         full: 'Session is full'
+      promo_code:
+        invalid: 'Invalid promo code'
   mailer:
     greeting: 'Sincerely, CrossCourt Team'
     session:

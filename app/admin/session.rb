@@ -1,14 +1,14 @@
 ActiveAdmin.register Session do
   actions :all, except: :destroy
 
-  permit_params :location_id, :start_time, :end_time, :recurring, :time,
+  permit_params :location_id, :start_time, :end_time, :recurring, :time, :level,
                 session_exceptions_attributes: %i[id date _destroy]
   includes :location, :session_exceptions
 
   form do |f|
     f.inputs 'Session Details' do
       f.input :location
-
+      f.input :level, include_blank: false
       f.input :start_time, as: :datepicker, datepicker_options: { min_date: Date.current }
       f.input :end_time, as: :datepicker, datepicker_options: { min_date: Date.current }
       f.input :time
@@ -24,6 +24,7 @@ ActiveAdmin.register Session do
     selectable_column
     id_column
     column :location_name
+    column :level
     column :time
 
     actions
@@ -39,6 +40,7 @@ ActiveAdmin.register Session do
               } do
     attributes_table do
       row :id
+      row :level
       row :start_time
       row :end_time
       row :time do |session|
@@ -50,6 +52,13 @@ ActiveAdmin.register Session do
       row :location_name
       row :created_at
       row :updated_at
+    end
+
+    panel 'Time exceptions' do
+      table_for session.session_exceptions.order(date: :desc) do
+        column :id
+        column :date
+      end
     end
 
     date = params[:date]
@@ -72,12 +81,13 @@ ActiveAdmin.register Session do
           }
         end
       end
-    end
 
-    panel 'Time exceptions' do
-      table_for session.session_exceptions.order(date: :desc) do
-        column :id
-        column :date
+      panel 'Users' do
+        user_sessions = resource.user_sessions.visible_for_player.by_date(date)
+        render partial: 'show_users', locals: {
+          date: date,
+          user_sessions: user_sessions
+        }
       end
     end
   end

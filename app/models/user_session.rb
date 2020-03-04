@@ -9,18 +9,14 @@
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  date                        :date             not null
-#  sms_reminder_sent           :boolean          default(FALSE), not null
-#  email_reminder_sent         :boolean          default(FALSE), not null
 #  checked_in                  :boolean          default(FALSE), not null
 #  is_free_session             :boolean          default(FALSE), not null
 #  free_session_payment_intent :string
 #
 # Indexes
 #
-#  index_user_sessions_on_email_reminder_sent  (email_reminder_sent)
-#  index_user_sessions_on_session_id           (session_id)
-#  index_user_sessions_on_sms_reminder_sent    (sms_reminder_sent)
-#  index_user_sessions_on_user_id              (user_id)
+#  index_user_sessions_on_session_id  (session_id)
+#  index_user_sessions_on_user_id     (user_id)
 #
 
 class UserSession < ApplicationRecord
@@ -34,8 +30,6 @@ class UserSession < ApplicationRecord
   delegate :time, :time_zone, to: :session
   delegate :phone_number, :name, :email, to: :user, prefix: true
 
-  scope :email_not_sent, -> { where(email_reminder_sent: false) }
-  scope :sms_not_sent, -> { where(sms_reminder_sent: false) }
   scope :visible_for_player, -> { where.not(state: :canceled) }
   scope :past, (lambda do
     joins(session: :location)
@@ -69,13 +63,9 @@ class UserSession < ApplicationRecord
   end
 
   def in_confirmation_time?
-    current_time = Time.current.in_time_zone(time_zone)
-    today = current_time.to_date
-    current_time_formatted = current_time.strftime(Session::TIME_FORMAT)
-    session_time_formatted = time.strftime(Session::TIME_FORMAT)
-    tomorrow = today + 1.day
-
-    (today == date && current_time_formatted < session_time_formatted) ||
-      (tomorrow == date && current_time_formatted > session_time_formatted)
+    current_time = Time.current.utc
+    session_time = "#{date} #{time}".to_datetime
+    time_difference = session_time.to_i - current_time.to_i
+    time_difference < 24.hours
   end
 end

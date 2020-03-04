@@ -1,9 +1,12 @@
 {
   id: session.id,
+  level: session.level,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   user_session_id: user_sessions.detect { |item| item.date = session.start_time }&.id,
   full: user_sessions_count.values_at([session.id, session.start_time]).sum ==
     Session::MAX_CAPACITY,
+  spots_left: Session::MAX_CAPACITY -
+    user_sessions_count.values_at([session.id, session.start_time]).sum,
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location })
 }

@@ -3,10 +3,12 @@ module Api
     class UserSessionsController < Api::V1::ApiUserController
       def index
         @previous_sessions = user_sessions.past
+                                          .visible_for_player
                                           .order(date: :desc)
                                           .includes(session: [location: [image_attachment: :blob]])
                                           .take(3)
         @upcoming_sessions = user_sessions.future
+                                          .visible_for_player
                                           .order(:date)
                                           .includes(session: [location: [image_attachment: :blob]])
         @employee_upcoming_sessions = EmployeeSessionsQuery.new(current_user).future_sessions
@@ -21,8 +23,13 @@ module Api
 
       def confirm
         ActiveRecord::Base.transaction do
-          confirmed_user_session = ConfirmedUserSession.new(user_session)
+          confirmed_user_session = UserSessionConfirmed.new(user_session)
           confirmed_user_session.save!
+          KlaviyoService.new.event(
+            Event::SESSION_CONFIRMATION,
+            current_user,
+            user_session: user_session
+          )
         end
       end
 
@@ -33,7 +40,7 @@ module Api
       end
 
       def user_session
-        current_user.user_sessions.find(params[:user_session_id])
+        @user_session ||= current_user.user_sessions.find(params[:user_session_id])
       end
     end
   end

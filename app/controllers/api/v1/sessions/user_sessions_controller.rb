@@ -11,10 +11,11 @@ module Api
             )
             user_session = UserSessionWithValidDate.new(user_session)
             user_session = UserSessionConfirmed.new(user_session)
-            user_session = UserSessionEmail.new(user_session)
             user_session = UserSessionConsumeCredit.new(user_session)
             user_session = UserSessionNotFull.new(user_session)
             user_session.save!
+            KlaviyoService.new
+                          .event(Event::SESSION_BOOKED, current_user, user_session: user_session)
           end
         end
       end
