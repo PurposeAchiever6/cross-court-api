@@ -37,7 +37,7 @@ en:
       promo_code:
         invalid: 'Invalid promo code'
   mailer:
-    greeting: 'Sincerely, CrossCourt Team'
+    greeting: 'Sincerely, Crosscourt Team'
     session:
       cancel: 'If you need to cancel the session click'
       here: 'here'
