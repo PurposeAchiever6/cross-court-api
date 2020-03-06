@@ -9,7 +9,7 @@ class UserSessionWithValidDate
 
   def save!
     raise InvalidDateException, I18n.t('api.errors.user_session.invalid_date') if
-      !session.schedule.occurs_on?(date) || date.past?
+      session.calendar_events(date, date).empty? || date.past?
 
     user_session.save!
   end
