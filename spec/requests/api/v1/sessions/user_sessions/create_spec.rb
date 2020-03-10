@@ -88,7 +88,8 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         let(:date)    { Date.tomorrow }
         let(:session) do
           create(:session, :daily,
-                 time: Time.current.in_time_zone('America/Los_Angeles') - 1.minute)
+                 time: (Time.current.in_time_zone('America/Los_Angeles') - 1.minute)
+                 .strftime(Session::TIME_FORMAT))
         end
 
         it 'confirms the session automatically' do
