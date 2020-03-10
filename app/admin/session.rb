@@ -47,10 +47,10 @@ ActiveAdmin.register Session do
         session.time.strftime(Session::TIME_FORMAT)
       end
       row :recurring do |session|
-        if session.recurring.blank?
-          'Single occurrence' 
-        else
+        if session.recurring?
           IceCube::Rule.from_hash(session.recurring).to_s
+        else
+          'Single occurrence'
         end
       end
       row :location_name
