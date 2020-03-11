@@ -54,4 +54,25 @@ describe 'POST api/v1/purchases' do
       end
     end
   end
+
+  context 'when the transaction fails' do
+    before do
+      stub_request(:post, %r{stripe.com/v1/payment_intents})
+        .to_return(status: 400, body: '{}')
+      allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    end
+
+    it "doesn't create the purchase" do
+      expect { subject }.not_to change(Purchase, :count)
+    end
+
+    it "doesn't increment user's credits" do
+      expect { subject }.not_to change { user.reload.credits }
+    end
+
+    it "doesn't call the klaviyo service" do
+      expect_any_instance_of(KlaviyoService).not_to receive(:event)
+      subject
+    end
+  end
 end
