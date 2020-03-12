@@ -30,7 +30,7 @@ class UserSession < ApplicationRecord
   delegate :time, :time_zone, to: :session
   delegate :phone_number, :name, :email, to: :user, prefix: true
 
-  scope :visible_for_player, -> { where.not(state: :canceled) }
+  scope :not_canceled, -> { where.not(state: :canceled) }
   scope :past, (lambda do
     joins(session: :location)
       .where('date < (current_timestamp at time zone locations.time_zone)::date OR
@@ -66,6 +66,6 @@ class UserSession < ApplicationRecord
     current_time = Time.current.in_time_zone(time_zone)
     session_time = "#{date} #{time}".to_datetime
     time_difference = session_time.to_i - current_time.to_i
-    time_difference < 24.hours
+    time_difference < 2.days
   end
 end

@@ -3,7 +3,7 @@ class ReminderReadyQuery
   attr_reader :relation
 
   def initialize(relation = UserSession.all)
-    @relation = relation.reserved.joins(:user, session: :location)
+    @relation = relation.not_canceled.joins(:user, session: :location)
   end
 
   def tomorrow_user_sessions

@@ -45,10 +45,10 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
   end
 
   context 'when not in valid confirmation time' do
-    context 'when the session is in more the 24 hours' do
+    context 'when the session is in more the 48 hours' do
       let(:session) { create(:session, :daily) }
       let!(:user_session) do
-        create(:user_session, user: user, date: Date.tomorrow, session: session)
+        create(:user_session, user: user, date: 2.days.from_now, session: session)
       end
 
       it "doesn't change the user_session state" do
