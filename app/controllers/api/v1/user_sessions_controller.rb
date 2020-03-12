@@ -3,12 +3,12 @@ module Api
     class UserSessionsController < Api::V1::ApiUserController
       def index
         @previous_sessions = user_sessions.past
-                                          .visible_for_player
+                                          .not_canceled
                                           .order(date: :desc)
                                           .includes(session: [location: [image_attachment: :blob]])
                                           .take(3)
         @upcoming_sessions = user_sessions.future
-                                          .visible_for_player
+                                          .not_canceled
                                           .order(:date)
                                           .includes(session: [location: [image_attachment: :blob]])
         @employee_upcoming_sessions = EmployeeSessionsQuery.new(current_user).future_sessions

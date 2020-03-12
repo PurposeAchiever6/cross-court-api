@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:user)    { create(:user, credits: 1) }
   let(:session) { create(:session, :daily) } # Weekly today
-  let(:date)    { Date.tomorrow }
+  let(:date)    { 2.days.from_now }
   let(:params)  { { date: date.strftime(Session::DATE_FORMAT) } }
 
   before do
