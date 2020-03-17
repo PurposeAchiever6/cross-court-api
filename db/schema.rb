@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_163658) do
+ActiveRecord::Schema.define(version: 2020_03_17_142353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -176,6 +176,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_163658) do
     t.boolean "checked_in", default: false, null: false
     t.boolean "is_free_session", default: false, null: false
     t.string "free_session_payment_intent"
+    t.boolean "credit_reimbursed", default: false, null: false
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
