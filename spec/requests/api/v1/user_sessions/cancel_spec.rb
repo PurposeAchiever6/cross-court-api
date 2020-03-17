@@ -37,6 +37,10 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     it 'reimburses the credit to the user' do
       expect { subject }.to change { user.reload.credits }.from(0).to(1)
     end
+
+    it 'sets user_session credit_reimbursed to true' do
+      expect { subject }.to change { user_session.reload.credit_reimbursed }.from(false).to(true)
+    end
   end
 
   context 'when not in valid cancellation time' do

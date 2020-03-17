@@ -11,6 +11,7 @@ class CanceledUserSession
     if user_session.in_cancellation_time?
       user.increment(:credits)
       user.save!
+      user_session.credit_reimbursed = true
     end
     user_session.state = :canceled
     user_session.save!
