@@ -16,7 +16,7 @@ module Api
       end
 
       def index
-        @user_sessions = UserSession.future.by_user(current_user)
+        @user_sessions = UserSession.future.by_user(current_user).group(:session_id, :date).count
         @sessions = Session.includes(:location, :session_exceptions)
                            .by_location(params[:location_id])
                            .for_range(from_date, to_date)
