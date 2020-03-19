@@ -116,4 +116,14 @@ describe 'GET api/v1/sessions', type: :request do
       expect(json[:sessions][0][:id]).to eq(session.id)
     end
   end
+
+  context 'when the session is in the past' do
+    let(:los_angeles_time) { Time.current.in_time_zone('America/Los_Angeles') - 1.minute }
+    let!(:session) { create(:session, :daily, time: Time.zone.local_to_utc(los_angeles_time)) }
+
+    it 'returns past in true' do
+      subject
+      expect(json[:sessions][0][:past]).to be true
+    end
+  end
 end

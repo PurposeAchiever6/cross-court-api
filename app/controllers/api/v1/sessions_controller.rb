@@ -17,12 +17,14 @@ module Api
 
       def index
         @user_sessions = UserSession.future.by_user(current_user).group(:session_id, :date).count
-        @sessions = Session.includes(:location, :session_exceptions)
-                           .by_location(params[:location_id])
-                           .for_range(from_date, to_date)
-                           .flat_map do |session_event|
-                             session_event.calendar_events(from_date, to_date)
-                           end
+        @sessions = SessionDecorator.decorate_collection(
+          Session.includes(:location, :session_exceptions)
+                 .by_location(params[:location_id])
+                 .for_range(from_date, to_date)
+                 .flat_map do |session_event|
+                   session_event.calendar_events(from_date, to_date)
+                 end
+        )
         @user_sessions_count = UserSession.where(date: (from_date..to_date))
                                           .group(:session_id, :date)
                                           .not_canceled

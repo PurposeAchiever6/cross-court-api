@@ -7,7 +7,9 @@ class SessionDecorator < Draper::Decorator
     text
   end
 
-  def full?(date)
-    date.present? && user_sessions.reserved.by_date(date).count == Session::MAX_CAPACITY
+  def past?
+    current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))
+    session_time = "#{start_time} #{time}".to_datetime
+    current_time > session_time
   end
 end
