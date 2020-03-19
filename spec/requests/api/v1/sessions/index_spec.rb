@@ -34,9 +34,9 @@ describe 'GET api/v1/sessions', type: :request do
     context 'when the user has a reservation for today' do
       let!(:user_session) { create(:user_session, user: user, session: session, date: today) }
 
-      it 'returns an user_session_id' do
+      it 'returns reserved in true' do
         subject
-        expect(json[:sessions][0][:user_session_id]).to eq(user_session.id)
+        expect(json[:sessions][0][:reserved]).to be true
       end
     end
 
@@ -63,9 +63,9 @@ describe 'GET api/v1/sessions', type: :request do
       expect(json[:sessions].count).to eq(7)
     end
 
-    it "doesn't return an user_session_id" do
+    it 'returns reserved in false' do
       subject
-      expect(json[:sessions][0][:user_session_id]).to be nil
+      expect(json[:sessions][0][:reserved]).to be false
     end
 
     it 'returns full on false' do
