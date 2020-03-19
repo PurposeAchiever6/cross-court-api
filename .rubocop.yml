@@ -29,6 +29,7 @@ Metrics/AbcSize:
     - app/decorators/user_session_consume_credit.rb
     - app/controllers/api/v1/sessions_controller.rb
     - app/controllers/api/v1/sessions/user_sessions_controller.rb
+    - app/controllers/api/v1/confirmations_controller.rb
     - app/interactors/create_purchase.rb
 
 Metrics/BlockLength:
@@ -118,3 +119,7 @@ Style/ModuleFunction:
 
 Style/ReturnNil:
   Enabled: true
+
+Style/GuardClause:
+  Exclude:
+    - app/controllers/api/v1/confirmations_controller.rb
