@@ -2,10 +2,24 @@ module Api
   module V1
     class ConfirmationsController < DeviseTokenAuth::ConfirmationsController
       def show
-        super do
-          sign_in(@resource) if @resource.errors.empty?
+        @resource = resource_class.confirm_by_token(resource_params[:confirmation_token])
+        if @resource.errors.empty?
+          sign_in(@resource)
+          redirect_header_options = { account_confirmation_success: true }
+          if signed_in?(resource_name)
+            token = signed_in_resource.create_token
+            signed_in_resource.save!
+            redirect_headers = build_redirect_headers(token.token,
+                                                      token.client,
+                                                      redirect_header_options)
+            redirect_to_link = signed_in_resource.build_auth_url(redirect_url, redirect_headers)
+          else
+            redirect_to_link = DeviseTokenAuth::Url.generate(redirect_url, redirect_header_options)
+          end
+          redirect_to(redirect_to_link)
+        else
+          raise ActionController::RoutingError, 'Not Found'
         end
-        KlaviyoService.new.event(Event::USER_CONFIRMATION, @resource)
       end
     end
   end
