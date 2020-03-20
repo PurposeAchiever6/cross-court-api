@@ -4,6 +4,7 @@ json = {
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   full: full,
+  past: session.past?(date),
   spots_left: spots_left,
   referee: {
     name: referee&.name

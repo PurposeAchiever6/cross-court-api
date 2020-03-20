@@ -7,9 +7,10 @@ class SessionDecorator < Draper::Decorator
     text
   end
 
-  def past?
+  def past?(date = nil)
     current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))
-    session_time = "#{start_time} #{time}".to_datetime
+    date = start_time if date.blank?
+    session_time = "#{date} #{time}".to_datetime
     current_time > session_time
   end
 end

@@ -35,7 +35,7 @@ module Api
 
       def date
         @date = params[:date]
-        @date ||= Date.parse(@date) if @date.present?
+        @date = Date.parse(@date) if @date.present?
       end
 
       def from_date

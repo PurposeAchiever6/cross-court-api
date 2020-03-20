@@ -25,7 +25,8 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
       id: session.id,
       start_time: session.start_time.iso8601,
       time: session.time.iso8601,
-      full: false
+      full: false,
+      past: false
     )
   end
 
@@ -86,6 +87,16 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
     it "doesn't return an user_session" do
       subject
       expect(json[:session][:user_session]).to be nil
+    end
+  end
+
+  context 'when the session is in the past' do
+    let(:lost_angeles_time) { Time.current.in_time_zone('America/Los_Angeles') }
+    let(:session) { create(:session, time: Time.zone.local_to_utc(lost_angeles_time) - 1.minute) }
+
+    it 'returns past in true' do
+      subject
+      expect(json[:session][:past]).to be true
     end
   end
 
