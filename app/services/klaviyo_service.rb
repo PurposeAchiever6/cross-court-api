@@ -29,7 +29,7 @@ class KlaviyoService
         first_name: user.name,
         phone_number: user.phone_number,
         credits: user.credits,
-        upcoming_sessions: user_sessions.future.visible_for_player.count
+        upcoming_sessions: user.user_sessions.future.not_canceled.count
       }
     }
   end

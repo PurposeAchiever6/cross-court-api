@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:user)    { create(:user, credits: 1) }
   let(:session) { create(:session, :daily) } # Weekly today
-  let(:date)    { Date.tomorrow }
+  let(:date)    { 2.days.from_now }
   let(:params)  { { date: date.strftime(Session::DATE_FORMAT) } }
 
   before do
@@ -88,7 +88,8 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         let(:date)    { Date.tomorrow }
         let(:session) do
           create(:session, :daily,
-                 time: Time.current.in_time_zone('America/Los_Angeles') - 1.minute)
+                 time: (Time.current.in_time_zone('America/Los_Angeles') - 1.minute)
+                 .strftime(Session::TIME_FORMAT))
         end
 
         it 'confirms the session automatically' do

@@ -4,6 +4,12 @@ module Api
       protect_from_forgery with: :null_session
       include Api::Concerns::ActAsApiRequest
 
+      after_action :create_stripe_user, only: :create
+
+      def create
+        super
+      end
+
       private
 
       def resource_params
@@ -12,6 +18,12 @@ module Api
 
       def render_create_success
         render json: { user: resource_data }
+      end
+
+      def create_stripe_user
+        return if @resource.blank? || @resource&.stripe_id.present?
+
+        StripeService.create_user(@resource)
       end
     end
   end

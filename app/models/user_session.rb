@@ -12,6 +12,7 @@
 #  checked_in                  :boolean          default(FALSE), not null
 #  is_free_session             :boolean          default(FALSE), not null
 #  free_session_payment_intent :string
+#  credit_reimbursed           :boolean          default(FALSE), not null
 #
 # Indexes
 #
@@ -30,7 +31,7 @@ class UserSession < ApplicationRecord
   delegate :time, :time_zone, to: :session
   delegate :phone_number, :name, :email, to: :user, prefix: true
 
-  scope :visible_for_player, -> { where.not(state: :canceled) }
+  scope :not_canceled, -> { where.not(state: :canceled) }
   scope :past, (lambda do
     joins(session: :location)
       .where('date < (current_timestamp at time zone locations.time_zone)::date OR
@@ -54,18 +55,18 @@ class UserSession < ApplicationRecord
   scope :by_session, ->(session_id) { where(session_id: session_id) }
 
   def in_cancellation_time?
-    current_time = Time.current.in_time_zone(time_zone)
-    today = current_time.to_date
-    max_cancellation_time = (time - Session::CANCELLATION_PERIOD)
-
-    today < date || today == date && current_time.strftime(Session::TIME_FORMAT) <
-      max_cancellation_time.strftime(Session::TIME_FORMAT)
+    remaining_time > Session::CANCELLATION_PERIOD
   end
 
   def in_confirmation_time?
-    current_time = Time.current.utc
+    remaining_time < 2.days
+  end
+
+  private
+
+  def remaining_time
+    current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))
     session_time = "#{date} #{time}".to_datetime
-    time_difference = session_time.to_i - current_time.to_i
-    time_difference < 24.hours
+    session_time.to_i - current_time.to_i
   end
 end

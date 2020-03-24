@@ -4,7 +4,7 @@ describe 'PUT api/v1/sem/user_sessions/check_in' do
   let(:user)          { create(:user, :sem) }
   let(:session)       { create(:session) }
   let(:user_sessions) { create_list(:user_session, 5, session: session) }
-  let(:params)        { { ids: user_sessions.pluck(:id) } }
+  let(:params)        { { checked_in_ids: user_sessions.pluck(:id) } }
 
   before do
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)

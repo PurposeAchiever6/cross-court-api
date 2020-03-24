@@ -47,11 +47,22 @@ ActiveAdmin.register Session do
         session.time.strftime(Session::TIME_FORMAT)
       end
       row :recurring do |session|
-        IceCube::Rule.from_hash(session.recurring).to_s
+        if session.recurring?
+          IceCube::Rule.from_hash(session.recurring).to_s
+        else
+          'Single occurrence'
+        end
       end
       row :location_name
       row :created_at
       row :updated_at
+    end
+
+    panel 'Time exceptions' do
+      table_for session.session_exceptions.order(date: :desc) do
+        column :id
+        column :date
+      end
     end
 
     date = params[:date]
@@ -74,12 +85,13 @@ ActiveAdmin.register Session do
           }
         end
       end
-    end
 
-    panel 'Time exceptions' do
-      table_for session.session_exceptions.order(date: :desc) do
-        column :id
-        column :date
+      panel 'Users' do
+        user_sessions = resource.user_sessions.not_canceled.by_date(date)
+        render partial: 'show_users', locals: {
+          date: date,
+          user_sessions: user_sessions
+        }
       end
     end
   end

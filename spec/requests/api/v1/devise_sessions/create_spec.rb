@@ -13,23 +13,22 @@ describe 'POST api/v1/users/sign_in', type: :request do
   end
   let(:user) { create(:user, :confirmed, password: password, tokens: token) }
 
+  before do
+    allow(StripeService).to receive(:create_user)
+  end
+
   context 'with correct params' do
-    before do
-      params = {
-        user:
-          {
-            email: user.email,
-            password: password
-          }
-      }
-      post new_user_session_path, params: params, as: :json
-    end
+    let(:params) { { user: { email: user.email, password: password } } }
+
+    subject { post new_user_session_path, params: params, as: :json }
 
     it 'returns success' do
+      subject
       expect(response).to be_successful
     end
 
     it 'returns the user' do
+      subject
       expect(json[:user][:id]).to eq(user.id)
       expect(json[:user][:email]).to eq(user.email)
       expect(json[:user][:uid]).to eq(user.uid)
@@ -39,9 +38,17 @@ describe 'POST api/v1/users/sign_in', type: :request do
     end
 
     it 'returns a valid client and access token' do
+      subject
       token = response.header['access-token']
       client = response.header['client']
       expect(user.reload.valid_token?(token, client)).to be_truthy
+    end
+
+    context 'when the user stripe_id is nil' do
+      it 'calls the stripe service' do
+        expect(StripeService).to receive(:create_user)
+        subject
+      end
     end
   end
 

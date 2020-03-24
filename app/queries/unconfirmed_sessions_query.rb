@@ -8,8 +8,8 @@ class UnconfirmedSessionsQuery
   def finished_cancellation_time
     relation.where('date = (current_timestamp at time zone locations.time_zone)::date AND
     to_char((current_timestamp at time zone locations.time_zone) +
-    interval :confirmation_period hour, :time_format) >
-    to_char(time, :time_format)', confirmation_period: ENV['CONFIRMATION_PERIOD'],
+    interval :cancellation_period hour, :time_format) >
+    to_char(time, :time_format)', cancellation_period: ENV['CANCELLATION_PERIOD'],
                                   time_format: Session::QUERY_TIME_FORMAT)
   end
 
