@@ -22,7 +22,6 @@
 #  confirmation_token          :string
 #  confirmed_at                :datetime
 #  confirmation_sent_at        :datetime
-#  name                        :string           default("")
 #  phone_number                :string
 #  credits                     :integer          default(0), not null
 #  is_referee                  :boolean          default(FALSE), not null
@@ -30,6 +29,8 @@
 #  stripe_id                   :string
 #  free_session_state          :integer          default("not_claimed"), not null
 #  free_session_payment_intent :string
+#  first_name                  :string           default(""), not null
+#  last_name                   :string           default(""), not null
 #
 # Indexes
 #
@@ -43,10 +44,11 @@
 
 FactoryBot.define do
   factory :user do
-    email    { Faker::Internet.unique.email }
-    password { Faker::Internet.password(8) }
-    name     { Faker::Name.name }
-    uid      { Faker::Number.unique.number(10) }
+    email      { Faker::Internet.unique.email }
+    password   { Faker::Internet.password(8) }
+    first_name { Faker::Name.first_name }
+    last_name  { Faker::Name.last_name }
+    uid        { Faker::Number.unique.number(10) }
 
     trait :confirmed do
       confirmed_at { Time.current }

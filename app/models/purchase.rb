@@ -25,5 +25,5 @@ class Purchase < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :credits, :name, presence: true
 
-  delegate :name, :email, :phone_number, to: :user, prefix: true
+  delegate :email, :phone_number, to: :user, prefix: true
 end

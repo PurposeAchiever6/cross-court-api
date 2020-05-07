@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_17_142353) do
+ActiveRecord::Schema.define(version: 2020_05_07_140314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -201,7 +201,6 @@ ActiveRecord::Schema.define(version: 2020_03_17_142353) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string "name", default: ""
     t.string "phone_number"
     t.integer "credits", default: 0, null: false
     t.boolean "is_referee", default: false, null: false
@@ -209,6 +208,8 @@ ActiveRecord::Schema.define(version: 2020_03_17_142353) do
     t.string "stripe_id"
     t.integer "free_session_state", default: 0, null: false
     t.string "free_session_payment_intent"
+    t.string "first_name", default: "", null: false
+    t.string "last_name", default: "", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_referee"], name: "index_users_on_is_referee"

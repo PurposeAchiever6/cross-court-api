@@ -87,7 +87,7 @@ ActiveAdmin.register Session do
       end
 
       panel 'Users' do
-        user_sessions = resource.user_sessions.not_canceled.by_date(date)
+        user_sessions = resource.user_sessions.not_canceled.by_date(date).includes(:user)
         render partial: 'show_users', locals: {
           date: date,
           user_sessions: user_sessions

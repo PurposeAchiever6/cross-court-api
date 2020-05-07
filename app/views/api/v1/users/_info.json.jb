@@ -1,7 +1,8 @@
 {
   id: user.id,
   email: user.email,
-  name: user.name,
+  first_name: user.first_name,
+  last_name: user.last_name,
   phone_number: user.phone_number,
   credits: user.credits,
   is_sem: user.is_sem,

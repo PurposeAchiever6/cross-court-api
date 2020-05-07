@@ -29,7 +29,7 @@ class UserSession < ApplicationRecord
   validates :state, :date, presence: true
 
   delegate :time, :time_zone, to: :session
-  delegate :phone_number, :name, :email, to: :user, prefix: true
+  delegate :phone_number, :email, to: :user, prefix: true
 
   scope :not_canceled, -> { where.not(state: :canceled) }
   scope :past, (lambda do
