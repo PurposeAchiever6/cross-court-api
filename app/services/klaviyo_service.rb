@@ -26,7 +26,8 @@ class KlaviyoService
       email: user_email,
       customer_properties: {
         email: user_email,
-        first_name: user.name,
+        first_name: user.first_name,
+        last_name: user.last_name,
         phone_number: user.phone_number,
         credits: user.credits,
         upcoming_sessions: user.user_sessions.future.not_canceled.count

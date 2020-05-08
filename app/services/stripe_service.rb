@@ -18,7 +18,7 @@ class StripeService
   def self.create_user(user)
     customer = Stripe::Customer.create(
       email: user.email,
-      name: user.name
+      name: user.decorate.full_name
     )
     user.update!(stripe_id: customer.id)
   end
