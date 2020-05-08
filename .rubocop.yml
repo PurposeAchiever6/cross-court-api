@@ -31,6 +31,7 @@ Metrics/AbcSize:
     - app/controllers/api/v1/sessions/user_sessions_controller.rb
     - app/controllers/api/v1/confirmations_controller.rb
     - app/interactors/create_purchase.rb
+    - app/interactors/make_discount.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
@@ -104,6 +105,10 @@ Rails/SkipsModelValidations:
 Rails/HasManyOrHasOneDependent:
   Exclude:
     - app/models/location.rb
+
+Rails/NotNullColumn:
+  Exclude:
+    - db/migrate/20200508180924_add_expiration_date_to_promo_codes.rb
 
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining

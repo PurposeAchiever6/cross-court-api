@@ -42,9 +42,7 @@ class StripeService
     payment_methods.data
   end
 
-  def self.charge(user, payment_method, product, promo_code)
-    price = product.price.to_i
-    price = promo_code.apply_discount(price) if promo_code.present?
+  def self.charge(user, payment_method, price)
     Stripe::PaymentIntent.create(
       amount: price * 100,
       currency: 'usd',

@@ -2,12 +2,13 @@
 #
 # Table name: promo_codes
 #
-#  id         :integer          not null, primary key
-#  discount   :integer          default(0), not null
-#  code       :string           not null
-#  type       :string           not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :integer          not null, primary key
+#  discount        :integer          default(0), not null
+#  code            :string           not null
+#  type            :string           not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  expiration_date :date             not null
 #
 # Indexes
 #
