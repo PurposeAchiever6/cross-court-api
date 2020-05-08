@@ -27,6 +27,7 @@ gem 'rack-cors', '~> 0.4.0'
 gem 'recurring_select', '~> 2.1'
 gem 'sendgrid', '~> 1.2.4'
 gem 'simple_calendar', '~> 2.3'
+gem 'slack-notifier', '~> 2.3', '>= 2.3.2'
 gem 'stripe', '~> 5.11'
 gem 'webpacker', '~> 4.0'
 # Use Redis adapter to run Action Cable in production
