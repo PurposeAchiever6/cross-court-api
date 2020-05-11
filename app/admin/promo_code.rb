@@ -6,6 +6,7 @@ ActiveAdmin.register PromoCode do
       f.input :type, as: :select, collection: PromoCode::TYPES
       f.input :code
       f.input :discount
+      f.input :expiration_date
     end
     f.actions
   end

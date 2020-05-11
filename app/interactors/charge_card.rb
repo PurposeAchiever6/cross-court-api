@@ -2,6 +2,9 @@ class ChargeCard
   include Interactor
 
   def call
-    StripeService.charge(context.user, context.payment_method, context.product, context.promo_code)
+    price = context.price
+    return if price.zero?
+
+    StripeService.charge(context.user, context.payment_method, price)
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_140314) do
+ActiveRecord::Schema.define(version: 2020_05_08_180924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_140314) do
     t.string "type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.date "expiration_date", null: false
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
   end
 
@@ -164,6 +165,15 @@ ActiveRecord::Schema.define(version: 2020_05_07_140314) do
     t.date "end_time"
     t.integer "level", default: 0, null: false
     t.index ["location_id"], name: "index_sessions_on_location_id"
+  end
+
+  create_table "user_promo_codes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "promo_code_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["promo_code_id"], name: "index_user_promo_codes_on_promo_code_id"
+    t.index ["user_id"], name: "index_user_promo_codes_on_user_id"
   end
 
   create_table "user_sessions", force: :cascade do |t|
