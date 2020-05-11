@@ -8,6 +8,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
   before do
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    allow_any_instance_of(SlackService).to receive(:session_booked).and_return(1)
   end
 
   subject do
@@ -32,8 +33,13 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         expect { subject }.to change { user.reload.credits }.from(1).to(0)
       end
 
-      it 'calls the klaviyo service' do
+      it 'calls the Klaviyo service' do
         expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+        subject
+      end
+
+      it 'calls the Slack service' do
+        expect_any_instance_of(SlackService).to receive(:session_booked).and_return(1)
         subject
       end
 
