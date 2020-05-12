@@ -25,11 +25,6 @@ module Api
         ActiveRecord::Base.transaction do
           confirmed_user_session = UserSessionConfirmed.new(user_session)
           confirmed_user_session.save!
-          KlaviyoService.new.event(
-            Event::SESSION_CONFIRMATION,
-            current_user,
-            user_session: user_session
-          )
         end
       end
 

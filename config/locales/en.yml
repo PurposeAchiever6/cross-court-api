@@ -29,6 +29,7 @@ en:
       unauthorized: 'User is not sem'
       user_session:
         invalid_date: 'Invalid date'
+        invalid_confirmation_date: "Can't confirm this session"
         not_enough_credits: 'Not enough credits. Please buy more.'
       free_session: 'Free session already claimed'
       legal: 'Invalid param'
