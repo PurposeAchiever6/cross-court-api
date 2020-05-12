@@ -3,7 +3,7 @@ class MakeDiscount
 
   def call
     promo_code = context.promo_code
-    context.price = context.product.price.to_f
+    context.price = context.product.price.to_i
     return if promo_code.blank?
 
     if promo_code.still_valid?(context.user)
