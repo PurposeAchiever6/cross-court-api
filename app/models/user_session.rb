@@ -59,7 +59,7 @@ class UserSession < ApplicationRecord
   end
 
   def in_confirmation_time?
-    remaining_time < 2.days
+    remaining_time.between?(Session::CANCELLATION_PERIOD, 24.hours)
   end
 
   private

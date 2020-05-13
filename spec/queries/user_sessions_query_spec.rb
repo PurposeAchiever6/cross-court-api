@@ -1,40 +1,38 @@
 require 'rails_helper'
 
-describe ReminderReadyQuery do
-  let(:reminder_ready_query) { ReminderReadyQuery.new }
+describe UserSessionsQuery do
+  let(:user_sessions_query) { UserSessionsQuery.new }
   let(:los_angeles_time) do
     Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
   end
   let(:los_angeles_date) { los_angeles_time.to_date }
 
   before do
-    Timecop.freeze(Time.current)
+    Timecop.freeze(los_angeles_time)
   end
 
   after do
     Timecop.return
   end
 
-  describe '.tomorrow_user_sessions' do
-    context 'when there are no user_sessions for tomorrow' do
+  describe '.finished_cancellation_time' do
+    context 'when there are no user_sessions ready to confirm' do
       it 'returns no user_sessions' do
-        expect(reminder_ready_query.tomorrow_user_sessions).to eq([])
+        expect(user_sessions_query.finished_cancellation_time).to be_empty
       end
     end
 
-    context 'when there are user_sessions for tomorrow' do
+    context 'when there are user_sessions ready to cancel' do
       let(:s1)             { create(:session, time: los_angeles_time) }
-      let(:s2)             { create(:session, time: los_angeles_time + 1.hour) }
       let!(:user_session1) { create(:user_session, session: s1, date: los_angeles_date) }
       let!(:user_session2) { create(:user_session, session: s1, date: los_angeles_date + 1.day) }
-      let!(:user_session3) { create(:user_session, session: s2, date: los_angeles_date + 1.day) }
 
       it 'returns only one user_sessions' do
-        expect(reminder_ready_query.tomorrow_user_sessions.count).to eq(1)
+        expect(user_sessions_query.finished_cancellation_time.count).to eq(1)
       end
 
       it 'returns the right user_sessions' do
-        expect(reminder_ready_query.tomorrow_user_sessions[0].id).to eq(user_session2.id)
+        expect(user_sessions_query.finished_cancellation_time[0][:id]).to eq(user_session1.id)
       end
     end
   end
