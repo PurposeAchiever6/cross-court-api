@@ -108,7 +108,12 @@ detectors:
     accept: []
   UncommunicativeVariableName:
     enabled: true
-    exclude: ['StripeController#load_event', 'SlackService#session_booked']
+    exclude: [
+      'StripeController#load_event',
+      'SlackService#session_booked',
+      'SonarService#add_customer',
+      'SonarService#send_message'
+    ]
     reject:
       - "/^.$/"
       - "/[0-9]$/"

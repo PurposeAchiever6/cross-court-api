@@ -47,14 +47,16 @@ en:
         subject: 'Session confirmation'
         confirmation: 'The session was booked successfully'
         time: 'Date: %{date}, Time: %{time}'
-      reminder:
-        subject: 'Session reminder'
-        message: 'You have a session for tomorrow. Please confirm it'
-      ultimatum:
-        subject: 'Session ultimatum'
-        message: 'You have a session for today. You must confirm it or we will cancel the reservation.'
   notifier:
     session_booked: '%{name} made a reservation for %{date} at %{time} on %{location}'
+    session_confirmed: 'Session confirmed. See you there!'
+    session_canceled: 'Session canceled. See you next time!'
+    unreadable_text: "We couldn't process your response. Please answer Yes to confirm the session or No to cancel it."
+    no_session_booked: "You don't have any session booked yet."
+    24_hour_reminder: "You have a session booked for tomorrow. Answer Yes to confirm your assistance or No to cancel it."
+    8_hour_reminder: "You have a session booked in 8 hours. Answer Yes to confirm your assistance or No to cancel it."
+    7_hour_reminder: "You have a session booked in 7 hours. Answer Yes to confirm your assistance or No to cancel it."
+    ultimatum: 'Cancelation time is over. Your session will be confirmed automatically. See you on the court!'
   admin:
     products:
       created: 'Product created successfully'

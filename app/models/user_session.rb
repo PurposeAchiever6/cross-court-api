@@ -50,6 +50,7 @@ class UserSession < ApplicationRecord
     joins(session: :location)
       .where('date = (current_timestamp at time zone locations.time_zone)::date - 1')
   end)
+  scope :ordered_by_date, -> { order(:date) }
   scope :by_user, ->(user_id) { where(user_id: user_id) }
   scope :by_date, ->(date) { where(date: date) }
   scope :by_session, ->(session_id) { where(session_id: session_id) }
