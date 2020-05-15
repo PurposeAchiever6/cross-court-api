@@ -32,6 +32,7 @@ Metrics/AbcSize:
     - app/controllers/api/v1/confirmations_controller.rb
     - app/interactors/create_purchase.rb
     - app/interactors/make_discount.rb
+    - app/services/sonar_service.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?

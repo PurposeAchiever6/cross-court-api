@@ -7,7 +7,10 @@ module Api
 
       def create
         super
+        return unless @resource.persisted?
+
         KlaviyoService.new.event(Event::SIGN_UP, @resource)
+        SonarService.new(@resource).add_customer
       end
 
       private
