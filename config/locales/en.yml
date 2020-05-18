@@ -55,7 +55,7 @@ en:
     no_session_booked: "You don't have any session booked yet."
     24_hour_reminder: "You have a session booked for tomorrow. Answer Yes to confirm your assistance or No to cancel it."
     8_hour_reminder: "You have a session booked in 8 hours. Answer Yes to confirm your assistance or No to cancel it."
-    7_hour_reminder: "You have a session booked in 7 hours. Answer Yes to confirm your assistance or No to cancel it."
+    6_hour_reminder: "You have a session booked in 6 hours. Answer Yes to confirm your assistance or No to cancel it."
     ultimatum: 'Cancelation time is over. Your session will be confirmed automatically. See you on the court!'
   admin:
     products:

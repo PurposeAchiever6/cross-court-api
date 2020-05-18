@@ -2,7 +2,8 @@ class StripeService
   def self.create_sku(sku_params)
     Stripe::SKU.create(
       attributes: {
-        name: sku_params[:name]
+        name: sku_params[:name],
+        credits: sku_params[:credits]
       },
       price: sku_params[:price].to_i * 100,
       currency: 'usd',

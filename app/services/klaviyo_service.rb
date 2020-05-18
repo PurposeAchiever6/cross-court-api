@@ -40,7 +40,7 @@ class KlaviyoService
              when Event::PURCHASE_PLACED
                { order_price: args[:purchase].price.to_i }
              when Event::SESSION_BOOKED, Event::SESSION_REMINDER_24_HOURS, Event::SESSION_REMINDER_8_HOURS,
-                  Event::SESSION_REMINDER_7_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION
+                  Event::SESSION_REMINDER_6_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION
                user_session = args[:user_session]
                session_id = user_session.session_id
                formatted_date = user_session.date.strftime(Session::DATE_FORMAT)
