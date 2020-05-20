@@ -1,0 +1,15 @@
+session_reminders:
+  cron: "0 * * * *"
+  class: "SessionRemindersJob"
+  queue: default
+
+
+charge_free_session_players:
+  cron: "* 0 * * *"
+  class: "ChargeFreeSessionPlayersJob"
+  queue: default
+
+confirm_unconfirmed_sessions:
+  cron: "10 * * * *"
+  class: "ConfirmUnconfirmedSessionsJob"
+  queue: default
