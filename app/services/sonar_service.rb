@@ -13,13 +13,13 @@ class SonarService
       last_name: user.last_name
     )
   rescue SendSonar::RequestException => e
-    Rails.logger(e)
+    Rails.logger.error(e)
   end
 
   def send_message(message)
     SendSonar.message_customer(text: message, to: user.phone_number)
   rescue SendSonar::RequestException => e
-    Rails.logger(e)
+    Rails.logger.error(e)
   end
 
   def message_received(message)

@@ -33,6 +33,7 @@ Metrics/AbcSize:
     - app/interactors/create_purchase.rb
     - app/interactors/make_discount.rb
     - app/services/sonar_service.rb
+    - app/jobs/session_reminders_job.jb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
