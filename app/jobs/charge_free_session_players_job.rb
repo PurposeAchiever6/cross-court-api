@@ -1,5 +1,5 @@
 class ChargeFreeSessionPlayersJob < ApplicationJob
-  include Sidekiq::Worker
+  queue_as :default
 
   def perform
     FreeSessionQuery.new.chargeable.find_each do |user_session|

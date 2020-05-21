@@ -10,7 +10,7 @@ module Api
         return unless @resource.persisted?
 
         KlaviyoService.new.event(Event::SIGN_UP, @resource)
-        SonarService.new(@resource).add_customer
+        SonarService.add_customer(@resource)
       end
 
       private

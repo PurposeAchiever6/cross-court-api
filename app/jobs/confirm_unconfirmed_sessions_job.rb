@@ -1,5 +1,5 @@
 class ConfirmUnconfirmedSessionsJob < ApplicationJob
-  include Sidekiq::Worker
+  queue_as :default
 
   def perform
     klaviyo_service = KlaviyoService.new

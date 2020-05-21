@@ -18,7 +18,7 @@ detectors:
     min_clump_size: 2
   DuplicateMethodCall:
     enabled: true
-    exclude: []
+    exclude: ['SessionRemindersJob#perform', 'SonarService#message_received']
     max_calls: 1
     allow_calls: []
   FeatureEnvy:
@@ -78,8 +78,7 @@ detectors:
     max_methods: 25
   TooManyStatements:
     enabled: true
-    exclude:
-      - initialize
+    exclude: ['SessionRemindersJob#perform']
     max_statements: 12
   UncommunicativeMethodName:
     enabled: true
