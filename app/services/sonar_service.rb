@@ -1,11 +1,7 @@
-class SonarService
-  attr_reader :user
+module SonarService
+  extend self
 
-  def initialize(user)
-    @user = user
-  end
-
-  def add_customer
+  def add_customer(user)
     SendSonar.add_update_customer(
       phone_number: user.phone_number,
       email: user.email,
@@ -16,13 +12,13 @@ class SonarService
     Rails.logger.error(e)
   end
 
-  def send_message(message)
+  def send_message(user, message)
     SendSonar.message_customer(text: message, to: user.phone_number)
   rescue SendSonar::RequestException => e
     Rails.logger.error(e)
   end
 
-  def message_received(message)
+  def message_received(user, message)
     user_session = user.user_sessions.future.reserved.ordered_by_date.first
     if user_session.present?
       if positive_message?(message)
@@ -30,7 +26,14 @@ class SonarService
         send_message(user, I18n.t('notifier.session_confirmed'))
       elsif negative_message?(message)
         CanceledUserSession.new(user_session).save!
-        send_message(user, I18n.t('notifier.session_canceled'))
+        message = if user_session.in_cancellation_time?
+                    I18n.t('notifier.session_canceled_in_time', schedule_url: ENV['SCHEDULE_URL'])
+                  else
+                    I18n.t('notifier.session_canceled_out_of_time',
+                           schedule_url: ENV['SCHEDULE_URL'],
+                           cancellation_period: ENV['CANCELLATION_PERIOD'])
+                  end
+        send_message(user, message)
       else
         send_message(user, I18n.t('notifier.unreadable_text'))
       end

@@ -8,7 +8,7 @@ describe 'POST api/v1/users', type: :request do
     stub_request(:post, %r{stripe.com/v1/customers})
       .to_return(status: 200, body: File.new('spec/fixtures/customer_creation_ok.json'))
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
-    allow_any_instance_of(SonarService).to receive(:add_customer).and_return(1)
+    allow(SonarService).to receive(:add_customer).and_return(1)
   end
 
   describe 'POST create' do
@@ -61,7 +61,7 @@ describe 'POST api/v1/users', type: :request do
     end
 
     it 'calls the sonar service' do
-      expect_any_instance_of(SonarService).to receive(:add_customer).and_return(1)
+      expect(SonarService).to receive(:add_customer).and_return(1)
       subject
     end
 
