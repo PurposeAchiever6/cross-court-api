@@ -5,6 +5,18 @@ class EmployeeSessionsQuery
     @user = user
   end
 
+  def sorted_future_sessions
+    future_sessions.sort do |s1, s2|
+      if s1.date == s2.date
+        s1.time - s2.time
+      else
+        s1.date - s2.date
+      end
+    end
+  end
+
+  private
+
   def future_sessions
     [
       user.sem_sessions

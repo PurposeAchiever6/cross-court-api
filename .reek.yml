@@ -18,12 +18,17 @@ detectors:
     min_clump_size: 2
   DuplicateMethodCall:
     enabled: true
-    exclude: ['SessionRemindersJob#perform', 'SonarService#message_received']
+    exclude: ['SessionRemindersJob#perform', 'SonarService#message_received', 'EmployeeSessionsQuery#sorted_future_sessions']
     max_calls: 1
     allow_calls: []
   FeatureEnvy:
     enabled: true
-    exclude: ['CreatePurchase#call', 'KlaviyoService#purchase_placed', 'KlaviyoService#general_event_attributes']
+    exclude: [
+      'CreatePurchase#call',
+      'KlaviyoService#purchase_placed',
+      'KlaviyoService#general_event_attributes',
+      'EmployeeSessionsQuery#sorted_future_sessions'  
+    ]
   InstanceVariableAssumption:
     enabled: false
   IrresponsibleModule:
@@ -111,7 +116,8 @@ detectors:
       'StripeController#load_event',
       'SlackService#session_booked',
       'SonarService#add_customer',
-      'SonarService#send_message'
+      'SonarService#send_message',
+      'EmployeeSessionsQuery#sorted_future_sessions'
     ]
     reject:
       - "/^.$/"

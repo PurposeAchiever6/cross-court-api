@@ -34,7 +34,6 @@ ActiveAdmin.register User do
     column :is_referee
     column :phone_number
     column :credits
-    column :sign_in_count
     column :created_at
 
     actions
