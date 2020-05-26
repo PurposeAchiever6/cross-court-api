@@ -105,6 +105,7 @@ Rails/SaveBang:
 
 Rails/SkipsModelValidations:
   Exclude:
+    - app/controllers/api/v1/sem/user_sessions_controller.rb
 
 Rails/HasManyOrHasOneDependent:
   Exclude:

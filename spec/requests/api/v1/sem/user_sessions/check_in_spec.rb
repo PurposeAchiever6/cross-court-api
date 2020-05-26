@@ -24,9 +24,8 @@ describe 'PUT api/v1/sem/user_sessions/check_in' do
       expect { subject }.to change { UserSession.where(checked_in: true).count }.from(0).to(5)
     end
 
-    it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
-      subject
+    it 'queues the call to KlaviyoCheckInUsers job' do
+      expect { subject }.to change(KlaviyoCheckInUsers.jobs, :size).by(1)
     end
   end
 
