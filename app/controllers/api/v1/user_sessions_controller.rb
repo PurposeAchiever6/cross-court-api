@@ -11,7 +11,7 @@ module Api
                                           .not_canceled
                                           .order(:date)
                                           .includes(session: [location: [image_attachment: :blob]])
-        @employee_upcoming_sessions = EmployeeSessionsQuery.new(current_user).future_sessions
+        @employee_upcoming_sessions = EmployeeSessionsQuery.new(current_user).sorted_future_sessions
       end
 
       def cancel
