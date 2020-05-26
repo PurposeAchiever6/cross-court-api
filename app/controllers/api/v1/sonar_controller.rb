@@ -29,6 +29,10 @@ module Api
       def handle_new_unassigned_message
         SonarService.message_received(user, text)
       end
+
+      def handle_new_assigned_message
+        SonarService.message_received(user, text)
+      end
     end
   end
 end

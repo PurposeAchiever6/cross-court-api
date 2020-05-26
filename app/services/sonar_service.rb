@@ -42,11 +42,11 @@ module SonarService
     end
   end
 
-  def positive_message?
+  def positive_message?(message)
     %w[yes y].include?(message.downcase)
   end
 
-  def negative_message?
+  def negative_message?(message)
     %w[no n].include?(message.downcase)
   end
 end
