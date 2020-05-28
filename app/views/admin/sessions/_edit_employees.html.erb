@@ -5,7 +5,7 @@
         <b>Referee</b>
       </td>
       <td>
-        <%= select_tag(:referee_id, options_from_collection_for_select(User.referees.decorate, 'id', 'full_name', referee&.id), include_blank: true) %>
+        <%= select_tag(:referee_id, options_from_collection_for_select(User.referees, 'id', 'full_name', referee&.id), include_blank: true) %>
       </td>
     </tr>
     <tr>
@@ -13,7 +13,7 @@
         <b>SEM</b>
       </td>
       <td>
-        <%= select_tag(:sem_id, options_from_collection_for_select(User.sems.decorate, 'id', 'full_name', sem&.id), include_blank: true) %>
+        <%= select_tag(:sem_id, options_from_collection_for_select(User.sems, 'id', 'full_name', sem&.id), include_blank: true) %>
       </td>
     </tr>
   </table>

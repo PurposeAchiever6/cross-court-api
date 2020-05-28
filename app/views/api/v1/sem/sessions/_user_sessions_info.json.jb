@@ -1,5 +1,5 @@
 {
   id: user_session.id,
-  name: user_session.user.decorate.full_name,
+  name: user_session.user.full_name,
   checked_in: user_session.checked_in
 }
