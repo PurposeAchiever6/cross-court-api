@@ -6,12 +6,32 @@ class SlackService
   end
 
   def session_booked(user, date, time, location)
-    notifier.ping(
-      I18n.t('notifier.session_booked', name: user.decorate.full_name,
-                                        date: date.strftime(Session::DATE_FORMAT),
-                                        time: time.strftime(Session::TIME_FORMAT),
-                                        location: location.name)
-    )
+    notify(I18n.t('notifier.slack.session_booked', name: user.decorate.full_name,
+                                                   date: date.strftime(Session::DATE_FORMAT),
+                                                   time: time.strftime(Session::TIME_FORMAT),
+                                                   location: location.name))
+  end
+
+  def session_canceled_in_time(user, date, time, location)
+    notify(I18n.t('notifier.slack.session_canceled_in_time',
+                  name: user.decorate.full_name,
+                  date: date.strftime(Session::DATE_FORMAT),
+                  time: time.strftime(Session::TIME_FORMAT),
+                  location: location.name))
+  end
+
+  def session_canceled_out_of_time(user, date, time, location)
+    notify(I18n.t('notifier.slack.session_canceled_out_of_time',
+                  name: user.decorate.full_name,
+                  date: date.strftime(Session::DATE_FORMAT),
+                  time: time.strftime(Session::TIME_FORMAT),
+                  location: location.name))
+  end
+
+  private
+
+  def notify(message)
+    notifier.ping(message)
   rescue Slack::Notifier::APIError => e
     Rails.logger.error e
   end

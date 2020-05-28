@@ -13,7 +13,7 @@ detectors:
     exclude: ['KlaviyoService#specific_event_attributes']
   DataClump:
     enabled: true
-    exclude: []
+    exclude: ['SlackService']
     max_copies: 2
     min_clump_size: 2
   DuplicateMethodCall:
@@ -114,7 +114,7 @@ detectors:
     enabled: true
     exclude: [
       'StripeController#load_event',
-      'SlackService#session_booked',
+      'SlackService#notify',
       'SonarService#add_customer',
       'SonarService#send_message',
       'EmployeeSessionsQuery#sorted_future_sessions'
