@@ -8,6 +8,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
   before do
     Timecop.freeze(Time.current)
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    allow_any_instance_of(SlackService).to receive(:session_confirmed).and_return(1)
   end
 
   after do
@@ -31,6 +32,11 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
 
     it 'changes the user_session state to confirmed' do
       expect { subject }.to change { user_session.reload.state }.from('reserved').to('confirmed')
+    end
+
+    it 'calls the Slack service session_confirmed method' do
+      expect_any_instance_of(SlackService).to receive(:session_confirmed)
+      subject
     end
 
     context 'when the user_session is canceled' do
