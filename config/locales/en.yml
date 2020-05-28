@@ -57,9 +57,9 @@ en:
     session_canceled_out_of_time: 'We’ll miss you! Unfortunately, we’re not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here’s a link to the upcoming schedule: %{schedule_url}'
     unreadable_text: "We couldn't process your response. Please answer Yes to confirm the session or No to cancel it."
     no_session_booked: "You don't have any session booked yet."
-    tomorrow_reminder: 'Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at %{location}. Please respond ‘Y’ to confirm or ’N’ to cancel. Thank you!'
-    today_reminder: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at %{location}. Please respond ‘Y’ to confirm or ’N’ to cancel. Thank you!'
-    ultimatum: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at %{location}. Please respond ‘Y’ to confirm or ’N’ to cancel. Also note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point. Thank you!'
+    tomorrow_reminder: 'Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at %{location}. Please respond ‘Y’ to confirm so we can verify your spot on tomorrow’s #ccteam. Thank you!'
+    today_reminder: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ to confirm so we can verify your spot on today’s #ccteam. Thank you!'
+    ultimatum: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ to confirm so we can verify your spot on today’s #ccteam. Also note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point. Thank you!'
   admin:
     products:
       created: 'Product created successfully'
