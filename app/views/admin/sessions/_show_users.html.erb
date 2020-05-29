@@ -7,7 +7,7 @@
     <% user_sessions.each do |user_session| %>
       <tr>
         <td>
-          <%= link_to user_session.user.decorate.full_name, admin_user_path(user_session.user_id) %>
+          <%= link_to user_session.user.full_name, admin_user_path(user_session.user_id) %>
         </td>
         <td>
           <%= user_session.state.humanize %>

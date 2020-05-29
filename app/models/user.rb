@@ -79,6 +79,10 @@ class User < ApplicationRecord
     is_sem || is_referee
   end
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   private
 
   def uses_email?

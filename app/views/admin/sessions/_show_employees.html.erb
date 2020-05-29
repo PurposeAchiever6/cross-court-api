@@ -5,7 +5,7 @@
         <b>Referee</b>
       </td>
       <td>
-        <%= link_to referee.decorate.full_name, admin_user_path(referee.id) %>
+        <%= link_to referee.full_name, admin_user_path(referee.id) %>
       </td>
     </tr>
     <tr>
@@ -13,7 +13,7 @@
         <b>SEM</b>
       </td>
       <td>
-        <%= link_to sem.decorate.full_name, admin_user_path(sem.id) %>
+        <%= link_to sem.full_name, admin_user_path(sem.id) %>
       </td>
     </tr>
   </table>

@@ -29,7 +29,7 @@ class SlackService
   private
 
   def notify(i18n_message)
-    notifier.ping(I18n.t(i18n_message, name: user.decorate.full_name,
+    notifier.ping(I18n.t(i18n_message, name: user.full_name,
                                        date: date.strftime(Session::DATE_FORMAT),
                                        time: time.strftime(Session::TIME_FORMAT),
                                        location: location.name))
