@@ -55,7 +55,7 @@ en:
     session_confirmed: 'You’re locked in! Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to check-in are in the first game. Don’t forget to bring a water, ball, and towel if you’ve got em. Let’s get it!'
     session_canceled_in_time: 'We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}'
     session_canceled_out_of_time: 'We’ll miss you! Unfortunately, we’re not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here’s a link to the upcoming schedule: %{schedule_url}'
-    unreadable_text: "We couldn't process your response. Please answer Yes to confirm the session or No to cancel it."
+    unreadable_text: "We couldn't process your response. Please respond ‘Y’ to confirm."
     no_session_booked: "You don't have any session booked yet."
     tomorrow_reminder: 'Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at %{location}. Please respond ‘Y’ to confirm so we can verify your spot on tomorrow’s #ccteam. Thank you!'
     today_reminder: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ to confirm so we can verify your spot on today’s #ccteam. Thank you!'
