@@ -8,7 +8,7 @@ class UserSessionSlackNotification
   end
 
   def save!
-    SlackService.new.session_booked(user, date, time, location)
+    SlackService.new(user, date, time, location).session_booked
     user_session.save!
   end
 end

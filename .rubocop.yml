@@ -28,6 +28,7 @@ Metrics/AbcSize:
     - app/models/concerns/employee_session.rb
     - app/decorators/user_session_consume_credit.rb
     - app/decorators/canceled_user_session.rb
+    - app/decorators/user_session_confirmed.rb
     - app/controllers/api/v1/sessions_controller.rb
     - app/controllers/api/v1/sessions/user_sessions_controller.rb
     - app/controllers/api/v1/confirmations_controller.rb
