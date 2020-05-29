@@ -19,7 +19,7 @@
 
 class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
-  TIME_FORMAT = '%H:%M'.freeze
+  TIME_FORMAT = '%l:%M %P'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
   MAX_CAPACITY = ENV['MAX_CAPACITY'].to_i.freeze
