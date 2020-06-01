@@ -10,4 +10,6 @@ module Event
   CLAIMED_FREE_SESSION = 'Claimed Free Session'.freeze
   SIGN_UP = 'Sign Up'.freeze
   PURCHASE_PLACED = 'Purchase Placed'.freeze
+  SESSION_CANCELED_IN_TIME = 'Session Canceled In Time'.freeze
+  SESSION_CANCELED_OUT_OF_TIME = 'Session Canceled Out Of Time'.freeze
 end
