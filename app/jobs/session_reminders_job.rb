@@ -41,10 +41,7 @@ class SessionRemindersJob < ApplicationJob
     UltimatumReadyQuery.new.confirmation_pending.find_each do |user_session|
       user = user_session.user
       klaviyo_service.event(Event::SESSION_ULTIMATUM, user_session.user, user_session: user_session)
-      SonarService.send_message(user, I18n.t('notifier.ultimatum',
-                                             name: user.first_name,
-                                             time: user_session.time.strftime(Session::TIME_FORMAT),
-                                             location: user_session.location.name))
+      SonarService.send_message(user, I18n.t('notifier.ultimatum', name: user.first_name))
     end
   end
 end

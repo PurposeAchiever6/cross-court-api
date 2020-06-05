@@ -10,9 +10,9 @@ module Api
               date: params[:date]
             )
             user_session = UserSessionSlackNotification.new(user_session)
-            user_session = UserSessionWithValidDate.new(user_session)
             user_session = UserSessionAutoConfirmed.new(user_session)
             user_session = UserSessionConsumeCredit.new(user_session)
+            user_session = UserSessionWithValidDate.new(user_session)
             user_session = UserSessionNotFull.new(user_session)
             user_session.save!
             KlaviyoService.new

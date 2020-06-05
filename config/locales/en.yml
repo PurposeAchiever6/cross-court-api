@@ -60,7 +60,7 @@ en:
     no_session_booked: "You don't have any session booked yet."
     tomorrow_reminder: 'Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at %{location}. Please respond ‘Y’ to confirm so we can verify your spot on tomorrow’s #ccteam. Thank you!'
     today_reminder: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ to confirm so we can verify your spot on today’s #ccteam. Thank you!'
-    ultimatum: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ to confirm so we can verify your spot on today’s #ccteam. Also note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point. Thank you!'
+    ultimatum: 'Hey %{name}! You’re locked in for today’s Crosscourt Session. Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to the check-in will begin the session. Don’t forget to bring a water, ball, and towel if you’ve got em. Also note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point. Thank you!'
   admin:
     products:
       created: 'Product created successfully'

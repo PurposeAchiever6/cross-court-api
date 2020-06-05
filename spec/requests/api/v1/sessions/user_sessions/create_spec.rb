@@ -60,6 +60,10 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       context 'when booking outside the cancellation time' do
+        before do
+          allow(SonarService).to receive(:send_message).and_return(1)
+        end
+
         let(:time) do
           Time.current.in_time_zone('America/Los_Angeles') + Session::CANCELLATION_PERIOD - 1.minute
         end
@@ -69,6 +73,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         it 'confirms the session automatically' do
           subject
           expect(UserSession.first.state).to eq('confirmed')
+        end
+
+        it 'calls the sonar service send_message method' do
+          expect(SonarService).to receive(:send_message).and_return(1)
+          subject
         end
       end
 
