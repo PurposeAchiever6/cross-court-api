@@ -8,7 +8,10 @@ class UserSessionAutoConfirmed
   end
 
   def save!
-    user_session.state = :confirmed unless user_session.in_cancellation_time?
+    unless user_session.in_cancellation_time?
+      user_session.state = :confirmed
+      SonarService.send_message(user, I18n.t('notifier.ultimatum', name: user.first_name))
+    end
     user_session.save!
   end
 end
