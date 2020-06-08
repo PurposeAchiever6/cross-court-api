@@ -6,6 +6,9 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
   end
 
   before do
+    allow_any_instance_of(SlackService).to receive(:session_canceled_in_time).and_return(1)
+    allow_any_instance_of(SlackService).to receive(:session_canceled_out_of_time).and_return(1)
+    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
     Timecop.freeze(Time.current)
   end
 
@@ -37,6 +40,20 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     it 'reimburses the credit to the user' do
       expect { subject }.to change { user.reload.credits }.from(0).to(1)
     end
+
+    it 'sets user_session credit_reimbursed to true' do
+      expect { subject }.to change { user_session.reload.credit_reimbursed }.from(false).to(true)
+    end
+
+    it 'calls the slack service session_canceled_in_time method' do
+      expect_any_instance_of(SlackService).to receive(:session_canceled_in_time).and_return(1)
+      subject
+    end
+
+    it 'calls the klaviyo service' do
+      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+      subject
+    end
   end
 
   context 'when not in valid cancellation time' do
@@ -56,6 +73,11 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
 
     it "doesn't reimburse the credit to the user" do
       expect { subject }.not_to change { user.reload.credits }
+    end
+
+    it 'calls the slack service session_canceled_out_of_time method' do
+      expect_any_instance_of(SlackService).to receive(:session_canceled_out_of_time).and_return(1)
+      subject
     end
   end
 

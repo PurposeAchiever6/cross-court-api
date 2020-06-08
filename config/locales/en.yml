@@ -29,6 +29,7 @@ en:
       unauthorized: 'User is not sem'
       user_session:
         invalid_date: 'Invalid date'
+        invalid_confirmation_date: "Can't confirm this session"
         not_enough_credits: 'Not enough credits. Please buy more.'
       free_session: 'Free session already claimed'
       legal: 'Invalid param'
@@ -37,7 +38,7 @@ en:
       promo_code:
         invalid: 'Invalid promo code'
   mailer:
-    greeting: 'Sincerely, CrossCourt Team'
+    greeting: 'Sincerely, Crosscourt Team'
     session:
       cancel: 'If you need to cancel the session click'
       here: 'here'
@@ -46,13 +47,20 @@ en:
         subject: 'Session confirmation'
         confirmation: 'The session was booked successfully'
         time: 'Date: %{date}, Time: %{time}'
-      reminder:
-        subject: 'Session reminder'
-        message: 'You have a session for tomorrow. Please confirm it'
-      ultimatum:
-        subject: 'Session ultimatum'
-        message: 'You have a session for today. You must confirm it or we will cancel the reservation.'
-
+  notifier:
+    slack:
+      session_booked: '%{name} made a reservation for %{date} at %{time} on %{location}'
+      session_confirmed: '%{name} confirmed the reservation for %{date} at %{time} on %{location}'
+      session_canceled_in_time: '%{name} cancelled in time the reservation for %{date} at %{time} on %{location}'
+      session_canceled_out_of_time: '%{name} cancelled out of time the reservation for %{date} at %{time} on %{location}'
+    session_confirmed: 'You’re locked in! Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to check-in are in the first game. Don’t forget to bring a water, ball, and towel if you’ve got em. Let’s get it!'
+    session_canceled_in_time: 'We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}'
+    session_canceled_out_of_time: 'We’ll miss you! Unfortunately, we’re not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here’s a link to the upcoming schedule: %{schedule_url}'
+    unreadable_text: "We couldn't process your response. Please respond ‘Y’ to confirm."
+    no_session_booked: "You don't have any session booked yet."
+    tomorrow_reminder: 'Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at %{location}. Please respond ‘Y’ to confirm so we can verify your spot on tomorrow’s #ccteam. Thank you!'
+    today_reminder: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ to confirm so we can verify your spot on today’s #ccteam. Thank you!'
+    ultimatum: 'Hey %{name}! You’re locked in for today’s Crosscourt Session. Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to the check-in will begin the session. Don’t forget to bring a water, ball, and towel if you’ve got em. Also note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point. Thank you!'
   admin:
     products:
       created: 'Product created successfully'

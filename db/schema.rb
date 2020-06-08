@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_163658) do
+ActiveRecord::Schema.define(version: 2020_05_08_180924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_163658) do
     t.string "type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.date "expiration_date", null: false
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
   end
 
@@ -166,6 +167,15 @@ ActiveRecord::Schema.define(version: 2020_02_26_163658) do
     t.index ["location_id"], name: "index_sessions_on_location_id"
   end
 
+  create_table "user_promo_codes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "promo_code_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["promo_code_id"], name: "index_user_promo_codes_on_promo_code_id"
+    t.index ["user_id"], name: "index_user_promo_codes_on_user_id"
+  end
+
   create_table "user_sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "session_id", null: false
@@ -176,6 +186,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_163658) do
     t.boolean "checked_in", default: false, null: false
     t.boolean "is_free_session", default: false, null: false
     t.string "free_session_payment_intent"
+    t.boolean "credit_reimbursed", default: false, null: false
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
@@ -200,7 +211,6 @@ ActiveRecord::Schema.define(version: 2020_02_26_163658) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string "name", default: ""
     t.string "phone_number"
     t.integer "credits", default: 0, null: false
     t.boolean "is_referee", default: false, null: false
@@ -208,6 +218,8 @@ ActiveRecord::Schema.define(version: 2020_02_26_163658) do
     t.string "stripe_id"
     t.integer "free_session_state", default: 0, null: false
     t.string "free_session_payment_intent"
+    t.string "first_name", default: "", null: false
+    t.string "last_name", default: "", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_referee"], name: "index_users_on_is_referee"

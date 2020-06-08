@@ -4,7 +4,7 @@ describe 'PUT api/v1/sem/user_sessions/check_in' do
   let(:user)          { create(:user, :sem) }
   let(:session)       { create(:session) }
   let(:user_sessions) { create_list(:user_session, 5, session: session) }
-  let(:params)        { { ids: user_sessions.pluck(:id) } }
+  let(:params)        { { checked_in_ids: user_sessions.pluck(:id) } }
 
   before do
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
@@ -24,9 +24,8 @@ describe 'PUT api/v1/sem/user_sessions/check_in' do
       expect { subject }.to change { UserSession.where(checked_in: true).count }.from(0).to(5)
     end
 
-    it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
-      subject
+    it 'queues the call to KlaviyoCheckInUsers job' do
+      expect { subject }.to change(KlaviyoCheckInUsers.jobs, :size).by(1)
     end
   end
 

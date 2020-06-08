@@ -7,7 +7,6 @@ describe UltimatumReadyQuery do
   end
   let(:los_angeles_date) { los_angeles_time.to_date }
   let(:cancellation_period) { ENV['CANCELLATION_PERIOD'].to_i.hours }
-  let(:ultimatum_period) { ENV['ULTIMATUM_PERIOD'].to_i.hours }
 
   before do
     Timecop.freeze(Time.current)
@@ -26,7 +25,7 @@ describe UltimatumReadyQuery do
 
     context 'when there are unconfirmed user_sessions ultimatum pending' do
       let(:s1) do
-        create(:session, time: los_angeles_time + cancellation_period + ultimatum_period)
+        create(:session, time: los_angeles_time + cancellation_period)
       end
       let!(:user_session1) { create(:user_session, session: s1, date: los_angeles_date) }
       let!(:user_session2) { create(:user_session, session: s1, date: los_angeles_date + 1.day) }

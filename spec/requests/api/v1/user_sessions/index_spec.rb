@@ -55,14 +55,15 @@ describe 'GET api/v1/user_sessions' do
 
   context 'when the user is a sem' do
     before do
-      user.update!(is_sem: true)
+      user.update!(is_sem: true, is_referee: true)
     end
 
     context 'when the session is not in starting time' do
       let(:s1)           { create(:session, :daily, time: los_angeles_time) }
-      let!(:sem_session) { create(:sem_session, session: s1, user: user, date: Date.tomorrow) }
+      let(:s2)           { create(:session, :daily, time: los_angeles_time) }
+      let!(:sem_session) { create(:sem_session, session: s1, user: user, date: 2.days.from_now) }
       let!(:referee_session1) do
-        create(:referee_session, session: s1, user: user, date: 2.days.from_now)
+        create(:referee_session, session: s2, user: user, date: 2.days.from_now)
       end
 
       it 'returns sem_upcoming_sessions' do
@@ -77,7 +78,7 @@ describe 'GET api/v1/user_sessions' do
 
       context 'when the user is also the referee' do
         let!(:referee_session2) do
-          create(:referee_session, session: s1, user: user, date: Date.tomorrow)
+          create(:referee_session, session: s1, user: user, date: 2.days.from_now)
         end
 
         it 'returns only two upcoming_sessions' do

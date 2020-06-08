@@ -32,6 +32,9 @@ config/application.yml
 # Ignore byebug history
 .byebug_history
 
+# Redis
+dump.rdb
+
 /public/packs
 /public/packs-test
 /node_modules

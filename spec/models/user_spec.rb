@@ -22,7 +22,6 @@
 #  confirmation_token          :string
 #  confirmed_at                :datetime
 #  confirmation_sent_at        :datetime
-#  name                        :string           default("")
 #  phone_number                :string
 #  credits                     :integer          default(0), not null
 #  is_referee                  :boolean          default(FALSE), not null
@@ -30,6 +29,8 @@
 #  stripe_id                   :string
 #  free_session_state          :integer          default("not_claimed"), not null
 #  free_session_payment_intent :string
+#  first_name                  :string           default(""), not null
+#  last_name                   :string           default(""), not null
 #
 # Indexes
 #

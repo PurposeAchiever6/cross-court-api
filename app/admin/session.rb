@@ -47,7 +47,11 @@ ActiveAdmin.register Session do
         session.time.strftime(Session::TIME_FORMAT)
       end
       row :recurring do |session|
-        IceCube::Rule.from_hash(session.recurring).to_s
+        if session.recurring?
+          IceCube::Rule.from_hash(session.recurring).to_s
+        else
+          'Single occurrence'
+        end
       end
       row :location_name
       row :created_at
@@ -83,7 +87,7 @@ ActiveAdmin.register Session do
       end
 
       panel 'Users' do
-        user_sessions = resource.user_sessions.visible_for_player.by_date(date)
+        user_sessions = resource.user_sessions.not_canceled.by_date(date).includes(:user)
         render partial: 'show_users', locals: {
           date: date,
           user_sessions: user_sessions

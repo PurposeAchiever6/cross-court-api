@@ -19,7 +19,7 @@
 
 class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
-  TIME_FORMAT = '%H:%M'.freeze
+  TIME_FORMAT = '%l:%M %P'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
   MAX_CAPACITY = ENV['MAX_CAPACITY'].to_i.freeze
@@ -98,11 +98,11 @@ class Session < ApplicationRecord
   end
 
   def full?(date)
-    user_sessions.visible_for_player.by_date(date).count == MAX_CAPACITY
+    user_sessions.not_canceled.by_date(date).count == MAX_CAPACITY
   end
 
   def spots_left(date)
-    MAX_CAPACITY - user_sessions.visible_for_player.by_date(date).count
+    MAX_CAPACITY - user_sessions.not_canceled.by_date(date).count
   end
 
   private

@@ -11,21 +11,24 @@ module Api
         @user_session = selected_session.user_sessions
                                         .by_user(current_user)
                                         .by_date(date)
-                                        .visible_for_player
+                                        .not_canceled
                                         .first
       end
 
       def index
-        @user_sessions = UserSession.future.by_user(current_user)
-        @sessions = Session.includes(:location, :session_exceptions)
-                           .by_location(params[:location_id])
-                           .for_range(from_date, to_date)
-                           .flat_map do |session_event|
-                             session_event.calendar_events(from_date, to_date)
-                           end
+        @user_sessions = UserSession.future.not_canceled.by_user(current_user)
+                                    .group(:session_id, :date).count
+        @sessions = SessionDecorator.decorate_collection(
+          Session.includes(:location, :session_exceptions)
+                 .by_location(params[:location_id])
+                 .for_range(from_date, to_date)
+                 .flat_map do |session_event|
+                   session_event.calendar_events(from_date, to_date)
+                 end
+        )
         @user_sessions_count = UserSession.where(date: (from_date..to_date))
                                           .group(:session_id, :date)
-                                          .visible_for_player
+                                          .not_canceled
                                           .count
       end
 
@@ -33,7 +36,7 @@ module Api
 
       def date
         @date = params[:date]
-        @date ||= Date.parse(@date) if @date.present?
+        @date = Date.parse(@date) if @date.present?
       end
 
       def from_date

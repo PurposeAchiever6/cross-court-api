@@ -1,12 +1,13 @@
 ActiveAdmin.register User do
-  permit_params :email, :name, :phone_number, :password, :password_confirmation,
+  permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :credits, :confirmed_at
 
   form do |f|
     f.object.confirmed_at = Time.current
     f.inputs 'Details' do
       f.input :email
-      f.input :name
+      f.input :first_name
+      f.input :last_name
       f.input :phone_number
       f.input :credits
       f.input :is_referee
@@ -27,12 +28,12 @@ ActiveAdmin.register User do
     selectable_column
     id_column
     column :email
-    column :name
+    column :first_name
+    column :last_name
     column :is_sem
     column :is_referee
     column :phone_number
     column :credits
-    column :sign_in_count
     column :created_at
 
     actions
@@ -40,7 +41,8 @@ ActiveAdmin.register User do
 
   filter :id
   filter :email
-  filter :name
+  filter :first_name
+  filter :last_name
   filter :is_sem
   filter :is_referee
   filter :created_at
@@ -49,7 +51,8 @@ ActiveAdmin.register User do
     attributes_table do
       row :id
       row :email
-      row :name
+      row :first_name
+      row :last_name
       row :image do |user|
         image_tag url_for(user.image) if user.image.attached?
       end

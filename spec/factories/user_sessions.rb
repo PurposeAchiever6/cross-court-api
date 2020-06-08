@@ -12,6 +12,7 @@
 #  checked_in                  :boolean          default(FALSE), not null
 #  is_free_session             :boolean          default(FALSE), not null
 #  free_session_payment_intent :string
+#  credit_reimbursed           :boolean          default(FALSE), not null
 #
 # Indexes
 #

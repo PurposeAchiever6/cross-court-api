@@ -5,7 +5,7 @@ describe 'PUT api/v1/user/', type: :request do
   let(:api_v1_user_path) { '/api/v1/user' }
 
   context 'with valid params' do
-    let(:params) { { user: { name: 'new name' } } }
+    let(:params) { { user: { first_name: 'new first_name' } } }
 
     it 'returns success' do
       put api_v1_user_path, params: params, headers: auth_headers, as: :json
@@ -14,7 +14,7 @@ describe 'PUT api/v1/user/', type: :request do
 
     it 'updates the user' do
       put api_v1_user_path, params: params, headers: auth_headers, as: :json
-      expect(user.reload.name).to eq(params[:user][:name])
+      expect(user.reload.first_name).to eq(params[:user][:first_name])
     end
 
     it 'returns the user' do

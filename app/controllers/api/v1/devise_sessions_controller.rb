@@ -21,7 +21,7 @@ module Api
       end
 
       def create_stripe_user
-        return if @resource.stripe_id.present?
+        return if @resource.blank? || @resource&.stripe_id.present?
 
         StripeService.create_user(@resource)
       end
