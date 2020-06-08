@@ -6,6 +6,9 @@ require 'factory_bot_rails'
 require 'helpers'
 require 'webmock/rspec'
 require 'shoulda/matchers'
+require 'sidekiq/testing'
+
+Sidekiq::Testing.fake!
 
 FactoryBot.factories.clear
 FactoryBot.reload

@@ -28,8 +28,8 @@ class UserSession < ApplicationRecord
 
   validates :state, :date, presence: true
 
-  delegate :time, :time_zone, to: :session
-  delegate :phone_number, :name, :email, to: :user, prefix: true
+  delegate :time, :time_zone, :location, to: :session
+  delegate :phone_number, :email, to: :user, prefix: true
 
   scope :not_canceled, -> { where.not(state: :canceled) }
   scope :past, (lambda do
@@ -50,6 +50,7 @@ class UserSession < ApplicationRecord
     joins(session: :location)
       .where('date = (current_timestamp at time zone locations.time_zone)::date - 1')
   end)
+  scope :ordered_by_date, -> { order(:date) }
   scope :by_user, ->(user_id) { where(user_id: user_id) }
   scope :by_date, ->(date) { where(date: date) }
   scope :by_session, ->(session_id) { where(session_id: session_id) }
@@ -59,7 +60,7 @@ class UserSession < ApplicationRecord
   end
 
   def in_confirmation_time?
-    remaining_time < 2.days
+    remaining_time.between?(Session::CANCELLATION_PERIOD, 24.hours)
   end
 
   private

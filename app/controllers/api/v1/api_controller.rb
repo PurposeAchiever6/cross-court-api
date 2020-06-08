@@ -18,6 +18,7 @@ module Api
       rescue_from InvalidActionException,              with: :render_custom_exception
       rescue_from WrongParameterException,             with: :render_custom_exception
       rescue_from FullSessionException,                with: :render_custom_exception
+      rescue_from PurchaseException,                   with: :render_custom_exception
       rescue_from Stripe::StripeError,                 with: :render_custom_exception
 
       def status

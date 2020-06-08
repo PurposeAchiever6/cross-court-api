@@ -1,5 +1,6 @@
 class PlacePurchase
   include Interactor::Organizer
 
-  organize ChargeCard, CreatePurchase, IncrementUserCredits, SendPurchasePlacedEvent
+  organize MakeDiscount, ChargeCard, CreatePurchase, IncrementUserCredits, SendPurchasePlacedEvent,
+           CreateUserPromoCode
 end

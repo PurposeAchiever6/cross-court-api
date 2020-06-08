@@ -7,14 +7,17 @@ module Api
 
       def create
         super
+        return unless @resource.persisted?
+
         KlaviyoService.new.event(Event::SIGN_UP, @resource)
+        SonarService.add_customer(@resource)
       end
 
       private
 
       def sign_up_params
         params.require(:user).permit(:email, :password, :password_confirmation,
-                                     :name, :phone_number)
+                                     :first_name, :last_name, :phone_number)
       end
 
       def render_create_success

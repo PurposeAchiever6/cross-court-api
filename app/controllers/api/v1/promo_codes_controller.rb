@@ -1,9 +1,9 @@
 module Api
   module V1
-    class PromoCodesController < Api::V1::ApiController
+    class PromoCodesController < Api::V1::ApiUserController
+      before_action :check_promo_code
       def show
-        new_price = promo_code.present? ? promo_code.apply_discount(price) : price
-        render json: { price: new_price }, status: :ok
+        render json: { price: promo_code.apply_discount(price) }, status: :ok
       end
 
       private
@@ -14,6 +14,12 @@ module Api
 
       def promo_code
         @promo_code ||= PromoCode.find_by!(code: params[:promo_code])
+      end
+
+      def check_promo_code
+        return if promo_code&.still_valid?(current_user)
+
+        raise PurchaseException, I18n.t('api.errors.promo_code.invalid')
       end
     end
   end

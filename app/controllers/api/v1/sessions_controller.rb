@@ -16,7 +16,8 @@ module Api
       end
 
       def index
-        @user_sessions = UserSession.future.by_user(current_user).group(:session_id, :date).count
+        @user_sessions = UserSession.future.not_canceled.by_user(current_user)
+                                    .group(:session_id, :date).count
         @sessions = SessionDecorator.decorate_collection(
           Session.includes(:location, :session_exceptions)
                  .by_location(params[:location_id])

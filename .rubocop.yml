@@ -27,10 +27,15 @@ Metrics/AbcSize:
     - app/models/session.rb
     - app/models/concerns/employee_session.rb
     - app/decorators/user_session_consume_credit.rb
+    - app/decorators/canceled_user_session.rb
+    - app/decorators/user_session_confirmed.rb
     - app/controllers/api/v1/sessions_controller.rb
     - app/controllers/api/v1/sessions/user_sessions_controller.rb
     - app/controllers/api/v1/confirmations_controller.rb
     - app/interactors/create_purchase.rb
+    - app/interactors/make_discount.rb
+    - app/services/sonar_service.rb
+    - app/jobs/session_reminders_job.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
@@ -54,6 +59,8 @@ Metrics/CyclomaticComplexity:
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 24
+  Exclude:
+    - app/jobs/session_reminders_job.rb
 
 Metrics/ModuleLength:
   CountComments: false  # count full line comments?
@@ -100,10 +107,15 @@ Rails/SaveBang:
 
 Rails/SkipsModelValidations:
   Exclude:
+    - app/controllers/api/v1/sem/user_sessions_controller.rb
 
 Rails/HasManyOrHasOneDependent:
   Exclude:
     - app/models/location.rb
+
+Rails/NotNullColumn:
+  Exclude:
+    - db/migrate/20200508180924_add_expiration_date_to_promo_codes.rb
 
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining

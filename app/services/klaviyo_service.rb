@@ -26,10 +26,11 @@ class KlaviyoService
       email: user_email,
       customer_properties: {
         email: user_email,
-        first_name: user.name,
+        first_name: user.first_name,
+        last_name: user.last_name,
         phone_number: user.phone_number,
         credits: user.credits,
-        upcoming_sessions: user.user_sessions.future.not_canceled.count
+        upcoming_sessions: user.user_sessions.future.not_canceled.size
       }
     }
   end
@@ -38,8 +39,8 @@ class KlaviyoService
     params = case event_name
              when Event::PURCHASE_PLACED
                { order_price: args[:purchase].price.to_i }
-             when Event::SESSION_BOOKED, Event::SESSION_REMINDER, Event::SESSION_ULTIMATUM, Event::SESSION_FORFEITED,
-                  Event::SESSION_CONFIRMATION
+             when Event::SESSION_BOOKED, Event::SESSION_REMINDER_24_HOURS, Event::SESSION_REMINDER_8_HOURS,
+                  Event::SESSION_REMINDER_6_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION
                user_session = args[:user_session]
                session_id = user_session.session_id
                formatted_date = user_session.date.strftime(Session::DATE_FORMAT)

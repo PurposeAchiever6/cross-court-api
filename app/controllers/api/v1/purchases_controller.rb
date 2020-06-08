@@ -8,12 +8,13 @@ module Api
       end
 
       def create
-        PlacePurchase.call(
+        result = PlacePurchase.call(
           product: product,
           user: current_user,
           payment_method: payment_method,
           promo_code: promo_code
         )
+        raise PurchaseException, result.message unless result.success?
       end
 
       def claim_free_session

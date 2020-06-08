@@ -12,6 +12,11 @@ class CanceledUserSession
       user.increment(:credits)
       user.save!
       user_session.credit_reimbursed = true
+      SlackService.new(user, date, time, location).session_canceled_in_time
+      KlaviyoService.new.event(Event::SESSION_CANCELED_IN_TIME, user)
+    else
+      SlackService.new(user, date, time, location).session_canceled_out_of_time
+      KlaviyoService.new.event(Event::SESSION_CANCELED_OUT_OF_TIME, user)
     end
     user_session.state = :canceled
     user_session.save!

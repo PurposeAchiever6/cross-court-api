@@ -7,10 +7,10 @@ json = {
   past: session.past?(date),
   spots_left: spots_left,
   referee: {
-    name: referee&.name
+    name: referee&.full_name
   },
   sem: {
-    name: sem&.name
+    name: sem&.full_name
   },
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location })
 }

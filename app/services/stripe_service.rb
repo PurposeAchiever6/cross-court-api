@@ -2,7 +2,8 @@ class StripeService
   def self.create_sku(sku_params)
     Stripe::SKU.create(
       attributes: {
-        name: sku_params[:name]
+        name: sku_params[:name],
+        credits: sku_params[:credits]
       },
       price: sku_params[:price].to_i * 100,
       currency: 'usd',
@@ -18,7 +19,7 @@ class StripeService
   def self.create_user(user)
     customer = Stripe::Customer.create(
       email: user.email,
-      name: user.name
+      name: user.full_name
     )
     user.update!(stripe_id: customer.id)
   end
@@ -42,9 +43,7 @@ class StripeService
     payment_methods.data
   end
 
-  def self.charge(user, payment_method, product, promo_code)
-    price = product.price.to_i
-    price = promo_code.apply_discount(price) if promo_code.present?
+  def self.charge(user, payment_method, price)
     Stripe::PaymentIntent.create(
       amount: price * 100,
       currency: 'usd',

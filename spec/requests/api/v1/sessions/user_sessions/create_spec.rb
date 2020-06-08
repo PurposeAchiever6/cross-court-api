@@ -3,11 +3,17 @@ require 'rails_helper'
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:user)    { create(:user, credits: 1) }
   let(:session) { create(:session, :daily) } # Weekly today
-  let(:date)    { 2.days.from_now }
+  let(:date)    { 1.day.from_now }
   let(:params)  { { date: date.strftime(Session::DATE_FORMAT) } }
 
   before do
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    allow_any_instance_of(SlackService).to receive(:session_booked).and_return(1)
+    Timecop.freeze(Time.current.change(hour: 10))
+  end
+
+  after do
+    Timecop.return
   end
 
   subject do
@@ -32,8 +38,13 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         expect { subject }.to change { user.reload.credits }.from(1).to(0)
       end
 
-      it 'calls the klaviyo service' do
+      it 'calls the Klaviyo service' do
         expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+        subject
+      end
+
+      it 'calls the Slack service' do
+        expect_any_instance_of(SlackService).to receive(:session_booked).and_return(1)
         subject
       end
 
@@ -41,9 +52,33 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         expect { subject }.not_to change { user.reload.free_session_state }
       end
 
-      it "doesn't confirm the user_session" do
-        subject
-        expect(UserSession.first.state).to eq('reserved')
+      context 'when booking in the cancellation window' do
+        it "doesn't confirm the user_session" do
+          subject
+          expect(UserSession.first.state).to eq('reserved')
+        end
+      end
+
+      context 'when booking outside the cancellation time' do
+        before do
+          allow(SonarService).to receive(:send_message).and_return(1)
+        end
+
+        let(:time) do
+          Time.current.in_time_zone('America/Los_Angeles') + Session::CANCELLATION_PERIOD - 1.minute
+        end
+        let(:session) { create(:session, :daily, time: time.strftime(Session::TIME_FORMAT)) }
+        let(:date)    { Time.current.to_date }
+
+        it 'confirms the session automatically' do
+          subject
+          expect(UserSession.first.state).to eq('confirmed')
+        end
+
+        it 'calls the sonar service send_message method' do
+          expect(SonarService).to receive(:send_message).and_return(1)
+          subject
+        end
       end
 
       context 'when using the free session' do
@@ -81,20 +116,6 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
         it "doesn't create the user_session" do
           expect { subject }.not_to change(UserSession, :count)
-        end
-      end
-
-      context 'when reserving in the confirmation time' do
-        let(:date)    { Date.tomorrow }
-        let(:session) do
-          create(:session, :daily,
-                 time: (Time.current.in_time_zone('America/Los_Angeles') - 1.minute)
-                 .strftime(Session::TIME_FORMAT))
-        end
-
-        it 'confirms the session automatically' do
-          subject
-          expect(UserSession.first.state).to eq('confirmed')
         end
       end
     end

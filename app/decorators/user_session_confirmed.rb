@@ -8,10 +8,16 @@ class UserSessionConfirmed
   end
 
   def save!
-    raise InvalidDateException, I18n.t('api.errors.user_session.invalid_date') if
-      Time.current.in_time_zone(time_zone).to_date > date
+    raise InvalidDateException, I18n.t('api.errors.user_session.invalid_confirmation_date') unless
+      in_confirmation_time?
 
-    user_session.state = :confirmed if user_session.in_confirmation_time? && user_session.reserved?
+    user_session.state = :confirmed if reserved?
+    KlaviyoService.new.event(
+      Event::SESSION_CONFIRMATION,
+      user,
+      user_session: user_session
+    )
+    SlackService.new(user, date, time, location).session_confirmed
     user_session.save!
   end
 end

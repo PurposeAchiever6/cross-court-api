@@ -8,19 +8,22 @@ describe 'POST api/v1/users', type: :request do
     stub_request(:post, %r{stripe.com/v1/customers})
       .to_return(status: 200, body: File.new('spec/fixtures/customer_creation_ok.json'))
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    allow(SonarService).to receive(:add_customer).and_return(1)
   end
 
   describe 'POST create' do
     let(:email)                 { 'test@test.com' }
     let(:password)              { '12345678' }
     let(:password_confirmation) { '12345678' }
-    let(:name)                  { 'Johnny' }
+    let(:first_name)            { 'Johnny' }
+    let(:last_name)             { 'Doe' }
     let(:phone_number)          { '1234567' }
 
     let(:params) do
       {
         user: {
-          name: name,
+          first_name: first_name,
+          last_name: last_name,
           email: email,
           password: password,
           password_confirmation: password_confirmation,
@@ -47,12 +50,18 @@ describe 'POST api/v1/users', type: :request do
       expect(json[:user][:email]).to eq(user.email)
       expect(json[:user][:uid]).to eq(user.uid)
       expect(json[:user][:provider]).to eq('email')
-      expect(json[:user][:name]).to eq(user.name)
+      expect(json[:user][:first_name]).to eq(user.first_name)
+      expect(json[:user][:last_name]).to eq(user.last_name)
       expect(json[:user][:phone_number]).to eq(user.phone_number)
     end
 
     it 'calls the klaviyo service' do
       expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+      subject
+    end
+
+    it 'calls the sonar service' do
+      expect(SonarService).to receive(:add_customer).and_return(1)
       subject
     end
 
