@@ -1,29 +1,4 @@
-# Rails API Template
-
-[![CircleCI](https://circleci.com/gh/rootstrap/rails_api_base.svg?style=svg)](https://circleci.com/gh/rootstrap/rails_api_base)
-[![Code Climate](https://codeclimate.com/github/rootstrap/rails_api_base/badges/gpa.svg)](https://codeclimate.com/github/rootstrap/rails_api_base)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/63de7f82c79f5fe82f46/test_coverage)](https://codeclimate.com/github/rootstrap/rails_api_base/test_coverage)
-
-Rails Api Base is a boilerplate project for JSON RESTful APIs. It follows the community best practices in terms of standards, security and maintainability, integrating a variety of testing and code quality tools. It's based on Rails 6 and Ruby 2.6.
-
-Finally, it contains a plug an play Administration console (thanks to [ActiveAdmin](https://github.com/activeadmin/activeadmin)).
-
-## Features
-
-This template comes with:
-- Schema
-  - Users table
-  - Admin users table
-- Endpoints
-  - Sign up with user credentials
-  - Sign in with user credentials
-  - Sign out
-  - Reset password
-  - Get and update user profile
-- Administration panel for users
-- Rspec tests
-- Code quality tools
-- API documentation following https://apiblueprint.org/
+# Crosscourt API
 
 ## How to use
 
@@ -38,46 +13,291 @@ This template comes with:
 9. `rails s`
 10. You can now try your REST services!
 
-## Gems
+## Documentation
+---
 
-- [ActiveAdmin](https://github.com/activeadmin/activeadmin) for easy administration
-- [Annotate](https://github.com/ctran/annotate_models) for doc the schema in the classes
-- [Better Errors](https://github.com/charliesome/better_errors) for a better error page
-- [Brakeman](https://github.com/presidentbeef/brakeman) for static analysis security
-- [Bullet](https://github.com/flyerhzm/bullet) help to kill N+1
-- [Byebug](https://github.com/deivid-rodriguez/byebug) for debugging
-- [DelayedJob](https://github.com/collectiveidea/delayed_job) for background processing
-- [Devise](https://github.com/plataformatec/devise) for basic auth
-- [Devise Token Auth](https://github.com/lynndylanhurley/devise_token_auth) for api auth
-- [Draper](https://github.com/drapergem/draper) for decorators
-- [Factory Bot](https://github.com/thoughtbot/factory_bot) for testing data
-- [Faker](https://github.com/stympy/faker) for generating test data
-- [Figaro](https://github.com/laserlemon/figaro) for handling environment variables
-- [Haml](https://github.com/haml/haml) for the template engine
-- [Jbuilder](https://github.com/rails/jbuilder) for json views
-- [Letter Opener](https://github.com/ryanb/letter_opener) for previewing a mail in the browser
-- [Oj](https://github.com/ohler55/oj) for optimized json
-- [Pry](https://github.com/pry/pry) for enhancing the ruby shell
-- [Puma](https://github.com/puma/puma) for the server
-- [Rack CORS](https://github.com/cyu/rack-cors) for handling CORS
-- [Rails Best Practices](https://github.com/flyerhzm/rails_best_practices) for rails linting
-- [Reek](https://github.com/troessner/reek) for ruby linting
-- [RSpec](https://github.com/rspec/rspec) for testing
-- [Rubocop](https://github.com/bbatsov/rubocop/) for ruby linting
-- [Sendgrid](https://github.com/stephenb/sendgrid) for sending mails
-- [Shoulda Matchers](https://github.com/thoughtbot/shoulda-matchers) adds other testing matchers
-- [Simplecov](https://github.com/colszowka/simplecov) for code coverage
-- [Webmock](https://github.com/bblimke/webmock) for stubbing http requests
+**Glossary**
 
-## Optional configuration
+- **Date:** only a date `'31/3/2020'`
+- **Time:** only a time `'19:50:00 UTC'`
+- **DateTime:** both date and time `'Thu, 05 Mar 2020 17:47:33 UTC'`
+- **Boolean:** True or False
 
-- Set your [frontend URL](https://github.com/cyu/rack-cors#origin) in `config/initializers/rack_cors.rb`
-- Set your mail sender in `config/initializers/devise.rb`
-- Config your timezone accordingly in `application.rb`.
+---
 
-## Api Docs
+## Models
 
-http://docs.railsapibase.apiary.io
+### AdminUser
+
+Represents an admin capable of signing in to the admin site.
+
+#### Attributes
+
+- **id** (Number: unique)
+- **email** (Text: unique)
+
+
+
+### Session
+
+Represents the actual game that takes place once or recurrently in a specific location and time.
+
+#### Attributes
+
+- **id** (Number: unique)
+- **start_time** (Date: represents the date when the session should starts. It will only accept future values in the admin)
+- **recurring** (Text: Represents the recurring rule. e.g: *Weekly on weekdays*)
+- **location_id** (Number: id of the location where the session takes place)
+- **end_time** (Same as start_time but for the end date)
+- **level** (Number: `'0 -> basic, 1 -> advanced'`)
+
+
+
+### SessionException
+
+Represents an exception on the recurring rule of the session. The Session will not take place on the SessionException date.
+
+#### Attributes
+
+- **id** (Number: unique)
+- **session_id** (Number: id of the session)
+- **date** (Date: date when the session is not supposed to occurr)
+
+
+
+### Location
+
+Represents a basketball court.
+
+#### Attributes
+
+- **id** (Number: unique)
+- **name** (Text: name of the court. Could be the gym name)
+- **direction** (Text)
+- **lat** (Number: latitude of the court. This field is auto assigned when creating a Location in the admin)
+- **lng** (Number: longitude of the court. This field is auto assigned when creating a Location in the admin)
+- **city** (Text)
+- **zipcode** (Text)
+- **time_zone** (Text: all times are calculated depending on this *time_zone*)
+
+
+
+### User
+
+### Attributes
+
+- **id** (Number: unique)
+- **email** (Text: unique)
+- **sign_in_count** (Number: the times the user logged in)
+- **confirmed_at** (DateTime: the date and time when the user confirmed their email)
+- **first_name** (Text)
+- **last_name** (Text)
+- **phone_number** (Text)
+- **credits** (Number: amount of credits available)
+- **is_referee** (Boolean)
+- **is_sem** (Boolean)
+- **stripe_id** (Text: id of the customer created on stripe. This attribute is created when a user signs up)
+- **free_session_state** (Number: `'0 -> not_claimed, 1 -> claimed, 2 -> used'`)
+- **free_session_payment_intent** (Text: Stripe payment intent created to charge the user if the he doesn't show up)
+
+
+
+### UserSession
+
+Represents a reservation made by a User to a Session.
+
+#### Attribtues
+
+- **id** (Number: unique)
+- **user_id** (Number: id of the user)
+- **session_id** (Number: id of the session)
+- **state** (Number: `'0 -> reserved, 1 -> canceled, 2 -> confirmed'`)
+- **created_at** (DateTime: when the reservation was made)
+- **date** (Date of the session)
+- **checked_in** (Boolean: if the player was checked in to the session)
+- **is_free_session** (Boolean: if this session was reserved using the free credit)
+- **free_session_payment_intent** (Text: Same as the user)
+- **credit_reimbursed** (Boolean: if a credit was reimbursed to the user after cancellation)
+
+
+
+### RefereeSession
+
+Represents an assignment of a Referee in a Session
+
+#### Attributes
+
+- **id** (Number: unique)
+- **user_id** (Number: id of the referee)
+- **session_id** (Number: id of the session)
+- **date** (Date of the session when the referee is assigned)
+
+
+
+### SemSession
+
+Represents an assignment of a SEM in a Session
+
+#### Attributes
+
+- **id** (Number: unique)
+- **user_id** (Number: id of the SEM)
+- **session_id** (Number: id of the session)
+- **date** (Date of the session when the SEM is assigned)
+
+
+
+### Product
+
+Represents one of the Series. e.g: `'The DROP-IN: 1 credit for $15'`
+
+#### Attributes
+
+- **id** (Number: unique)
+- **stripe_id** (Text: id of the product created in Stripe. This attribute is auto assigned when creating a new product in the admin)
+- **credits** (Number: amount of credits the product will give to the user)
+- **name** (Text: name of the product. e.g: `'The DROP-IN'`)
+- **price** (Number: amount in dollars)
+- **order_number** (Number: `0` will be displayed first in the web)
+
+
+
+### PromoCode
+
+Represents a Discount that a User can apply when making a purchase. There are 2 options. Both have the same attributes.
+
+**SpecificAmountDiscount**   e.g: $10 Discount
+
+**PercentageAmountDiscount**   e.g: %10 Discount
+
+#### Attribtues
+
+- **id** (Number: unique)
+- **type** (Text: `'SpecificAmountDiscount' or 'PercentageDiscount'`)
+- **discount** (Number: The amount to be discounted. If it's a specific amount it will be the amount of dollars. If it's a percentage discount then it will be the percentage)
+- **code** (Text: the text that the user needs to input to get the discount. e.g: `'10DollarDiscount'`)
+- **expiration_date** (Date)
+
+
+
+### UserPromoCode
+
+Represents a usage of the Promo code by the user. Users can only use a promo code once.
+
+**SpecificAmountDiscount**   e.g: $10 Discount
+
+**PercentageAmountDiscount**   e.g: %10 Discount
+
+#### Attribtues
+
+- **id** (Number: unique)
+- **user_id** (Text: `'SpecificAmountDiscount' or 'PercentageDiscount'`)
+
+
+### Purchase
+
+Represents an actual purchase made by a User.
+
+#### Attributes
+
+- **id** (Number: unique)
+- **product_id** (Number: id of the product. Could be `null` if the product is deleted after the purchase)
+- **user_id** (Number: id of the user that made the purchase)
+- **price** (Number: The price of the purchase)
+- **name** (Text: name of the product)
+- **created_at** (DateTime: when the purchase was made)
+- **discount** (Number: discount in dollars applied to the purchase)
+
+
+
+### Legal
+
+Represents a legal document to be displayed in the web.
+
+#### Attributes
+
+- **id** (Number: unique)
+- **title** (Text: `'terms_and_conditions' or 'cancelation_policy'`)
+- **text** (Text: The complete text of the document)
+
+---
+
+
+
+## Integrations
+
+### Klaviyo
+
+This integration is used to keep a record of the actions done by a User.
+
+The possible events are:
+
+- **Session Booked:** when a user books a new session.
+- **Session Reminder:** 24 hours before the session.
+- **Session Ultimatum:** 1 hour before the cancellation time is over.
+- **Session forfeited:** when the UserSession was cancelled due to the lack of confirmation from the user.
+- **Session Confirmation:** when the user confirms the UserSession.
+- **Claimed Free Session:** when the user claims the free session.
+- **Sign Up:** when a user creates an account.
+- **Purchase Placed:** when a user makes a purchase.
+
+Properties:
+
+- **email** (Text: unique)
+- **first_name** (Text)
+- **phone_number** (Text)
+- **credits** (Number: amount of credits left)
+- **upcoming_sessions** (Number: amount of sessions booked in the future)
+- **order_price** (Number: price of the last purchase made)
+- **session_date** (Date: date of the last session booked &rightarrow; `25-10-2020`)
+- **session_time** (Time: time of the last session booked &rightarrow; `18:00`)
+- **confirmation_url** (Text: link to the page where the user can confirm the session)
+
+### Sendgrid
+
+This integration is used to send emails from the backend.
+
+This is used for:
+
+- Email confirmation
+- Forgot password
+
+---
+
+## Background jobs
+
+Tasks that run recurringly every X amount of time.
+
+**charge_free_session_players**
+
+Charges the session to the players that reserved using the free credit but didn't show up.
+
+Runs Daily at 12:00 AM UTC
+
+
+
+**session_reminders**
+
+Send the reminder events to Klaviyo.
+
+Runs Hourly at :00
+
+
+
+**confirm_unconfirmed_sessions**
+
+Confirms the UserSessions that didn't confirmed assistance when the confirmation window is closed.
+
+Runs Hourly at "00
+
+
+
+**klaviyo_check_in_users**
+
+Sends the 'Session Check In' event to klaviyo for the users that the SEM checked in
+
+Runs Hourly at :00
+
 
 ## Code quality
 
