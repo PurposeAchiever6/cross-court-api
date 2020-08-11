@@ -31,6 +31,7 @@
 #  free_session_payment_intent :string
 #  first_name                  :string           default(""), not null
 #  last_name                   :string           default(""), not null
+#  zipcode                     :string
 #
 # Indexes
 #
@@ -62,6 +63,7 @@ class User < ApplicationRecord
   validates :uid, uniqueness: { scope: :provider }
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :free_session_state, presence: true
+  validates :zipcode, presence: true
 
   before_validation :init_uid
 

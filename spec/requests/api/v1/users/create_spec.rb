@@ -18,6 +18,7 @@ describe 'POST api/v1/users', type: :request do
     let(:first_name)            { 'Johnny' }
     let(:last_name)             { 'Doe' }
     let(:phone_number)          { '1234567' }
+    let(:zipcode)               { '1212121' }
 
     let(:params) do
       {
@@ -27,7 +28,8 @@ describe 'POST api/v1/users', type: :request do
           email: email,
           password: password,
           password_confirmation: password_confirmation,
-          phone_number: phone_number
+          phone_number: phone_number,
+          zipcode: zipcode
         }
       }
     end
@@ -53,6 +55,7 @@ describe 'POST api/v1/users', type: :request do
       expect(json[:user][:first_name]).to eq(user.first_name)
       expect(json[:user][:last_name]).to eq(user.last_name)
       expect(json[:user][:phone_number]).to eq(user.phone_number)
+      expect(json[:user][:zipcode]).to eq(user.zipcode)
     end
 
     it 'calls the klaviyo service' do

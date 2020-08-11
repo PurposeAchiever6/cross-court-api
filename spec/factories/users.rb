@@ -31,6 +31,7 @@
 #  free_session_payment_intent :string
 #  first_name                  :string           default(""), not null
 #  last_name                   :string           default(""), not null
+#  zipcode                     :string
 #
 # Indexes
 #
@@ -49,6 +50,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name  { Faker::Name.last_name }
     uid        { Faker::Number.unique.number(10) }
+    zipcode    { Faker::Address.zip_code }
 
     trait :confirmed do
       confirmed_at { Time.current }

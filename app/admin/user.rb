@@ -14,6 +14,7 @@ ActiveAdmin.register User do
       f.input :is_sem
       f.input :image, as: :file
       f.input :confirmed_at, as: :hidden
+      f.input :zipcode
 
       if f.object.new_record?
         f.input :password
@@ -35,6 +36,7 @@ ActiveAdmin.register User do
     column :phone_number
     column :credits
     column :created_at
+    column :zipcode
 
     actions
   end
@@ -61,6 +63,7 @@ ActiveAdmin.register User do
       row :is_referee
       row :is_sem
       row :sign_in_count
+      row :zipcode
       row :created_at
       row :updated_at
     end
