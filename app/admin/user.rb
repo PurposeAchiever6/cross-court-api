@@ -1,6 +1,6 @@
 ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
-                :is_referee, :is_sem, :image, :credits, :confirmed_at
+                :is_referee, :is_sem, :image, :credits, :confirmed_at, :zipcode
 
   form do |f|
     f.object.confirmed_at = Time.current
