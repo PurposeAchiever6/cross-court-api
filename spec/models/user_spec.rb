@@ -31,6 +31,7 @@
 #  free_session_payment_intent :string
 #  first_name                  :string           default(""), not null
 #  last_name                   :string           default(""), not null
+#  zipcode                     :string
 #
 # Indexes
 #
@@ -50,11 +51,8 @@ describe User do
     it { is_expected.to validate_uniqueness_of(:uid).scoped_to(:provider) }
     it { is_expected.to validate_numericality_of(:credits).is_greater_than_or_equal_to(0) }
     it { is_expected.to validate_presence_of(:free_session_state) }
-    it {
-      is_expected.to define_enum_for(:free_session_state)
-        .with_values(%i[not_claimed claimed used])
-        .with_prefix(:free_session)
-    }
+    it { is_expected.to define_enum_for(:free_session_state).with_values(%i[not_claimed claimed used]).with_prefix(:free_session) }
+    it { is_expected.to validate_presence_of(:zipcode) }
 
     context 'when was created with regular login' do
       subject { build :user }

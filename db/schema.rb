@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_180924) do
+ActiveRecord::Schema.define(version: 2020_08_11_012720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -220,6 +220,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.string "free_session_payment_intent"
     t.string "first_name", default: "", null: false
     t.string "last_name", default: "", null: false
+    t.string "zipcode"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_referee"], name: "index_users_on_is_referee"
