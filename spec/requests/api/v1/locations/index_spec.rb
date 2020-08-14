@@ -8,7 +8,7 @@ describe 'GET api/v1/locations' do
       {
         id: location.id,
         name: location.name,
-        direction: location.direction
+        address: location.address
       }
     end
   end

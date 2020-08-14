@@ -1,7 +1,7 @@
 {
   id: location.id,
   name: location.name,
-  direction: location.direction,
+  address: location.address,
   lat: location.lat,
   lng: location.lng,
   city: location.city,

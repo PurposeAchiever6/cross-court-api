@@ -19,6 +19,7 @@
 
 class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
+  MONTH_NAME_FORMAT = '%B, %d %Y'.freeze
   TIME_FORMAT = '%l:%M %P'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
@@ -40,7 +41,7 @@ class Session < ApplicationRecord
   validates :start_time, :time, presence: true
 
   delegate :name, to: :location, prefix: true
-  delegate :direction, :time_zone, to: :location
+  delegate :address, :time_zone, to: :location
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 

@@ -26,4 +26,5 @@ class Purchase < ApplicationRecord
   validates :credits, :name, presence: true
 
   delegate :email, :phone_number, to: :user, prefix: true
+  delegate :name, to: :product, prefix: true
 end

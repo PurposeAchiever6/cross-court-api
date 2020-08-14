@@ -135,3 +135,6 @@ Style/ReturnNil:
 Style/GuardClause:
   Exclude:
     - app/controllers/api/v1/confirmations_controller.rb
+
+Metrics/AbcSize:
+  Enabled: false

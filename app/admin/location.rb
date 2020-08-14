@@ -1,5 +1,5 @@
 ActiveAdmin.register Location do
-  permit_params :name, :direction, :lat, :lng, :city, :zipcode, :image, :time_zone
+  permit_params :name, :address, :lat, :lng, :city, :zipcode, :image, :time_zone, :state
 
   form do |f|
     f.inputs 'Location Details' do
@@ -8,7 +8,8 @@ ActiveAdmin.register Location do
       f.input :city
       f.input :zipcode
       f.input :time_zone, as: :select, collection: ActiveSupport::TimeZone::MAPPING.values.sort
-      f.input :direction
+      f.input :address
+      f.input :state, as: :select, collection: Location::STATES
       f.input :lat, as: :hidden
       f.input :lng, as: :hidden
       f.latlng api_key_env: 'GOOGLE_API_KEY',
@@ -18,6 +19,19 @@ ActiveAdmin.register Location do
     f.actions
   end
 
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :city
+    column :zipcode
+    column :time_zone
+    column :address
+    column :state
+
+    actions
+  end
+
   show do
     attributes_table do
       row :id
@@ -25,7 +39,8 @@ ActiveAdmin.register Location do
       row :city
       row :zipcode
       row :time_zone
-      row :direction
+      row :address
+      row :state
       row :image do |location|
         image_tag polymorphic_url(location.image) if location.image.attached?
       end

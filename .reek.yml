@@ -10,25 +10,26 @@ detectors:
     exclude: []
   ControlParameter:
     enabled: true
-    exclude: ['KlaviyoService#specific_event_attributes']
+    exclude: ["KlaviyoService#specific_event_attributes"]
   DataClump:
     enabled: true
-    exclude: ['SlackService']
+    exclude: ["SlackService"]
     max_copies: 2
     min_clump_size: 2
   DuplicateMethodCall:
     enabled: true
-    exclude: ['SessionRemindersJob#perform', 'SonarService#message_received', 'EmployeeSessionsQuery#sorted_future_sessions']
+    exclude: ["SessionRemindersJob#perform", "SonarService#message_received", "EmployeeSessionsQuery#sorted_future_sessions"]
     max_calls: 1
     allow_calls: []
   FeatureEnvy:
     enabled: true
-    exclude: [
-      'CreatePurchase#call',
-      'KlaviyoService#purchase_placed',
-      'KlaviyoService#general_event_attributes',
-      'EmployeeSessionsQuery#sorted_future_sessions'  
-    ]
+    exclude:
+      [
+        "CreatePurchase#call",
+        "KlaviyoService#purchase_placed",
+        "KlaviyoService#general_event_attributes",
+        "EmployeeSessionsQuery#sorted_future_sessions",
+      ]
   InstanceVariableAssumption:
     enabled: false
   IrresponsibleModule:
@@ -70,8 +71,8 @@ detectors:
     enabled: true
     exclude: []
   TooManyConstants:
-    enabled: true
-    exclude: ['Event']
+    enabled: false
+    exclude: ["Event"]
     max_constants: 5
   TooManyInstanceVariables:
     enabled: true
@@ -83,7 +84,7 @@ detectors:
     max_methods: 25
   TooManyStatements:
     enabled: true
-    exclude: ['SessionRemindersJob#perform']
+    exclude: ["SessionRemindersJob#perform"]
     max_statements: 12
   UncommunicativeMethodName:
     enabled: true
@@ -112,13 +113,14 @@ detectors:
     accept: []
   UncommunicativeVariableName:
     enabled: true
-    exclude: [
-      'StripeController#load_event',
-      'SlackService#notify',
-      'SonarService#add_customer',
-      'SonarService#send_message',
-      'EmployeeSessionsQuery#sorted_future_sessions'
-    ]
+    exclude:
+      [
+        "StripeController#load_event",
+        "SlackService#notify",
+        "SonarService#add_customer",
+        "SonarService#send_message",
+        "EmployeeSessionsQuery#sorted_future_sessions",
+      ]
     reject:
       - "/^.$/"
       - "/[0-9]$/"

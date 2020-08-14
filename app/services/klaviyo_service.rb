@@ -38,16 +38,22 @@ class KlaviyoService
   def specific_event_attributes(event_name, args)
     case event_name
     when Event::PURCHASE_PLACED
-      { order_price: args[:purchase].price.to_i }
+      purchase = args[:purchase]
+      { order_price: purchase.price.to_i, purchase_name: purchase.product_name }
     when Event::SESSION_BOOKED, Event::SESSION_REMINDER_24_HOURS, Event::SESSION_REMINDER_8_HOURS,
                   Event::SESSION_REMINDER_6_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION
+
       user_session = args[:user_session]
       session_id = user_session.session_id
-      formatted_date = user_session.date.strftime(Session::DATE_FORMAT)
+      formatted_date = user_session.date.strftime(Session::MONTH_NAME_FORMAT)
+      location = user_session.location
+
       {
         session_date: formatted_date,
-        session_time: user_session.time.strftime(Session::TIME_FORMAT),
-        confirmation_url: "#{ENV['FRONTENT_URL']}/session/#{session_id}?date=#{formatted_date}"
+        session_time: user_session.time.strftime(Session::TIME_FORMAT).upcase,
+        confirmation_url: "#{ENV['FRONTENT_URL']}/session/#{session_id}?date=#{formatted_date}",
+        session_location_name: location.name,
+        session_location_address: location.full_address
       }
     else
       {}

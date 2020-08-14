@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string           not null
-#  direction  :string           not null
+#  address    :string           not null
 #  lat        :float            not null
 #  lng        :float            not null
 #  created_at :datetime         not null
@@ -13,6 +13,7 @@
 #  zipcode    :string           default(""), not null
 #  time_zone  :string           default("America/Los_Angeles"), not null
 #  deleted_at :datetime
+#  state      :string           default("CA")
 #
 # Indexes
 #
@@ -25,10 +26,11 @@ describe Location do
   describe 'validations' do
     subject { build :location }
     it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_presence_of(:direction) }
+    it { is_expected.to validate_presence_of(:address) }
     it { is_expected.to validate_presence_of(:lat) }
     it { is_expected.to validate_presence_of(:lng) }
     it { is_expected.to validate_presence_of(:city) }
     it { is_expected.to validate_presence_of(:zipcode) }
+    it { is_expected.to validate_presence_of(:state) }
   end
 end

@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string           not null
-#  direction  :string           not null
+#  address    :string           not null
 #  lat        :float            not null
 #  lng        :float            not null
 #  created_at :datetime         not null
@@ -13,6 +13,7 @@
 #  zipcode    :string           default(""), not null
 #  time_zone  :string           default("America/Los_Angeles"), not null
 #  deleted_at :datetime
+#  state      :string           default("CA")
 #
 # Indexes
 #
@@ -22,7 +23,7 @@
 FactoryBot.define do
   factory :location do
     name      { Faker::Address.state }
-    direction { Faker::Address.street_address }
+    address { Faker::Address.street_address }
     lat       { Faker::Address.latitude }
     lng       { Faker::Address.longitude }
     city      { Faker::Address.city }
