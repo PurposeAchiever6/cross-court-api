@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'no-replay@crosscourtball.com'
+  default from: 'ccteam@cross-court.com'
   layout 'mailer'
 end

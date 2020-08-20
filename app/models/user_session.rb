@@ -28,7 +28,7 @@ class UserSession < ApplicationRecord
 
   validates :state, :date, presence: true
 
-  delegate :time, :time_zone, :location, to: :session
+  delegate :time, :time_zone, :location, :location_name, :location_description, to: :session
   delegate :phone_number, :email, to: :user, prefix: true
 
   scope :not_canceled, -> { where.not(state: :canceled) }
@@ -61,6 +61,33 @@ class UserSession < ApplicationRecord
 
   def in_confirmation_time?
     remaining_time.between?(Session::CANCELLATION_PERIOD, 24.hours)
+  end
+
+  def create_ics_event
+    start_datetime = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec, time_zone)
+
+    options = {
+      'CUTYPE' => 'INDIVIDUAL',
+      'RSVP' => 'TRUE',
+      'ROLE' => 'REQ-PARTICIPANT',
+      'PARTSTAT' => 'NEEDS-ACTION',
+      'X-NUM-GUESTS' => '0'
+    }
+
+    attendee_property = RiCal::PropertyValue::CalAddress.new(nil, value: 'mailto:ccteam@cross-court.com', params: options)
+
+    event = RiCal.Calendar do |cal|
+      cal.event do |calendar_event|
+        calendar_event.summary = location_name
+        calendar_event.description = location_description
+        calendar_event.dtstart = start_datetime
+        calendar_event.dtend = start_datetime + 1.hour
+        calendar_event.location = location.full_address
+        calendar_event.attendee_property = attendee_property
+      end
+    end
+
+    event
   end
 
   private

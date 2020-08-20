@@ -2,18 +2,19 @@
 #
 # Table name: locations
 #
-#  id         :integer          not null, primary key
-#  name       :string           not null
-#  address    :string           not null
-#  lat        :float            not null
-#  lng        :float            not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  city       :string           default(""), not null
-#  zipcode    :string           default(""), not null
-#  time_zone  :string           default("America/Los_Angeles"), not null
-#  deleted_at :datetime
-#  state      :string           default("CA")
+#  id          :integer          not null, primary key
+#  name        :string           not null
+#  address     :string           not null
+#  lat         :float            not null
+#  lng         :float            not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  city        :string           default(""), not null
+#  zipcode     :string           default(""), not null
+#  time_zone   :string           default("America/Los_Angeles"), not null
+#  deleted_at  :datetime
+#  state       :string           default("CA")
+#  description :text             default("")
 #
 # Indexes
 #

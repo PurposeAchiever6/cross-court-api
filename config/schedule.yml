@@ -3,7 +3,6 @@ session_reminders:
   class: "SessionRemindersJob"
   queue: default
 
-
 charge_free_session_players:
   cron: "* 0 * * *"
   class: "ChargeFreeSessionPlayersJob"

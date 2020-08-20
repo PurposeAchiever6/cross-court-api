@@ -40,7 +40,7 @@ class Session < ApplicationRecord
 
   validates :start_time, :time, presence: true
 
-  delegate :name, to: :location, prefix: true
+  delegate :name, :description, :time_zone, to: :location, prefix: true
   delegate :address, :time_zone, to: :location
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_14_214356) do
+ActiveRecord::Schema.define(version: 2020_08_21_134728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 2020_08_14_214356) do
     t.string "time_zone", default: "America/Los_Angeles", null: false
     t.datetime "deleted_at"
     t.string "state", default: "CA"
+    t.text "description", default: ""
     t.index ["deleted_at"], name: "index_locations_on_deleted_at"
   end
 

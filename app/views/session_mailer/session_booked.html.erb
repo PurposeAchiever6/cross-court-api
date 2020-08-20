@@ -1,0 +1,63 @@
+<table align="center" bgcolor="#fcf4f3" border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td bgcolor="#fcf4f3" style="padding-top:20px;" valign="top" width="100%">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="device-width" style="margin:0 auto;" width="550">
+        <tr>
+          <td>
+            <table border="0" cellpadding="0" cellspacing="0" class="device-width" style="margin:0 auto;font-size: 12px;" width="550">
+              <tr>
+                <td align="center">
+                  <a href="https://www.cross-court.com/">
+                    <img border="0" src="https://d3k81ch9hvuctc.cloudfront.net/company/K5fCFg/images/35d5ade1-f688-443d-9a8b-e73b9959d663.png" class="logo"/>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td align="center">
+                  <a href="https://www.cross-court.com/">
+                    <img alt="" border="0" class="device-width mens" src="https://d3k81ch9hvuctc.cloudfront.net/company/K5fCFg/images/081db712-1e0b-49e6-b98b-85782de36b25.png"/>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td class="location-info">
+                  <span class="location-info-title">DATE</span><br/>
+                  <span class="location-info-item"><%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %></span><br/>
+                  <span class="location-info-title">TIME</span><br/>
+                  <span class="location-info-item"><%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %></span><br/>
+                  <span class="location-info-title">LOCATION</span><br/>
+                  <span class="location-info-item"><%= @location.name %></span>
+                  <span class="location-info-item-blue"><%= @location.full_address %></span><br/>
+                </td>
+              </tr>
+              <tr>
+                <td align="center">
+                  <a href="https://vimeo.com/438000525">
+                    <img alt="What to Expect Video" border="0" class="device-width video-img" src="https://d3k81ch9hvuctc.cloudfront.net/company/K5fCFg/images/d48da1f4-d4d7-4f96-9a16-b4b67c6651fc.png"/>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td class="more-info">
+                  FOR MORE INFORMATION, CHECK OUT OUR FAQ PAGE
+                  <a href="https://www.cross-court.com/how-it-works" style="text-decoration:none;color:#3358ff;">HERE</a>.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <div class="footer">
+        <br/>
+        CROSSCOURT
+        <br/>
+        12345 W Email Ave., Denver, CO 80123
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+      </div>
+    </td>
+  </tr>
+</table>

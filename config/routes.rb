@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+
+  require 'sidekiq/web'
+  authenticate :admin_user do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   mount_devise_token_auth_for 'User', at: '/api/v1/users', controllers: {
     registrations: 'api/v1/registrations',
     confirmations: 'api/v1/confirmations',

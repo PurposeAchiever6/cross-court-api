@@ -23,6 +23,7 @@ module App
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.load_defaults 6.0
+    config.active_job.queue_adapter = :sidekiq
 
     config.secret_key_base = ENV['SECRET_KEY_BASE']
 

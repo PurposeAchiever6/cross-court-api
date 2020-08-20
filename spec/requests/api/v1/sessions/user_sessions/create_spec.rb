@@ -48,6 +48,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         subject
       end
 
+      it 'sends session booked email' do
+        expect { SessionMailer.session_booked.deliver_later }.to have_enqueued_job.on_queue('mailers')
+        subject
+      end
+
       it "doesn't update user's free_session_state" do
         expect { subject }.not_to change { user.reload.free_session_state }
       end

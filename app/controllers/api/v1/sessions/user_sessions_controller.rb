@@ -15,8 +15,9 @@ module Api
             user_session = UserSessionWithValidDate.new(user_session)
             user_session = UserSessionNotFull.new(user_session)
             user_session.save!
-            KlaviyoService.new
-                          .event(Event::SESSION_BOOKED, current_user, user_session: user_session)
+
+            KlaviyoService.new.event(Event::SESSION_BOOKED, current_user, user_session: user_session)
+            SessionMailer.with(user_session_id: user_session.id).session_booked.deliver_later
           end
         end
       end
