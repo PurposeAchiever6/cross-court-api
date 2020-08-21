@@ -9,8 +9,6 @@ describe 'GET api/v1/locations' do
         id: location.id,
         name: location.name,
         address: location.address,
-        lat: location.lat,
-        lng: location.lng,
         city: location.city,
         zipcode: location.zipcode,
         description: location.description
