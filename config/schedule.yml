@@ -12,3 +12,8 @@ confirm_unconfirmed_sessions:
   cron: "10 * * * *"
   class: "ConfirmUnconfirmedSessionsJob"
   queue: default
+
+remove_expired_free_credits:
+  cron: "0 5 * * *"
+  class: "RemoveExpiredFreeCreditsJob"
+  queue: default

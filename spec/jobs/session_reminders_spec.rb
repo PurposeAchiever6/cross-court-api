@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe SessionRemindersJob do
-  describe '#perform' do
+  describe '.perform' do
     before do
       allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
       allow(SonarService).to receive(:send_message).and_return(1)

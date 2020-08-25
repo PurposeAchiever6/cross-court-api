@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'PUT api/v1/purchases/claim_free_session' do
+describe 'PUT api/v1/purchases/create_free_session_intent' do
   let(:user)   { create(:user) }
   let(:params) { { payment_method: 'pm123456789' } }
 
@@ -11,17 +11,13 @@ describe 'PUT api/v1/purchases/claim_free_session' do
   end
 
   subject do
-    put claim_free_session_api_v1_purchases_path, params: params, headers: auth_headers, as: :json
+    put create_free_session_intent_api_v1_purchases_path, params: params, headers: auth_headers, as: :json
   end
 
   context "when the user hasn't claimed the free session" do
     it 'returns success' do
       subject
       expect(response).to be_successful
-    end
-
-    it 'increments user credits' do
-      expect { subject }.to change { user.reload.credits }.from(0).to(1)
     end
 
     it 'updates user free_session_status' do

@@ -64,6 +64,8 @@ ActiveAdmin.register User do
       row :is_sem
       row :sign_in_count
       row :zipcode
+      row :free_session_state
+      row :free_session_expiration_date
       row :created_at
       row :updated_at
     end

@@ -1,7 +1,7 @@
 module Api
   module V1
     class PurchasesController < Api::V1::ApiUserController
-      before_action :validate_free_session, only: :claim_free_session
+      before_action :validate_free_session, only: :create_free_session_intent
 
       def index
         @purchases = current_user.purchases.order(id: :desc).decorate
@@ -17,11 +17,10 @@ module Api
         raise PurchaseException, result.message unless result.success?
       end
 
-      def claim_free_session
+      def create_free_session_intent
         intent = StripeService.create_free_session_intent(current_user, payment_method)
         current_user.free_session_state = :claimed
         current_user.free_session_payment_intent = intent.id
-        current_user.increment(:credits)
         current_user.save!
         KlaviyoService.new.event(Event::CLAIMED_FREE_SESSION, current_user)
       end

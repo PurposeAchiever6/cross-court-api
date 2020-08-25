@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   require 'sidekiq/web'
+  require 'sidekiq/cron/web'
   authenticate :admin_user do
     mount Sidekiq::Web => '/sidekiq'
   end
@@ -37,7 +38,7 @@ Rails.application.routes.draw do
           put :confirm
         end
         resources :purchases, only: %i[create index] do
-          put :claim_free_session, on: :collection
+          put :create_free_session_intent, on: :collection
         end
         resources :payment_methods, only: %i[create index destroy]
         resource :user, only: %i[update show] do
