@@ -70,10 +70,10 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         end
 
         let(:time) do
-          Time.current.in_time_zone('America/Los_Angeles') + Session::CANCELLATION_PERIOD - 1.minute
+          Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) + Session::CANCELLATION_PERIOD - 1.minute
         end
         let(:session) { create(:session, :daily, time: time.strftime(Session::TIME_FORMAT)) }
-        let(:date)    { Time.current.to_date }
+        let(:date)    { time.to_date }
 
         it 'confirms the session automatically' do
           subject

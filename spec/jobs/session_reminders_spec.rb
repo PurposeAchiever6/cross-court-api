@@ -8,7 +8,7 @@ describe SessionRemindersJob do
     end
 
     context 'when there are user_sessions booked' do
-      let(:la_time) { Time.current.in_time_zone('America/Los_Angeles') }
+      let(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
       let!(:user)   { create(:user) }
 
       # In 24 hours
