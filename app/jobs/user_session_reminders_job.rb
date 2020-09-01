@@ -1,11 +1,11 @@
-class SessionRemindersJob < ApplicationJob
+class UserSessionRemindersJob < ApplicationJob
   queue_as :default
 
   def perform
     klaviyo_service = KlaviyoService.new
 
     # 24 hour reminder
-    UserSessionReminderQuery.new.in_24_hours.find_each do |user_session|
+    SessionReminderQuery.new(UserSession.all.reserved).in_24_hours.find_each do |user_session|
       user = user_session.user
       klaviyo_service.event(Event::SESSION_REMINDER_24_HOURS, user,
                             user_session: user_session)
@@ -16,7 +16,7 @@ class SessionRemindersJob < ApplicationJob
     end
 
     # 8 hour reminder
-    UserSessionReminderQuery.new.in(8).find_each do |user_session|
+    SessionReminderQuery.new(UserSession.all.reserved).in(8).find_each do |user_session|
       user = user_session.user
       klaviyo_service.event(Event::SESSION_REMINDER_8_HOURS, user_session.user,
                             user_session: user_session)
@@ -27,7 +27,7 @@ class SessionRemindersJob < ApplicationJob
     end
 
     # 6 hour reminder
-    UserSessionReminderQuery.new.in(6).find_each do |user_session|
+    SessionReminderQuery.new(UserSession.all.reserved).in(6).find_each do |user_session|
       user = user_session.user
       klaviyo_service.event(Event::SESSION_REMINDER_6_HOURS, user_session.user,
                             user_session: user_session)

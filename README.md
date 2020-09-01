@@ -75,6 +75,7 @@ Represents a basketball court.
 - **zipcode** (Text)
 - **time_zone** (Text: all times are calculated depending on this _time_zone_)
 - **state** (Text)
+- **description** (Text)
 
 ### User
 
@@ -93,6 +94,8 @@ Represents a basketball court.
 - **stripe_id** (Text: id of the customer created on stripe. This attribute is created when a user signs up)
 - **free_session_state** (Number: `'0 -> not_claimed, 1 -> claimed, 2 -> used'`)
 - **free_session_payment_intent** (Text: Stripe payment intent created to charge the user if the he doesn't show up)
+- **zipcode** (Text)
+- **free_session_expiration_date** (Date)
 
 ### UserSession
 
@@ -121,6 +124,7 @@ Represents an assignment of a Referee in a Session
 - **user_id** (Number: id of the referee)
 - **session_id** (Number: id of the session)
 - **date** (Date of the session when the referee is assigned)
+- **state** (Number: `'0 -> unconfirmed, 1 -> canceled, 2 -> confirmed'`)
 
 ### SemSession
 
@@ -132,6 +136,7 @@ Represents an assignment of a SEM in a Session
 - **user_id** (Number: id of the SEM)
 - **session_id** (Number: id of the session)
 - **date** (Date of the session when the SEM is assigned)
+- **state** (Number: `'0 -> unconfirmed, 1 -> canceled, 2 -> confirmed'`)
 
 ### Product
 

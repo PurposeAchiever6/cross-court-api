@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_24_201231) do
+ActiveRecord::Schema.define(version: 2020_09_01_225613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,7 @@ ActiveRecord::Schema.define(version: 2020_08_24_201231) do
     t.date "date", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "state", default: 0, null: false
     t.index ["session_id"], name: "index_referee_sessions_on_session_id"
     t.index ["user_id", "session_id", "date"], name: "index_referee_sessions_on_user_id_and_session_id_and_date", unique: true
     t.index ["user_id"], name: "index_referee_sessions_on_user_id"
@@ -143,6 +144,7 @@ ActiveRecord::Schema.define(version: 2020_08_24_201231) do
     t.date "date", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "state", default: 0, null: false
     t.index ["session_id"], name: "index_sem_sessions_on_session_id"
     t.index ["user_id", "session_id", "date"], name: "index_sem_sessions_on_user_id_and_session_id_and_date", unique: true
     t.index ["user_id"], name: "index_sem_sessions_on_user_id"

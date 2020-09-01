@@ -1,9 +1,9 @@
-class UserSessionReminderQuery
+class SessionReminderQuery
   QUERY_TIME_FORMAT = 'HH24'.freeze
   attr_reader :relation
 
-  def initialize(relation = UserSession.all)
-    @relation = relation.reserved.joins(:user, session: :location)
+  def initialize(relation)
+    @relation = relation.joins(:user, session: :location)
   end
 
   def for_today

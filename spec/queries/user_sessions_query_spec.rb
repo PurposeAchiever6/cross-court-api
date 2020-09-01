@@ -8,7 +8,7 @@ describe UserSessionsQuery do
   let(:los_angeles_date) { los_angeles_time.to_date }
 
   before do
-    Timecop.freeze(los_angeles_time)
+    Timecop.freeze(Time.current)
   end
 
   after do

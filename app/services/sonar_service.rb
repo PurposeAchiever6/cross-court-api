@@ -19,20 +19,28 @@ module SonarService
   end
 
   def message_received(user, message)
-    user_session = user.user_sessions.future.reserved.ordered_by_date.first
-    if user_session.present?
-      if positive_message?(message)
-        UserSessionConfirmed.new(user_session).save!
+    if positive_message?(message)
+      to_confirm = find_next_to_confirm(user)
+      if to_confirm.present?
         send_message(user, I18n.t('notifier.session_confirmed'))
       else
-        send_message(user, I18n.t('notifier.unreadable_text'))
+        send_message(user, I18n.t('notifier.no_session_booked'))
       end
     else
-      send_message(user, I18n.t('notifier.no_session_booked'))
+      send_message(user, I18n.t('notifier.unreadable_text'))
     end
   end
 
   def positive_message?(message)
     %w[yes y].include?(message.downcase)
+  end
+
+  def find_next_to_confirm(user)
+    if user.is_referee? || user.is_sem?
+      EmployeeSessionConfirmed.new(user).save!
+    else
+      user_sesion = user.user_sessions.future.reserved.ordered_by_date.first
+      UserSessionConfirmed.new(user_session).save! if user_sesion
+    end
   end
 end

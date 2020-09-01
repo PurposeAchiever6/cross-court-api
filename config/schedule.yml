@@ -1,6 +1,16 @@
-session_reminders:
+user_session_reminders:
   cron: "0 * * * *"
-  class: "SessionRemindersJob"
+  class: "UserSessionRemindersJob"
+  queue: default
+
+referee_session_reminders:
+  cron: "0 * * * *"
+  class: "RefereeSessionRemindersJob"
+  queue: default
+
+sem_session_reminders:
+  cron: "0 * * * *"
+  class: "SemSessionRemindersJob"
   queue: default
 
 charge_free_session_players:
