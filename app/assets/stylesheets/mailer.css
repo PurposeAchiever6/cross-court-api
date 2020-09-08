@@ -43,13 +43,6 @@
   text-transform: uppercase;
 }
 
-@media only screen and (max-width: 590px) {
-  .device-width {
-    width: 440px !important;
-    padding: 0;
-  }
-}
-
 .logo {
   display: block;
   width: 200px;

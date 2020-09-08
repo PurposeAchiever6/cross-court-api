@@ -18,9 +18,11 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
   config.public_file_server.headers = {
-    'Cache-Control' => "public, s-maxage=#{4.days.to_i}, maxage=#{2.days.to_i}",
-    'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s
+    'Cache-Control' => "public, max-age=#{1.year.to_i}",
+    'Expires' => 1.year.from_now.to_formatted_s(:rfc822)
   }
+
+  config.static_cache_control = "public, max-age=#{1.year.to_i}"
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
