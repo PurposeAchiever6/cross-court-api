@@ -37,6 +37,7 @@ detectors:
         "KlaviyoService#general_event_attributes",
         "EmployeeSessionsQuery#sorted_future_sessions",
         "SonarService#find_next_to_confirm",
+        "EmployeeSessionConfirmed",
       ]
   InstanceVariableAssumption:
     enabled: false
