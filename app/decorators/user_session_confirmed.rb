@@ -11,7 +11,7 @@ class UserSessionConfirmed
     raise InvalidDateException, I18n.t('api.errors.user_session.invalid_confirmation_date') unless
       in_confirmation_time?
 
-    user_session.state = :confirmed if reserved?
+    user_session.state = :confirmed if user_session.reserved?
     KlaviyoService.new.event(
       Event::SESSION_CONFIRMATION,
       user,

@@ -9,8 +9,8 @@ ActiveAdmin.register Session do
     f.inputs 'Session Details' do
       f.input :location
       f.input :level, include_blank: false
-      f.input :start_time, as: :datepicker, datepicker_options: { min_date: Date.current }
-      f.input :end_time, as: :datepicker, datepicker_options: { min_date: Date.current }
+      f.input :start_time, as: :datepicker, datepicker_options: { min_date: Date.current }, input_html: { autocomplete: :off }
+      f.input :end_time, as: :datepicker, datepicker_options: { min_date: Date.current }, input_html: { autocomplete: :off }
       f.input :time
       f.select_recurring :recurring, nil, allow_blank: true
       f.has_many :session_exceptions, allow_destroy: true do |p|
