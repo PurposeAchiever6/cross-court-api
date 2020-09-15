@@ -18,10 +18,12 @@
 #
 
 FactoryBot.define do
+  los_angeles_time = Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
+
   factory :session do
     location
-    start_time { Date.current }
-    time       { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) + 1.minute }
+    start_time { los_angeles_time.to_date }
+    time       { los_angeles_time + 1.minute }
 
     trait :daily do
       recurring { IceCube::Rule.daily }

@@ -26,6 +26,8 @@ class UserSession < ApplicationRecord
   belongs_to :user
   belongs_to :session
 
+  has_many :session_survey_answers, dependent: :destroy
+
   validates :state, :date, presence: true
 
   delegate :time, :time_zone, :location, :location_name, :location_description, to: :session

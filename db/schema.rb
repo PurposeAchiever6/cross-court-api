@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_01_225613) do
+ActiveRecord::Schema.define(version: 2020_09_09_225415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,6 +157,20 @@ ActiveRecord::Schema.define(version: 2020_09_01_225613) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["date", "session_id"], name: "index_session_exceptions_on_date_and_session_id"
     t.index ["session_id"], name: "index_session_exceptions_on_session_id"
+  end
+
+  create_table "session_survey_answers", force: :cascade do |t|
+    t.string "answer"
+    t.bigint "session_survey_question_id"
+    t.bigint "user_session_id"
+    t.index ["session_survey_question_id"], name: "index_session_survey_answers_on_session_survey_question_id"
+    t.index ["user_session_id"], name: "index_session_survey_answers_on_user_session_id"
+  end
+
+  create_table "session_survey_questions", force: :cascade do |t|
+    t.string "question", null: false
+    t.boolean "is_enabled", default: true
+    t.boolean "is_mandatory", default: false
   end
 
   create_table "sessions", force: :cascade do |t|
