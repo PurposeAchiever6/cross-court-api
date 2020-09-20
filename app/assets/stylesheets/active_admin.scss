@@ -21,13 +21,13 @@
 
 .simple-calendar {
   .prev-month {
-    background-color: #DDDDDD
+    background-color: #dddddd;
   }
   .next-month {
-    background-color: #DDDDDD
+    background-color: #dddddd;
   }
   .today {
-    background-color: #FFFFCC
+    background-color: #ffffcc;
   }
 }
 
@@ -40,11 +40,11 @@
 }
 
 .odd-row {
-  background-color: #F9F9F9
+  background-color: #f9f9f9;
 }
 
 input[disabled="disabled"],
 input[disabled] {
-  background-color: #F4F4F4;
-  border: 0px solid #F4F4F4 !important;  
+  background-color: #f4f4f4;
+  border: 0px solid #f4f4f4 !important;
 }
