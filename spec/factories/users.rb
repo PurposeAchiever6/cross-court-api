@@ -46,13 +46,14 @@
 
 FactoryBot.define do
   factory :user do
-    email                       { Faker::Internet.unique.email }
-    password                    { Faker::Internet.password(8) }
-    first_name                  { Faker::Name.first_name }
-    last_name                   { Faker::Name.last_name }
-    uid                         { Faker::Number.unique.number(10) }
-    zipcode                     { Faker::Address.zip_code[0..4] }
+    email                        { Faker::Internet.unique.email }
+    password                     { Faker::Internet.password(8) }
+    first_name                   { Faker::Name.first_name }
+    last_name                    { Faker::Name.last_name }
+    uid                          { Faker::Number.unique.number(10) }
+    zipcode                      { Faker::Address.zip_code[0..4] }
     free_session_expiration_date { Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS }
+    phone_number                 { Faker::PhoneNumber.cell_phone }
 
     trait :confirmed do
       confirmed_at { Time.current }

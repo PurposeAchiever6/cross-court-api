@@ -68,6 +68,7 @@ class User < ApplicationRecord
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :free_session_state, presence: true
   validates :zipcode, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
+  validates :phone_number, uniqueness: true
 
   before_validation :init_uid
 
