@@ -35,7 +35,9 @@
                   <span class="location-info-item"><%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %></span><br/>
                   <span class="location-info-title">LOCATION</span><br/>
                   <span class="location-info-item"><%= @location.name %></span>
-                  <span class="location-info-item-blue"><%= @location.full_address %></span><br/>
+                  <a href=<%= @location.google_maps_link %>
+                    <span class="location-info-item-blue"><%= @location.full_address %></span><br/>
+                  </a>
                 </td>
               </tr>
               <tr width="100%">

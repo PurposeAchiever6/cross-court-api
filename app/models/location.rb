@@ -28,6 +28,8 @@ class Location < ApplicationRecord
     VT VA WA WV WI WY
   ].freeze
 
+  GOOGLE_MAPS_BASE_URL = 'https://www.google.com/maps/search/?api=1&query='.freeze
+
   acts_as_paranoid
   has_many :sessions
   has_one_attached :image, dependent: :purge_now
@@ -35,6 +37,10 @@ class Location < ApplicationRecord
   validates :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, presence: true
 
   def full_address
-    "#{address ? "#{address}," : ''} #{city || ''} #{state || ''} #{zipcode || ''}"
+    "#{address}, #{city} #{state} #{zipcode}"
+  end
+
+  def google_maps_link
+    "#{GOOGLE_MAPS_BASE_URL}#{full_address}".split(' ').join('+')
   end
 end
