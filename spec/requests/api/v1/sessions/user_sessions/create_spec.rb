@@ -123,6 +123,16 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
           expect { subject }.not_to change(UserSession, :count)
         end
       end
+
+      context 'when user has been referred by other user' do
+        let!(:other_user) { create(:user) }
+
+        before { params[:referred_by] = other_user.referral_code }
+
+        it 'increments the credits of the other user' do
+          expect { subject }.to change { other_user.reload.credits }.by(1)
+        end
+      end
     end
 
     context 'with invalid date' do

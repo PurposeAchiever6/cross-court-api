@@ -33,6 +33,7 @@
 #  last_name                    :string           default(""), not null
 #  zipcode                      :string
 #  free_session_expiration_date :date
+#  referral_code                :string
 #
 # Indexes
 #
@@ -75,6 +76,8 @@ class User < ApplicationRecord
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
 
+  after_create :create_referral_code
+
   def self.from_social_provider(provider, user_params)
     where(provider: provider, uid: user_params['id']).first_or_create! do |user|
       user.password = Devise.friendly_token[0, 20]
@@ -90,6 +93,10 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def first_session?
+    user_sessions.empty?
+  end
+
   private
 
   def uses_email?
@@ -98,5 +105,16 @@ class User < ApplicationRecord
 
   def init_uid
     self.uid = email if uid.blank? && provider == 'email'
+  end
+
+  def create_referral_code
+    loop do
+      code = SecureRandom.hex(8)
+      next if User.where(referral_code: code).exists?
+
+      self.referral_code = code
+      save!
+      break
+    end
   end
 end

@@ -13,6 +13,7 @@
 #  is_free_session             :boolean          default(FALSE), not null
 #  free_session_payment_intent :string
 #  credit_reimbursed           :boolean          default(FALSE), not null
+#  referral_id                 :integer
 #
 # Indexes
 #

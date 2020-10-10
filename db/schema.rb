@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_25_235705) do
+ActiveRecord::Schema.define(version: 2020_09_27_221433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -205,6 +205,7 @@ ActiveRecord::Schema.define(version: 2020_09_25_235705) do
     t.boolean "is_free_session", default: false, null: false
     t.string "free_session_payment_intent"
     t.boolean "credit_reimbursed", default: false, null: false
+    t.bigint "referral_id"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
@@ -240,6 +241,7 @@ ActiveRecord::Schema.define(version: 2020_09_25_235705) do
     t.string "last_name", default: "", null: false
     t.string "zipcode"
     t.date "free_session_expiration_date"
+    t.string "referral_code"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_referee"], name: "index_users_on_is_referee"

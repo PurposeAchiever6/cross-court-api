@@ -13,6 +13,7 @@
 #  is_free_session             :boolean          default(FALSE), not null
 #  free_session_payment_intent :string
 #  credit_reimbursed           :boolean          default(FALSE), not null
+#  referral_id                 :integer
 #
 # Indexes
 #
@@ -25,6 +26,8 @@ class UserSession < ApplicationRecord
 
   belongs_to :user
   belongs_to :session
+
+  belongs_to :referral, class_name: 'User', foreign_key: :referral_id, optional: true, inverse_of: :user_sessions
 
   has_many :session_survey_answers, dependent: :destroy
 

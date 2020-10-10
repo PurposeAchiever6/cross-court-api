@@ -7,13 +7,15 @@ module Api
             user_session = UserSession.new(
               session_id: params[:session_id],
               user_id: current_user.id,
-              date: params[:date]
+              date: params[:date],
+              referral: User.find_by(referral_code: params[:referred_by])
             )
             user_session = UserSessionSlackNotification.new(user_session)
             user_session = UserSessionAutoConfirmed.new(user_session)
             user_session = UserSessionConsumeCredit.new(user_session)
             user_session = UserSessionWithValidDate.new(user_session)
             user_session = UserSessionNotFull.new(user_session)
+            user_session = UserSessionReferralCredits.new(user_session)
             user_session.save!
 
             KlaviyoService.new.event(Event::SESSION_BOOKED, current_user, user_session: user_session)

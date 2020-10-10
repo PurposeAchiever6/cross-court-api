@@ -33,6 +33,7 @@
 #  last_name                    :string           default(""), not null
 #  zipcode                      :string
 #  free_session_expiration_date :date
+#  referral_code                :string
 #
 # Indexes
 #
