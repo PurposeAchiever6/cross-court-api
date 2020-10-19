@@ -8,7 +8,7 @@ class UserSessionReferralCredits
   end
 
   def save!
-    if referral
+    if referral && referral.id != user_id
       referral.increment(:credits)
       referral.save!
     end

@@ -8,7 +8,7 @@ module Api
               session_id: params[:session_id],
               user_id: current_user.id,
               date: params[:date],
-              referral: User.find_by(referral_code: params[:referred_by])
+              referral: User.find_by(referral_code: params[:referral_code])
             )
             user_session = UserSessionSlackNotification.new(user_session)
             user_session = UserSessionAutoConfirmed.new(user_session)
