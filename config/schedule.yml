@@ -27,3 +27,8 @@ remove_expired_free_credits:
   cron: "0 5 * * *"
   class: "RemoveExpiredFreeCreditsJob"
   queue: default
+
+send_survey_sms_to_players:
+  cron: "0 * * * *"
+  class: "SurveySmsJob"
+  queue: default
