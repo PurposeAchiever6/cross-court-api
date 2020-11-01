@@ -2,10 +2,11 @@ require 'rails_helper'
 
 describe 'GET api/v1/sessions', type: :request do
   let(:user)              { create(:user) }
-  let(:beginning_of_week) { Time.current.beginning_of_week }
+  let(:los_angeles_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+  let(:beginning_of_week) { los_angeles_time.beginning_of_week }
   let(:from_date)         { beginning_of_week.strftime(Session::DATE_FORMAT) }
   let(:params)            { { from_date: from_date } }
-  let(:today)             { Date.current.to_s }
+  let(:today)             { los_angeles_time.to_date.to_s }
 
   subject do
     get api_v1_sessions_path(params),
@@ -118,8 +119,7 @@ describe 'GET api/v1/sessions', type: :request do
   end
 
   context 'when the session is in the past' do
-    let(:los_angeles_time) { Time.current.in_time_zone('America/Los_Angeles') - 1.minute }
-    let!(:session) { create(:session, :daily, time: Time.zone.local_to_utc(los_angeles_time)) }
+    let!(:session) { create(:session, :daily, time: los_angeles_time - 1.minute) }
 
     it 'returns past in true' do
       subject

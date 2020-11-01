@@ -127,7 +127,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       context 'when user has been referred by other user' do
         let!(:other_user) { create(:user) }
 
-        before { params[:referred_by] = other_user.referral_code }
+        before { params[:referral_code] = other_user.referral_code }
 
         it 'increments the credits of the other user' do
           expect { subject }.to change { other_user.reload.credits }.by(1)
