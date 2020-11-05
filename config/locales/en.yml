@@ -68,7 +68,9 @@ en:
     sem_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
     referee_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
     ultimatum: "Hey %{name}! You’re locked in for today’s Crosscourt Session. Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to the check-in will begin the session. Don’t forget to bring a water, ball, and towel if you’ve got em. Also note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point. Thank you!"
-    survey_reminder: Thanks for coming out %{name}! If you have a second, we'd appreciate your feedback. %{survey_link}
+    survey_reminder: >
+      Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate your
+      feedback. %{survey_link}
   admin:
     products:
       created: "Product created successfully"
