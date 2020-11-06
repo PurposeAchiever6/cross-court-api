@@ -42,7 +42,7 @@ class KlaviyoService
         purchase = args[:purchase]
         { order_price: purchase.price.to_i, purchase_name: purchase.product_name }
       when Event::SESSION_BOOKED, Event::SESSION_REMINDER_24_HOURS, Event::SESSION_REMINDER_8_HOURS,
-                    Event::SESSION_REMINDER_6_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION
+           Event::SESSION_REMINDER_6_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION
 
         user_session = args[:user_session]
         session_id = user_session.session_id

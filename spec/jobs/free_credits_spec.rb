@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe RemoveExpiredFreeCreditsJob do
+describe FreeCreditsJob do
   describe '#perform' do
     let!(:user_1) { create(:user, credits: 1, free_session_state: 0, free_session_expiration_date: Time.zone.today - 4.days) }
     let!(:user_2) { create(:user, credits: 1, free_session_state: 0, free_session_expiration_date: Time.zone.today + 30.days) }

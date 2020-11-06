@@ -23,9 +23,9 @@ confirm_unconfirmed_sessions:
   class: "ConfirmUnconfirmedSessionsJob"
   queue: default
 
-remove_expired_free_credits:
+free_credits:
   cron: "0 5 * * *"
-  class: "RemoveExpiredFreeCreditsJob"
+  class: "FreeCreditsJob"
   queue: default
 
 send_survey_sms_to_players:
