@@ -94,7 +94,7 @@ detectors:
   TooManyStatements:
     enabled: true
     exclude: ["UserSessionRemindersJob#perform", "ConfirmationsController"]
-    max_statements: 12
+    max_statements: 13
   UncommunicativeMethodName:
     enabled: true
     exclude: []

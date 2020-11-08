@@ -69,7 +69,17 @@ class UserSession < ApplicationRecord
   end
 
   def create_ics_event
-    start_datetime = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec).in_time_zone(time_zone)
+    tz = Time.find_zone(time_zone)
+
+    start_datetime = Time.new(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.min,
+      time.sec,
+      tz
+    ).utc
 
     options = { 'CN' => 'Crosscourt' }
     organizer_property = RiCal::PropertyValue::CalAddress.new(nil, value: 'mailto:ccteam@cross-court.com', params: options)
