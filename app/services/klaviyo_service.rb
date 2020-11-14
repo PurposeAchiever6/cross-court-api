@@ -57,7 +57,7 @@ class KlaviyoService
           session_location_address: location.full_address
         }
       else
-        {}
+        args
       end
 
     { properties: properties }

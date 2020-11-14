@@ -8,8 +8,12 @@ class FreeCreditsJob < ApplicationJob
       user.save!
     end
 
-    UsersQuery.new.free_session_not_used_in_7_days.each do |user|
+    UsersQuery.new.free_session_not_used_in(7.days).each do |user|
       KlaviyoService.new.event(Event::FREE_SESSION_NOT_USED_IN_7_DAYS, user)
+    end
+
+    UsersQuery.new.free_session_expires_in(15.days).each do |user|
+      KlaviyoService.new.event(Event::FREE_SESSION_EXPIRES_SOON, user, expires_in: 15)
     end
   end
 end
