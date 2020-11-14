@@ -20,9 +20,9 @@ module SonarService
 
   def message_received(user, message)
     if positive_message?(message)
-      to_confirm = find_next_to_confirm(user)
-      if to_confirm.present?
-        send_message(user, confirmation_msg(user))
+      session = find_next_to_confirm(user)
+      if session.present?
+        send_message(user, confirmation_msg(user, session))
       else
         send_message(user, I18n.t('notifier.no_session_booked'))
       end
@@ -39,12 +39,25 @@ module SonarService
     if user.employee?
       EmployeeSessionConfirmed.new(user).save!
     else
-      user_sesion = user.user_sessions.future.reserved.ordered_by_date.first
-      UserSessionConfirmed.new(user_session).save! if user_sesion
+      user_session = user.user_sessions.future.reserved.ordered_by_date.first
+
+      return unless user_session
+
+      UserSessionConfirmed.new(user_session).save!
+      user_session
     end
   end
 
-  def confirmation_msg(user)
-    user.employee? ? I18n.t('notifier.employee_session_confirmed') : I18n.t('notifier.session_confirmed')
+  def confirmation_msg(user, user_session)
+    return I18n.t('notifier.employee_session_confirmed') if user.employee?
+
+    session_confirmed_msg = I18n.t('notifier.session_confirmed')
+    app_instructions_msg = I18n.t('notifier.app_instructions', app_link: "#{ENV['FRONTENT_URL']}/app")
+
+    if user_session.is_free_session
+      "#{session_confirmed_msg} #{app_instructions_msg}"
+    else
+      session_confirmed_msg
+    end
   end
 end
