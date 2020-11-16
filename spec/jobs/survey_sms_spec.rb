@@ -16,19 +16,19 @@ describe SurveySmsJob do
     end
     let(:los_angeles_date) { los_angeles_time.to_date }
 
-    let!(:session_1) { create(:session, time: los_angeles_time - 1.5.hours) }
+    let!(:session) { create(:session, time: los_angeles_time - 1.5.hours) }
 
     let!(:user_session_1) do
-      create(:user_session, session: session_1, checked_in: true, date: los_angeles_date)
+      create(:user_session, session: session, checked_in: true, date: los_angeles_date)
     end
     let!(:user_session_2) do
-      create(:user_session, session: session_1, checked_in: true, date: los_angeles_date)
+      create(:user_session, session: session, checked_in: true, date: los_angeles_date)
     end
     let!(:user_session_3) do
-      create(:user_session, session: session_1, checked_in: true, date: los_angeles_date + 1.day)
+      create(:user_session, session: session, checked_in: true, date: los_angeles_date + 1.day)
     end
     let!(:user_session_4) do
-      create(:user_session, session: session_1, checked_in: false, date: los_angeles_date)
+      create(:user_session, session: session, checked_in: false, date: los_angeles_date)
     end
 
     let(:expected_message_user_1) do

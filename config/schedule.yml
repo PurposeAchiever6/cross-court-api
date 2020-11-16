@@ -32,3 +32,8 @@ send_survey_sms_to_players:
   cron: "0 * * * *"
   class: "SurveySmsJob"
   queue: default
+
+send_email_to_inactive_players:
+  cron: "0 7 * * *"
+  class: "EmailToInactiveUsersJob"
+  queue: default

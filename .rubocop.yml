@@ -18,25 +18,6 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*
 
-Metrics/AbcSize:
-  # The ABC size is a calculated magnitude, so this number can be an Integer or
-  # a Float.
-  Max: 15
-  Exclude:
-    - db/migrate/20161011151353_devise_create_users.rb
-    - app/models/session.rb
-    - app/models/concerns/employee_session.rb
-    - app/decorators/user_session_consume_credit.rb
-    - app/decorators/canceled_user_session.rb
-    - app/decorators/user_session_confirmed.rb
-    - app/controllers/api/v1/sessions_controller.rb
-    - app/controllers/api/v1/sessions/user_sessions_controller.rb
-    - app/controllers/api/v1/confirmations_controller.rb
-    - app/interactors/create_purchase.rb
-    - app/interactors/make_discount.rb
-    - app/services/sonar_service.rb
-    - app/jobs/session_reminders_job.rb
-
 Metrics/BlockLength:
   CountComments: false # count full line comments?
   Max: 25
@@ -61,7 +42,6 @@ Metrics/CyclomaticComplexity:
     - app/jobs/sem_session_reminders_job.rb
     - app/jobs/referee_session_reminders_job.rb
     - app/decorators/employee_session_confirmed.rb
-
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
@@ -147,3 +127,8 @@ Style/GuardClause:
 
 Metrics/AbcSize:
   Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: true
+  Exclude:
+    - app/jobs/email_to_inactive_users_job.rb

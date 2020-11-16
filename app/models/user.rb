@@ -58,6 +58,16 @@ class User < ApplicationRecord
 
   enum free_session_state: { not_claimed: 0, claimed: 1, used: 2, expired: 3 }, _prefix: :free_session
 
+  has_one :last_checked_in_user_session,
+          -> { where(checked_in: true).order(date: :desc) },
+          class_name: 'UserSession',
+          inverse_of: :user
+
+  has_one :first_future_user_session,
+          -> { future.not_canceled.order(date: :asc, 'sessions.time' => :asc) },
+          class_name: 'UserSession',
+          inverse_of: :user
+
   has_many :user_sessions, dependent: :destroy
   has_many :sem_sessions, dependent: :destroy
   has_many :referee_sessions, dependent: :destroy
@@ -75,6 +85,7 @@ class User < ApplicationRecord
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
+  scope :no_credits, -> { where(credits: 0) }
 
   after_create :create_referral_code
 

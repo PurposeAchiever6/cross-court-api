@@ -23,4 +23,5 @@ module Event
   FREE_SESSION_NOT_USED_IN_7_DAYS = 'Free Session Not Used In 7 Days'.freeze
   FREE_SESSION_EXPIRES_SOON = 'Free Session Expires Soon'.freeze
   FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze
+  TIME_TO_RE_UP = 'Time To Re Up'.freeze
 end
