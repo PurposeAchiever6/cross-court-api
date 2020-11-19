@@ -39,8 +39,25 @@ describe EmailToInactiveUsersJob do
     subject { described_class.perform_now }
 
     it 'calls Klaviyo with the correct parameters' do
-      expect_any_instance_of(KlaviyoService).to receive(:event).with(Event::TIME_TO_RE_UP, user).once
+      expect_any_instance_of(KlaviyoService).to receive(:event).with(Event::TIME_TO_RE_UP_2, user).once
       subject
+    end
+
+    context 'when user last checked in session was 7 days ago' do
+      let!(:user_session_4) do
+        create(
+          :user_session,
+          user: user,
+          session: session,
+          checked_in: true,
+          date: Time.zone.today - 7.days
+        )
+      end
+
+      it 'calls Klaviyo with the correct parameters' do
+        expect_any_instance_of(KlaviyoService).to receive(:event).with(Event::TIME_TO_RE_UP_1, user).once
+        subject
+      end
     end
 
     context 'when user has a future session' do
@@ -56,12 +73,12 @@ describe EmailToInactiveUsersJob do
       end
 
       it 'do not call KlaviyoService' do
-        expect_any_instance_of(KlaviyoService).not_to receive(:event).with(Event::TIME_TO_RE_UP, user)
+        expect_any_instance_of(KlaviyoService).not_to receive(:event)
         subject
       end
     end
 
-    context 'when the user last checked in session was before 14 days ago' do
+    context 'when the user last checked in session was before 14 or 7 days ago' do
       let!(:user_session_4) do
         create(
           :user_session,
@@ -73,7 +90,7 @@ describe EmailToInactiveUsersJob do
       end
 
       it 'do not call KlaviyoService' do
-        expect_any_instance_of(KlaviyoService).not_to receive(:event).with(Event::TIME_TO_RE_UP, user)
+        expect_any_instance_of(KlaviyoService).not_to receive(:event)
         subject
       end
     end
@@ -82,7 +99,7 @@ describe EmailToInactiveUsersJob do
       let(:user_credits) { rand(1..10) }
 
       it 'do not call KlaviyoService' do
-        expect_any_instance_of(KlaviyoService).not_to receive(:event).with(Event::TIME_TO_RE_UP, user)
+        expect_any_instance_of(KlaviyoService).not_to receive(:event)
         subject
       end
     end
