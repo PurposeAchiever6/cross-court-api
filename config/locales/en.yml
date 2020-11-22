@@ -43,7 +43,7 @@ en:
       cancel: "If you need to cancel the session click"
       here: "here"
       welcome: "Hi %{name}"
-      booked: "Spot secured!"
+      booked: "You're in!"
       add_to_calendar: "add-to-calendar.ics"
       new:
         subject: "Session confirmation"
