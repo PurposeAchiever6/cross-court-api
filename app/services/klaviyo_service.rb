@@ -56,6 +56,9 @@ class KlaviyoService
           session_location_name: location.name,
           session_location_address: location.full_address
         }
+      when Event::REFERRAL_SUCCESS
+        referred = args[:referred]
+        { referred_first_name: referred.first_name, referred_last_name: referred.last_name }
       else
         args
       end
