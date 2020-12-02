@@ -8,7 +8,7 @@ class UserSessionReferralCredits
   end
 
   def save!
-    if referral && referral.id != user_id
+    if referral && referral.id != user_id && user.first_session?
       referral.increment(:credits)
       referral.save!
       KlaviyoService.new.event(Event::REFERRAL_SUCCESS, referral, referred: user)
