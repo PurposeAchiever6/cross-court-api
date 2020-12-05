@@ -23,13 +23,13 @@ class EmployeeSessionsQuery
           .future
           .order(:date)
           .includes(session: [
-                      location: [image_attachment: :blob]
+                      location: [images_attachments: :blob]
                     ]),
       user.referee_sessions
           .future
           .order(:date)
           .includes(session: [
-                      location: [image_attachment: :blob]
+                      location: [images_attachments: :blob]
                     ])
     ].flatten.uniq { |session| "#{session[:session_id]} - #{session[:date]}" }
   end

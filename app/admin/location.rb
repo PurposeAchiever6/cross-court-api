@@ -1,10 +1,10 @@
 ActiveAdmin.register Location do
-  permit_params :name, :address, :lat, :lng, :city, :zipcode, :image, :time_zone, :state, :description
+  permit_params :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, :description, images: []
 
   form do |f|
     f.inputs 'Location Details' do
       f.input :name
-      f.input :image, as: :file
+      f.input :images, as: :file, input_html: { multiple: true }
       f.input :city
       f.input :zipcode
       f.input :time_zone, as: :select, collection: ActiveSupport::TimeZone::MAPPING.values.sort
@@ -43,8 +43,16 @@ ActiveAdmin.register Location do
       row :address
       row :state
       row :description
-      row :image do |location|
-        image_tag polymorphic_url(location.image) if location.image.attached?
+      row :images do |location|
+        if location.images.attached?
+          div class: 'flex' do
+            location.images.each do |img|
+              div class: 'mr-2' do
+                image_tag polymorphic_url(img), class: 'mw-200px'
+              end
+            end
+          end
+        end
       end
     end
   end

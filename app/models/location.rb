@@ -32,7 +32,7 @@ class Location < ApplicationRecord
 
   acts_as_paranoid
   has_many :sessions
-  has_one_attached :image, dependent: :purge_now
+  has_many_attached :images, dependent: :purge_now
 
   validates :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, presence: true
 

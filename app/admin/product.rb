@@ -19,8 +19,8 @@ ActiveAdmin.register Product do
       row :credits
       row :price
       row :order_number
-      row :image do |location|
-        image_tag polymorphic_url(location.image) if location.image.attached?
+      row :image do |product|
+        image_tag polymorphic_url(product.image), class: 'mw-200px' if product.image.attached?
       end
     end
   end

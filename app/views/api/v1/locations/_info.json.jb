@@ -9,6 +9,10 @@ json = {
   description: location.description
 }
 
-json[:image_url] = polymorphic_url(location.image) if location.image.attached?
+if location.images.attached?
+  json[:image_urls] = location.images.map do |image|
+    polymorphic_url(image)
+  end
+end
 
 json
