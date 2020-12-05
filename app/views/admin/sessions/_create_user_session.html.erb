@@ -1,0 +1,17 @@
+<%= form_with(url: create_user_session_admin_session_path(id: resource.id, date: date),
+              local: true,
+              class: 'mt-2') do %>
+  <div class='mb-2'>
+    <%= label_tag(:user_id, 'Select player', class: 'mr-2') %>
+    <%= select_tag(:user_id, options_for_select(users_for_select), include_blank: true) %>
+  </div>
+
+  <div class='flex items-center mb-4'>
+    <%= check_box_tag(:not_charge_user_credit, true, true, class: 'mr-1') %>
+    <%= label_tag(:not_charge_user_credit, 'Don\'t use player credit') %>
+  </div>
+
+  <div>
+    <%= submit_tag('Create User Session') %>
+  </div>
+<% end %>
