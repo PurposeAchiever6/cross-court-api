@@ -1,4 +1,4 @@
-class EmailToInactiveUsersJob < ApplicationJob
+class InactiveUsersJob < ApplicationJob
   queue_as :default
 
   def perform
@@ -14,6 +14,8 @@ class EmailToInactiveUsersJob < ApplicationJob
         KlaviyoService.new.event(Event::TIME_TO_RE_UP_1, user)
       when today_date - 14.days
         KlaviyoService.new.event(Event::TIME_TO_RE_UP_2, user)
+      when today_date - 1.month
+        SlackService.new(user).inactive_user
       end
     end
   end

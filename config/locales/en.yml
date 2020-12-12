@@ -55,6 +55,9 @@ en:
       session_confirmed: "%{name} confirmed the reservation for %{date} at %{time} on %{location}"
       session_canceled_in_time: "%{name} cancelled in time the reservation for %{date} at %{time} on %{location}"
       session_canceled_out_of_time: "%{name} cancelled out of time the reservation for %{date} at %{time} on %{location}"
+      inactive_user: >
+        %{name} (phone: %{phone}) has played his last session 1 month ago and doesn't have any
+        remaining credits.
     session_confirmed: "You’re locked in! Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to check-in are in the first game. Don’t forget to bring a water, ball, and towel if you’ve got em. Let’s get it!"
     employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear. Let’s get it!"
     session_canceled_in_time: "We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}"

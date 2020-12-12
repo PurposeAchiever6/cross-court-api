@@ -6,7 +6,7 @@ DryBundlerInCapistranoCheck: {}
 #HashSyntaxCheck: { }
 IsolateSeedDataCheck: {}
 KeepFindersOnTheirOwnModelCheck: {}
-LawOfDemeterCheck: { ignored_files: ["db/migrate", "app/jobs/email_to_inactive_users_job.rb"] }
+LawOfDemeterCheck: { ignored_files: ["db/migrate", "app/jobs/inactive_users_job.rb"] }
 #LongLineCheck: { max_line_length: 80 }
 MoveCodeIntoControllerCheck: {}
 MoveCodeIntoHelperCheck: { array_count: 3 }
@@ -16,7 +16,10 @@ MoveModelLogicIntoModelCheck:
   {
     use_count: 4,
     ignored_files:
-      ["app/controllers/api/v1/sessions/user_sessions_controller.rb", "app/controllers/api/v1/confirmations_controller.rb"],
+      [
+        "app/controllers/api/v1/sessions/user_sessions_controller.rb",
+        "app/controllers/api/v1/confirmations_controller.rb",
+      ],
   }
 NeedlessDeepNestingCheck: { nested_count: 2 }
 NotRescueExceptionCheck: {}

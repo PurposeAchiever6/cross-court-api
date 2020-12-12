@@ -128,8 +128,3 @@ Style/GuardClause:
 
 Metrics/AbcSize:
   Enabled: false
-
-Style/IfUnlessModifier:
-  Enabled: true
-  Exclude:
-    - app/jobs/email_to_inactive_users_job.rb
