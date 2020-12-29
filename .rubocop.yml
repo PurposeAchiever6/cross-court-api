@@ -41,6 +41,7 @@ Metrics/CyclomaticComplexity:
     - app/jobs/user_session_reminders_job.rb
     - app/jobs/sem_session_reminders_job.rb
     - app/jobs/referee_session_reminders_job.rb
+    - app/jobs/inactive_users_job.rb
     - app/decorators/employee_session_confirmed.rb
 
 Metrics/MethodLength:

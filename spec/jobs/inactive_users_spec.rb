@@ -20,7 +20,8 @@ describe InactiveUsersJob do
         user: user,
         session: session,
         checked_in: true,
-        date: Time.zone.today - date_ago_last_session
+        date: Time.zone.today - date_ago_last_session,
+        is_free_session: free_session
       )
     end
     let!(:user_session_3) do
@@ -36,6 +37,7 @@ describe InactiveUsersJob do
 
     let(:user_credits) { 0 }
     let(:date_ago_last_session) { [1.month, 14.days, 7.days].sample }
+    let(:free_session) { false }
 
     subject { described_class.perform_now }
 
@@ -61,6 +63,20 @@ describe InactiveUsersJob do
         expect_any_instance_of(SlackService).not_to receive(:notify)
 
         subject
+      end
+
+      context 'when it was a free session' do
+        let(:free_session) { true }
+
+        it 'calls service with the correct parameters' do
+          expect_any_instance_of(KlaviyoService).to receive(:event).with(Event::TIME_TO_RE_UP_2, user).once
+          expect_any_instance_of(SlackService).to receive(:notify).with(
+            I18n.t('notifier.slack.inactive_first_timer_user', name: user.full_name, phone: user.phone_number),
+            channel: ENV['SLACK_CHANNEL_CHURN']
+          ).once
+
+          subject
+        end
       end
     end
 

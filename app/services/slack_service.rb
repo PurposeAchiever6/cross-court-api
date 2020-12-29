@@ -31,10 +31,11 @@ class SlackService
   end
 
   def inactive_user
-    notify(
-      I18n.t('notifier.slack.inactive_user', name: user.full_name, phone: user.phone_number),
-      channel: ENV['SLACK_CHANNEL_CHURN']
-    )
+    notify_inactive('notifier.slack.inactive_user')
+  end
+
+  def inactive_first_timer_user
+    notify_inactive('notifier.slack.inactive_first_timer_user')
   end
 
   private
@@ -49,6 +50,17 @@ class SlackService
         location: location.name
       ),
       channel: ENV['SLACK_CHANNEL_BOOKING']
+    )
+  end
+
+  def notify_inactive(i18n_message)
+    notify(
+      I18n.t(
+        i18n_message,
+        name: user.full_name,
+        phone: user.phone_number
+      ),
+      channel: ENV['SLACK_CHANNEL_CHURN']
     )
   end
 
