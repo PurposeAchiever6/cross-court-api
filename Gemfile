@@ -33,8 +33,9 @@ gem 'sidekiq', '~> 6.0.7'
 gem 'sidekiq-cron', '~> 1.2'
 gem 'simple_calendar', '~> 2.3'
 gem 'slack-notifier', '~> 2.3', '>= 2.3.2'
-gem 'stripe', '~> 5.11'
+gem 'stripe', '~> 5.21'
 gem 'webpacker', '~> 4.0'
+gem 'sprockets', '~> 3.7.2'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password

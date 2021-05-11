@@ -29,11 +29,5 @@ describe 'GET api/v1/products' do
     it 'returns the products' do
       expect(json[:products].count).to eq(3)
     end
-
-    it 'returns the products ordered by order_number' do
-      expect(json[:products][0][:stripe_id]).to eq(product3.stripe_id)
-      expect(json[:products][1][:stripe_id]).to eq(product1.stripe_id)
-      expect(json[:products][2][:stripe_id]).to eq(product2.stripe_id)
-    end
   end
 end

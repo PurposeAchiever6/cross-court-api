@@ -4,7 +4,7 @@ describe 'POST api/v1/purchases' do
   let!(:user)          { create(:user) }
   let!(:product)       { create(:product, price: 100) }
   let(:payment_method) { 'pm123456789' }
-  let(:params)         { { product_id: product.stripe_id, payment_method: payment_method } }
+  let(:params)         { { product_id: product.id, payment_method: payment_method } }
 
   subject do
     post api_v1_purchases_path, params: params, headers: auth_headers, as: :json
@@ -38,7 +38,7 @@ describe 'POST api/v1/purchases' do
     context 'when a promo_code is applied' do
       let(:params) do
         {
-          product_id: product.stripe_id,
+          product_id: product.id,
           payment_method: payment_method,
           promo_code: promo_code.code
         }

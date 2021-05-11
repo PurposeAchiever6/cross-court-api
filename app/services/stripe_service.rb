@@ -1,21 +1,4 @@
 class StripeService
-  def self.create_sku(sku_params)
-    Stripe::SKU.create(
-      attributes: {
-        name: sku_params[:name],
-        credits: sku_params[:credits]
-      },
-      price: sku_params[:price].to_i * 100,
-      currency: 'usd',
-      inventory: { type: 'infinite' },
-      product: ENV['STRIPE_PRODUCT_ID']
-    )
-  end
-
-  def self.delete_sku(sku_id)
-    Stripe::SKU.delete(sku_id)
-  end
-
   def self.create_user(user)
     customer = Stripe::Customer.create(
       email: user.email,
@@ -64,5 +47,25 @@ class StripeService
 
   def self.confirm_intent(payment_intent)
     Stripe::PaymentIntent.confirm(payment_intent)
+  end
+
+  def self.create_price(product_attrs)
+    product_name = product_attrs[:name]
+    is_one_time = product_attrs[:product_type] == 'one_time'
+
+    price_attrs = {
+      currency: 'usd',
+      unit_amount: product_attrs[:price].to_i * 100,
+      nickname: product_name,
+      product: ENV['STRIPE_PRODUCT_ID']
+    }
+
+    price_attrs.merge!(recurring: { interval: 'month' }) unless is_one_time
+
+    Stripe::Price.create(price_attrs)
+  end
+
+  def self.update_price(price_id, price_attrs)
+    Stripe::Price.update(price_id, price_attrs)
   end
 end

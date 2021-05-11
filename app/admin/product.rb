@@ -1,5 +1,5 @@
 ActiveAdmin.register Product do
-  permit_params :name, :credits, :price, :order_number, :image
+  permit_params :name, :credits, :price, :order_number, :image, :product_type
 
   form do |f|
     f.inputs 'Product details' do
@@ -8,6 +8,7 @@ ActiveAdmin.register Product do
       f.input :price, input_html: { disabled: resource.persisted? }
       f.input :order_number
       f.input :image, as: :file
+      f.input :product_type
     end
     f.actions
   end
@@ -28,13 +29,14 @@ ActiveAdmin.register Product do
   controller do
     def create
       product_params = permitted_params[:product]
-      sku = StripeService.create_sku(product_params)
-      Product.create!(product_params.merge(stripe_id: sku.id))
+      stripe_price_id = StripeService.create_price(product_params).id
+      Product.create!(product_params.merge(stripe_price_id: stripe_price_id))
       redirect_to admin_products_path, notice: I18n.t('admin.products.created')
     end
 
     def destroy
-      StripeService.delete_sku(resource.stripe_id)
+      stripe_price_id = resource.stripe_price_id
+      StripeService.update_price(stripe_price_id, active: false) if stripe_price_id
       resource.destroy!
       redirect_to admin_products_path, notice: I18n.t('admin.products.destroyed')
     end

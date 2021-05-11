@@ -145,11 +145,11 @@ Represents one of the Series. e.g: `'The DROP-IN: 1 credit for $15'`
 #### Attributes
 
 - **id** (Number: unique)
-- **stripe_id** (Text: id of the product created in Stripe. This attribute is auto assigned when creating a new product in the admin)
 - **credits** (Number: amount of credits the product will give to the user)
 - **name** (Text: name of the product. e.g: `'The DROP-IN'`)
 - **price** (Number: amount in dollars)
 - **order_number** (Number: `0` will be displayed first in the web)
+- **stripe_price_id** (String: Stripe price ID)
 
 ### PromoCode
 

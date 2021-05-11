@@ -1,8 +1,8 @@
 json = {
+  id: product.id,
   name: product.name,
   credits: product.credits,
-  price: product.price,
-  stripe_id: product.stripe_id
+  price: product.price
 }
 
 json[:image_url] = polymorphic_url(product.image) if product.image.attached?

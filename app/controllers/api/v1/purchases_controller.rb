@@ -28,7 +28,7 @@ module Api
       private
 
       def product
-        Product.find_by(stripe_id: params[:product_id])
+        Product.find(params[:product_id])
       end
 
       def promo_code
