@@ -68,11 +68,18 @@ class User < ApplicationRecord
           class_name: 'UserSession',
           inverse_of: :user
 
+  has_one :active_subscription,
+          -> { active.recent },
+          class_name: 'Subscription',
+          inverse_of: :user
+
   has_many :user_sessions, dependent: :destroy
   has_many :sem_sessions, dependent: :destroy
   has_many :referee_sessions, dependent: :destroy
   has_many :sessions, through: :user_sessions
   has_many :purchases, dependent: :nullify
+  has_many :subscriptions, dependent: :destroy
+
   has_one_attached :image
 
   validates :uid, uniqueness: { scope: :provider }

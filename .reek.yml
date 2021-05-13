@@ -25,6 +25,7 @@ detectors:
         "UserSessionRemindersJob#perform",
         "SonarService#message_received",
         "EmployeeSessionsQuery#sorted_future_sessions",
+        "Subscription#assign_stripe_attrs",
       ]
     max_calls: 1
     allow_calls: []
@@ -38,6 +39,7 @@ detectors:
         "EmployeeSessionsQuery#sorted_future_sessions",
         "SonarService#find_next_to_confirm",
         "EmployeeSessionConfirmed",
+        "Subscription#assign_stripe_attrs",
       ]
   InstanceVariableAssumption:
     enabled: false
@@ -129,6 +131,7 @@ detectors:
         "SonarService#add_customer",
         "SonarService#send_message",
         "EmployeeSessionsQuery#sorted_future_sessions",
+        "CreateSubscription#call",
       ]
     reject:
       - "/^.$/"

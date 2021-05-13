@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_11_131555) do
+ActiveRecord::Schema.define(version: 2021_05_11_183135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -183,6 +183,25 @@ ActiveRecord::Schema.define(version: 2021_05_11_131555) do
     t.date "end_time"
     t.integer "level", default: 0, null: false
     t.index ["location_id"], name: "index_sessions_on_location_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.string "stripe_id"
+    t.string "stripe_item_id"
+    t.string "status"
+    t.boolean "cancel_at_period_end", default: false
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "cancel_at"
+    t.datetime "canceled_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.bigint "product_id"
+    t.index ["product_id"], name: "index_subscriptions_on_product_id"
+    t.index ["status"], name: "index_subscriptions_on_status"
+    t.index ["stripe_id"], name: "index_subscriptions_on_stripe_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
   create_table "user_promo_codes", force: :cascade do |t|

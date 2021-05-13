@@ -37,6 +37,8 @@ en:
         full: "Session is full"
       promo_code:
         invalid: "Invalid promo code"
+      subscriptions:
+        user_has_active: "User already has an active subscription"
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:

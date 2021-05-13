@@ -68,4 +68,31 @@ class StripeService
   def self.update_price(price_id, price_attrs)
     Stripe::Price.update(price_id, price_attrs)
   end
+
+  def self.create_subscription(user, product, payment_method_id)
+    Stripe::Subscription.create(
+      customer: user.stripe_id,
+      items: [{ price: product.stripe_price_id }],
+      default_payment_method: payment_method_id
+    )
+  end
+
+  def self.update_subscription(subscription, product, payment_method_id)
+    Stripe::Subscription.update(
+      subscription.stripe_id,
+      items: [
+        { id: subscription.stripe_item_id, deleted: true },
+        { price: product.stripe_price_id }
+      ],
+      default_payment_method: payment_method_id
+    )
+  end
+
+  def self.retrieve_subscription(stripe_subscription_id)
+    Stripe::Subscription.retrieve(stripe_subscription_id)
+  end
+
+  def self.cancel_subscription(subscription)
+    Stripe::Subscription.delete(subscription.stripe_id)
+  end
 end
