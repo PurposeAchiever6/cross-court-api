@@ -95,7 +95,7 @@ detectors:
     max_methods: 25
   TooManyStatements:
     enabled: true
-    exclude: ["UserSessionRemindersJob#perform", "ConfirmationsController"]
+    exclude: ["UserSessionRemindersJob#perform", "ConfirmationsController", "StripeController"]
     max_statements: 13
   UncommunicativeMethodName:
     enabled: true

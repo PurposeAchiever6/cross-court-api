@@ -1,0 +1,3 @@
+{
+  subscriptions: render(partial: 'info', collection: @subscriptions, as: :subscription)
+}

@@ -22,6 +22,9 @@ Rails.application.routes.draw do
       namespace :sonar do
         post :webhook
       end
+      namespace :stripe do
+        post :webhook
+      end
       devise_scope :user do
         get :status, to: 'api#status'
         resource :promo_code, only: :show
@@ -55,6 +58,7 @@ Rails.application.routes.draw do
           get :questions, on: :collection
           post :answers, on: :collection
         end
+        resources :subscriptions, except: %i[show new edit]
       end
     end
   end
