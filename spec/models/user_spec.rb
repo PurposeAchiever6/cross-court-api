@@ -34,6 +34,7 @@
 #  zipcode                      :string
 #  free_session_expiration_date :date
 #  referral_code                :string
+#  subscription_credits         :integer          default(0), not null
 #
 # Indexes
 #

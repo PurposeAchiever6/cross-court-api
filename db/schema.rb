@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_11_183135) do
+ActiveRecord::Schema.define(version: 2021_05_19_144354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,6 +261,7 @@ ActiveRecord::Schema.define(version: 2021_05_11_183135) do
     t.string "zipcode"
     t.date "free_session_expiration_date"
     t.string "referral_code"
+    t.integer "subscription_credits", default: 0, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_referee"], name: "index_users_on_is_referee"

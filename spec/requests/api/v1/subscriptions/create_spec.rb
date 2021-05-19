@@ -26,9 +26,9 @@ describe 'POST api/v1/subscriptions' do
       expect { subject }.to change(Subscription, :count).by(1)
     end
 
-    # it "increments user's credits" do
-    #   expect { subject }.to change { user.reload.credits }.from(0).to(product.credits)
-    # end
+    it "increments user's subscription credits" do
+      expect { subject }.to change { user.reload.subscription_credits }.from(0).to(product.credits)
+    end
   end
 
   context 'when the transaction fails' do
@@ -42,9 +42,9 @@ describe 'POST api/v1/subscriptions' do
       expect { subject }.not_to change(Subscription, :count)
     end
 
-    # it "doesn't increment user's credits" do
-    #   expect { subject }.not_to change { user.reload.credits }
-    # end
+    it "doesn't increment user's subscription credits" do
+      expect { subject }.not_to change { user.reload.subscription_credits }
+    end
 
     it "doesn't call the klaviyo service" do
       expect_any_instance_of(KlaviyoService).not_to receive(:event)
