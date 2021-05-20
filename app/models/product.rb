@@ -19,5 +19,5 @@ class Product < ApplicationRecord
   has_one_attached :image
   has_many :purchases, dependent: :nullify
 
-  validates :credits, :order_number, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :credits, :order_number, presence: true
 end
