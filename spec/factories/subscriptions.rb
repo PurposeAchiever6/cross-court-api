@@ -35,5 +35,11 @@ FactoryBot.define do
     cancel_at_period_end { false }
     cancel_at { nil }
     canceled_at { nil }
+
+    after :create do |subscription|
+      user = subscription.user
+      user.subscription_credits = subscription.product.credits
+      user.save!
+    end
   end
 end

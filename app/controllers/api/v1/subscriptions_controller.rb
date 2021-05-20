@@ -15,7 +15,12 @@ module Api
       end
 
       def destroy
-        StripeService.cancel_subscription(subscription)
+        result = CancelSubscription.call(
+          user: current_user,
+          subscription: subscription
+        )
+
+        raise SubscriptionException, result.message unless result.success?
       end
 
       def update
@@ -33,7 +38,7 @@ module Api
       end
 
       def subscription
-        Subscription.find(params[:subscription_id])
+        Subscription.find(params[:id])
       end
     end
   end
