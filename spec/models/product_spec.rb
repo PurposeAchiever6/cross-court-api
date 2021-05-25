@@ -20,6 +20,5 @@ describe Product do
     subject { build(:product) }
 
     it { is_expected.to validate_presence_of(:credits) }
-    it { is_expected.to validate_numericality_of(:credits).is_greater_than_or_equal_to(0) }
   end
 end
