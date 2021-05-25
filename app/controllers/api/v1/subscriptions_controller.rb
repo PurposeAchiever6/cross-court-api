@@ -5,7 +5,8 @@ module Api
         result = PlaceSubscription.call(
           product: product,
           user: current_user,
-          payment_method: payment_method
+          payment_method: payment_method,
+          promo_code: promo_code
         )
         raise SubscriptionException, result.message unless result.success?
       end
@@ -31,6 +32,10 @@ module Api
 
       def product
         Product.find(params[:product_id])
+      end
+
+      def promo_code
+        PromoCode.find_by(code: params[:promo_code])
       end
 
       def payment_method
