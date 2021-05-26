@@ -1,3 +1,12 @@
+user_active_subscription = nil
+
+if user.active_subscription
+  user_active_subscription = render(
+    partial: 'api/v1/subscriptions/info',
+    locals: { subscription: user.active_subscription }
+  )
+end
+
 {
   id: user.id,
   email: user.email,
@@ -5,9 +14,11 @@
   last_name: user.last_name,
   phone_number: user.phone_number,
   credits: user.credits,
+  subscription_credits: user.subscription_credits,
   is_sem: user.is_sem,
   is_referee: user.is_referee,
   free_session_state: user.free_session_state,
   free_session_expiration_date: user.free_session_expiration_date&.iso8601,
-  referral_code: user.referral_code
+  referral_code: user.referral_code,
+  active_subscription: user_active_subscription
 }
