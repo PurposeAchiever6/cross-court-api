@@ -1,11 +1,12 @@
 ActiveAdmin.register Product do
-  permit_params :name, :credits, :price, :order_number, :image, :product_type
+  permit_params :name, :credits, :price, :order_number, :image, :label, :product_type
 
   form do |f|
     f.inputs 'Product details' do
       f.input :name, input_html: { disabled: resource.persisted? }
       f.input :credits, input_html: { disabled: resource.persisted? }
       f.input :price, input_html: { disabled: resource.persisted? }
+      f.input :label
       f.input :order_number
       f.input :image, as: :file
       f.input :product_type
@@ -19,6 +20,7 @@ ActiveAdmin.register Product do
       row :name
       row :credits
       row :price
+      row :label
       row :order_number
       row :image do |product|
         image_tag polymorphic_url(product.image), class: 'mw-200px' if product.image.attached?

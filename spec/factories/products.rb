@@ -11,6 +11,7 @@
 #  order_number    :integer          default(0), not null
 #  product_type    :integer          default("one_time")
 #  stripe_price_id :string
+#  label           :string
 #
 
 FactoryBot.define do

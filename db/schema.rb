@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_19_144354) do
+ActiveRecord::Schema.define(version: 2021_05_28_210158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_144354) do
     t.integer "order_number", default: 0, null: false
     t.integer "product_type", default: 0
     t.string "stripe_price_id"
+    t.string "label"
   end
 
   create_table "promo_codes", force: :cascade do |t|
