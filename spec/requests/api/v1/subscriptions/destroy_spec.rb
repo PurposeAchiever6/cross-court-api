@@ -1,12 +1,25 @@
 require 'rails_helper'
 
 describe 'DELETE api/v1/subscriptions/:id' do
-  let(:user)           { create(:user) }
-  let(:subscription)   { create(:subscription, user: user) }
+  let(:user) { create(:user) }
+  let(:subscription_status) { :active }
+  let(:subscription) { create(:subscription, status: subscription_status, user: user) }
+
+  let(:stripe_response) do
+    {
+      id: subscription.stripe_id,
+      items: double(data: [double(id: subscription.stripe_item_id)]),
+      status: 'canceled',
+      current_period_start: subscription.current_period_start,
+      current_period_end: subscription.current_period_end,
+      cancel_at: subscription.cancel_at,
+      canceled_at: Time.current.to_i,
+      cancel_at_period_end: subscription.cancel_at_period_end
+    }
+  end
 
   before do
-    stub_request(:delete, %r{stripe.com/v1/subscriptions/#{subscription.stripe_id}})
-      .to_return(status: 200, body: '{}')
+    allow(StripeService).to receive(:cancel_subscription).and_return(double(stripe_response))
   end
 
   subject do
@@ -22,5 +35,18 @@ describe 'DELETE api/v1/subscriptions/:id' do
 
   it 'resets the subscription credits of the user' do
     expect { subject }.to change { user.reload.subscription_credits }.from(subscription.product.credits).to(0)
+  end
+
+  it 'sets the subscription status to canceled' do
+    expect { subject }.to change { subscription.reload.status }.to('canceled')
+  end
+
+  context 'when the subscription is not active' do
+    let(:subscription_status) { %i[past_due canceled].sample }
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 end

@@ -39,6 +39,7 @@ en:
         invalid: "Invalid promo code"
       subscriptions:
         user_has_active: "User already has an active subscription"
+        is_not_active: "The subscription is not active"
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:

@@ -8,6 +8,7 @@ module Api
           payment_method: payment_method,
           promo_code: promo_code
         )
+
         raise SubscriptionException, result.message unless result.success?
       end
 
@@ -43,7 +44,7 @@ module Api
       end
 
       def subscription
-        Subscription.find(params[:id])
+        current_user.subscriptions.find(params[:id])
       end
     end
   end

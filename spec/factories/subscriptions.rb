@@ -29,6 +29,7 @@ FactoryBot.define do
     user
     product
     stripe_id { 'stripe-subscription-id' }
+    stripe_item_id { 'stripe-subscription-item-id' }
     status { 'active' }
     current_period_start { Time.current }
     current_period_end { Time.current + 1.month }
