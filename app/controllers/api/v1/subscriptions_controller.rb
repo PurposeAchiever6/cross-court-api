@@ -10,6 +10,8 @@ module Api
         )
 
         raise SubscriptionException, result.message unless result.success?
+
+        @subscription = result.subscription
       end
 
       def index

@@ -10,9 +10,12 @@ class CreateSubscription
 
     stripe_subscription = StripeService.create_subscription(user, product, payment_method_id)
 
-    Subscription.new(user: user, product: product)
-                .assign_stripe_attrs(stripe_subscription)
-                .save!
+    subscription = Subscription.new(user: user, product: product)
+                               .assign_stripe_attrs(stripe_subscription)
+
+    subscription.save!
+
+    context.subscription = subscription
   rescue Stripe::StripeError => e
     context.fail!(message: e.message)
   end
