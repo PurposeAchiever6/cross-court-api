@@ -15,10 +15,16 @@
 #
 
 class Product < ApplicationRecord
+  UNLIMITED = -1
+
   enum product_type: { one_time: 0, recurring: 1 }
 
   has_one_attached :image
   has_many :purchases, dependent: :nullify
 
   validates :credits, :order_number, presence: true
+
+  def unlimited?
+    credits == UNLIMITED
+  end
 end

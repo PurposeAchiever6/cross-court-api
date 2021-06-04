@@ -28,7 +28,17 @@ module Api
       end
 
       def update
-        StripeService.update_subscription(subscription, product, payment_method)
+        result = UpdateSubscription.call(
+          user: current_user,
+          subscription: subscription,
+          product: product,
+          payment_method: payment_method,
+          promo_code: promo_code
+        )
+
+        raise SubscriptionException, result.message unless result.success?
+
+        @subscription = result.subscription
       end
 
       private

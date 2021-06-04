@@ -1,10 +1,30 @@
 ActiveAdmin.register Product do
   permit_params :name, :credits, :price, :order_number, :image, :label, :product_type
 
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :credits do |product|
+      product.unlimited? ? 'Unlimited' : product.credits
+    end
+    column :price
+    column :label
+    column :order_number
+    column :product_type
+
+    actions
+  end
+
   form do |f|
+    checkbox = []
+    checkbox << label_tag('unlimited')
+    checkbox << check_box_tag('unlimited', '1', resource.persisted? && resource.unlimited?, disabled: resource.persisted?, id: 'product-unlimited')
+
     f.inputs 'Product details' do
       f.input :name, input_html: { disabled: resource.persisted? }
       f.input :credits, input_html: { disabled: resource.persisted? }
+      f.li checkbox
       f.input :price, input_html: { disabled: resource.persisted? }
       f.input :label
       f.input :order_number
@@ -18,7 +38,9 @@ ActiveAdmin.register Product do
     attributes_table do
       row :id
       row :name
-      row :credits
+      row :credits do |product|
+        product.unlimited? ? 'Unlimited' : product.credits
+      end
       row :price
       row :label
       row :order_number

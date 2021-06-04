@@ -41,6 +41,7 @@ detectors:
         "SonarService#find_next_to_confirm",
         "EmployeeSessionConfirmed",
         "Subscription#assign_stripe_attrs",
+        "UpdateUserSubscriptionCredits#call",
       ]
   InstanceVariableAssumption:
     enabled: false
@@ -134,6 +135,7 @@ detectors:
         "EmployeeSessionsQuery#sorted_future_sessions",
         "CreateSubscription#call",
         "DeleteSubscription#call",
+        "ChangeSubscription#call",
       ]
     reject:
       - "/^.$/"
