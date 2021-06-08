@@ -116,6 +116,14 @@ class User < ApplicationRecord
     user_sessions.empty?
   end
 
+  def credits?
+    credits.positive? || subscription_credits.positive? || unlimited_credits?
+  end
+
+  def unlimited_credits?
+    subscription_credits == Product::UNLIMITED
+  end
+
   private
 
   def uses_email?
