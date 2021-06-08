@@ -28,6 +28,8 @@ class Subscription < ApplicationRecord
   belongs_to :user
   belongs_to :product
 
+  delegate :credits, to: :product, prefix: false
+
   enum status: {
     trialing: 'trialing',
     active: 'active',

@@ -4,7 +4,7 @@ class DeleteSubscription
   def call
     subscription = context.subscription
 
-    context.fail!(message: I18n.t('api.errors.subscriptions.is_not_active')) unless subscription.active?
+    context.fail!(message: I18n.t('api.errors.subscriptions.is_not_active')) unless subscription&.active?
 
     stripe_subscription = StripeService.cancel_subscription(subscription)
 

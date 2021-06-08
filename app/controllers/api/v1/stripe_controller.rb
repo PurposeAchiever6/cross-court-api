@@ -8,6 +8,7 @@ module Api
       INVOICE_PAYMENT_SUCCEEDED = 'invoice.payment_succeeded'.freeze
       CUSTOMER_SUBSCRIPTION_UPDATED = 'customer.subscription.updated'.freeze
       CUSTOMER_SUBSCRIPTION_DELETED = 'customer.subscription.deleted'.freeze
+      SUBSCRIPTION_CYCLE = 'subscription_cycle'.freeze
 
       def webhook
         payload = request.body.read
@@ -24,11 +25,16 @@ module Api
         data = event.data
         object = data.object
         type = event.type
+        user = User.find_by(stripe_id: object.customer)
+        active_subscription = user.active_subscription
 
         case type
-        when INVOICE_PAYMENT_FAILED, INVOICE_PAYMENT_SUCCEEDED
+        when INVOICE_PAYMENT_FAILED
+          CancelSubscription.call(user: user, subscription: active_subscription)
+        when INVOICE_PAYMENT_SUCCEEDED
           subscription = StripeService.retrieve_subscription(object.subscription)
           update_database_subscription(subscription)
+          RenewUserSubscriptionCredits.call(user: user, subscription: active_subscription) if object.billing_reason == SUBSCRIPTION_CYCLE
         when CUSTOMER_SUBSCRIPTION_UPDATED, CUSTOMER_SUBSCRIPTION_DELETED
           update_database_subscription(object)
         else
