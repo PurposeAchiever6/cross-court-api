@@ -124,6 +124,10 @@ class User < ApplicationRecord
     subscription_credits == Product::UNLIMITED
   end
 
+  def total_credits
+    unlimited_credits? ? 'Unlimited' : credits + subscription_credits
+  end
+
   private
 
   def uses_email?

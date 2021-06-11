@@ -1,15 +1,17 @@
 ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
-                :is_referee, :is_sem, :image, :credits, :confirmed_at, :zipcode
+                :is_referee, :is_sem, :image, :confirmed_at, :zipcode
 
   form do |f|
+    type = resource.unlimited_credits? ? 'text' : 'number'
+
     f.object.confirmed_at = Time.current
     f.inputs 'Details' do
       f.input :email
       f.input :first_name
       f.input :last_name
       f.input :phone_number
-      f.input :credits
+      f.input :credits, input_html: { value: resource.total_credits, type: type, disabled: true }
       f.input :is_referee
       f.input :is_sem
       f.input :image, as: :file
@@ -34,7 +36,7 @@ ActiveAdmin.register User do
     column :is_sem
     column :is_referee
     column :phone_number
-    column :credits
+    column :credits, &:total_credits
     column :created_at
     column :zipcode
 
@@ -59,7 +61,7 @@ ActiveAdmin.register User do
         image_tag url_for(user.image) if user.image.attached?
       end
       row :phone_number
-      row :credits
+      row :credits, &:total_credits
       row :is_referee
       row :is_sem
       row :sign_in_count
