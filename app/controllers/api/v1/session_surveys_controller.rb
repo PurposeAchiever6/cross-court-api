@@ -6,7 +6,7 @@ module Api
       before_action :authenticate_user!
 
       def questions
-        user_session_id = current_user.user_sessions.last&.id
+        user_session_id = current_user.last_checked_in_user_session&.id
 
         already_answered = SessionSurveyAnswer.where(user_session_id: user_session_id).exists?
 
@@ -14,7 +14,7 @@ module Api
       end
 
       def answers
-        user_session_id = current_user.user_sessions.last&.id
+        user_session_id = current_user.last_checked_in_user_session&.id
 
         SessionSurveyAnswer.create!(session_answer_params.merge!(user_session_id: user_session_id)) if user_session_id
       end

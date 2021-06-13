@@ -7,6 +7,15 @@ if user.active_subscription
   )
 end
 
+last_checked_in_user_session = nil
+
+if user.last_checked_in_user_session
+  last_checked_in_user_session = render(
+    partial: 'api/v1/user_sessions/info',
+    locals: { user_session: user.last_checked_in_user_session }
+  )
+end
+
 {
   id: user.id,
   email: user.email,
@@ -22,5 +31,6 @@ end
   free_session_state: user.free_session_state,
   free_session_expiration_date: user.free_session_expiration_date&.iso8601,
   referral_code: user.referral_code,
-  active_subscription: user_active_subscription
+  active_subscription: user_active_subscription,
+  last_checked_in_user_session: last_checked_in_user_session
 }

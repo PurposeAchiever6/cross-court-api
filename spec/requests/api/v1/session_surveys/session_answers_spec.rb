@@ -24,7 +24,7 @@ describe 'POST api/v1/session_surveys/answers' do
   end
 
   context 'when the user has an user session' do
-    before { create(:user_session, user: user) }
+    before { create(:user_session, user: user, checked_in: true) }
 
     it 'creates the answer' do
       expect { subject }.to change(SessionSurveyAnswer, :count).by(1)

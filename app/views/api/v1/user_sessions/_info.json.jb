@@ -8,5 +8,6 @@
     partial: 'api/v1/sessions/short_info_with_image',
     locals: { session: user_session.session }
   ),
+  checked_in: user_session.checked_in,
   survey_answers: user_session.session_survey_answers
 }
