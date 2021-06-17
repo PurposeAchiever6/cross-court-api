@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     passwords: 'api/v1/passwords'
   }
 
-  root to: 'admin/dashboard#index'
+  root to: 'admin/scheduler#index'
 
   namespace :api do
     namespace :v1, defaults: { format: :json } do
