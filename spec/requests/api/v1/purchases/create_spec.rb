@@ -51,7 +51,7 @@ describe 'POST api/v1/purchases' do
         context "when the user hasn't used the promo code yet" do
           it 'calls the stripes charge method with the correct params' do
             expect(StripeService).to receive(:charge).with(user, payment_method, price)
-            subject
+            subject rescue nil
           end
 
           it 'creates a UserPromoCode' do

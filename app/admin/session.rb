@@ -87,10 +87,17 @@ ActiveAdmin.register Session do
       end
 
       panel 'Users' do
-        user_sessions = resource.user_sessions.not_canceled.by_date(date).includes(:user)
+        user_sessions = resource.user_sessions
+                                .joins(:user)
+                                .not_canceled
+                                .by_date(date)
+                                .order('checked_in DESC, LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
+                                .includes(:user)
+
         render partial: 'show_users', locals: {
           date: date,
-          user_sessions: user_sessions
+          user_sessions: user_sessions,
+          jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
         }
       end
 
@@ -121,6 +128,61 @@ ActiveAdmin.register Session do
     resource.sem_sessions.create!(user_id: sem_id, date: date) if sem_id.present?
 
     redirect_to admin_root_path, notice: 'Employees assigned successfully'
+  end
+
+  member_action :update_user_session, method: :post do
+    session_id = params[:id]
+    date = params[:date]
+    user_session_id = params[:user_session_id]
+    checked_in = params[:checked_in] == 'true'
+    jersey_rental = params[:jersey_rental] == 'true'
+    assigned_team = params[:assigned_team]
+
+    user_session = UserSession.find(user_session_id)
+
+    jersey_rental_payment_intent_id = user_session.jersey_rental_payment_intent_id
+
+    if user_session.jersey_rental && !jersey_rental
+      result = RefundPayment.call(payment_intent_id: jersey_rental_payment_intent_id)
+
+      unless result.success?
+        flash[:error] = result.message
+        return redirect_to admin_session_path(id: session_id, date: date)
+      end
+
+      jersey_rental_payment_intent_id = nil
+    elsif !user_session.jersey_rental && jersey_rental
+      user = user_session.user
+      payment_method = StripeService.fetch_payment_methods(user).first
+
+      unless payment_method
+        flash[:error] = 'User does not have a credit card to charge the rental'
+        return redirect_to admin_session_path(id: session_id, date: date)
+      end
+
+      result = ChargeCard.call(
+        user: user,
+        payment_method: payment_method.id,
+        price: ENV['JERSEY_RENTAL_PRICE'].to_i
+      )
+
+      unless result.success?
+        flash[:error] = result.message
+        return redirect_to admin_session_path(id: session_id, date: date)
+      end
+
+      jersey_rental_payment_intent_id = result.charge_payment_intent_id
+    end
+
+    user_session.update!(
+      checked_in: checked_in,
+      jersey_rental: jersey_rental,
+      jersey_rental_payment_intent_id: jersey_rental_payment_intent_id,
+      assigned_team: assigned_team
+    )
+
+    redirect_to admin_session_path(id: session_id, date: date),
+                notice: 'User session updated successfully'
   end
 
   member_action :create_user_session, method: :post do

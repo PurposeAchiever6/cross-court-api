@@ -36,6 +36,13 @@ class StripeService
     )
   end
 
+  def self.refund(payment_intent_id, amount = nil)
+    Stripe::Refund.create(
+      payment_intent: payment_intent_id,
+      amount: amount
+    )
+  end
+
   def self.create_free_session_intent(user, payment_method)
     Stripe::PaymentIntent.create(
       amount: ENV['FREE_SESSION_PRICE'].to_i * 100,

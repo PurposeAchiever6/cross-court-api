@@ -2,18 +2,21 @@
 #
 # Table name: user_sessions
 #
-#  id                          :integer          not null, primary key
-#  user_id                     :integer          not null
-#  session_id                  :integer          not null
-#  state                       :integer          default("reserved"), not null
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  date                        :date             not null
-#  checked_in                  :boolean          default(FALSE), not null
-#  is_free_session             :boolean          default(FALSE), not null
-#  free_session_payment_intent :string
-#  credit_reimbursed           :boolean          default(FALSE), not null
-#  referral_id                 :integer
+#  id                              :integer          not null, primary key
+#  user_id                         :integer          not null
+#  session_id                      :integer          not null
+#  state                           :integer          default("reserved"), not null
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  date                            :date             not null
+#  checked_in                      :boolean          default(FALSE), not null
+#  is_free_session                 :boolean          default(FALSE), not null
+#  free_session_payment_intent     :string
+#  credit_reimbursed               :boolean          default(FALSE), not null
+#  referral_id                     :integer
+#  jersey_rental                   :boolean          default(FALSE)
+#  jersey_rental_payment_intent_id :string
+#  assigned_team                   :string
 #
 # Indexes
 #

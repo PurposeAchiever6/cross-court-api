@@ -136,6 +136,8 @@ detectors:
         "CreateSubscription#call",
         "DeleteSubscription#call",
         "ChangeSubscription#call",
+        "ChargeCard#call",
+        "RefundPayment#call",
       ]
     reject:
       - "/^.$/"

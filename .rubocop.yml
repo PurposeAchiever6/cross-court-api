@@ -131,3 +131,7 @@ Style/GuardClause:
 
 Metrics/AbcSize:
   Enabled: false
+
+Style/RescueModifier:
+  Exclude:
+    - spec/**/*
