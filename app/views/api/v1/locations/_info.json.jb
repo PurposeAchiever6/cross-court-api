@@ -6,7 +6,8 @@ json = {
   lng: location.lng,
   city: location.city,
   zipcode: location.zipcode,
-  description: location.description
+  description: location.description,
+  state: location.state
 }
 
 if location.images.attached?
