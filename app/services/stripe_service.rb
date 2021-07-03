@@ -26,13 +26,14 @@ class StripeService
     payment_methods.data
   end
 
-  def self.charge(user, payment_method, price)
+  def self.charge(user, payment_method, price, description = nil)
     Stripe::PaymentIntent.create(
       amount: price * 100,
       currency: 'usd',
       payment_method: payment_method,
       customer: user.stripe_id,
-      confirm: true
+      confirm: true,
+      description: description
     )
   end
 

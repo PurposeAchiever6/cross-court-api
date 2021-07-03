@@ -51,13 +51,13 @@ ActiveAdmin.register User do
   filter :is_referee
   filter :created_at
 
-  show do
+  show do |user|
     attributes_table do
       row :id
       row :email
       row :first_name
       row :last_name
-      row :image do |user|
+      row :image do
         image_tag url_for(user.image) if user.image.attached?
       end
       row :phone_number
@@ -71,5 +71,43 @@ ActiveAdmin.register User do
       row :created_at
       row :updated_at
     end
+
+    panel 'Purchase Actions' do
+      render partial: 'purchases', locals: {
+        user: user,
+        jersey_purchase_price: ENV['JERSEY_PURCHASE_PRICE'],
+        water_purchase_price: ENV['WATER_PURCHASE_PRICE']
+      }
+    end
+  end
+
+  member_action :purchase, method: :post do
+    user = User.find(params[:id])
+    purchase = params[:purchase_type]&.to_sym
+
+    case purchase
+    when :jersey
+      result = ChargeUser.call(
+        user: user,
+        price: ENV['JERSEY_PURCHASE_PRICE'].to_i,
+        description: 'CrossCourt jersey purchase'
+      )
+    when :water
+      result = ChargeUser.call(
+        user: user,
+        price: ENV['WATER_PURCHASE_PRICE'].to_i,
+        description: 'CrossCourt water purchase'
+      )
+    end
+
+    if result&.failure?
+      flash[:error] = result.message
+      return redirect_to admin_user_path(id: user.id)
+    end
+
+    redirect_to admin_user_path(user.id), notice: 'Purchase made successfully'
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to admin_user_path(id: params[:id])
   end
 end

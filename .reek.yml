@@ -126,25 +126,14 @@ detectors:
     accept: []
   UncommunicativeVariableName:
     enabled: true
-    exclude:
-      [
-        "StripeController#load_event",
-        "SlackService#notify",
-        "SonarService#add_customer",
-        "SonarService#send_message",
-        "EmployeeSessionsQuery#sorted_future_sessions",
-        "CreateSubscription#call",
-        "DeleteSubscription#call",
-        "ChangeSubscription#call",
-        "ChargeCard#call",
-        "RefundPayment#call",
-      ]
+    exclude: ["EmployeeSessionsQuery#sorted_future_sessions"]
     reject:
       - "/^.$/"
       - "/[0-9]$/"
       - "/[A-Z]/"
     accept:
       - _
+      - e
   UnusedParameters:
     enabled: true
     exclude: []

@@ -145,7 +145,7 @@ ActiveAdmin.register Session do
     if user_session.jersey_rental && !jersey_rental
       result = RefundPayment.call(payment_intent_id: jersey_rental_payment_intent_id)
 
-      unless result.success?
+      if result.failure?
         flash[:error] = result.message
         return redirect_to admin_session_path(id: session_id, date: date)
       end
@@ -153,20 +153,14 @@ ActiveAdmin.register Session do
       jersey_rental_payment_intent_id = nil
     elsif !user_session.jersey_rental && jersey_rental
       user = user_session.user
-      payment_method = StripeService.fetch_payment_methods(user).first
 
-      unless payment_method
-        flash[:error] = 'User does not have a credit card to charge the rental'
-        return redirect_to admin_session_path(id: session_id, date: date)
-      end
-
-      result = ChargeCard.call(
+      result = ChargeUser.call(
         user: user,
-        payment_method: payment_method.id,
-        price: ENV['JERSEY_RENTAL_PRICE'].to_i
+        price: ENV['JERSEY_RENTAL_PRICE'].to_i,
+        description: 'CrossCourt session jersey rental'
       )
 
-      unless result.success?
+      if result.failure?
         flash[:error] = result.message
         return redirect_to admin_session_path(id: session_id, date: date)
       end
@@ -220,6 +214,6 @@ ActiveAdmin.register Session do
                 notice: 'User session created successfully'
   rescue StandardError => e
     flash[:error] = e.message
-    return redirect_to admin_session_path(id: session_id, date: date)
+    redirect_to admin_session_path(id: session_id, date: date)
   end
 end

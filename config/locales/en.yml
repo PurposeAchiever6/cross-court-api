@@ -40,6 +40,10 @@ en:
       subscriptions:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"
+      users:
+        charges:
+          price_not_positive: "Price should be greater than 0"
+          missing_payment_method: "The user does not have a saved credit card to be charged"
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:
