@@ -15,7 +15,7 @@ describe 'GET api/v1/sessions', type: :request do
   end
 
   context 'when the session is a one time only' do
-    let!(:session) { create(:session) }
+    let!(:session) { create(:session, time: los_angeles_time + 1.hour) }
 
     it 'returns success' do
       subject
@@ -30,15 +30,6 @@ describe 'GET api/v1/sessions', type: :request do
     it 'returns the number of spots left' do
       subject
       expect(json[:sessions][0][:spots_left]).to eq(Session::MAX_CAPACITY)
-    end
-
-    context 'when the user has a reservation for today' do
-      let!(:user_session) { create(:user_session, user: user, session: session, date: today) }
-
-      it 'returns reserved in true' do
-        subject
-        expect(json[:sessions][0][:reserved]).to be true
-      end
     end
 
     context 'when the session is full' do

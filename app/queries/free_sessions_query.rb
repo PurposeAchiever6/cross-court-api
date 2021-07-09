@@ -6,6 +6,6 @@ class FreeSessionsQuery
   end
 
   def chargeable
-    relation.where(is_free_session: true, checked_in: false)
+    relation.confirmed.where(is_free_session: true, checked_in: false)
   end
 end
