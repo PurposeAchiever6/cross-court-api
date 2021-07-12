@@ -47,6 +47,7 @@ Rails.application.routes.draw do
         resource :user, only: %i[update show] do
           get :profile
           post :resend_confirmation_instructions
+          put :update_skill_rating
         end
         namespace :sem do
           resources :sessions, only: :show

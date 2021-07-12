@@ -35,6 +35,7 @@
 #  free_session_expiration_date :date
 #  referral_code                :string
 #  subscription_credits         :integer          default(0), not null
+#  skill_rating                 :decimal(2, 1)
 #
 # Indexes
 #

@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < Api::V1::ApiUserController
-      skip_before_action :authenticate_user!, only: :resend_confirmation_instructions
+      skip_before_action :authenticate_user!, only: %i[resend_confirmation_instructions update_skill_rating]
 
       def show; end
 
@@ -12,6 +12,12 @@ module Api
       def update
         current_user.update!(user_params)
         render :show
+      end
+
+      def update_skill_rating
+        user_to_update = current_user || user
+        user_to_update.update!(skill_rating_params)
+        head :ok
       end
 
       def resend_confirmation_instructions
@@ -26,7 +32,11 @@ module Api
       end
 
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :phone_number)
+        params.require(:user).permit(:first_name, :last_name)
+      end
+
+      def skill_rating_params
+        params.require(:user).permit(:skill_rating)
       end
     end
   end
