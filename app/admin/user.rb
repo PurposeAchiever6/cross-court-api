@@ -1,6 +1,6 @@
 ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
-                :is_referee, :is_sem, :image, :confirmed_at, :zipcode
+                :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating
 
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
@@ -17,6 +17,7 @@ ActiveAdmin.register User do
       f.input :image, as: :file
       f.input :confirmed_at, as: :hidden
       f.input :zipcode
+      f.input :skill_rating
 
       if f.object.new_record?
         f.input :password
@@ -37,6 +38,7 @@ ActiveAdmin.register User do
     column :is_referee
     column :phone_number
     column :credits, &:total_credits
+    column :skill_rating
     column :created_at
     column :zipcode
 
@@ -49,6 +51,7 @@ ActiveAdmin.register User do
   filter :last_name
   filter :is_sem
   filter :is_referee
+  filter :skill_rating
   filter :created_at
 
   show do |user|
@@ -68,6 +71,7 @@ ActiveAdmin.register User do
       row :zipcode
       row :free_session_state
       row :free_session_expiration_date
+      row :skill_rating
       row :created_at
       row :updated_at
     end
