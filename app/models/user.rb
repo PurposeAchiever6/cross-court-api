@@ -36,15 +36,18 @@
 #  referral_code                :string
 #  subscription_credits         :integer          default(0), not null
 #  skill_rating                 :decimal(2, 1)
+#  drop_in_expiration_date      :date
 #
 # Indexes
 #
-#  index_users_on_confirmation_token    (confirmation_token) UNIQUE
-#  index_users_on_email                 (email) UNIQUE
-#  index_users_on_is_referee            (is_referee)
-#  index_users_on_is_sem                (is_sem)
-#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#  index_users_on_uid_and_provider      (uid,provider) UNIQUE
+#  index_users_on_confirmation_token            (confirmation_token) UNIQUE
+#  index_users_on_drop_in_expiration_date       (drop_in_expiration_date)
+#  index_users_on_email                         (email) UNIQUE
+#  index_users_on_free_session_expiration_date  (free_session_expiration_date)
+#  index_users_on_is_referee                    (is_referee)
+#  index_users_on_is_sem                        (is_sem)
+#  index_users_on_reset_password_token          (reset_password_token) UNIQUE
+#  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
 
 class User < ApplicationRecord
@@ -53,6 +56,7 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   FREE_SESSION_EXPIRATION_DAYS = 30.days.freeze
+  DROP_IN_EXPIRATION_DAYS = 30.days.freeze
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,

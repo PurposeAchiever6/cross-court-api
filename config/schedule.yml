@@ -23,9 +23,9 @@ confirm_unconfirmed_sessions:
   class: "ConfirmUnconfirmedSessionsJob"
   queue: default
 
-free_credits:
+credits:
   cron: "0 5 * * *"
-  class: "FreeCreditsJob"
+  class: "CreditsJob"
   queue: default
 
 send_survey_sms_to_players:

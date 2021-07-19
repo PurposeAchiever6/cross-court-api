@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_12_020356) do
+ActiveRecord::Schema.define(version: 2021_07_19_193615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -267,8 +267,11 @@ ActiveRecord::Schema.define(version: 2021_07_12_020356) do
     t.string "referral_code"
     t.integer "subscription_credits", default: 0, null: false
     t.decimal "skill_rating", precision: 2, scale: 1
+    t.date "drop_in_expiration_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["free_session_expiration_date"], name: "index_users_on_free_session_expiration_date"
     t.index ["is_referee"], name: "index_users_on_is_referee"
     t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

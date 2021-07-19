@@ -1,10 +1,16 @@
-class FreeCreditsJob < ApplicationJob
+class CreditsJob < ApplicationJob
   queue_as :default
 
   def perform
     UsersQuery.new.expired_free_session_users.each do |user|
       user.decrement(:credits)
       user.free_session_state = 'expired'
+      user.save!
+    end
+
+    UsersQuery.new.expired_drop_in_credit_users.each do |user|
+      user.credits = 0
+      user.drop_in_expiration_date = nil
       user.save!
     end
 

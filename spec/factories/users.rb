@@ -36,15 +36,18 @@
 #  referral_code                :string
 #  subscription_credits         :integer          default(0), not null
 #  skill_rating                 :decimal(2, 1)
+#  drop_in_expiration_date      :date
 #
 # Indexes
 #
-#  index_users_on_confirmation_token    (confirmation_token) UNIQUE
-#  index_users_on_email                 (email) UNIQUE
-#  index_users_on_is_referee            (is_referee)
-#  index_users_on_is_sem                (is_sem)
-#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#  index_users_on_uid_and_provider      (uid,provider) UNIQUE
+#  index_users_on_confirmation_token            (confirmation_token) UNIQUE
+#  index_users_on_drop_in_expiration_date       (drop_in_expiration_date)
+#  index_users_on_email                         (email) UNIQUE
+#  index_users_on_free_session_expiration_date  (free_session_expiration_date)
+#  index_users_on_is_referee                    (is_referee)
+#  index_users_on_is_sem                        (is_sem)
+#  index_users_on_reset_password_token          (reset_password_token) UNIQUE
+#  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
 
 FactoryBot.define do
@@ -56,6 +59,7 @@ FactoryBot.define do
     uid                          { Faker::Number.unique.number(10) }
     zipcode                      { Faker::Address.zip_code[0..4] }
     free_session_expiration_date { Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS }
+    drop_in_expiration_date      { Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS }
     phone_number                 { Faker::PhoneNumber.cell_phone }
 
     trait :confirmed do
