@@ -2,19 +2,20 @@
 #
 # Table name: sessions
 #
-#  id          :integer          not null, primary key
-#  start_time  :date             not null
-#  recurring   :text
-#  time        :time             not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  location_id :integer          not null
-#  end_time    :date
-#  level       :integer          default("basic"), not null
+#  id             :integer          not null, primary key
+#  start_time     :date             not null
+#  recurring      :text
+#  time           :time             not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  location_id    :integer          not null
+#  end_time       :date
+#  skill_level_id :integer
 #
 # Indexes
 #
-#  index_sessions_on_location_id  (location_id)
+#  index_sessions_on_location_id     (location_id)
+#  index_sessions_on_skill_level_id  (skill_level_id)
 #
 
 class Session < ApplicationRecord
@@ -24,8 +25,6 @@ class Session < ApplicationRecord
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
   MAX_CAPACITY = ENV['MAX_CAPACITY'].to_i.freeze
-
-  enum level: { basic: 0, advanced: 1 }
 
   attr_accessor :employees_assigned
 
@@ -37,11 +36,13 @@ class Session < ApplicationRecord
   has_many :session_exceptions, dependent: :destroy
   has_many :referee_sessions, dependent: :nullify
   has_many :sem_sessions, dependent: :nullify
+  belongs_to :skill_level
 
   validates :start_time, :time, presence: true
 
   delegate :name, :description, :time_zone, to: :location, prefix: true
   delegate :address, :time_zone, to: :location
+  delegate :name, to: :skill_level, prefix: true
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 
@@ -84,7 +85,7 @@ class Session < ApplicationRecord
           start_time: date,
           time: time,
           location_id: location_id,
-          level: level
+          skill_level_id: skill_level_id
         )
       end
     end

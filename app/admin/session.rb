@@ -1,14 +1,14 @@
 ActiveAdmin.register Session do
   actions :all, except: :destroy
 
-  permit_params :location_id, :start_time, :end_time, :recurring, :time, :level,
+  permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 session_exceptions_attributes: %i[id date _destroy]
   includes :location, :session_exceptions
 
   form do |f|
     f.inputs 'Session Details' do
       f.input :location
-      f.input :level, include_blank: false
+      f.input :skill_level
       f.input :start_time, as: :datepicker, datepicker_options: { min_date: Date.current }, input_html: { autocomplete: :off }
       f.input :end_time, as: :datepicker, datepicker_options: { min_date: Date.current }, input_html: { autocomplete: :off }
       f.input :time
@@ -24,7 +24,7 @@ ActiveAdmin.register Session do
     selectable_column
     id_column
     column :location_name
-    column :level
+    column :skill_level_name
     column :time
 
     actions
@@ -40,7 +40,6 @@ ActiveAdmin.register Session do
               } do
     attributes_table do
       row :id
-      row :level
       row :start_time
       row :end_time
       row :time do |session|
@@ -54,6 +53,7 @@ ActiveAdmin.register Session do
         end
       end
       row :location_name
+      row :skill_level_name
       row :created_at
       row :updated_at
     end

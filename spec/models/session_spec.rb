@@ -2,19 +2,20 @@
 #
 # Table name: sessions
 #
-#  id          :integer          not null, primary key
-#  start_time  :date             not null
-#  recurring   :text
-#  time        :time             not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  location_id :integer          not null
-#  end_time    :date
-#  level       :integer          default("basic"), not null
+#  id             :integer          not null, primary key
+#  start_time     :date             not null
+#  recurring      :text
+#  time           :time             not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  location_id    :integer          not null
+#  end_time       :date
+#  skill_level_id :integer
 #
 # Indexes
 #
-#  index_sessions_on_location_id  (location_id)
+#  index_sessions_on_location_id     (location_id)
+#  index_sessions_on_skill_level_id  (skill_level_id)
 #
 
 require 'rails_helper'

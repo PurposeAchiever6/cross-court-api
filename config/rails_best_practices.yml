@@ -4,7 +4,7 @@ AlwaysAddDbIndexCheck: {}
 DefaultScopeIsEvilCheck: {}
 DryBundlerInCapistranoCheck: {}
 #HashSyntaxCheck: { }
-IsolateSeedDataCheck: {}
+IsolateSeedDataCheck: { ignored_files: ["db/migrate/20210722012239_create_skill_level.rb"] }
 KeepFindersOnTheirOwnModelCheck: {}
 LawOfDemeterCheck: { ignored_files: ["db/migrate", "app/jobs/inactive_users_job.rb"] }
 #LongLineCheck: { max_line_length: 80 }
@@ -16,10 +16,7 @@ MoveModelLogicIntoModelCheck:
   {
     use_count: 4,
     ignored_files:
-      [
-        "app/controllers/api/v1/sessions/user_sessions_controller.rb",
-        "app/controllers/api/v1/confirmations_controller.rb",
-      ],
+      ["app/controllers/api/v1/sessions/user_sessions_controller.rb", "app/controllers/api/v1/confirmations_controller.rb"],
   }
 NeedlessDeepNestingCheck: { nested_count: 2 }
 NotRescueExceptionCheck: {}

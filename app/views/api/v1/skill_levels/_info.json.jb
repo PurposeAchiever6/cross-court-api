@@ -1,0 +1,7 @@
+{
+  id: skill_level.id,
+  name: skill_level.name,
+  description: skill_level.description,
+  min: skill_level.min,
+  max: skill_level.max
+}

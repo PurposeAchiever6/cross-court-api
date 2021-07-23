@@ -105,6 +105,7 @@ Rails/SkipsModelValidations:
 Rails/HasManyOrHasOneDependent:
   Exclude:
     - app/models/location.rb
+    - app/models/skill_level.rb
 
 Rails/NotNullColumn:
   Exclude:

@@ -1,0 +1,3 @@
+{
+  skill_levels: render(partial: 'info', collection: @skill_levels, as: :skill_level)
+}
