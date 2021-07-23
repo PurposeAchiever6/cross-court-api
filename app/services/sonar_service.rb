@@ -51,13 +51,23 @@ module SonarService
   def confirmation_msg(user, user_session)
     return I18n.t('notifier.employee_session_confirmed') if user.employee?
 
-    session_confirmed_msg = I18n.t('notifier.session_confirmed')
-    app_instructions_msg = I18n.t('notifier.app_instructions', app_link: "#{ENV['FRONTENT_URL']}/app")
-
     if user_session.is_free_session
-      "#{session_confirmed_msg} #{app_instructions_msg}"
+      I18n.t(
+        'notifier.session_confirmed_first_timers',
+        name: user.first_name,
+        when: user_session.date == Time.zone.today ? 'today' : 'tomorrow',
+        time: user_session.time.strftime(Session::TIME_FORMAT),
+        location: user_session.location.address,
+        app_link: "#{ENV['FRONTENT_URL']}/app"
+      )
     else
-      session_confirmed_msg
+      I18n.t(
+        'notifier.session_confirmed',
+        name: user.first_name,
+        when: user_session.date == Time.zone.today ? 'today' : 'tomorrow',
+        time: user_session.time.strftime(Session::TIME_FORMAT),
+        location: user_session.location.address
+      )
     end
   end
 end

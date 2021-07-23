@@ -11,16 +11,17 @@ class UserSessionAutoConfirmed
     unless user_session.in_cancellation_time?
       user_session.state = :confirmed
 
-      ultimatum_msg = I18n.t('notifier.ultimatum', name: user.first_name)
-      app_instructions_msg = I18n.t(
-        'notifier.app_instructions',
-        app_link: "#{ENV['FRONTENT_URL']}/app"
-      )
-
       message = if user_session.is_free_session
-                  "#{ultimatum_msg} #{app_instructions_msg}"
+                  I18n.t('notifier.session_auto_confirmed_first_timers',
+                         name: user.first_name,
+                         time: user_session.time.strftime(Session::TIME_FORMAT),
+                         location: user_session.location.address,
+                         app_link: "#{ENV['FRONTENT_URL']}/app")
                 else
-                  ultimatum_msg
+                  I18n.t('notifier.session_auto_confirmed',
+                         name: user.first_name,
+                         time: user_session.time.strftime(Session::TIME_FORMAT),
+                         location: user_session.location.address)
                 end
 
       SonarService.send_message(user, message)

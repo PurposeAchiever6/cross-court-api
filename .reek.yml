@@ -27,6 +27,8 @@ detectors:
         "EmployeeSessionsQuery#sorted_future_sessions",
         "Subscription#assign_stripe_attrs",
         "CreditsJob#perform",
+        "SonarService#confirmation_msg",
+        "UserSessionAutoConfirmed#save!",
       ]
     max_calls: 1
     allow_calls: []
@@ -99,7 +101,13 @@ detectors:
     max_methods: 25
   TooManyStatements:
     enabled: true
-    exclude: ["UserSessionRemindersJob#perform", "ConfirmationsController", "StripeController", CanceledUserSession]
+    exclude:
+      [
+        "UserSessionRemindersJob#perform",
+        "ConfirmationsController",
+        "StripeController",
+        CanceledUserSession,
+      ]
     max_statements: 13
   UncommunicativeMethodName:
     enabled: true

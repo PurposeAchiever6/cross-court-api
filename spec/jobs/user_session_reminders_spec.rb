@@ -24,8 +24,7 @@ describe UserSessionRemindersJob do
       let(:message_24_hours) do
         I18n.t('notifier.tomorrow_reminder',
                name: user.first_name,
-               time: time_24,
-               location: user_session1.location.name)
+               time: time_24)
       end
 
       # In 8 hours
@@ -35,8 +34,7 @@ describe UserSessionRemindersJob do
       let(:message_8_hours) do
         I18n.t('notifier.today_reminder',
                name: user.first_name,
-               time: time_8,
-               location: user_session2.location.name)
+               time: time_8)
       end
 
       # In 6 hours
@@ -46,8 +44,7 @@ describe UserSessionRemindersJob do
       let(:message_6_hours) do
         I18n.t('notifier.today_reminder',
                name: user.first_name,
-               time: time_6,
-               location: user_session3.location.name)
+               time: time_6)
       end
 
       # In 5 hours
@@ -57,8 +54,7 @@ describe UserSessionRemindersJob do
       let(:message_ultimatum) do
         I18n.t('notifier.ultimatum',
                name: user.first_name,
-               time: time_5,
-               location: user_session4.location.name)
+               time: time_5)
       end
 
       it 'calls the SonarService with the correct parameters' do
