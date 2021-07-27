@@ -12,7 +12,8 @@ module Api
           product: product,
           user: current_user,
           payment_method: payment_method,
-          promo_code: promo_code
+          promo_code: promo_code,
+          description: "CrossCourt #{product.name} purchase"
         )
         raise PurchaseException, result.message unless result.success?
       end

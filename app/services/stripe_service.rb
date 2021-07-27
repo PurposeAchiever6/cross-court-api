@@ -33,7 +33,8 @@ class StripeService
       payment_method: payment_method,
       customer: user.stripe_id,
       confirm: true,
-      description: description
+      description: description,
+      receipt_email: user.email
     )
   end
 
