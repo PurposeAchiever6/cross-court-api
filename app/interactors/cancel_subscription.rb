@@ -1,5 +1,5 @@
 class CancelSubscription
   include Interactor::Organizer
 
-  organize DeleteSubscription, ResetUserSubscriptionCredits
+  organize DeleteSubscription, ResetUserSubscriptionCredits, SendSubscriptionCancelledEvent
 end

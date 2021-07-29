@@ -36,6 +36,8 @@ class KlaviyoService
   end
 
   def specific_event_attributes(event_name, args)
+    front_end_url = ENV['FRONTENT_URL']
+
     properties =
       case event_name
       when Event::PURCHASE_PLACED
@@ -52,7 +54,7 @@ class KlaviyoService
         {
           session_date: formatted_date,
           session_time: user_session.time.strftime(Session::TIME_FORMAT).upcase,
-          confirmation_url: "#{ENV['FRONTENT_URL']}/session/#{session_id}?date=#{formatted_date}",
+          confirmation_url: "#{front_end_url}/session/#{session_id}?date=#{formatted_date}",
           session_location_name: location.name,
           session_location_address: location.full_address
         }
@@ -62,6 +64,8 @@ class KlaviyoService
       else
         args
       end
+
+    properties[:front_end_url] = front_end_url
 
     { properties: properties }
   end
