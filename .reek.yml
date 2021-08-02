@@ -106,7 +106,8 @@ detectors:
         "UserSessionRemindersJob#perform",
         "ConfirmationsController",
         "StripeController",
-        CanceledUserSession,
+        "CanceledUserSession",
+        "KlaviyoService"
       ]
     max_statements: 13
   UncommunicativeMethodName:

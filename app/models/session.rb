@@ -21,6 +21,7 @@
 class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
   MONTH_NAME_FORMAT = '%B, %d %Y'.freeze
+  DAY_MONTH_NAME_FORMAT = '%A %e of %B'.freeze
   TIME_FORMAT = '%l:%M %P'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze

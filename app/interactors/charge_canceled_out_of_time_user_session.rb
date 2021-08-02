@@ -15,6 +15,8 @@ class ChargeCanceledOutOfTimeUserSession
       price_to_charge = ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'].to_i
     end
 
+    context.amount_charged = price_to_charge
+
     return unless price_to_charge.positive?
 
     result = ChargeUser.call(
