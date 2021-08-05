@@ -26,10 +26,7 @@ class CanceledUserSession
         Event::SESSION_CANCELED_IN_TIME,
         user,
         user_session: user_session,
-        extra_params: {
-          session_date: session_date,
-          cancellation_period: Session::CANCELLATION_PERIOD
-        }
+        extra_params: { session_date: session_date }
       )
     else
       result = ChargeCanceledOutOfTimeUserSession.call(user_session: user_session)
@@ -47,7 +44,7 @@ class CanceledUserSession
         user_session: user_session,
         extra_params: {
           session_date: session_date,
-          cancellation_period: Session::CANCELLATION_PERIOD,
+          cancellation_period: Session::CANCELLATION_PERIOD.to_i / (60 * 60),
           amount_charged: result.amount_charged,
           unlimited_credits: user.unlimited_credits?
         }
