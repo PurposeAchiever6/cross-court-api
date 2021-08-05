@@ -22,7 +22,7 @@ class ChargeCanceledOutOfTimeUserSession
     result = ChargeUser.call(
       user: user,
       price: price_to_charge,
-      description: 'CrossCourt session canceled out of time fee'
+      description: 'Session canceled out of time fee'
     )
 
     context.fail!(message: result.message) if result.failure?

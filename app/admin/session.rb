@@ -157,7 +157,7 @@ ActiveAdmin.register Session do
       result = ChargeUser.call(
         user: user,
         price: ENV['JERSEY_RENTAL_PRICE'].to_i,
-        description: 'CrossCourt session jersey rental'
+        description: 'Jersey rental'
       )
 
       if result.failure?

@@ -39,7 +39,7 @@ describe ChargeCanceledOutOfTimeUserSession do
         expect(ChargeUser).to receive(:call).with(
           user: user,
           price: free_session_price_to_charge.to_i,
-          description: 'CrossCourt session canceled out of time fee'
+          description: 'Session canceled out of time fee'
         ).once
 
         subject rescue nil
@@ -55,7 +55,7 @@ describe ChargeCanceledOutOfTimeUserSession do
         expect(ChargeUser).to receive(:call).with(
           user: user,
           price: unlimited_credits_price_to_charge.to_i,
-          description: 'CrossCourt session canceled out of time fee'
+          description: 'Session canceled out of time fee'
         ).once
 
         subject rescue nil

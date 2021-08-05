@@ -47,7 +47,7 @@ describe 'POST api/v1/purchases' do
       context 'when the amount is less than the product price' do
         let(:promo_code) { create(:promo_code, discount: 50) }
         let(:price) { promo_code.apply_discount(product.price) }
-        let(:description) { "CrossCourt #{product.name} purchase" }
+        let(:description) { "#{product.name} purchase" }
 
         context "when the user hasn't used the promo code yet" do
           it 'calls the stripes charge method with the correct params' do

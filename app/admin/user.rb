@@ -94,13 +94,13 @@ ActiveAdmin.register User do
       result = ChargeUser.call(
         user: user,
         price: ENV['JERSEY_PURCHASE_PRICE'].to_i,
-        description: 'CrossCourt jersey purchase'
+        description: 'Jersey purchase'
       )
     when :water
       result = ChargeUser.call(
         user: user,
         price: ENV['WATER_PURCHASE_PRICE'].to_i,
-        description: 'CrossCourt water purchase'
+        description: 'Water bottle purchase'
       )
     end
 
