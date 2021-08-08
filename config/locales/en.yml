@@ -122,3 +122,4 @@ en:
     products:
       created: "Product created successfully"
       destroyed: "Product deleted successfully"
+      recover: "Product recovered successfully"

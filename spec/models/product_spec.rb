@@ -12,6 +12,11 @@
 #  product_type    :integer          default("one_time")
 #  stripe_price_id :string
 #  label           :string
+#  deleted_at      :datetime
+#
+# Indexes
+#
+#  index_products_on_deleted_at  (deleted_at)
 #
 
 require 'rails_helper'

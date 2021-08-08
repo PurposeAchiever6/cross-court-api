@@ -26,7 +26,7 @@
 
 class Subscription < ApplicationRecord
   belongs_to :user
-  belongs_to :product
+  belongs_to :product, with_deleted: true
 
   delegate :credits, to: :product, prefix: false
 

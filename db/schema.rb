@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_22_012239) do
+ActiveRecord::Schema.define(version: 2021_08_08_162503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,8 @@ ActiveRecord::Schema.define(version: 2021_07_22_012239) do
     t.integer "product_type", default: 0
     t.string "stripe_price_id"
     t.string "label"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_products_on_deleted_at"
   end
 
   create_table "promo_codes", force: :cascade do |t|

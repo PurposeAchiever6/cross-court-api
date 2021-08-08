@@ -12,10 +12,17 @@
 #  product_type    :integer          default("one_time")
 #  stripe_price_id :string
 #  label           :string
+#  deleted_at      :datetime
+#
+# Indexes
+#
+#  index_products_on_deleted_at  (deleted_at)
 #
 
 class Product < ApplicationRecord
   UNLIMITED = -1
+
+  acts_as_paranoid
 
   enum product_type: { one_time: 0, recurring: 1 }
 
@@ -26,5 +33,9 @@ class Product < ApplicationRecord
 
   def unlimited?
     credits == UNLIMITED
+  end
+
+  def memberships_count
+    Subscription.joins(:user).where(product_id: id, status: :active).count
   end
 end
