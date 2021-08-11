@@ -28,7 +28,7 @@ class Subscription < ApplicationRecord
   belongs_to :user
   belongs_to :product, with_deleted: true
 
-  delegate :credits, to: :product, prefix: false
+  delegate :credits, :name, to: :product, prefix: false
 
   enum status: {
     trialing: 'trialing',

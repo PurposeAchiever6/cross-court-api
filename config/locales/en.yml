@@ -70,6 +70,8 @@ en:
         remaining credits.
       inactive_first_timer_user: >
         %{name} (phone: %{phone}) has played his FIRST FREE SESSION 14 days ago and didn't rebook.
+      session_canceled: >
+        %{name} (phone: %{phone}) has canceled his current subscription (%{subscription_name}).
     session_confirmed: >
       Hey %{name}, You’re locked in for %{when}’s %{time} Crosscourt session at %{location}.
       Please remember to arrive at least 10 minutes early with your jersey if you have one,

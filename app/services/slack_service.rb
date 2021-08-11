@@ -4,7 +4,6 @@ class SlackService
   def initialize(user, date = nil, time = nil, location = nil)
     @notifier = Slack::Notifier.new(
       ENV['SLACK_WEBHOOK_URL'],
-      channel: ENV['SLACK_CHANNEL_DEFAULT'],
       username: 'Backend Notifier'
     )
 
@@ -45,6 +44,10 @@ class SlackService
     notify_inactive('notifier.slack.inactive_first_timer_user')
   end
 
+  def subscription_canceled(subscription)
+    notify_subscription('notifier.slack.session_canceled', subscription)
+  end
+
   private
 
   def notify_booking(i18n_message, extra_params = {})
@@ -70,6 +73,18 @@ class SlackService
         phone: user.phone_number
       ),
       channel: ENV['SLACK_CHANNEL_CHURN']
+    )
+  end
+
+  def notify_subscription(i18n_message, subscription)
+    notify(
+      I18n.t(
+        i18n_message,
+        name: user.full_name,
+        phone: user.phone_number,
+        subscription_name: subscription.name
+      ),
+      channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
     )
   end
 

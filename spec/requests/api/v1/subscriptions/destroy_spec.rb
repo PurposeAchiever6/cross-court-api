@@ -20,6 +20,7 @@ describe 'DELETE api/v1/subscriptions/:id' do
 
   before do
     allow(StripeService).to receive(:cancel_subscription).and_return(double(stripe_response))
+    allow_any_instance_of(SlackService).to receive(:subscription_canceled)
     allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
   end
 
@@ -40,6 +41,11 @@ describe 'DELETE api/v1/subscriptions/:id' do
 
   it 'sets the subscription status to canceled' do
     expect { subject }.to change { subscription.reload.status }.to('canceled')
+  end
+
+  it 'calls the slack service' do
+    expect_any_instance_of(SlackService).to receive(:subscription_canceled).with(subscription)
+    subject
   end
 
   it 'calls the klaviyo service' do
