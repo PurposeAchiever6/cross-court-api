@@ -101,7 +101,7 @@ class User < ApplicationRecord
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
-  scope :no_credits, -> { where(credits: 0) }
+  scope :no_credits, -> { where(credits: 0, subscription_credits: 0) }
 
   after_create :create_referral_code
 

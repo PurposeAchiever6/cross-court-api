@@ -133,5 +133,18 @@ describe InactiveUsersJob do
         subject
       end
     end
+
+    context 'when user has an active subscription' do
+      let(:subscription) { create(:subscription, status: :active) }
+
+      before { user.subscriptions << subscription }
+
+      it 'do not call service' do
+        expect_any_instance_of(KlaviyoService).not_to receive(:event)
+        expect_any_instance_of(SlackService).not_to receive(:notify)
+
+        subject
+      end
+    end
   end
 end
