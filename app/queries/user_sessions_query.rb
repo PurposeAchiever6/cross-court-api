@@ -23,4 +23,8 @@ class UserSessionsQuery
                     interval \'1\' hour, :time_format) >
                     to_char(time, :time_format)', time_format: Session::QUERY_TIME_FORMAT)
   end
+
+  def not_checked_in
+    relation.confirmed.where(checked_in: false)
+  end
 end

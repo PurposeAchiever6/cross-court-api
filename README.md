@@ -272,9 +272,9 @@ This is used for:
 
 Tasks that run recurringly every X amount of time.
 
-**charge_free_session_players**
+**charge_not_show_up_players**
 
-Charges the session to the players that reserved using the free credit but didn't show up.
+Charges the players that reserved but didn't show up. Applies to free_sessions & unlimited users.
 
 Runs Daily at 12:00 AM UTC
 

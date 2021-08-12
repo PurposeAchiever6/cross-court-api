@@ -13,9 +13,9 @@ sem_session_reminders:
   class: "SemSessionRemindersJob"
   queue: default
 
-charge_free_session_players:
+charge_no_show_up_players:
   cron: "* 0 * * *"
-  class: "ChargeFreeSessionPlayersJob"
+  class: "ChargeNoShowUpPlayersJob"
   queue: default
 
 confirm_unconfirmed_sessions:
