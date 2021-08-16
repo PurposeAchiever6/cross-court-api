@@ -1,5 +1,6 @@
 ActiveAdmin.register Product do
-  permit_params :name, :credits, :price, :order_number, :image, :label, :product_type
+  permit_params :name, :credits, :price, :price_for_members, :order_number, :image, :label,
+                :product_type
 
   scope :all, default: true
   scope 'Deletes', :only_deleted
@@ -12,6 +13,9 @@ ActiveAdmin.register Product do
       product.unlimited? ? 'Unlimited' : product.credits
     end
     column :price
+    column :price_for_members do |product|
+      product.recurring? ? 'N/A' : product.price_for_members
+    end
     column :label
     column :order_number
     column :product_type
@@ -34,14 +38,15 @@ ActiveAdmin.register Product do
     checkbox << check_box_tag('unlimited', '1', resource.persisted? && resource.unlimited?, disabled: resource.persisted?, id: 'product-unlimited')
 
     f.inputs 'Product details' do
+      f.input :product_type, input_html: { disabled: resource.persisted? }
       f.input :name, input_html: { disabled: resource.persisted? }
       f.input :credits, input_html: { disabled: resource.persisted? }
       f.li checkbox
-      f.input :price, input_html: { disabled: resource.persisted? }
+      f.input :price, input_html: { disabled: resource.persisted? && resource.recurring? }
+      f.input :price_for_members
       f.input :label
       f.input :order_number
       f.input :image, as: :file
-      f.input :product_type
     end
     f.actions
   end
@@ -54,6 +59,7 @@ ActiveAdmin.register Product do
         product.unlimited? ? 'Unlimited' : product.credits
       end
       row :price
+      row :price_for_members if resource.one_time?
       row :label
       row :order_number
       row :memberships_count do |product|

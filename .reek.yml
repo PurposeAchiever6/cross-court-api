@@ -10,7 +10,7 @@ detectors:
     exclude: []
   ControlParameter:
     enabled: true
-    exclude: ["KlaviyoService#specific_event_attributes"]
+    exclude: ["KlaviyoService#specific_event_attributes", "Product#price"]
   DataClump:
     enabled: true
     exclude: ["SlackService"]
@@ -107,7 +107,7 @@ detectors:
         "ConfirmationsController",
         "StripeController",
         "CanceledUserSession",
-        "KlaviyoService"
+        "KlaviyoService",
       ]
     max_statements: 13
   UncommunicativeMethodName:

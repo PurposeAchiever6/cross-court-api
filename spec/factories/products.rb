@@ -2,17 +2,18 @@
 #
 # Table name: products
 #
-#  id              :integer          not null, primary key
-#  credits         :integer          default(0), not null
-#  name            :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  price           :decimal(10, 2)   default(0.0), not null
-#  order_number    :integer          default(0), not null
-#  product_type    :integer          default("one_time")
-#  stripe_price_id :string
-#  label           :string
-#  deleted_at      :datetime
+#  id                :integer          not null, primary key
+#  credits           :integer          default(0), not null
+#  name              :string           not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  price             :decimal(10, 2)   default(0.0), not null
+#  order_number      :integer          default(0), not null
+#  product_type      :integer          default("one_time")
+#  stripe_price_id   :string
+#  label             :string
+#  deleted_at        :datetime
+#  price_for_members :decimal(10, 2)
 #
 # Indexes
 #

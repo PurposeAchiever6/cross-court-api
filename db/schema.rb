@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_08_162503) do
+ActiveRecord::Schema.define(version: 2021_08_16_004042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2021_08_08_162503) do
     t.string "stripe_price_id"
     t.string "label"
     t.datetime "deleted_at"
+    t.decimal "price_for_members", precision: 10, scale: 2
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
   end
 

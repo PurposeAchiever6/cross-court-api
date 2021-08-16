@@ -3,6 +3,7 @@ json = {
   name: product.name,
   credits: product.credits,
   price: product.price,
+  price_for_members: product.price_for_members,
   product_type: product.product_type,
   label: product.label
 }
