@@ -3,7 +3,7 @@ ActiveAdmin.register Product do
                 :product_type
 
   scope :all, default: true
-  scope 'Deletes', :only_deleted
+  scope 'Deleted', :only_deleted
 
   index do
     selectable_column
@@ -75,7 +75,11 @@ ActiveAdmin.register Product do
     def create
       product_params = permitted_params[:product]
 
-      stripe_price_id = StripeService.create_price(product_params).id
+      stripe_product_id = StripeService.create_product(product_params).id
+      stripe_price_id = StripeService.create_price(
+        product_params.merge!(stripe_product_id: stripe_product_id)
+      ).id
+
       Product.create!(product_params.merge(stripe_price_id: stripe_price_id))
 
       redirect_to admin_products_path, notice: I18n.t('admin.products.created')
@@ -83,6 +87,7 @@ ActiveAdmin.register Product do
 
     def destroy
       StripeService.update_price(resource.stripe_price_id, active: false)
+      StripeService.update_product(resource.stripe_product_id, active: false)
       resource.destroy!
 
       redirect_to admin_products_path, notice: I18n.t('admin.products.destroyed')

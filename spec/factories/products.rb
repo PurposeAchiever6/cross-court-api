@@ -14,6 +14,7 @@
 #  label             :string
 #  deleted_at        :datetime
 #  price_for_members :decimal(10, 2)
+#  stripe_product_id :string
 #
 # Indexes
 #

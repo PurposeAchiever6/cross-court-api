@@ -66,7 +66,7 @@ class StripeService
       currency: 'usd',
       unit_amount: product_attrs[:price].to_i * 100,
       nickname: product_name,
-      product: ENV['STRIPE_PRODUCT_ID']
+      product: product_attrs[:stripe_product_id]
     }
 
     price_attrs.merge!(recurring: { interval: 'month' }) unless is_one_time
@@ -103,5 +103,19 @@ class StripeService
 
   def self.cancel_subscription(subscription)
     Stripe::Subscription.delete(subscription.stripe_id)
+  end
+
+  def self.create_product(product_attrs)
+    Stripe::Product.create(
+      name: product_attrs[:name],
+      metadata: {
+        credits: product_attrs[:credits],
+        product_type: product_attrs[:product_type]
+      }
+    )
+  end
+
+  def self.update_product(stripe_product_id, product_attrs)
+    Stripe::Product.update(stripe_product_id, product_attrs)
   end
 end
