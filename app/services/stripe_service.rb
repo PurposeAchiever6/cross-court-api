@@ -118,4 +118,39 @@ class StripeService
   def self.update_product(stripe_product_id, product_attrs)
     Stripe::Product.update(stripe_product_id, product_attrs)
   end
+
+  def self.create_coupon(promo_code_attrs, product)
+    coupon_attrs = { duration: 'forever', currency: 'usd' }
+
+    coupon_attrs.merge!(applies_to: { products: [product.stripe_product_id] }) if product&.recurring?
+
+    discount = promo_code_attrs[:discount]
+    if promo_code_attrs[:type] == PercentageDiscount.to_s
+      coupon_attrs.merge!(percent_off: discount)
+    else
+      coupon_attrs.merge!(amount_off: discount.to_i * 100)
+    end
+
+    Stripe::Coupon.create(coupon_attrs)
+  end
+
+  def self.delete_coupon(coupon_id)
+    Stripe::Coupon.delete(coupon_id)
+  end
+
+  def self.create_promotion_code(coupon_id, promo_code_params)
+    promo_code_attrs = {
+      coupon: coupon_id,
+      code: promo_code_params[:code]
+    }
+
+    expiration_date = promo_code_params[:expiration_date]
+    promo_code_attrs.merge!(expires_at: (DateTime.parse(expiration_date) + 1.day).to_i) if expiration_date.present?
+
+    Stripe::PromotionCode.create(promo_code_attrs)
+  end
+
+  def self.update_promotion_code(promotion_code_id, promotion_code_params)
+    Stripe::PromotionCode.update(promotion_code_id, promotion_code_params)
+  end
 end

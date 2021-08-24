@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_22_195347) do
+ActiveRecord::Schema.define(version: 2021_08_23_220055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,8 +114,12 @@ ActiveRecord::Schema.define(version: 2021_08_22_195347) do
     t.string "type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.date "expiration_date", null: false
+    t.date "expiration_date"
+    t.bigint "product_id"
+    t.string "stripe_promo_code_id"
+    t.string "stripe_coupon_id"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
+    t.index ["product_id"], name: "index_promo_codes_on_product_id"
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -290,4 +294,5 @@ ActiveRecord::Schema.define(version: 2021_08_22_195347) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "promo_codes", "products"
 end

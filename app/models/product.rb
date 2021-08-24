@@ -30,6 +30,7 @@ class Product < ApplicationRecord
 
   has_one_attached :image
   has_many :purchases, dependent: :nullify
+  has_many :promo_codes, dependent: :nullify
 
   validates :credits, :order_number, presence: true
 

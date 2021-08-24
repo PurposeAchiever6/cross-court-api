@@ -125,3 +125,6 @@ en:
       created: "Product created successfully"
       destroyed: "Product deleted successfully"
       recover: "Product recovered successfully"
+    promo_codes:
+      created: "%{type} created successfully"
+      destroyed: "%{type} deleted successfully"
