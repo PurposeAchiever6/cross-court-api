@@ -5,6 +5,7 @@ describe CreateSubscription do
     let(:user) { create(:user) }
     let(:product) { create(:product) }
     let(:payment_method) { 'some-stripe-pm-id' }
+    let(:promo_code) { nil }
 
     let(:stripe_response) do
       {
@@ -23,13 +24,29 @@ describe CreateSubscription do
       allow(StripeService).to receive(:create_subscription).and_return(double(stripe_response))
     end
 
-    subject { CreateSubscription.call(user: user, product: product, payment_method: payment_method) }
+    subject do
+      CreateSubscription.call(user: user, product: product, payment_method: payment_method, promo_code: promo_code)
+    end
 
     it { expect { subject }.to change(Subscription, :count).by(1) }
 
-    it 'calls the stripes create_subscription method with the correct params' do
-      expect(StripeService).to receive(:create_subscription).with(user, product, payment_method)
-      subject
+    context 'with promo code' do
+      let(:promo_code) { create(:promo_code, product: product) }
+      let(:stripe_promo_code_id) { promo_code.stripe_promo_code_id }
+
+      it 'calls the stripes create_subscription method with the correct params' do
+        expect(StripeService).to receive(:create_subscription).with(user, product, payment_method, stripe_promo_code_id)
+        subject
+      end
+    end
+
+    context 'without promo code' do
+      let(:stripe_promo_code_id) { nil }
+
+      it 'calls the stripes create_subscription method with the correct params' do
+        expect(StripeService).to receive(:create_subscription).with(user, product, payment_method, stripe_promo_code_id)
+        subject
+      end
     end
 
     context 'when user already has an active subscription attribute is updated' do

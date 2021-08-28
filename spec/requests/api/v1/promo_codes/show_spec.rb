@@ -2,9 +2,10 @@ require 'rails_helper'
 
 describe 'GET api/v1/promo_code' do
   let(:user)       { create(:user) }
-  let(:promo_code) { create(:promo_code, discount: 10) }
+  let(:product)    { create(:product, price: 100) }
+  let(:promo_code) { create(:promo_code, discount: 10, product: product) }
   let(:price)      { 100 }
-  let(:params)     { { promo_code: code, price: price } }
+  let(:params)     { { promo_code: code, product_id: product.id } }
 
   subject { get api_v1_promo_code_path, params: params, headers: auth_headers, as: :json }
 
@@ -22,7 +23,7 @@ describe 'GET api/v1/promo_code' do
 
     it 'returns the price with the promo_code applied' do
       subject
-      expect(json[:price]).to eq(promo_code.apply_discount(price))
+      expect(json[:price].to_i).to eq(promo_code.apply_discount(price))
     end
   end
 

@@ -45,7 +45,7 @@ describe 'POST api/v1/purchases' do
       end
 
       context 'when the amount is less than the product price' do
-        let(:promo_code) { create(:promo_code, discount: 50) }
+        let(:promo_code) { create(:promo_code, discount: 50, product: product) }
         let(:price) { promo_code.apply_discount(product.price) }
         let(:description) { "#{product.name} purchase" }
 

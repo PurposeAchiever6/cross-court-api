@@ -9,7 +9,11 @@ module Api
       private
 
       def price
-        @price ||= params[:price].to_i
+        @price ||= product.price
+      end
+
+      def product
+        @product ||= Product.find(params[:product_id])
       end
 
       def promo_code
@@ -17,7 +21,7 @@ module Api
       end
 
       def check_promo_code
-        return if promo_code&.still_valid?(current_user)
+        return if promo_code&.still_valid?(current_user) && promo_code.product == product
 
         raise PurchaseException, I18n.t('api.errors.promo_code.invalid')
       end

@@ -78,12 +78,16 @@ class StripeService
     Stripe::Price.update(price_id, price_attrs)
   end
 
-  def self.create_subscription(user, product, payment_method_id)
-    Stripe::Subscription.create(
+  def self.create_subscription(user, product, payment_method_id, stripe_promo_code_id)
+    subscription_params = {
       customer: user.stripe_id,
       items: [{ price: product.stripe_price_id }],
       default_payment_method: payment_method_id
-    )
+    }
+
+    subscription_params.merge!(promotion_code: stripe_promo_code_id) if stripe_promo_code_id
+
+    Stripe::Subscription.create(subscription_params)
   end
 
   def self.update_subscription(subscription, product, payment_method_id)

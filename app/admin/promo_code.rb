@@ -5,6 +5,36 @@ ActiveAdmin.register PromoCode do
 
   collection = PromoCode::TYPES.map { |type| [type.underscore.humanize, type] }
 
+  index do
+    id_column
+    column :discount
+    column :code
+    column :created_at
+    column :expiration_date
+    column :product
+    column :type do |promo_code|
+      promo_code.type.underscore.humanize
+    end
+
+    actions
+  end
+
+  show do
+    attributes_table do
+      row :id
+      row :discount
+      row :code
+      row :created_at
+      row :expiration_date
+      row :product
+      row :type do |promo_code|
+        promo_code.type.underscore.humanize
+      end
+      row :stripe_coupon_id
+      row :stripe_promo_code_id
+    end
+  end
+
   form do |f|
     f.inputs 'Promo Code Details' do
       f.input :product
