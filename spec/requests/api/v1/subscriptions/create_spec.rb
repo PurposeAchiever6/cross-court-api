@@ -26,8 +26,17 @@ describe 'POST api/v1/subscriptions' do
       expect { subject }.to change(Subscription, :count).by(1)
     end
 
+    it 'creates the purchase' do
+      expect { subject }.to change(Purchase, :count).by(1)
+    end
+
     it "increments user's subscription credits" do
       expect { subject }.to change { user.reload.subscription_credits }.from(0).to(product.credits)
+    end
+
+    it 'calls the klaviyo service' do
+      expect_any_instance_of(KlaviyoService).to receive(:event)
+      subject
     end
   end
 

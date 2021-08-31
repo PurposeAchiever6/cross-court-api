@@ -1,5 +1,5 @@
 class PlaceSubscription
   include Interactor::Organizer
 
-  organize CreateSubscription, CreatePurchase, UpdateUserSubscriptionCredits, SendPurchasePlacedEvent
+  organize CreateSubscription, CreatePurchase, UpdateUserSubscriptionCredits, SendPurchasePlacedEvent, CreateUserPromoCode
 end
