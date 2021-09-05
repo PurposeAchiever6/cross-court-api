@@ -16,7 +16,11 @@ MoveModelLogicIntoModelCheck:
   {
     use_count: 4,
     ignored_files:
-      ["app/controllers/api/v1/sessions/user_sessions_controller.rb", "app/controllers/api/v1/confirmations_controller.rb"],
+      [
+        "app/controllers/api/v1/sessions/user_sessions_controller.rb",
+        "app/controllers/api/v1/confirmations_controller.rb",
+        "app/controllers/api/v1/promo_codes_controller.rb",
+      ],
   }
 NeedlessDeepNestingCheck: { nested_count: 2 }
 NotRescueExceptionCheck: {}

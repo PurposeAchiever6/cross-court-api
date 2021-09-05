@@ -30,23 +30,9 @@ describe CreateSubscription do
 
     it { expect { subject }.to change(Subscription, :count).by(1) }
 
-    context 'with promo code' do
-      let(:promo_code) { create(:promo_code, product: product) }
-      let(:stripe_promo_code_id) { promo_code.stripe_promo_code_id }
-
-      it 'calls the stripes create_subscription method with the correct params' do
-        expect(StripeService).to receive(:create_subscription).with(user, product, payment_method, stripe_promo_code_id)
-        subject
-      end
-    end
-
-    context 'without promo code' do
-      let(:stripe_promo_code_id) { nil }
-
-      it 'calls the stripes create_subscription method with the correct params' do
-        expect(StripeService).to receive(:create_subscription).with(user, product, payment_method, stripe_promo_code_id)
-        subject
-      end
+    it 'calls the stripes create_subscription method with the correct params' do
+      expect(StripeService).to receive(:create_subscription).with(user, product, payment_method, promo_code)
+      subject
     end
 
     context 'when user already has an active subscription attribute is updated' do

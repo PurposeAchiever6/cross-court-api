@@ -32,7 +32,18 @@ class PromoCode < ApplicationRecord
             if: -> { type == PercentageDiscount.to_s }
 
   def still_valid?(user)
-    date_valid = expiration_date ? Time.current.to_date <= expiration_date : true
-    user_promo_codes.where(user: user).none? && date_valid
+    !expired? && !already_used?(user)
+  end
+
+  def expired?
+    expiration_date ? Time.current.to_date >= expiration_date : false
+  end
+
+  def already_used?(user)
+    user_promo_codes.where(user: user).any?
+  end
+
+  def for_product?(product)
+    self.product == product
   end
 end

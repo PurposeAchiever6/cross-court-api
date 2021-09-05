@@ -37,6 +37,7 @@ en:
         full: "Session is full"
       promo_code:
         invalid: "Invalid promo code"
+        already_used: "Promo code already used"
       subscriptions:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"

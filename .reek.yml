@@ -108,6 +108,7 @@ detectors:
         "StripeController",
         "CanceledUserSession",
         "KlaviyoService",
+        "ChangeSubscription",
       ]
     max_statements: 13
   UncommunicativeMethodName:

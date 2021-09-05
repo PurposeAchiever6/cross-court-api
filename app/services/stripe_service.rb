@@ -78,19 +78,21 @@ class StripeService
     Stripe::Price.update(price_id, price_attrs)
   end
 
-  def self.create_subscription(user, product, payment_method_id, stripe_promo_code_id)
+  def self.create_subscription(user, product, payment_method_id, promo_code = nil)
     subscription_params = {
       customer: user.stripe_id,
       items: [{ price: product.stripe_price_id }],
       default_payment_method: payment_method_id
     }
 
-    subscription_params.merge!(promotion_code: stripe_promo_code_id) if stripe_promo_code_id
+    subscription_params.merge!(promotion_code: promo_code.stripe_promo_code_id) if promo_code
 
     Stripe::Subscription.create(subscription_params)
   end
 
-  def self.update_subscription(subscription, product, payment_method_id, stripe_promo_code_id)
+  def self.update_subscription(subscription, product, payment_method_id, promo_code = nil)
+    subscription_stripe_id = subscription.stripe_id
+
     subscription_params = {
       items: [
         { id: subscription.stripe_item_id, deleted: true },
@@ -99,9 +101,13 @@ class StripeService
       default_payment_method: payment_method_id
     }
 
-    subscription_params.merge!(promotion_code: stripe_promo_code_id) if stripe_promo_code_id
+    if promo_code
+      subscription_params.merge!(promotion_code: promo_code.stripe_promo_code_id)
+    elsif subscription.promo_code
+      Stripe::Subscription.delete_discount(subscription_stripe_id)
+    end
 
-    Stripe::Subscription.update(subscription.stripe_id, subscription_params)
+    Stripe::Subscription.update(subscription_stripe_id, subscription_params)
   end
 
   def self.retrieve_subscription(stripe_subscription_id)
