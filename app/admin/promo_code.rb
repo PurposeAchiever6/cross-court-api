@@ -1,7 +1,7 @@
 ActiveAdmin.register PromoCode do
   actions :index, :show, :create, :new
   config.batch_actions = false
-  permit_params :type, :code, :discount, :expiration_date, :product_id
+  permit_params :type, :code, :discount, :expiration_date, :product_id, :duration, :duration_in_months
 
   collection = PromoCode::TYPES.map { |type| [type.underscore.humanize, type] }
 
@@ -12,6 +12,8 @@ ActiveAdmin.register PromoCode do
     column :created_at
     column :expiration_date
     column :product
+    column :duration
+    column :duration_in_months
     column :type do |promo_code|
       promo_code.type.underscore.humanize
     end
@@ -30,18 +32,22 @@ ActiveAdmin.register PromoCode do
       row :type do |promo_code|
         promo_code.type.underscore.humanize
       end
+      row :duration
+      row :duration_in_months
       row :stripe_coupon_id
       row :stripe_promo_code_id
     end
   end
 
-  form do |f|
+  form data: { recurring_product_ids: Product.recurring.ids } do |f|
     f.inputs 'Promo Code Details' do
       f.input :product
       f.input :type, as: :select, collection: collection
       f.input :code
       f.input :discount
       f.input :expiration_date, as: :datepicker, datepicker_options: { min_date: Date.current }, input_html: { autocomplete: :off }
+      f.input :duration, as: :select
+      f.input :duration_in_months
     end
     f.actions
   end

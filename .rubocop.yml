@@ -137,3 +137,4 @@ Metrics/AbcSize:
 Style/RescueModifier:
   Exclude:
     - spec/**/*
+    - config/routes.rb

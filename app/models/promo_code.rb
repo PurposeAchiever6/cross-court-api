@@ -12,6 +12,8 @@
 #  product_id           :integer
 #  stripe_promo_code_id :string
 #  stripe_coupon_id     :string
+#  duration             :string
+#  duration_in_months   :integer
 #
 # Indexes
 #
@@ -27,9 +29,16 @@ class PromoCode < ApplicationRecord
 
   validates :discount, :code, :type, presence: true
   validates :code, uniqueness: true
+  validates :duration, presence: true, if: -> { product&.recurring? }
+  validates :duration_in_months, presence: true, if: -> { duration == 'repeating' }
   validates :discount,
             inclusion: { in: 1..100, message: 'needs to be between 1 and 100' },
             if: -> { type == PercentageDiscount.to_s }
+
+  enum duration: {
+    forever: 'forever',
+    repeating: 'repeating'
+  }
 
   def still_valid?(user)
     !expired? && !already_used?(user)

@@ -12,6 +12,8 @@
 #  product_id           :integer
 #  stripe_promo_code_id :string
 #  stripe_coupon_id     :string
+#  duration             :string
+#  duration_in_months   :integer
 #
 # Indexes
 #

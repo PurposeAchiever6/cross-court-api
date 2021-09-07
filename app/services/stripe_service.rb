@@ -133,9 +133,15 @@ class StripeService
   end
 
   def self.create_coupon(promo_code_attrs, product)
-    coupon_attrs = { duration: 'forever', currency: 'usd' }
+    duration = promo_code_attrs['duration']
+    duration_in_months = promo_code_attrs['duration_in_months'].presence
 
-    coupon_attrs.merge!(applies_to: { products: [product.stripe_product_id] }) if product&.recurring?
+    coupon_attrs = {
+      duration: duration,
+      currency: 'usd',
+      duration_in_months: duration_in_months,
+      applies_to: { products: [product.stripe_product_id] }
+    }
 
     discount = promo_code_attrs[:discount]
     if promo_code_attrs[:type] == PercentageDiscount.to_s

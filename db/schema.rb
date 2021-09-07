@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_05_221606) do
+ActiveRecord::Schema.define(version: 2021_09_07_210528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,8 @@ ActiveRecord::Schema.define(version: 2021_09_05_221606) do
     t.bigint "product_id"
     t.string "stripe_promo_code_id"
     t.string "stripe_coupon_id"
+    t.string "duration"
+    t.integer "duration_in_months"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["product_id"], name: "index_promo_codes_on_product_id"
   end
