@@ -40,6 +40,7 @@ detectors:
         "ResetUserSubscriptionCredits#call",
         "KlaviyoService#purchase_placed",
         "KlaviyoService#general_event_attributes",
+        "KlaviyoService#specific_event_attributes",
         "EmployeeSessionsQuery#sorted_future_sessions",
         "SonarService#find_next_to_confirm",
         "EmployeeSessionConfirmed",

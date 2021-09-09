@@ -42,7 +42,17 @@ class KlaviyoService
       case event_name
       when Event::PURCHASE_PLACED
         purchase = args[:purchase]
-        { order_price: purchase.price.to_i, purchase_name: purchase.product_name }
+        price = purchase.price
+        discount = purchase.discount
+        final_price = price - discount
+
+        {
+          order_price: format('%.2f', price),
+          order_discount: format('%.2f', discount),
+          order_final_price: format('%.2f', final_price),
+          apply_discount: discount.positive?,
+          purchase_name: purchase.product_name
+        }
       when Event::SESSION_BOOKED, Event::SESSION_REMINDER_24_HOURS, Event::SESSION_REMINDER_8_HOURS,
            Event::SESSION_REMINDER_6_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION,
            Event::SESSION_CANCELED_IN_TIME, Event::SESSION_CANCELED_OUT_OF_TIME
