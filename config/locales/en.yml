@@ -22,46 +22,110 @@
 en:
   api:
     errors:
-      server: 'An error ocurred'
+      server: "An error ocurred"
       not_found: "Couldn't find the record"
-      missing_param: 'A required param is missing'
-      invalid_content_type: 'Invalid content type header'
-      unauthorized: 'User is not sem'
+      missing_param: "A required param is missing"
+      invalid_content_type: "Invalid content type header"
+      unauthorized: "User is not sem"
       user_session:
-        invalid_date: 'Invalid date'
+        invalid_date: "Invalid date"
         invalid_confirmation_date: "Can't confirm this session"
-        not_enough_credits: 'Not enough credits. Please buy more.'
-      free_session: 'Free session already claimed'
-      legal: 'Invalid param'
+        not_enough_credits: "Not enough credits. Please buy more."
+      free_session: "Free session already claimed"
+      legal: "Invalid param"
       session:
-        full: 'Session is full'
+        full: "Session is full"
       promo_code:
-        invalid: 'Invalid promo code'
+        invalid: "Invalid promo code"
+        already_used: "Promo code already used"
+      subscriptions:
+        user_has_active: "User already has an active subscription"
+        is_not_active: "The subscription is not active"
+      users:
+        charges:
+          price_not_positive: "Price should be greater than 0"
+          missing_payment_method: "The user does not have a saved credit card to be charged"
   mailer:
-    greeting: 'Sincerely, Crosscourt Team'
+    greeting: "Sincerely, Crosscourt Team"
     session:
-      cancel: 'If you need to cancel the session click'
-      here: 'here'
-      welcome: 'Hi %{name}'
+      cancel: "If you need to cancel the session click"
+      here: "here"
+      welcome: "Hi %{name}"
+      booked: "You're in!"
+      add_to_calendar: "add-to-calendar.ics"
       new:
-        subject: 'Session confirmation'
-        confirmation: 'The session was booked successfully'
-        time: 'Date: %{date}, Time: %{time}'
+        subject: "Session confirmation"
+        confirmation: "The session was booked successfully"
+        time: "Date: %{date}, Time: %{time}"
   notifier:
     slack:
-      session_booked: '%{name} made a reservation for %{date} at %{time} on %{location}'
-      session_confirmed: '%{name} confirmed the reservation for %{date} at %{time} on %{location}'
-      session_canceled_in_time: '%{name} cancelled in time the reservation for %{date} at %{time} on %{location}'
-      session_canceled_out_of_time: '%{name} cancelled out of time the reservation for %{date} at %{time} on %{location}'
-    session_confirmed: 'You’re locked in! Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to check-in are in the first game. Don’t forget to bring a water, ball, and towel if you’ve got em. Let’s get it!'
-    session_canceled_in_time: 'We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}'
-    session_canceled_out_of_time: 'We’ll miss you! Unfortunately, we’re not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here’s a link to the upcoming schedule: %{schedule_url}'
-    unreadable_text: "We couldn't process your response. Please respond ‘Y’ to confirm."
-    no_session_booked: "You don't have any session booked yet."
-    tomorrow_reminder: 'Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at %{location}. Please respond ‘Y’ to confirm so we can verify your spot on tomorrow’s #ccteam. Thank you!'
-    today_reminder: 'Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ to confirm so we can verify your spot on today’s #ccteam. Thank you!'
-    ultimatum: 'Hey %{name}! You’re locked in for today’s Crosscourt Session. Please remember to arrive at least 10 minutes early to check in with an Experience Team Member at the door or podium. First 10 players to the check-in will begin the session. Don’t forget to bring a water, ball, and towel if you’ve got em. Also note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point. Thank you!'
+      session_booked: "%{name} made a reservation for %{date} at %{time} on %{location}"
+      session_confirmed: "%{name} confirmed the reservation for %{date} at %{time} on %{location}"
+      session_canceled_in_time: "%{name} canceled in time the reservation for %{date} at %{time} on %{location}"
+      session_canceled_out_of_time: "%{name} canceled out of time the reservation for %{date} at %{time} on %{location}"
+      session_canceled_out_of_time_with_charge_error: >
+        %{name} canceled out of time the reservation for %{date} at %{time} on %{location}. It was an error when
+        charging the user for the out of time cancellation. Error: %{error_message}
+      inactive_user: >
+        %{name} (phone: %{phone}) has played his last session 1 month ago and doesn't have any
+        remaining credits.
+      inactive_first_timer_user: >
+        %{name} (phone: %{phone}) has played his FIRST FREE SESSION 14 days ago and didn't rebook.
+      session_canceled: >
+        %{name} (phone: %{phone}) has canceled his current subscription (%{subscription_name}).
+    session_confirmed: >
+      Hey %{name}, You’re locked in for %{when}’s %{time} Crosscourt session at %{location}.
+      Please remember to arrive at least 10 minutes early with your jersey if you have one,
+      otherwise, you can rent one. Also, the first 10 players to check-in are in the first game.
+      Please note, due to limited capacity, spectators or guests will not be allowed to watch.
+      Let’s get it!
+    session_confirmed_first_timers: >
+      Hey %{name}, You’re locked in for %{when}’s %{time} Crosscourt session at %{location}.
+      Please remember to arrive at least 10 minutes early, the first 10 players to check-in
+      are in the first game. Please note, due to limited capacity, spectators or guests will
+      not be allowed to watch. To improve your Crosscourt experience, you can use this link to
+      install our app on your mobile device %{app_link}. Let’s get it!
+    session_auto_confirmed: >
+      Hey %{name}, You’re locked in for today’s %{time} Crosscourt session at %{location}.
+      Please remember to arrive at least 10 minutes early with your jersey if you have one,
+      otherwise, you can rent one. The first 10 players to check-in are in the first game.
+      Please note that the cancellation window has passed so no refunds will be issued for
+      cancellations beyond this point. Also, due to limited capacity, spectators or guests
+      will not be allowed to watch. Let’s get it!
+    session_auto_confirmed_first_timers: >
+      Hey %{name}, You’re locked in for today’s %{time} Crosscourt session at %{location}. Please
+      remember to arrive at least 10 minutes, the first 10 players to check-in are in the first game.
+      Please note that the cancellation window has passed so no refunds will be issued for
+      cancellations beyond this point. Also, due to limited capacity, spectators or guests will
+      not be allowed to watch. To improve your Crosscourt experience, you can use this link to
+      install our app on your mobile device %{app_link}. Let’s get it!
+    employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear. Let’s get it!"
+    session_canceled_in_time: "We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}"
+    session_canceled_out_of_time: "We’ll miss you! Unfortunately, we’re not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here’s a link to the upcoming schedule: %{schedule_url}"
+    unreadable_text: "We couldn’t process your response. Please respond ‘Y’ to confirm."
+    no_session_booked: "You don’t have any session booked yet."
+    tomorrow_reminder: >
+      Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at Crosscourt.
+      Please respond ‘Y’ to confirm so we can verify your spot. Thank you!"
+    sem_tomorrow_reminder: "Hey %{name}! You’re scheduled to Manage tomorrow’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!"
+    referee_tomorrow_reminder: "Hey %{name}! You’re scheduled to Officiate tomorrow’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!"
+    today_reminder: >
+      Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt. Please
+      respond ‘Y’ to confirm so we can verify your spot. Thank you!
+    sem_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
+    referee_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
+    ultimatum: >
+      Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt. Please
+      respond ‘Y’ to confirm so we can verify your spot. Also, please note that the cancellation
+      window has passed so no refunds will be issued for cancellations beyond this point. Thank you!
+    survey_reminder: >
+      Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate your
+      feedback. %{survey_link}
   admin:
     products:
-      created: 'Product created successfully'
-      destroyed: 'Product deleted successfully'
+      created: "Product created successfully"
+      destroyed: "Product deleted successfully"
+      recover: "Product recovered successfully"
+    promo_codes:
+      created: "%{type} created successfully"
+      destroyed: "%{type} deleted successfully"

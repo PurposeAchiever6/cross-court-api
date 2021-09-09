@@ -1,0 +1,74 @@
+<body style="padding:0">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="color: black">
+    <tr>
+      <td style="padding-top:20px;" valign="top" width="100%">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+          <tr width="100%">
+            <td width="100%">
+              <table border="0" cellpadding="0" cellspacing="0" style="margin:0 auto;font-size: 12px;" width="100%">
+                <tr>
+                  <td align="center" width="100%">
+                    <a href="https://www.cross-court.com/">
+                      <img
+                        border="0"
+                        src="https://d3k81ch9hvuctc.cloudfront.net/company/K5fCFg/images/c20db615-67b5-4893-8d4c-8e71caca47e7.png"
+                        class="logo"
+                      />
+                    </a>
+                  </td>
+                </tr>
+                <tr width="100%">
+                  <td align="center" width="100%">
+                    <a href="https://www.cross-court.com/">
+                      <img
+                        border="0"
+                        class="device-width mens"
+                        src="https://d3k81ch9hvuctc.cloudfront.net/company/K5fCFg/images/081db712-1e0b-49e6-b98b-85782de36b25.png"
+                      />
+                    </a>
+                  </td>
+                </tr>
+                <tr width="100%">
+                  <td class="location-info" width="100%">
+                    <span class="location-info-title">DATE</span><br/>
+                    <span class="location-info-item"><%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %></span><br/>
+                    <span class="location-info-title">TIME</span><br/>
+                    <span class="location-info-item"><%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %></span><br/>
+                    <span class="location-info-title">LOCATION</span><br/>
+                    <span class="location-info-item"><%= @location.name %></span>
+                    <a href=<%= @location.google_maps_link %>
+                      <span class="location-info-item-blue"><%= @location.full_address %></span><br/>
+                    </a>
+                  </td>
+                </tr>
+                <tr width="100%">
+                  <td align="center" width="100%">
+                    <a href="https://vimeo.com/438000525">
+                      <img
+                        alt="What to Expect Video"
+                        border="0"
+                        class="device-width video-img"
+                        src="https://d3k81ch9hvuctc.cloudfront.net/company/K5fCFg/images/d48da1f4-d4d7-4f96-9a16-b4b67c6651fc.png"
+                      />
+                    </a>
+                  </td>
+                </tr>
+                <tr width="100%">
+                  <td class="more-info" width="100%">
+                    FOR MORE INFORMATION, CHECK OUT OUR FAQ PAGE
+                    <a href="https://www.cross-court.com/how-it-works" style="text-decoration:none;color:#3358ff;">HERE</a>.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <div class="footer">
+          <br/>
+          CROSSCOURT
+          <br/>
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>

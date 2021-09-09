@@ -18,56 +18,50 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*
 
-Metrics/AbcSize:
-  # The ABC size is a calculated magnitude, so this number can be an Integer or
-  # a Float.
-  Max: 15
-  Exclude:
-    - db/migrate/20161011151353_devise_create_users.rb
-    - app/models/session.rb
-    - app/models/concerns/employee_session.rb
-    - app/decorators/user_session_consume_credit.rb
-    - app/decorators/canceled_user_session.rb
-    - app/decorators/user_session_confirmed.rb
-    - app/controllers/api/v1/sessions_controller.rb
-    - app/controllers/api/v1/sessions/user_sessions_controller.rb
-    - app/controllers/api/v1/confirmations_controller.rb
-    - app/interactors/create_purchase.rb
-    - app/interactors/make_discount.rb
-    - app/services/sonar_service.rb
-    - app/jobs/session_reminders_job.rb
-
 Metrics/BlockLength:
-  CountComments: false  # count full line comments?
+  CountComments: false # count full line comments?
   Max: 25
   Exclude:
     - config/**/*
     - spec/**/*
     - app/admin/**/*
+    - app/models/concerns/employee_session.rb
 
 Metrics/BlockNesting:
   Max: 4
 
 Metrics/ClassLength:
-  CountComments: false  # count full line comments?
+  CountComments: false # count full line comments?
   Max: 200
 
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:
   Max: 6
+  Exclude:
+    - app/jobs/user_session_reminders_job.rb
+    - app/jobs/sem_session_reminders_job.rb
+    - app/jobs/referee_session_reminders_job.rb
+    - app/jobs/inactive_users_job.rb
+    - app/decorators/employee_session_confirmed.rb
+    - app/controllers/api/v1/stripe_controller.rb
 
 Metrics/MethodLength:
-  CountComments: false  # count full line comments?
+  CountComments: false # count full line comments?
   Max: 24
   Exclude:
-    - app/jobs/session_reminders_job.rb
+    - app/jobs/user_session_reminders_job.rb
+    - app/jobs/sem_session_reminders_job.rb
+    - app/jobs/referee_session_reminders_job.rb
+    - app/services/klaviyo_service.rb
+    - app/controllers/api/v1/stripe_controller.rb
+    - app/decorators/canceled_user_session.rb
 
 Metrics/ModuleLength:
-  CountComments: false  # count full line comments?
+  CountComments: false # count full line comments?
   Max: 200
 
 Metrics/LineLength:
-  Max: 100
+  Max: 200
   # To make it possible to copy or click on URIs in the code, we allow lines
   # containing a URI to be longer than Max.
   AllowURI: true
@@ -112,6 +106,7 @@ Rails/SkipsModelValidations:
 Rails/HasManyOrHasOneDependent:
   Exclude:
     - app/models/location.rb
+    - app/models/skill_level.rb
 
 Rails/NotNullColumn:
   Exclude:
@@ -135,3 +130,11 @@ Style/ReturnNil:
 Style/GuardClause:
   Exclude:
     - app/controllers/api/v1/confirmations_controller.rb
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/RescueModifier:
+  Exclude:
+    - spec/**/*
+    - config/routes.rb

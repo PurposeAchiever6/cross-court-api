@@ -23,6 +23,7 @@ module App
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.load_defaults 6.0
+    config.active_job.queue_adapter = :sidekiq
 
     config.secret_key_base = ENV['SECRET_KEY_BASE']
 
@@ -38,12 +39,16 @@ module App
     }
     config.action_mailer.default_url_options = { host: ENV['SERVER_URL'] }
     config.action_mailer.default_options = {
-      from: 'no-reply@crosscourtball.com'
+      from: 'Crosscourt <no-reply@cross-court.com>'
     }
 
     config.generators do |g|
       g.test_framework :rspec
       g.fixture_replacement :factory_bot, dir: 'spec/factories'
+    end
+
+    config.to_prepare do
+      Devise::Mailer.layout 'mailer'
     end
   end
 end

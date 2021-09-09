@@ -8,16 +8,49 @@ class CanceledUserSession
   end
 
   def save!
-    if user_session.in_cancellation_time?
+    in_cancellation_time = user_session.in_cancellation_time?
+    is_free_session = user_session.is_free_session
+    session_date = user_session.date.strftime(Session::DAY_MONTH_NAME_FORMAT)
+
+    if in_cancellation_time || is_free_session
       user.increment(:credits)
+      user.free_session_state = :claimed if is_free_session
       user.save!
+
       user_session.credit_reimbursed = true
-      SlackService.new(user, date, time, location).session_canceled_in_time
-      KlaviyoService.new.event(Event::SESSION_CANCELED_IN_TIME, user)
-    else
-      SlackService.new(user, date, time, location).session_canceled_out_of_time
-      KlaviyoService.new.event(Event::SESSION_CANCELED_OUT_OF_TIME, user)
     end
+
+    if in_cancellation_time
+      SlackService.new(user, date, time, location).session_canceled_in_time
+      KlaviyoService.new.event(
+        Event::SESSION_CANCELED_IN_TIME,
+        user,
+        user_session: user_session,
+        extra_params: { session_date: session_date }
+      )
+    else
+      result = ChargeCanceledOutOfTimeUserSession.call(user_session: user_session)
+
+      if result.failure?
+        SlackService.new(user, date, time, location)
+                    .session_canceled_out_of_time_with_charge_error(result.message)
+      else
+        SlackService.new(user, date, time, location).session_canceled_out_of_time
+      end
+
+      KlaviyoService.new.event(
+        Event::SESSION_CANCELED_OUT_OF_TIME,
+        user,
+        user_session: user_session,
+        extra_params: {
+          session_date: session_date,
+          cancellation_period: Session::CANCELLATION_PERIOD.to_i / (60 * 60),
+          amount_charged: result.amount_charged,
+          unlimited_credits: user.unlimited_credits?
+        }
+      )
+    end
+
     user_session.state = :canceled
     user_session.save!
   end

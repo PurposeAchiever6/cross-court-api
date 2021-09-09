@@ -4,7 +4,7 @@ describe 'POST api/v1/purchases' do
   let!(:user)          { create(:user) }
   let!(:product)       { create(:product, price: 100) }
   let(:payment_method) { 'pm123456789' }
-  let(:params)         { { product_id: product.stripe_id, payment_method: payment_method } }
+  let(:params)         { { product_id: product.id, payment_method: payment_method } }
 
   subject do
     post api_v1_purchases_path, params: params, headers: auth_headers, as: :json
@@ -38,20 +38,21 @@ describe 'POST api/v1/purchases' do
     context 'when a promo_code is applied' do
       let(:params) do
         {
-          product_id: product.stripe_id,
+          product_id: product.id,
           payment_method: payment_method,
           promo_code: promo_code.code
         }
       end
 
       context 'when the amount is less than the product price' do
-        let(:promo_code) { create(:promo_code, discount: 50) }
-        let(:price)      { promo_code.apply_discount(product.price) }
+        let(:promo_code) { create(:promo_code, discount: 50, product: product) }
+        let(:price) { promo_code.apply_discount(product.price) }
+        let(:description) { "#{product.name} purchase" }
 
         context "when the user hasn't used the promo code yet" do
           it 'calls the stripes charge method with the correct params' do
-            expect(StripeService).to receive(:charge).with(user, payment_method, price)
-            subject
+            expect(StripeService).to receive(:charge).with(user, payment_method, price, description)
+            subject rescue nil
           end
 
           it 'creates a UserPromoCode' do

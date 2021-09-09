@@ -376,7 +376,7 @@ This route is the destination URL for password reset confirmation
 ### Create purchase [POST]
 
 + Request (application/json)
-    
+
     + Body
 
             {
@@ -472,6 +472,46 @@ This route is the destination URL for password reset confirmation
 + Response 204 (application/json)
     + Attributes (Legal)
 
+## Session Survey Questions [/api/v1/survey/questions]
+
+### Get questions [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+    + Attributes (array[Session survey question])
+
+## Session Survey Answers [/api/v1/survey/answers]
+
+### Create session survey answer [POST]
+
++ Request (application/json)
+
+    + Body
+
+            {
+              "session_answer": {
+                answer: 'This is the answer!',
+                session_survey_question_id: 1
+              }
+            }
+
++ Response 204 (application/json)
+    + Headers
+
+            access-token: sO2bm_Bpdyoo8r78jZ-fqg
+            client: QADgNCWRJj0LyRruqzYbBg
+            expiry: 1489009792
+            uid: test@test.com
+
+
 
 # Data Structures
 
@@ -498,7 +538,6 @@ This route is the destination URL for password reset confirmation
 
 ## Session (object)
 + id (number)
-+ level (string)
 + start_time: 2019-11-14T14:59:11Z (string)
 + time: 2000-01-01T16:00:00Z (string)
 + location (Location)
@@ -510,7 +549,6 @@ This route is the destination URL for password reset confirmation
 
 ## Session short (object)
 + id (number)
-+ level (string)
 + start_time: 2019-11-14T14:59:11Z (string)
 + time: 2000-01-01T16:00:00Z (string)
 + location (Location short)
@@ -518,10 +556,11 @@ This route is the destination URL for password reset confirmation
 ## Location (object)
 + id (number)
 + name (string)
-+ direction (string)
++ address (string)
 + lat (number)
 + lng (number)
 + city (string)
++ state (string)
 + zipcode (string)
 + image_url (string)
 
@@ -561,7 +600,7 @@ This route is the destination URL for password reset confirmation
 + price (number)
 + name (string)
 + credits (number)
-+ stripe_id (string)
++ stripe_price_id (string)
 
 ## Employee (object)
 + name (string)
@@ -595,3 +634,15 @@ This route is the destination URL for password reset confirmation
 
 ## Legal
 + text (string)
+
+## Session survey question (object)
++ id (number)
++ question (string)
++ is_enabled (boolean)
++ is_mandatory (boolean)
+
+## Session Survey Answer (object)
++ id (number)
++ answer (string)
++ session_survey_question_id (number)
++ user_session_id (number)

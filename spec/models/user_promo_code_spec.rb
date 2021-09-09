@@ -17,14 +17,39 @@
 require 'rails_helper'
 
 describe UserPromoCode do
-  subject { build :user_promo_code }
+  subject { build(:user_promo_code) }
+  let(:user) { create(:user) }
+  let(:promo_code) { create(:promo_code, product: product) }
 
   describe 'validations' do
     it { is_expected.to validate_uniqueness_of(:promo_code_id).scoped_to(:user_id) }
   end
 
   describe 'associations' do
+    before { allow(subject).to receive(:one_time_product?).and_return(true) }
+
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:promo_code) }
+  end
+
+  context 'when product is one_time' do
+    let(:product) { create(:product, product_type: 'one_time') }
+
+    before { create(:user_promo_code, promo_code: promo_code, user: user) }
+
+    subject { create(:user_promo_code, promo_code: promo_code, user: user) }
+
+    it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid) }
+  end
+
+  context 'when product is recurring' do
+    let(:product) { create(:product, product_type: 'recurring') }
+
+    before { create(:user_promo_code, promo_code: promo_code, user: user) }
+
+    subject { create(:user_promo_code, promo_code: promo_code, user: user) }
+
+    it { expect { subject }.not_to raise_error }
+    it { expect { subject }.to change(UserPromoCode, :count) }
   end
 end

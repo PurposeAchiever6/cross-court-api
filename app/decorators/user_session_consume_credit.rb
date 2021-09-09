@@ -8,8 +8,7 @@ class UserSessionConsumeCredit
   end
 
   def save!
-    raise NotEnoughCreditsException, I18n.t('api.errors.user_session.not_enough_credits') unless
-      user.credits.positive?
+    raise NotEnoughCreditsException, I18n.t('api.errors.user_session.not_enough_credits') unless user.credits?
 
     if user.free_session_claimed?
       user_session.is_free_session = true
@@ -17,7 +16,12 @@ class UserSessionConsumeCredit
       user.free_session_state = :used
     end
 
-    user.decrement(:credits)
+    if user.credits.positive?
+      user.decrement(:credits)
+    else
+      user.decrement(:subscription_credits) unless user.unlimited_credits?
+    end
+
     user.save!
     user_session.save!
   end

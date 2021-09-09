@@ -19,20 +19,55 @@ module SonarService
   end
 
   def message_received(user, message)
-    user_session = user.user_sessions.future.reserved.ordered_by_date.first
-    if user_session.present?
-      if positive_message?(message)
-        UserSessionConfirmed.new(user_session).save!
-        send_message(user, I18n.t('notifier.session_confirmed'))
+    if positive_message?(message)
+      session = find_next_to_confirm(user)
+      if session.present?
+        send_message(user, confirmation_msg(user, session))
       else
-        send_message(user, I18n.t('notifier.unreadable_text'))
+        send_message(user, I18n.t('notifier.no_session_booked'))
       end
     else
-      send_message(user, I18n.t('notifier.no_session_booked'))
+      send_message(user, I18n.t('notifier.unreadable_text'))
     end
   end
 
   def positive_message?(message)
     %w[yes y].include?(message.downcase)
+  end
+
+  def find_next_to_confirm(user)
+    if user.employee?
+      EmployeeSessionConfirmed.new(user).save!
+    else
+      user_session = user.user_sessions.future.reserved.ordered_by_date.first
+
+      return unless user_session
+
+      UserSessionConfirmed.new(user_session).save!
+      user_session
+    end
+  end
+
+  def confirmation_msg(user, user_session)
+    return I18n.t('notifier.employee_session_confirmed') if user.employee?
+
+    if user_session.is_free_session
+      I18n.t(
+        'notifier.session_confirmed_first_timers',
+        name: user.first_name,
+        when: user_session.date == Time.zone.today ? 'today' : 'tomorrow',
+        time: user_session.time.strftime(Session::TIME_FORMAT),
+        location: user_session.location.address,
+        app_link: "#{ENV['FRONTENT_URL']}/app"
+      )
+    else
+      I18n.t(
+        'notifier.session_confirmed',
+        name: user.first_name,
+        when: user_session.date == Time.zone.today ? 'today' : 'tomorrow',
+        time: user_session.time.strftime(Session::TIME_FORMAT),
+        location: user_session.location.address
+      )
+    end
   end
 end

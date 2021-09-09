@@ -5,12 +5,12 @@ module Api
         @previous_sessions = user_sessions.past
                                           .not_canceled
                                           .order(date: :desc)
-                                          .includes(session: [location: [image_attachment: :blob]])
+                                          .includes(:session_survey_answers, session: [location: [images_attachments: :blob]])
                                           .take(3)
         @upcoming_sessions = user_sessions.future
                                           .not_canceled
                                           .order(:date)
-                                          .includes(session: [location: [image_attachment: :blob]])
+                                          .includes(:session_survey_answers, session: [location: [images_attachments: :blob]])
         @employee_upcoming_sessions = EmployeeSessionsQuery.new(current_user).sorted_future_sessions
       end
 

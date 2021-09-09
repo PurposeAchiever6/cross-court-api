@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
+  ActiveAdmin.routes(self) rescue ActiveAdmin::DatabaseHitDuringLoad
+
+  require 'sidekiq/web'
+  require 'sidekiq/cron/web'
+  authenticate :admin_user do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   mount_devise_token_auth_for 'User', at: '/api/v1/users', controllers: {
     registrations: 'api/v1/registrations',
     confirmations: 'api/v1/confirmations',
@@ -8,11 +15,14 @@ Rails.application.routes.draw do
     passwords: 'api/v1/passwords'
   }
 
-  root to: 'admin/dashboard#index'
+  root to: 'admin/scheduler#index'
 
   namespace :api do
     namespace :v1, defaults: { format: :json } do
       namespace :sonar do
+        post :webhook
+      end
+      namespace :stripe do
         post :webhook
       end
       devise_scope :user do
@@ -31,12 +41,13 @@ Rails.application.routes.draw do
           put :confirm
         end
         resources :purchases, only: %i[create index] do
-          put :claim_free_session, on: :collection
+          put :create_free_session_intent, on: :collection
         end
         resources :payment_methods, only: %i[create index destroy]
         resource :user, only: %i[update show] do
           get :profile
           post :resend_confirmation_instructions
+          put :update_skill_rating
         end
         namespace :sem do
           resources :sessions, only: :show
@@ -44,6 +55,11 @@ Rails.application.routes.draw do
             put :check_in, on: :collection
           end
         end
+        resources :session_surveys, only: [] do
+          get :questions, on: :collection
+          post :answers, on: :collection
+        end
+        resources :subscriptions, except: %i[show new edit]
       end
     end
   end

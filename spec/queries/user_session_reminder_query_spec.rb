@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe UserSessionReminderQuery do
-  let(:reminder_ready_query) { UserSessionReminderQuery.new }
+describe SessionReminderQuery do
+  let(:reminder_ready_query) { SessionReminderQuery.new(UserSession.all.reserved) }
   let(:los_angeles_time) do
     Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
   end
@@ -40,10 +40,10 @@ describe UserSessionReminderQuery do
   end
 
   describe '.in' do
-    let(:s1)             { create(:session, time: los_angeles_time + 8.hours) }
-    let(:s2)             { create(:session, time: los_angeles_time + 7.hours) }
-    let!(:user_session1) { create(:user_session, session: s1) }
-    let!(:user_session2) { create(:user_session, session: s2) }
+    let(:s1)            { create(:session, time: los_angeles_time + 8.hours) }
+    let(:s2)            { create(:session, time: los_angeles_time + 7.hours) }
+    let!(:user_session1) { create(:user_session, session: s1, date: los_angeles_date + 8.hours) }
+    let!(:user_session2) { create(:user_session, session: s2, date: los_angeles_date + 7.hours) }
     let!(:user_session3) { create(:user_session, session: s2, date: 2.days.from_now) }
 
     describe 'in 8 hours' do

@@ -12,6 +12,7 @@ describe PlacePurchase do
     allow_any_instance_of(IncrementUserCredits).to receive(:call)
     allow_any_instance_of(SendPurchasePlacedEvent).to receive(:call)
     allow_any_instance_of(CreateUserPromoCode).to receive(:call)
+    allow_any_instance_of(SetDropInExpirationDate).to receive(:call)
   end
 
   it 'calls the MakeDiscount interactor' do
@@ -41,6 +42,11 @@ describe PlacePurchase do
 
   it 'calls the CreateUserPromoCode interactor' do
     expect_any_instance_of(CreateUserPromoCode).to receive(:call)
+    subject
+  end
+
+  it 'calls the SetDropInExpirationDate interactor' do
+    expect_any_instance_of(SetDropInExpirationDate).to receive(:call)
     subject
   end
 end

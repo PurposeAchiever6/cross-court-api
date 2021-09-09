@@ -2,17 +2,21 @@
 #
 # Table name: user_sessions
 #
-#  id                          :integer          not null, primary key
-#  user_id                     :integer          not null
-#  session_id                  :integer          not null
-#  state                       :integer          default("reserved"), not null
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  date                        :date             not null
-#  checked_in                  :boolean          default(FALSE), not null
-#  is_free_session             :boolean          default(FALSE), not null
-#  free_session_payment_intent :string
-#  credit_reimbursed           :boolean          default(FALSE), not null
+#  id                              :integer          not null, primary key
+#  user_id                         :integer          not null
+#  session_id                      :integer          not null
+#  state                           :integer          default("reserved"), not null
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  date                            :date             not null
+#  checked_in                      :boolean          default(FALSE), not null
+#  is_free_session                 :boolean          default(FALSE), not null
+#  free_session_payment_intent     :string
+#  credit_reimbursed               :boolean          default(FALSE), not null
+#  referral_id                     :integer
+#  jersey_rental                   :boolean          default(FALSE)
+#  jersey_rental_payment_intent_id :string
+#  assigned_team                   :string
 #
 # Indexes
 #
@@ -26,9 +30,13 @@ class UserSession < ApplicationRecord
   belongs_to :user
   belongs_to :session
 
+  belongs_to :referral, class_name: 'User', foreign_key: :referral_id, optional: true, inverse_of: :user_sessions
+
+  has_many :session_survey_answers, dependent: :destroy
+
   validates :state, :date, presence: true
 
-  delegate :time, :time_zone, :location, to: :session
+  delegate :time, :time_zone, :location, :location_name, :location_description, to: :session
   delegate :phone_number, :email, to: :user, prefix: true
 
   scope :not_canceled, -> { where.not(state: :canceled) }
@@ -61,6 +69,36 @@ class UserSession < ApplicationRecord
 
   def in_confirmation_time?
     remaining_time.between?(Session::CANCELLATION_PERIOD, 24.hours)
+  end
+
+  def create_ics_event
+    tz = Time.find_zone(time_zone)
+
+    start_datetime = Time.new(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.min,
+      time.sec,
+      tz
+    ).utc
+
+    options = { 'CN' => 'Crosscourt' }
+    organizer_property = RiCal::PropertyValue::CalAddress.new(nil, value: 'mailto:ccteam@cross-court.com', params: options)
+
+    event = RiCal.Calendar do |cal|
+      cal.event do |calendar_event|
+        calendar_event.summary = "Crosscourt - #{location_name}"
+        calendar_event.description = location_description
+        calendar_event.dtstart = start_datetime
+        calendar_event.dtend = start_datetime + 1.hour
+        calendar_event.location = location.full_address
+        calendar_event.organizer_property = organizer_property
+      end
+    end
+
+    event
   end
 
   private

@@ -48,6 +48,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         subject
       end
 
+      it 'sends session booked email' do
+        expect { SessionMailer.session_booked.deliver_later }.to have_enqueued_job.on_queue('mailers')
+        subject
+      end
+
       it "doesn't update user's free_session_state" do
         expect { subject }.not_to change { user.reload.free_session_state }
       end
@@ -65,10 +70,10 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         end
 
         let(:time) do
-          Time.current.in_time_zone('America/Los_Angeles') + Session::CANCELLATION_PERIOD - 1.minute
+          Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) + Session::CANCELLATION_PERIOD - 1.minute
         end
         let(:session) { create(:session, :daily, time: time.strftime(Session::TIME_FORMAT)) }
-        let(:date)    { Time.current.to_date }
+        let(:date)    { time.to_date }
 
         it 'confirms the session automatically' do
           subject
@@ -116,6 +121,16 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
         it "doesn't create the user_session" do
           expect { subject }.not_to change(UserSession, :count)
+        end
+      end
+
+      context 'when user has been referred by other user' do
+        let!(:other_user) { create(:user) }
+
+        before { params[:referral_code] = other_user.referral_code }
+
+        it 'increments the credits of the other user' do
+          expect { subject }.to change { other_user.reload.credits }.by(1)
         end
       end
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_180924) do
+ActiveRecord::Schema.define(version: 2021_09_07_210528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
 
   create_table "locations", force: :cascade do |t|
     t.string "name", null: false
-    t.string "direction", null: false
+    t.string "address", null: false
     t.float "lat", null: false
     t.float "lng", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -87,18 +87,25 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.string "zipcode", default: "", null: false
     t.string "time_zone", default: "America/Los_Angeles", null: false
     t.datetime "deleted_at"
+    t.string "state", default: "CA"
+    t.text "description", default: ""
     t.index ["deleted_at"], name: "index_locations_on_deleted_at"
   end
 
   create_table "products", force: :cascade do |t|
-    t.string "stripe_id", null: false
     t.integer "credits", default: 0, null: false
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
     t.integer "order_number", default: 0, null: false
-    t.index ["stripe_id"], name: "index_products_on_stripe_id"
+    t.integer "product_type", default: 0
+    t.string "stripe_price_id"
+    t.string "label"
+    t.datetime "deleted_at"
+    t.decimal "price_for_members", precision: 10, scale: 2
+    t.string "stripe_product_id"
+    t.index ["deleted_at"], name: "index_products_on_deleted_at"
   end
 
   create_table "promo_codes", force: :cascade do |t|
@@ -107,8 +114,14 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.string "type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.date "expiration_date", null: false
+    t.date "expiration_date"
+    t.bigint "product_id"
+    t.string "stripe_promo_code_id"
+    t.string "stripe_coupon_id"
+    t.string "duration"
+    t.integer "duration_in_months"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
+    t.index ["product_id"], name: "index_promo_codes_on_product_id"
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -130,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.date "date", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "state", default: 0, null: false
     t.index ["session_id"], name: "index_referee_sessions_on_session_id"
     t.index ["user_id", "session_id", "date"], name: "index_referee_sessions_on_user_id_and_session_id_and_date", unique: true
     t.index ["user_id"], name: "index_referee_sessions_on_user_id"
@@ -141,6 +155,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.date "date", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "state", default: 0, null: false
     t.index ["session_id"], name: "index_sem_sessions_on_session_id"
     t.index ["user_id", "session_id", "date"], name: "index_sem_sessions_on_user_id_and_session_id_and_date", unique: true
     t.index ["user_id"], name: "index_sem_sessions_on_user_id"
@@ -155,6 +170,20 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.index ["session_id"], name: "index_session_exceptions_on_session_id"
   end
 
+  create_table "session_survey_answers", force: :cascade do |t|
+    t.string "answer"
+    t.bigint "session_survey_question_id"
+    t.bigint "user_session_id"
+    t.index ["session_survey_question_id"], name: "index_session_survey_answers_on_session_survey_question_id"
+    t.index ["user_session_id"], name: "index_session_survey_answers_on_user_session_id"
+  end
+
+  create_table "session_survey_questions", force: :cascade do |t|
+    t.string "question", null: false
+    t.boolean "is_enabled", default: true
+    t.boolean "is_mandatory", default: false
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.date "start_time", null: false
     t.text "recurring"
@@ -163,8 +192,37 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "location_id", null: false
     t.date "end_time"
-    t.integer "level", default: 0, null: false
+    t.bigint "skill_level_id"
     t.index ["location_id"], name: "index_sessions_on_location_id"
+    t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
+  end
+
+  create_table "skill_levels", force: :cascade do |t|
+    t.decimal "min", precision: 2, scale: 1
+    t.decimal "max", precision: 2, scale: 1
+    t.string "name"
+    t.string "description"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.string "stripe_id"
+    t.string "stripe_item_id"
+    t.string "status"
+    t.boolean "cancel_at_period_end", default: false
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "cancel_at"
+    t.datetime "canceled_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.bigint "product_id"
+    t.bigint "promo_code_id"
+    t.index ["product_id"], name: "index_subscriptions_on_product_id"
+    t.index ["promo_code_id"], name: "index_subscriptions_on_promo_code_id"
+    t.index ["status"], name: "index_subscriptions_on_status"
+    t.index ["stripe_id"], name: "index_subscriptions_on_stripe_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
   create_table "user_promo_codes", force: :cascade do |t|
@@ -187,6 +245,10 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.boolean "is_free_session", default: false, null: false
     t.string "free_session_payment_intent"
     t.boolean "credit_reimbursed", default: false, null: false
+    t.bigint "referral_id"
+    t.boolean "jersey_rental", default: false
+    t.string "jersey_rental_payment_intent_id"
+    t.string "assigned_team"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
@@ -220,12 +282,21 @@ ActiveRecord::Schema.define(version: 2020_05_08_180924) do
     t.string "free_session_payment_intent"
     t.string "first_name", default: "", null: false
     t.string "last_name", default: "", null: false
+    t.string "zipcode"
+    t.date "free_session_expiration_date"
+    t.string "referral_code"
+    t.integer "subscription_credits", default: 0, null: false
+    t.decimal "skill_rating", precision: 2, scale: 1
+    t.date "drop_in_expiration_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["free_session_expiration_date"], name: "index_users_on_free_session_expiration_date"
     t.index ["is_referee"], name: "index_users_on_is_referee"
     t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "promo_codes", "products"
 end

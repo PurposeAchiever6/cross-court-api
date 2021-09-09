@@ -8,6 +8,7 @@
 #  date       :date             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  state      :integer          default("unconfirmed"), not null
 #
 # Indexes
 #

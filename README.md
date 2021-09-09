@@ -14,6 +14,7 @@
 10. You can now try your REST services!
 
 ## Documentation
+
 ---
 
 **Glossary**
@@ -36,8 +37,6 @@ Represents an admin capable of signing in to the admin site.
 - **id** (Number: unique)
 - **email** (Text: unique)
 
-
-
 ### Session
 
 Represents the actual game that takes place once or recurrently in a specific location and time.
@@ -46,12 +45,10 @@ Represents the actual game that takes place once or recurrently in a specific lo
 
 - **id** (Number: unique)
 - **start_time** (Date: represents the date when the session should starts. It will only accept future values in the admin)
-- **recurring** (Text: Represents the recurring rule. e.g: *Weekly on weekdays*)
+- **recurring** (Text: Represents the recurring rule. e.g: _Weekly on weekdays_)
 - **location_id** (Number: id of the location where the session takes place)
 - **end_time** (Same as start_time but for the end date)
 - **level** (Number: `'0 -> basic, 1 -> advanced'`)
-
-
 
 ### SessionException
 
@@ -63,8 +60,6 @@ Represents an exception on the recurring rule of the session. The Session will n
 - **session_id** (Number: id of the session)
 - **date** (Date: date when the session is not supposed to occurr)
 
-
-
 ### Location
 
 Represents a basketball court.
@@ -73,14 +68,14 @@ Represents a basketball court.
 
 - **id** (Number: unique)
 - **name** (Text: name of the court. Could be the gym name)
-- **direction** (Text)
+- **address** (Text)
 - **lat** (Number: latitude of the court. This field is auto assigned when creating a Location in the admin)
 - **lng** (Number: longitude of the court. This field is auto assigned when creating a Location in the admin)
 - **city** (Text)
 - **zipcode** (Text)
-- **time_zone** (Text: all times are calculated depending on this *time_zone*)
-
-
+- **time_zone** (Text: all times are calculated depending on this _time_zone_)
+- **state** (Text)
+- **description** (Text)
 
 ### User
 
@@ -99,8 +94,8 @@ Represents a basketball court.
 - **stripe_id** (Text: id of the customer created on stripe. This attribute is created when a user signs up)
 - **free_session_state** (Number: `'0 -> not_claimed, 1 -> claimed, 2 -> used'`)
 - **free_session_payment_intent** (Text: Stripe payment intent created to charge the user if the he doesn't show up)
-
-
+- **zipcode** (Text)
+- **free_session_expiration_date** (Date)
 
 ### UserSession
 
@@ -119,8 +114,6 @@ Represents a reservation made by a User to a Session.
 - **free_session_payment_intent** (Text: Same as the user)
 - **credit_reimbursed** (Boolean: if a credit was reimbursed to the user after cancellation)
 
-
-
 ### RefereeSession
 
 Represents an assignment of a Referee in a Session
@@ -131,8 +124,7 @@ Represents an assignment of a Referee in a Session
 - **user_id** (Number: id of the referee)
 - **session_id** (Number: id of the session)
 - **date** (Date of the session when the referee is assigned)
-
-
+- **state** (Number: `'0 -> unconfirmed, 1 -> canceled, 2 -> confirmed'`)
 
 ### SemSession
 
@@ -144,8 +136,7 @@ Represents an assignment of a SEM in a Session
 - **user_id** (Number: id of the SEM)
 - **session_id** (Number: id of the session)
 - **date** (Date of the session when the SEM is assigned)
-
-
+- **state** (Number: `'0 -> unconfirmed, 1 -> canceled, 2 -> confirmed'`)
 
 ### Product
 
@@ -154,21 +145,19 @@ Represents one of the Series. e.g: `'The DROP-IN: 1 credit for $15'`
 #### Attributes
 
 - **id** (Number: unique)
-- **stripe_id** (Text: id of the product created in Stripe. This attribute is auto assigned when creating a new product in the admin)
 - **credits** (Number: amount of credits the product will give to the user)
 - **name** (Text: name of the product. e.g: `'The DROP-IN'`)
 - **price** (Number: amount in dollars)
 - **order_number** (Number: `0` will be displayed first in the web)
-
-
+- **stripe_price_id** (String: Stripe price ID)
 
 ### PromoCode
 
 Represents a Discount that a User can apply when making a purchase. There are 2 options. Both have the same attributes.
 
-**SpecificAmountDiscount**   e.g: $10 Discount
+**SpecificAmountDiscount** e.g: \$10 Discount
 
-**PercentageAmountDiscount**   e.g: %10 Discount
+**PercentageAmountDiscount** e.g: %10 Discount
 
 #### Attribtues
 
@@ -178,21 +167,18 @@ Represents a Discount that a User can apply when making a purchase. There are 2 
 - **code** (Text: the text that the user needs to input to get the discount. e.g: `'10DollarDiscount'`)
 - **expiration_date** (Date)
 
-
-
 ### UserPromoCode
 
 Represents a usage of the Promo code by the user. Users can only use a promo code once.
 
-**SpecificAmountDiscount**   e.g: $10 Discount
+**SpecificAmountDiscount** e.g: \$10 Discount
 
-**PercentageAmountDiscount**   e.g: %10 Discount
+**PercentageAmountDiscount** e.g: %10 Discount
 
 #### Attribtues
 
 - **id** (Number: unique)
 - **user_id** (Text: `'SpecificAmountDiscount' or 'PercentageDiscount'`)
-
 
 ### Purchase
 
@@ -208,8 +194,6 @@ Represents an actual purchase made by a User.
 - **created_at** (DateTime: when the purchase was made)
 - **discount** (Number: discount in dollars applied to the purchase)
 
-
-
 ### Legal
 
 Represents a legal document to be displayed in the web.
@@ -220,9 +204,29 @@ Represents a legal document to be displayed in the web.
 - **title** (Text: `'terms_and_conditions' or 'cancelation_policy'`)
 - **text** (Text: The complete text of the document)
 
+### Session Survey Question
+
+Represents a survey question for after the session
+
+#### Attributes
+
+- **id** (Number: unique)
+- **question** (Text: The question)
+- **is_enabled** (Boolean)
+- **is_mandatory** (Boolean)
+
+### Session Survey Answer
+
+Represents a survey question for after the session
+
+#### Attributes
+
+- **id** (Number: unique)
+- **answer** (Text: The question)
+- **session_survey_question_id** (Number: id of the session survey question)
+- **user_session_id** (Number: id of the user session)
+
 ---
-
-
 
 ## Integrations
 
@@ -235,7 +239,7 @@ The possible events are:
 - **Session Booked:** when a user books a new session.
 - **Session Reminder:** 24 hours before the session.
 - **Session Ultimatum:** 1 hour before the cancellation time is over.
-- **Session forfeited:** when the UserSession was cancelled due to the lack of confirmation from the user.
+- **Session forfeited:** when the UserSession was canceled due to the lack of confirmation from the user.
 - **Session Confirmation:** when the user confirms the UserSession.
 - **Claimed Free Session:** when the user claims the free session.
 - **Sign Up:** when a user creates an account.
@@ -268,13 +272,11 @@ This is used for:
 
 Tasks that run recurringly every X amount of time.
 
-**charge_free_session_players**
+**charge_not_show_up_players**
 
-Charges the session to the players that reserved using the free credit but didn't show up.
+Charges the players that reserved but didn't show up. Applies to free_sessions & unlimited users.
 
 Runs Daily at 12:00 AM UTC
-
-
 
 **session_reminders**
 
@@ -282,22 +284,17 @@ Send the reminder events to Klaviyo.
 
 Runs Hourly at :00
 
-
-
 **confirm_unconfirmed_sessions**
 
 Confirms the UserSessions that didn't confirmed assistance when the confirmation window is closed.
 
 Runs Hourly at "00
 
-
-
 **klaviyo_check_in_users**
 
 Sends the 'Session Check In' event to klaviyo for the users that the SEM checked in
 
 Runs Hourly at :00
-
 
 ## Code quality
 
@@ -310,6 +307,7 @@ With `rake code_analysis` you can run the code analysis tool, you can omit rules
 - [Bullet](https://github.com/flyerhzm/bullet#whitelist) You can add exceptions to a bullet initializer or in the controller
 
 ## Configuring Code Climate
+
 1. After adding the project to CC, go to `Repo Settings`
 2. On the `Test Coverage` tab, copy the `Test Reporter ID`
 3. Replace the current value of `CC_TEST_REPORTER_ID` on the `config.yml file (.circleci/config.yml)` with the one you copied from CC

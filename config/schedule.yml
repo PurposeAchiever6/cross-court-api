@@ -1,15 +1,39 @@
-session_reminders:
+user_session_reminders:
   cron: "0 * * * *"
-  class: "SessionRemindersJob"
+  class: "UserSessionRemindersJob"
   queue: default
 
+referee_session_reminders:
+  cron: "0 * * * *"
+  class: "RefereeSessionRemindersJob"
+  queue: default
 
-charge_free_session_players:
+sem_session_reminders:
+  cron: "0 * * * *"
+  class: "SemSessionRemindersJob"
+  queue: default
+
+charge_no_show_up_players:
   cron: "* 0 * * *"
-  class: "ChargeFreeSessionPlayersJob"
+  class: "ChargeNotShowUpPlayersJob"
   queue: default
 
 confirm_unconfirmed_sessions:
   cron: "10 * * * *"
   class: "ConfirmUnconfirmedSessionsJob"
+  queue: default
+
+credits:
+  cron: "0 5 * * *"
+  class: "CreditsJob"
+  queue: default
+
+send_survey_sms_to_players:
+  cron: "0 * * * *"
+  class: "SurveySmsJob"
+  queue: default
+
+notify_inactive_players:
+  cron: "0 7 * * *"
+  class: "InactiveUsersJob"
   queue: default

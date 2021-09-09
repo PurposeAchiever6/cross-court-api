@@ -1,17 +1,28 @@
 require 'rails_helper'
 
 describe RemoveOrphanSessions do
+  before do
+    Timecop.freeze(Time.current)
+  end
+
+  after do
+    Timecop.return
+  end
+
+  let!(:los_angeles_time)       { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+  let!(:los_angeles_date)       { los_angeles_time.to_date }
+
   let(:session)                 { create(:session, :daily) }
-  let!(:yesterday_sem_session)  { create(:sem_session, session: session, date: Date.yesterday) }
-  let!(:yesterday_ref_session)  { create(:referee_session, session: session, date: Date.yesterday) }
-  let!(:yesterday_user_session) { create(:user_session, session: session, date: Date.yesterday) }
+  let!(:yesterday_sem_session)  { create(:sem_session, session: session, date: los_angeles_date.yesterday) }
+  let!(:yesterday_ref_session)  { create(:referee_session, session: session, date: los_angeles_date.yesterday) }
+  let!(:yesterday_user_session) { create(:user_session, session: session, date: los_angeles_date.yesterday) }
   let(:user)                    { create(:user) }
 
   before do
     8.times do |i|
-      create(:sem_session, session: session, date: Date.current + i.days)
-      create(:referee_session, session: session, date: Date.current + i.days)
-      create(:user_session, session: session, user: user, date: Date.current + i.days)
+      create(:sem_session, session: session, date: los_angeles_date + i.days)
+      create(:referee_session, session: session, date: los_angeles_date + i.days)
+      create(:user_session, session: session, user: user, date: los_angeles_date + i.days)
     end
   end
 

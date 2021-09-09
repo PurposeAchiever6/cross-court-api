@@ -8,7 +8,10 @@ describe 'GET api/v1/locations' do
       {
         id: location.id,
         name: location.name,
-        direction: location.direction
+        address: location.address,
+        city: location.city,
+        zipcode: location.zipcode,
+        description: location.description
       }
     end
   end
@@ -22,6 +25,9 @@ describe 'GET api/v1/locations' do
   end
 
   it 'returns location information' do
-    expect(json[:locations]).to include_json(expected_response)
+    id = json[:locations].first[:id]
+    response_item = expected_response.select { |location| location[:id] == id }
+
+    expect(json[:locations].first).to include_json(response_item.first)
   end
 end
