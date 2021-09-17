@@ -13,7 +13,7 @@ class ChargeNotShowUpPlayersJob < ApplicationJob
         ChargeUser.call(
           user: user,
           price: ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_i,
-          description: 'Session not show up fee for unlimited subscription'
+          description: 'Unlimited membership no show fee'
         )
       end
     end

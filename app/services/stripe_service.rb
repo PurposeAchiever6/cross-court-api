@@ -50,7 +50,8 @@ class StripeService
       amount: ENV['FREE_SESSION_PRICE'].to_i * 100,
       currency: 'usd',
       payment_method: payment_method,
-      customer: user.stripe_id
+      customer: user.stripe_id,
+      description: 'First Free no show fee'
     )
   end
 
