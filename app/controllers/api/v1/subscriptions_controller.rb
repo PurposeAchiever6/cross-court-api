@@ -19,12 +19,14 @@ module Api
       end
 
       def destroy
-        result = CancelSubscription.call(
+        result = CancelSubscriptionAtPeriodEnd.call(
           user: current_user,
           subscription: subscription
         )
 
         raise SubscriptionException, result.message unless result.success?
+
+        @subscription = result.subscription
       end
 
       def update
@@ -35,6 +37,14 @@ module Api
           payment_method: payment_method,
           promo_code: promo_code
         )
+
+        raise SubscriptionException, result.message unless result.success?
+
+        @subscription = result.subscription
+      end
+
+      def reactive
+        result = SubscriptionReactivation.call(user: current_user, subscription: subscription)
 
         raise SubscriptionException, result.message unless result.success?
 

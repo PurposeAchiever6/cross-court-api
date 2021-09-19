@@ -119,6 +119,14 @@ class StripeService
     Stripe::Subscription.delete(subscription.stripe_id)
   end
 
+  def self.cancel_subscription_at_period_end(subscription)
+    Stripe::Subscription.update(subscription.stripe_id, cancel_at_period_end: true)
+  end
+
+  def self.reactive_subscription(subscription)
+    Stripe::Subscription.update(subscription.stripe_id, cancel_at_period_end: false)
+  end
+
   def self.create_product(product_attrs)
     Stripe::Product.create(
       name: product_attrs[:name],

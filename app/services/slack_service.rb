@@ -48,6 +48,10 @@ class SlackService
     notify_subscription('notifier.slack.session_canceled', subscription)
   end
 
+  def subscription_reactivated(subscription)
+    notify_subscription('notifier.slack.session_reactivated', subscription)
+  end
+
   private
 
   def notify_booking(i18n_message, extra_params = {})

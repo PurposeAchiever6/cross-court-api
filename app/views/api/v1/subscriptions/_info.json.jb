@@ -3,6 +3,7 @@
   status: subscription.status,
   current_period_start: subscription&.current_period_start&.iso8601,
   current_period_end: subscription&.current_period_end&.iso8601,
+  canceled: subscription.cancel_at_period_end,
   canceled_at: subscription&.canceled_at&.iso8601,
   product: render(
     partial: 'api/v1/products/info',
