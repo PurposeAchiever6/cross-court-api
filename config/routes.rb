@@ -60,7 +60,7 @@ Rails.application.routes.draw do
           post :answers, on: :collection
         end
         resources :subscriptions, except: %i[show new edit] do
-          post :reactive, on: :member
+          post :reactivate, on: :member
         end
       end
     end

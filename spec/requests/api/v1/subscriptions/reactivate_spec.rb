@@ -21,12 +21,12 @@ describe 'POST api/v1/subscriptions/:id/reactivate' do
   end
 
   before do
-    allow(StripeService).to receive(:reactive_subscription).and_return(double(stripe_response))
+    allow(StripeService).to receive(:reactivate_subscription).and_return(double(stripe_response))
     allow_any_instance_of(SlackService).to receive(:subscription_reactivated)
   end
 
   subject do
-    post reactive_api_v1_subscription_path(subscription.id),
+    post reactivate_api_v1_subscription_path(subscription.id),
          headers: auth_headers,
          as: :json
   end
@@ -49,7 +49,7 @@ describe 'POST api/v1/subscriptions/:id/reactivate' do
   end
 
   it 'calls stripe service' do
-    expect(StripeService).to receive(:reactive_subscription).with(subscription)
+    expect(StripeService).to receive(:reactivate_subscription).with(subscription)
     subject
   end
 

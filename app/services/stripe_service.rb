@@ -123,7 +123,7 @@ class StripeService
     Stripe::Subscription.update(subscription.stripe_id, cancel_at_period_end: true)
   end
 
-  def self.reactive_subscription(subscription)
+  def self.reactivate_subscription(subscription)
     Stripe::Subscription.update(subscription.stripe_id, cancel_at_period_end: false)
   end
 

@@ -1,4 +1,4 @@
-class ReactiveSubscription
+class ReactivateSubscription
   include Interactor
 
   def call
@@ -6,7 +6,7 @@ class ReactiveSubscription
 
     context.fail!(message: I18n.t('api.errors.subscriptions.is_not_canceled')) unless subscription.cancel_at_period_end
 
-    stripe_subscription = StripeService.reactive_subscription(subscription)
+    stripe_subscription = StripeService.reactivate_subscription(subscription)
 
     subscription.assign_stripe_attrs(stripe_subscription).save!
   rescue Stripe::StripeError => e

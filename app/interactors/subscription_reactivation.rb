@@ -1,5 +1,5 @@
 class SubscriptionReactivation
   include Interactor::Organizer
 
-  organize ReactiveSubscription, SendSubscriptionReactivatedSlackNotification
+  organize ReactivateSubscription, SendSubscriptionReactivatedSlackNotification
 end

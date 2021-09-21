@@ -43,7 +43,7 @@ module Api
         @subscription = result.subscription
       end
 
-      def reactive
+      def reactivate
         result = SubscriptionReactivation.call(user: current_user, subscription: subscription)
 
         raise SubscriptionException, result.message unless result.success?
