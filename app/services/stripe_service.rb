@@ -50,7 +50,8 @@ class StripeService
       amount: ENV['FREE_SESSION_PRICE'].to_i * 100,
       currency: 'usd',
       payment_method: payment_method,
-      customer: user.stripe_id
+      customer: user.stripe_id,
+      description: 'First Free no show fee'
     )
   end
 
@@ -116,6 +117,14 @@ class StripeService
 
   def self.cancel_subscription(subscription)
     Stripe::Subscription.delete(subscription.stripe_id)
+  end
+
+  def self.cancel_subscription_at_period_end(subscription)
+    Stripe::Subscription.update(subscription.stripe_id, cancel_at_period_end: true)
+  end
+
+  def self.reactivate_subscription(subscription)
+    Stripe::Subscription.update(subscription.stripe_id, cancel_at_period_end: false)
   end
 
   def self.create_product(product_attrs)

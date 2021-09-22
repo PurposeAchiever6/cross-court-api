@@ -59,7 +59,9 @@ Rails.application.routes.draw do
           get :questions, on: :collection
           post :answers, on: :collection
         end
-        resources :subscriptions, except: %i[show new edit]
+        resources :subscriptions, except: %i[show new edit] do
+          post :reactivate, on: :member
+        end
       end
     end
   end

@@ -29,6 +29,7 @@ detectors:
         "CreditsJob#perform",
         "SonarService#confirmation_msg",
         "UserSessionAutoConfirmed#save!",
+        "Api::V1::StripeController#webhook",
       ]
     max_calls: 1
     allow_calls: []
@@ -83,7 +84,7 @@ detectors:
     exclude: []
   RepeatedConditional:
     enabled: true
-    exclude: []
+    exclude: ["Api::V1::SubscriptionsController"]
     max_ifs: 3
   SubclassedFromCoreClass:
     enabled: true

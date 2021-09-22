@@ -1,6 +1,5 @@
 class CancelSubscription
   include Interactor::Organizer
 
-  organize DeleteSubscription, ResetUserSubscriptionCredits, SendSubscriptionCanceledSlackNotification,
-           SendSubscriptionCanceledEvent
+  organize DeleteSubscription, ResetUserSubscriptionCredits
 end
