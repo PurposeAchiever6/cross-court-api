@@ -27,4 +27,5 @@ module Event
   TIME_TO_RE_UP_2 = 'Time To Re Up 2'.freeze
   REFERRAL_SUCCESS = 'Referral Success'.freeze
   MEMBERSHIP_CANCELED = 'Membership Canceled'.freeze
+  DROP_IN_SESSIONS_EXPIRE_SOON = 'Drop in Sessions Expire Soon'.freeze
 end

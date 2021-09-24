@@ -14,6 +14,10 @@ class CreditsJob < ApplicationJob
       user.save!
     end
 
+    UsersQuery.new.expired_drop_in_credits_in(15.days).each do |user|
+      KlaviyoService.new.event(Event::DROP_IN_SESSIONS_EXPIRE_SOON, user)
+    end
+
     UsersQuery.new.free_session_not_used_in(7.days).each do |user|
       KlaviyoService.new.event(Event::FREE_SESSION_NOT_USED_IN_7_DAYS, user)
     end

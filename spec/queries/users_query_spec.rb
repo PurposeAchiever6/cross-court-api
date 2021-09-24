@@ -30,6 +30,8 @@ describe UsersQuery do
   let!(:user_4) do
     create(
       :user,
+      credits: 1,
+      drop_in_expiration_date: Time.zone.today + 15.days,
       free_session_state: :not_claimed,
       free_session_expiration_date: Time.zone.today + 20.days
     )
@@ -38,6 +40,8 @@ describe UsersQuery do
   let!(:user_5) do
     create(
       :user,
+      credits: 0,
+      drop_in_expiration_date: Time.zone.today + 15.days,
       free_session_state: %i[claimed used].sample,
       free_session_expiration_date: Time.zone.today + 23.days
     )
@@ -46,6 +50,8 @@ describe UsersQuery do
   let!(:user_6) do
     create(
       :user,
+      credits: 1,
+      drop_in_expiration_date: Time.zone.today + 20.days,
       free_session_state: %i[claimed used].sample,
       free_session_expiration_date: Time.zone.today - 2.days
     )
@@ -67,5 +73,11 @@ describe UsersQuery do
     subject { users_query.free_session_expires_in(15.days) }
 
     it { is_expected.to match_array([user_3]) }
+  end
+
+  describe '.expired_drop_in_credits_in' do
+    subject { users_query.expired_drop_in_credits_in(15.days) }
+
+    it { is_expected.to match_array([user_4]) }
   end
 end

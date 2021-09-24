@@ -111,6 +111,7 @@ detectors:
         "CanceledUserSession",
         "KlaviyoService",
         "ChangeSubscription",
+        "CreditsJob#perform",
       ]
     max_statements: 13
   UncommunicativeMethodName:
