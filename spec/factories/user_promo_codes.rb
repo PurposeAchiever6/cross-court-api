@@ -7,6 +7,7 @@
 #  promo_code_id :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  times_used    :integer          default(0)
 #
 # Indexes
 #
@@ -16,6 +17,7 @@
 
 FactoryBot.define do
   factory :user_promo_code do
+    times_used { 1 }
     user
     promo_code
   end

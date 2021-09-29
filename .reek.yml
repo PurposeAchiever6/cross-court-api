@@ -48,6 +48,7 @@ detectors:
         "Subscription#assign_stripe_attrs",
         "UpdateUserSubscriptionCredits#call",
         "SetDropInExpirationDate#call",
+        "IncrementTimesUsedPromoCode#call",
       ]
   InstanceVariableAssumption:
     enabled: false

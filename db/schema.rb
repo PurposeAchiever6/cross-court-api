@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_07_210528) do
+ActiveRecord::Schema.define(version: 2021_09_26_223639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,9 @@ ActiveRecord::Schema.define(version: 2021_09_07_210528) do
     t.string "stripe_coupon_id"
     t.string "duration"
     t.integer "duration_in_months"
+    t.integer "max_redemptions"
+    t.integer "max_redemptions_by_user"
+    t.integer "times_used", default: 0
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["product_id"], name: "index_promo_codes_on_product_id"
   end
@@ -230,6 +233,7 @@ ActiveRecord::Schema.define(version: 2021_09_07_210528) do
     t.bigint "promo_code_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "times_used", default: 0
     t.index ["promo_code_id"], name: "index_user_promo_codes_on_promo_code_id"
     t.index ["user_id"], name: "index_user_promo_codes_on_user_id"
   end

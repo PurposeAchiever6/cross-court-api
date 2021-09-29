@@ -7,6 +7,7 @@
 #  promo_code_id :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  times_used    :integer          default(0)
 #
 # Indexes
 #
@@ -18,7 +19,7 @@ class UserPromoCode < ApplicationRecord
   belongs_to :user
   belongs_to :promo_code
 
-  validates :promo_code_id, uniqueness: { scope: :user_id }, if: -> { one_time_product? }
+  validates :promo_code_id, uniqueness: { scope: :user_id }
 
   def one_time_product?
     promo_code.product.one_time?

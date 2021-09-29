@@ -7,6 +7,7 @@
 #  promo_code_id :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  times_used    :integer          default(0)
 #
 # Indexes
 #
@@ -49,7 +50,6 @@ describe UserPromoCode do
 
     subject { create(:user_promo_code, promo_code: promo_code, user: user) }
 
-    it { expect { subject }.not_to raise_error }
-    it { expect { subject }.to change(UserPromoCode, :count) }
+    it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid) }
   end
 end

@@ -9,7 +9,7 @@ class MakeDiscount
 
     return if promo_code.blank?
 
-    if promo_code.still_valid?(user) && promo_code.product == product
+    if promo_code.still_valid?(user, product)
       context.price = promo_code.apply_discount(context.price)
     else
       context.fail!(message: I18n.t('api.errors.promo_code.invalid'))

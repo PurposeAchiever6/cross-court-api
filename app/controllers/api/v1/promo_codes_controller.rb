@@ -10,7 +10,7 @@ module Api
       private
 
       def price
-        @price ||= product.price
+        @price ||= product.price(current_user)
       end
 
       def product
@@ -24,8 +24,9 @@ module Api
       def check_promo_code
         @promo_code = PromoCode.find_by(code: params[:promo_code])
 
-        raise PurchaseException, I18n.t('api.errors.promo_code.invalid') if @promo_code.nil? || @promo_code.expired? || !@promo_code.for_product?(product)
-        raise PurchaseException, I18n.t('api.errors.promo_code.already_used') if @promo_code.already_used?(current_user)
+        raise PurchaseException, I18n.t('api.errors.promo_code.invalid') if @promo_code.nil? || !@promo_code.for_product?(product)
+        raise PurchaseException, I18n.t('api.errors.promo_code.no_longer_valid') if @promo_code.expired? || @promo_code.max_times_used?
+        raise PurchaseException, I18n.t('api.errors.promo_code.already_used') if @promo_code.max_times_used_by_user?(current_user)
       end
     end
   end
