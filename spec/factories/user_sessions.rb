@@ -29,5 +29,6 @@ FactoryBot.define do
     user
     session
     date { Date.current }
+    state { 'reserved' }
   end
 end

@@ -1,0 +1,7 @@
+{
+  user_sessions: render(
+    partial: 'api/v1/user_sessions/short_info_with_user',
+    collection: @user_sessions,
+    as: :user_session
+  )
+}

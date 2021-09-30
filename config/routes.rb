@@ -32,7 +32,7 @@ Rails.application.routes.draw do
         resources :locations, only: :index
         resources :sessions, only: %i[index show] do
           scope module: :sessions do
-            resources :user_sessions, only: :create
+            resources :user_sessions, only: %i[create index]
           end
         end
         resources :products, only: :index

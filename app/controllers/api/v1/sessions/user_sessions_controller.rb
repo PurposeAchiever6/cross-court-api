@@ -2,6 +2,13 @@ module Api
   module V1
     module Sessions
       class UserSessionsController < Api::V1::ApiUserController
+        def index
+          @user_sessions =
+            Session.find(params[:session_id])
+                   .user_sessions.confirmed
+                   .where(date: date).includes(:user).order(:created_at)
+        end
+
         def create
           ActiveRecord::Base.transaction do
             user_session = UserSession.new(
@@ -21,6 +28,12 @@ module Api
             KlaviyoService.new.event(Event::SESSION_BOOKED, current_user.reload, user_session: user_session)
             SessionMailer.with(user_session_id: user_session.id).session_booked.deliver_later
           end
+        end
+
+        private
+
+        def date
+          params[:date] || Time.zone.today
         end
       end
     end
