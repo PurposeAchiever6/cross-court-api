@@ -5,8 +5,9 @@ module Api
         def index
           @user_sessions =
             Session.find(params[:session_id])
-                   .user_sessions.confirmed
-                   .where(date: date).includes(:user).order(:created_at)
+                   .user_sessions
+                   .where(date: date, checked_in: true)
+                   .includes(:user).order(:created_at)
         end
 
         def create

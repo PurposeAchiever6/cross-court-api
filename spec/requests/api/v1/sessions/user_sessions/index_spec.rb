@@ -5,10 +5,10 @@ describe 'GET /api/v1/sessions/:session_id/user_sessions', type: :request do
   let!(:location) { create(:location) }
   let!(:session) { create(:session, location: location) }
 
-  let!(:user_session1) { create(:user_session, session: session, date: Time.zone.today, state: 'confirmed') }
-  let!(:user_session2) { create(:user_session, session: session, date: Time.zone.today, state: 'confirmed') }
-  let!(:user_session3) { create(:user_session, session: session, date: 2.days.from_now, state: 'confirmed') }
-  let!(:user_session4) { create(:user_session, session: session, date: 2.days.from_now, state: 'confirmed') }
+  let!(:user_session1) { create(:user_session, session: session, date: Time.zone.today, checked_in: true) }
+  let!(:user_session2) { create(:user_session, session: session, date: Time.zone.today, checked_in: true) }
+  let!(:user_session3) { create(:user_session, session: session, date: 2.days.from_now, checked_in: true) }
+  let!(:user_session4) { create(:user_session, session: session, date: 2.days.from_now, checked_in: true) }
 
   let(:params) { {} }
 
