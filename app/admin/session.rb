@@ -175,6 +175,8 @@ ActiveAdmin.register Session do
       assigned_team: assigned_team
     )
 
+    KlaviyoCheckInUsers.perform_async([user_session_id]) if checked_in
+
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session updated successfully'
   end

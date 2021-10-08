@@ -20,7 +20,6 @@ class UserSessionConsumeCredit
       user.decrement(:credits)
     else
       user.decrement(:subscription_credits) unless user.unlimited_credits?
-      KlaviyoService.new.event(Event::TIME_TO_RE_UP_1, user) if user.subscription_credits.zero?
     end
 
     user.save!

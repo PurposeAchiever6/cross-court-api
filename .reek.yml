@@ -49,6 +49,7 @@ detectors:
         "UpdateUserSubscriptionCredits#call",
         "SetDropInExpirationDate#call",
         "IncrementTimesUsedPromoCode#call",
+        "KlaviyoCheckInUsers#perform"
       ]
   InstanceVariableAssumption:
     enabled: false
