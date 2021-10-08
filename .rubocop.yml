@@ -101,7 +101,6 @@ Rails/SaveBang:
 
 Rails/SkipsModelValidations:
   Exclude:
-    - app/controllers/api/v1/sem/user_sessions_controller.rb
     - app/interactors/create_user_promo_code.rb
     - app/interactors/increment_times_used_promo_code.rb
 

@@ -51,9 +51,6 @@ Rails.application.routes.draw do
         end
         namespace :sem do
           resources :sessions, only: :show
-          resources :user_sessions, only: [] do
-            put :check_in, on: :collection
-          end
         end
         resources :session_surveys, only: [] do
           get :questions, on: :collection
