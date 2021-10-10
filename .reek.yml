@@ -34,23 +34,7 @@ detectors:
     max_calls: 1
     allow_calls: []
   FeatureEnvy:
-    enabled: true
-    exclude:
-      [
-        "CreatePurchase#call",
-        "ResetUserSubscriptionCredits#call",
-        "KlaviyoService#purchase_placed",
-        "KlaviyoService#general_event_attributes",
-        "KlaviyoService#specific_event_attributes",
-        "EmployeeSessionsQuery#sorted_future_sessions",
-        "SonarService#find_next_to_confirm",
-        "EmployeeSessionConfirmed",
-        "Subscription#assign_stripe_attrs",
-        "UpdateUserSubscriptionCredits#call",
-        "SetDropInExpirationDate#call",
-        "IncrementTimesUsedPromoCode#call",
-        "KlaviyoCheckInUsers#perform"
-      ]
+    enabled: false
   InstanceVariableAssumption:
     enabled: false
   IrresponsibleModule:

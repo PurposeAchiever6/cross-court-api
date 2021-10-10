@@ -63,6 +63,7 @@ en:
     slack:
       session_booked: "%{name} made a reservation for %{date} at %{time} on %{location}"
       session_confirmed: "%{name} confirmed the reservation for %{date} at %{time} on %{location}"
+      session_auto_confirmed: "Session auto confirmed for user %{name} for %{date} at %{time} on %{location}"
       session_canceled_in_time: "%{name} canceled in time the reservation for %{date} at %{time} on %{location}"
       session_canceled_out_of_time: "%{name} canceled out of time the reservation for %{date} at %{time} on %{location}"
       session_canceled_out_of_time_with_charge_error: >
@@ -77,32 +78,41 @@ en:
         %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
       session_reactivated: >
         %{name} (phone: %{phone}) has *reactivated* his subscription (%{subscription_name}).
+    invite_friend_msg: "If you want to sweat with a friend, they can sign up for your session here: %{link}."
     session_confirmed: >
-      Hey %{name}, You’re locked in for %{when}’s %{time} Crosscourt session at %{location}.
-      Please remember to arrive at least 10 minutes early with your jersey if you have one,
-      otherwise, you can rent one. Also, the first 10 players to check-in are in the first game.
-      Please note, due to limited capacity, spectators or guests will not be allowed to watch.
+      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!.
+      Feel free to use the gated parking lot attached to the building.
+      Please remember to arrive at least 10 minutes early with your jersey if you purchased one, otherwise, you can rent one.
+      Also, the first 10 players to check-in start the first game.
+      Please note, due to limited capacity, spectators or guests will not be allowed to watch your session.
+      %{invite_friend}
       Let’s get it!
     session_confirmed_first_timers: >
-      Hey %{name}, You’re locked in for %{when}’s %{time} Crosscourt session at %{location}.
-      Please remember to arrive at least 10 minutes early, the first 10 players to check-in
-      are in the first game. Please note, due to limited capacity, spectators or guests will
-      not be allowed to watch. To improve your Crosscourt experience, you can use this link to
-      install our app on your mobile device %{app_link}. Let’s get it!
+      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!.
+      Feel free to use the gated parking lot attached to the building.
+      Please remember to arrive at least 10 minutes early, the first 10 players to check-in start the first game.
+      Please note, due to limited capacity, spectators or guests will not be allowed to watch your session.
+      To improve your Crosscourt experience, you can use this link to install our app on your mobile device %{app_link}.
+      %{invite_friend}
+      Let’s get it!
     session_auto_confirmed: >
-      Hey %{name}, You’re locked in for today’s %{time} Crosscourt session at %{location}.
-      Please remember to arrive at least 10 minutes early with your jersey if you have one,
-      otherwise, you can rent one. The first 10 players to check-in are in the first game.
-      Please note that the cancellation window has passed so no refunds will be issued for
-      cancellations beyond this point. Also, due to limited capacity, spectators or guests
-      will not be allowed to watch. Let’s get it!
+      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!.
+      Feel free to use the gated parking lot attached to the building.
+      Please remember to arrive at least 10 minutes early with your jersey if you purchased one, otherwise, you can rent one.
+      Also, the first 10 players to check-in start the first game.
+      Please note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point.
+      Also, due to limited capacity, spectators or guests will not be allowed to watch your session.
+      %{invite_friend}
+      Let’s get it!
     session_auto_confirmed_first_timers: >
-      Hey %{name}, You’re locked in for today’s %{time} Crosscourt session at %{location}. Please
-      remember to arrive at least 10 minutes, the first 10 players to check-in are in the first game.
-      Please note that the cancellation window has passed so no refunds will be issued for
-      cancellations beyond this point. Also, due to limited capacity, spectators or guests will
-      not be allowed to watch. To improve your Crosscourt experience, you can use this link to
-      install our app on your mobile device %{app_link}. Let’s get it!
+      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!.
+      Feel free to use the gated parking lot attached to the building.
+      Please remember to arrive at least 10 minutes early, the first 10 players to check-in start the first game.
+      Please note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point.
+      Also, due to limited capacity, spectators or guests will not be allowed to watch your session.
+      To improve your Crosscourt experience, you can use this link to install our app on your mobile device %{app_link}.
+      %{invite_friend}
+      Let’s get it!
     employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear. Let’s get it!"
     session_canceled_in_time: "We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}"
     session_canceled_out_of_time: "We’ll miss you! Unfortunately, we’re not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here’s a link to the upcoming schedule: %{schedule_url}"
