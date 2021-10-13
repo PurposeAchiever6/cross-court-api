@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_26_223639) do
+ActiveRecord::Schema.define(version: 2021_10_12_001547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,13 @@ ActiveRecord::Schema.define(version: 2021_09_26_223639) do
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
   end
 
+  create_table "products_promo_codes", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "promo_code_id"
+    t.index ["product_id"], name: "index_products_promo_codes_on_product_id"
+    t.index ["promo_code_id"], name: "index_products_promo_codes_on_promo_code_id"
+  end
+
   create_table "promo_codes", force: :cascade do |t|
     t.integer "discount", default: 0, null: false
     t.string "code", null: false
@@ -115,7 +122,6 @@ ActiveRecord::Schema.define(version: 2021_09_26_223639) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "expiration_date"
-    t.bigint "product_id"
     t.string "stripe_promo_code_id"
     t.string "stripe_coupon_id"
     t.string "duration"
@@ -124,7 +130,6 @@ ActiveRecord::Schema.define(version: 2021_09_26_223639) do
     t.integer "max_redemptions_by_user"
     t.integer "times_used", default: 0
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
-    t.index ["product_id"], name: "index_promo_codes_on_product_id"
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -302,5 +307,4 @@ ActiveRecord::Schema.define(version: 2021_09_26_223639) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "promo_codes", "products"
 end

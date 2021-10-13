@@ -141,7 +141,7 @@ class StripeService
     Stripe::Product.update(stripe_product_id, product_attrs)
   end
 
-  def self.create_coupon(promo_code_attrs, product)
+  def self.create_coupon(promo_code_attrs, products)
     duration = promo_code_attrs['duration']
     duration_in_months = promo_code_attrs['duration_in_months'].presence
 
@@ -149,7 +149,7 @@ class StripeService
       duration: duration,
       currency: 'usd',
       duration_in_months: duration_in_months,
-      applies_to: { products: [product.stripe_product_id] }
+      applies_to: { products: products.map(&:stripe_product_id) }
     }
 
     discount = promo_code_attrs[:discount]

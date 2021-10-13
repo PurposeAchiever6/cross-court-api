@@ -9,7 +9,6 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  expiration_date         :date
-#  product_id              :integer
 #  stripe_promo_code_id    :string
 #  stripe_coupon_id        :string
 #  duration                :string
@@ -20,15 +19,16 @@
 #
 # Indexes
 #
-#  index_promo_codes_on_code        (code) UNIQUE
-#  index_promo_codes_on_product_id  (product_id)
+#  index_promo_codes_on_code  (code) UNIQUE
 #
 
 class PromoCode < ApplicationRecord
   TYPES = %w[SpecificAmountDiscount PercentageDiscount].freeze
 
   has_many :user_promo_codes, dependent: :destroy
-  belongs_to :product
+
+  has_many :products_promo_codes, dependent: :destroy
+  has_many :products, through: :products_promo_codes
 
   validates :discount, :code, :type, presence: true
   validates :code, uniqueness: true
@@ -38,11 +38,12 @@ class PromoCode < ApplicationRecord
   validates :max_redemptions_by_user, numericality: { only_integer: true,
                                                       greater_than: 0,
                                                       allow_nil: true }
-  validates :duration, presence: true, if: -> { product&.recurring? }
+  validates :duration, presence: true, if: -> { products.any?(&:recurring?) }
   validates :duration_in_months, presence: true, if: -> { duration == 'repeating' }
   validates :discount,
             inclusion: { in: 1..100, message: 'needs to be between 1 and 100' },
             if: -> { type == PercentageDiscount.to_s }
+  validates :products, presence: true
 
   enum duration: {
     forever: 'forever',
@@ -76,6 +77,6 @@ class PromoCode < ApplicationRecord
   end
 
   def for_product?(product)
-    self.product == product
+    products.any? { |current_product| current_product == product }
   end
 end

@@ -9,7 +9,6 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  expiration_date         :date
-#  product_id              :integer
 #  stripe_promo_code_id    :string
 #  stripe_coupon_id        :string
 #  duration                :string
@@ -20,8 +19,7 @@
 #
 # Indexes
 #
-#  index_promo_codes_on_code        (code) UNIQUE
-#  index_promo_codes_on_product_id  (product_id)
+#  index_promo_codes_on_code  (code) UNIQUE
 #
 
 require 'rails_helper'
@@ -38,7 +36,7 @@ describe UserPromoCode do
   let(:promo_code) do
     create(
       :promo_code,
-      product: product,
+      products: [product],
       expiration_date: expiration_date,
       max_redemptions: max_redemptions,
       max_redemptions_by_user: max_redemptions_by_user,
@@ -54,7 +52,7 @@ describe UserPromoCode do
     context 'when is for another product' do
       let!(:another_product) { create(:product) }
 
-      before { promo_code.update!(product: another_product) }
+      before { promo_code.update!(products: [another_product]) }
 
       it { is_expected.to eq(false) }
     end

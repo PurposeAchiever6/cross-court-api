@@ -7,7 +7,7 @@ describe 'GET api/v1/promo_code' do
     create(
       :promo_code,
       discount: 10,
-      product: promo_product,
+      products: [promo_product],
       expiration_date: expiration_date,
       max_redemptions: max_redemptions,
       max_redemptions_by_user: max_redemptions_by_user,

@@ -88,18 +88,7 @@ detectors:
     exclude: []
     max_methods: 25
   TooManyStatements:
-    enabled: true
-    exclude:
-      [
-        "UserSessionRemindersJob#perform",
-        "ConfirmationsController",
-        "StripeController",
-        "CanceledUserSession",
-        "KlaviyoService",
-        "ChangeSubscription",
-        "CreditsJob#perform",
-      ]
-    max_statements: 13
+    enabled: false
   UncommunicativeMethodName:
     enabled: true
     exclude: []

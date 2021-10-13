@@ -9,7 +9,6 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  expiration_date         :date
-#  product_id              :integer
 #  stripe_promo_code_id    :string
 #  stripe_coupon_id        :string
 #  duration                :string
@@ -20,8 +19,7 @@
 #
 # Indexes
 #
-#  index_promo_codes_on_code        (code) UNIQUE
-#  index_promo_codes_on_product_id  (product_id)
+#  index_promo_codes_on_code  (code) UNIQUE
 #
 
 FactoryBot.define do
@@ -34,6 +32,6 @@ FactoryBot.define do
     max_redemptions         { nil }
     max_redemptions_by_user { nil }
     times_used              { 0 }
-    product
+    products                { [create(:product)] }
   end
 end

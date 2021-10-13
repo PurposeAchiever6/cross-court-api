@@ -20,8 +20,4 @@ class UserPromoCode < ApplicationRecord
   belongs_to :promo_code
 
   validates :promo_code_id, uniqueness: { scope: :user_id }
-
-  def one_time_product?
-    promo_code.product.one_time?
-  end
 end
