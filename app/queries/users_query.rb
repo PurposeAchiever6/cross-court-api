@@ -15,6 +15,11 @@ class UsersQuery
             .where('drop_in_expiration_date < ?', Time.zone.today)
   end
 
+  def expired_drop_in_credits_in(in_time)
+    relation.where('credits > ?', 0)
+            .where(drop_in_expiration_date: Time.zone.today + in_time)
+  end
+
   def free_session_not_used_in(in_time)
     free_session_expiration_date = ((User::FREE_SESSION_EXPIRATION_DAYS - in_time) / 1.day).days
                                                                                            .from_now

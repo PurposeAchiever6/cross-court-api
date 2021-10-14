@@ -67,6 +67,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       context 'when booking outside the cancellation time' do
         before do
           allow(SonarService).to receive(:send_message).and_return(1)
+          allow_any_instance_of(SlackService).to receive(:session_auto_confirmed).and_return(1)
         end
 
         let(:time) do
@@ -82,6 +83,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
         it 'calls the sonar service send_message method' do
           expect(SonarService).to receive(:send_message).and_return(1)
+          subject
+        end
+
+        it 'calls the slack service' do
+          expect_any_instance_of(SlackService).to receive(:session_auto_confirmed)
           subject
         end
       end

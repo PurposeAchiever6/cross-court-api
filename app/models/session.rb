@@ -20,6 +20,7 @@
 
 class Session < ApplicationRecord
   DATE_FORMAT = '%d-%m-%Y'.freeze
+  YEAR_MONTH_DAY = '%Y-%m-%d'.freeze
   MONTH_NAME_FORMAT = '%B, %d %Y'.freeze
   DAY_MONTH_NAME_FORMAT = '%A %B %-e'.freeze
   TIME_FORMAT = '%l:%M %P'.freeze

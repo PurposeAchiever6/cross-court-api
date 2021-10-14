@@ -36,6 +36,10 @@ class SlackService
     notify_booking('notifier.slack.session_confirmed')
   end
 
+  def session_auto_confirmed
+    notify_booking('notifier.slack.session_auto_confirmed')
+  end
+
   def inactive_user
     notify_inactive('notifier.slack.inactive_user')
   end

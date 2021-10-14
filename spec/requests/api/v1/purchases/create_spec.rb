@@ -45,7 +45,7 @@ describe 'POST api/v1/purchases' do
       end
 
       context 'when the amount is less than the product price' do
-        let(:promo_code) { create(:promo_code, discount: 50, product: product) }
+        let(:promo_code) { create(:promo_code, discount: 50, products: [product]) }
         let(:price) { promo_code.apply_discount(product.price) }
         let(:description) { "#{product.name} purchase" }
 
@@ -63,9 +63,8 @@ describe 'POST api/v1/purchases' do
         context 'when the user has already used the promo code' do
           let!(:user_promo_code) { create(:user_promo_code, user: user, promo_code: promo_code) }
 
-          it 'returns promo_code invalid error message' do
-            subject
-            expect(json[:error]).to eq(I18n.t('api.errors.promo_code.invalid'))
+          it 'increments the times used' do
+            expect { subject }.to change { user_promo_code.reload.times_used }.from(1).to(2)
           end
 
           it "doesn't create a UserPromoCode" do

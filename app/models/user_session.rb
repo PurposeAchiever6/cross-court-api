@@ -101,6 +101,12 @@ class UserSession < ApplicationRecord
     event
   end
 
+  def invite_link
+    front_end_url = ENV['FRONTENT_URL']
+    formatted_date = date.strftime(Session::YEAR_MONTH_DAY)
+    "#{front_end_url}/session/#{session.id}/#{formatted_date}"
+  end
+
   private
 
   def remaining_time

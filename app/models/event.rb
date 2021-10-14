@@ -24,7 +24,7 @@ module Event
   FREE_SESSION_EXPIRES_SOON = 'Free Session Expires Soon'.freeze
   FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze
   TIME_TO_RE_UP_1 = 'Time To Re Up 1'.freeze
-  TIME_TO_RE_UP_2 = 'Time To Re Up 2'.freeze
   REFERRAL_SUCCESS = 'Referral Success'.freeze
   MEMBERSHIP_CANCELED = 'Membership Canceled'.freeze
+  DROP_IN_SESSIONS_EXPIRE_SOON = 'Drop in Sessions Expire Soon'.freeze
 end

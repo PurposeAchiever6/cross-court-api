@@ -59,7 +59,6 @@ describe InactiveUsersJob do
       let(:date_ago_last_session) { 14.days }
 
       it 'calls service with the correct parameters' do
-        expect_any_instance_of(KlaviyoService).to receive(:event).with(Event::TIME_TO_RE_UP_2, user).once
         expect_any_instance_of(SlackService).not_to receive(:notify)
 
         subject
@@ -69,7 +68,6 @@ describe InactiveUsersJob do
         let(:free_session) { true }
 
         it 'calls service with the correct parameters' do
-          expect_any_instance_of(KlaviyoService).to receive(:event).with(Event::TIME_TO_RE_UP_2, user).once
           expect_any_instance_of(SlackService).to receive(:notify).with(
             I18n.t('notifier.slack.inactive_first_timer_user', name: user.full_name, phone: user.phone_number),
             channel: ENV['SLACK_CHANNEL_CHURN']
@@ -84,7 +82,6 @@ describe InactiveUsersJob do
       let(:date_ago_last_session) { 7.days }
 
       it 'calls service with the correct parameters' do
-        expect_any_instance_of(KlaviyoService).to receive(:event).with(Event::TIME_TO_RE_UP_1, user).once
         expect_any_instance_of(SlackService).not_to receive(:notify)
 
         subject
