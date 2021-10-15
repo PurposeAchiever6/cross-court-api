@@ -48,7 +48,7 @@ describe RemoveOrphanSessions do
     end
 
     context 'when end_time attribute is updated' do
-      subject { session.update!(end_time: 2.days.from_now) }
+      subject { session.update!(end_time: los_angeles_date + 2.days) }
 
       it 'destroys all future sem_sessions which occur after the end_time' do
         expect { subject }.to change(SemSession, :count).by(-5)
