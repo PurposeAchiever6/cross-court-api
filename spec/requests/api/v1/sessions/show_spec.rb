@@ -3,9 +3,11 @@ require 'rails_helper'
 describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   let(:user)     { create(:user) }
   let(:location) { create(:location) }
-  let!(:session) { create(:session, location: location) }
-  let(:today)    { Date.current.to_s }
-  let(:tomorrow) { Date.tomorrow.to_s }
+  let!(:session) { create(:session, location: location, time: la_time + 1.hour) }
+
+  let!(:la_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+  let!(:today)    { la_time.to_date }
+  let!(:tomorrow) { today.tomorrow }
 
   subject do
     get api_v1_session_path(location_id: location.id, id: session.id, date: today),

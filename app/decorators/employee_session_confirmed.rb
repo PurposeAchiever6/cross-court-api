@@ -9,6 +9,8 @@ class EmployeeSessionConfirmed
     referee_session = user.referee_sessions.future.unconfirmed.ordered_by_date.first
     sem_session = user.sem_sessions.future.unconfirmed.ordered_by_date.first
 
+    return unless referee_session || sem_session
+
     is_sem = user.is_sem?
     is_referee = user.is_referee?
 
@@ -27,12 +29,14 @@ class EmployeeSessionConfirmed
     referee_session.state = :confirmed if referee_session.unconfirmed?
     KlaviyoService.new.event(Event::REFEREE_SESSION_CONFIRMATION, user, referee_session: referee_session)
     referee_session.save!
+    referee_session
   end
 
   def confirm_sem_session(sem_session)
     sem_session.state = :confirmed if sem_session.unconfirmed?
     KlaviyoService.new.event(Event::SEM_SESSION_CONFIRMATION, user, sem_session: sem_session)
     sem_session.save!
+    sem_session
   end
 
   def confirm_first_session(referee_session, sem_session)

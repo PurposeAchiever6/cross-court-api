@@ -23,7 +23,9 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
 
   context 'when in valid confirmation time' do
     let(:session)       { create(:session, :daily, time: los_angeles_time - 1.minute) }
-    let!(:user_session) { create(:user_session, user: user, date: Date.tomorrow, session: session) }
+    let!(:user_session) do
+      create(:user_session, user: user, date: los_angeles_time.to_date.tomorrow, session: session)
+    end
 
     it 'returns success' do
       subject
@@ -63,9 +65,9 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
     end
 
     context 'when the session is in the past' do
-      let(:session) { create(:session, :daily, start_time: Date.yesterday) }
+      let(:session) { create(:session, :daily, start_time: los_angeles_time.to_date.yesterday) }
       let!(:user_session) do
-        create(:user_session, user: user, date: Date.yesterday, session: session)
+        create(:user_session, user: user, date: los_angeles_time.to_date.yesterday, session: session)
       end
 
       it "doesn't change the user_session state" do

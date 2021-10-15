@@ -28,7 +28,7 @@ FactoryBot.define do
   factory :user_session do
     user
     session
-    date { Date.current }
+    date { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')).to_date }
     state { 'reserved' }
   end
 end

@@ -40,7 +40,7 @@ describe UserSessionRemindersJob do
       # In 6 hours
       let(:time_6)         { (la_time + 6.hours).strftime(Session::TIME_FORMAT) }
       let(:s3)             { create(:session, :daily, time: time_6) }
-      let!(:user_session3) { create(:user_session, date: Time.zone.today, session: s3, user: user) }
+      let!(:user_session3) { create(:user_session, date: la_date, session: s3, user: user) }
       let(:message_6_hours) do
         I18n.t('notifier.today_reminder',
                name: user.first_name,
@@ -50,7 +50,7 @@ describe UserSessionRemindersJob do
       # In 5 hours
       let(:time_5)         { (la_time + 5.hours).strftime(Session::TIME_FORMAT) }
       let(:s4)             { create(:session, :daily, time: time_5) }
-      let!(:user_session4) { create(:user_session, date: Time.zone.today, session: s4, user: user) }
+      let!(:user_session4) { create(:user_session, date: la_date, session: s4, user: user) }
       let(:message_ultimatum) do
         I18n.t('notifier.ultimatum',
                name: user.first_name,
