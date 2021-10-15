@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
-  let(:los_angeles_time) do
+  let!(:los_angeles_time) do
     Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
   end
+
+  let!(:los_angeles_date) { los_angeles_time.to_date }
 
   before do
     Timecop.freeze(Time.current)
@@ -24,7 +26,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
   context 'when in valid confirmation time' do
     let(:session)       { create(:session, :daily, time: los_angeles_time - 1.minute) }
     let!(:user_session) do
-      create(:user_session, user: user, date: los_angeles_time.to_date.tomorrow, session: session)
+      create(:user_session, user: user, date: los_angeles_date.tomorrow, session: session)
     end
 
     it 'returns success' do
@@ -56,7 +58,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
     context 'when the session is in more the 24 hours' do
       let(:session) { create(:session, :daily) }
       let!(:user_session) do
-        create(:user_session, user: user, date: 1.day.from_now, session: session)
+        create(:user_session, user: user, date: los_angeles_date.tomorrow, session: session)
       end
 
       it "doesn't change the user_session state" do
@@ -65,9 +67,9 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
     end
 
     context 'when the session is in the past' do
-      let(:session) { create(:session, :daily, start_time: los_angeles_time.to_date.yesterday) }
+      let(:session) { create(:session, :daily, start_time: los_angeles_date.yesterday) }
       let!(:user_session) do
-        create(:user_session, user: user, date: los_angeles_time.to_date.yesterday, session: session)
+        create(:user_session, user: user, date: los_angeles_date.yesterday, session: session)
       end
 
       it "doesn't change the user_session state" do
