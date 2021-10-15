@@ -35,17 +35,25 @@ module SonarService
     %w[yes y].include?(message.downcase)
   end
 
+  def find_and_confirm_user_session(user)
+    user_session = user.user_sessions.future.reserved.ordered_by_date.first
+
+    return unless user_session
+
+    UserSessionConfirmed.new(user_session).save!
+    user_session
+  end
+
+  def find_and_confirm_employee_session(user)
+    EmployeeSessionConfirmed.new(user).save!
+  end
+
   def find_next_to_confirm(user)
-    if user.employee?
-      EmployeeSessionConfirmed.new(user).save!
-    else
-      user_session = user.user_sessions.future.reserved.ordered_by_date.first
+    user_session = find_and_confirm_user_session(user)
 
-      return unless user_session
+    return user_session if user_session
 
-      UserSessionConfirmed.new(user_session).save!
-      user_session
-    end
+    find_and_confirm_employee_session(user) if user.employee?
   end
 
   def invite_friend(user_session)
