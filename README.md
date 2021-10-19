@@ -272,7 +272,7 @@ This is used for:
 
 Tasks that run recurringly every X amount of time.
 
-**charge_not_show_up_players**
+**charge_no_show_up_players**
 
 Charges the players that reserved but didn't show up. Applies to free_sessions & unlimited users.
 
