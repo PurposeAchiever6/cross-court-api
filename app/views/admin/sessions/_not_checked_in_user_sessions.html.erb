@@ -1,4 +1,8 @@
-<div>
+<% if user_sessions.length.zero? %>
+  <div>
+    No users has reserved this session yet
+  </div>
+<% else %>
   <table>
     <tr>
       <th>User</th>
@@ -47,8 +51,8 @@
           <td>
             <%= submit_tag('Update', data: { disable_with: "Loading..." }) %>
           </td>
-      </tr>
+        </tr>
       <% end %>
     <% end %>
   </table>
-</div>
+<% end %>

@@ -1,0 +1,29 @@
+.table-sessions {
+  border-spacing: 0;
+
+  tbody {
+    tr:first-of-type {
+      td {
+        padding-top: 1rem;
+      }
+    }
+
+    tr:last-of-type {
+      td {
+        padding-bottom: 1rem;
+      }
+    }
+
+    .session-team-light {
+      background-color: #F9FAFB;
+    }
+
+    .session-team-dark {
+      background-color: #D1D5DB;
+    }
+
+    .session-no-team {
+      background-color: #FEE2E2;
+    }
+  }
+  }
