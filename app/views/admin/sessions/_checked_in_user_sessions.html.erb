@@ -1,21 +1,22 @@
 <% if user_sessions_by_team.blank? %>
   <div>
-    No users arrived yet. Check in those who arrived in the panel below and will appear here
+    No users arrived yet. Check in the players who arrived in the panel below and will appear here
   </div>
 <% else %>
-  <table class="table-sessions">
+  <table class='table-sessions'>
     <tr>
       <th>#</th>
       <th>User</th>
       <th>First Session</th>
       <th>Status</th>
+      <th>Vaccine</th>
       <th></th>
       <th></th>
       <th></th>
       <th></th>
     </tr>
     <% user_sessions_by_team.each do |team, user_sessions| %>
-      <tbody class=<%= "#{team.present? ? "session-team-#{team}" : "session-no-team"}" %>>
+      <tbody class=<%= "#{team.present? ? "session-team-#{team}" : 'session-no-team'}" %>>
         <% user_sessions.each_with_index do |user_session, index| %>
           <%= form_with(url: update_user_session_admin_session_path(id: resource.id,
                                                                     date: date,
@@ -26,13 +27,16 @@
                 <%= "##{index + 1}" if team.present? %>
               </td>
               <td>
-                <%= link_to user_session.user.full_name, admin_user_path(user_session.user_id) %>
+                <%= link_to user_session.user_full_name, admin_user_path(user_session.user_id) %>
               </td>
               <td>
                 <%= status_tag user_session.is_free_session %>
               </td>
               <td>
                 <%= user_session.state.humanize %>
+              </td>
+              <td>
+                <%= user_session.user_vaccinated ? 'Yes' : 'No' %>
               </td>
               <td>
                 <div class='flex items-center'>
@@ -55,7 +59,7 @@
                 </div>
               </td>
               <td>
-                <%= submit_tag('Update', data: { disable_with: "Loading..." }) %>
+                <%= submit_tag('Update', data: { disable_with: 'Loading...' }) %>
               </td>
             </tr>
           <% end %>

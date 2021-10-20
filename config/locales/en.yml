@@ -91,9 +91,10 @@ en:
       Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!.
       Feel free to use the gated parking lot attached to the building.
       Please remember to arrive at least 10 minutes early, the first 10 players to check-in start the first game.
-      Please note, due to limited capacity, spectators or guests will not be allowed to watch your session.
-      To improve your Crosscourt experience, you can use this link to install our app on your mobile device %{app_link}.
-      %{invite_friend}
+      IMPORTANT: Please bring proof of vaccination and photo identification with you to your session
+      if you haven’t presented it to the club previously. Please note, due to limited capacity, spectators
+      or guests will not be allowed to watch your session. To improve your Crosscourt experience, you can use
+      this link to install our app on your mobile device %{app_link}. %{invite_friend}
       Let’s get it!
     session_auto_confirmed: >
       Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!.
@@ -106,12 +107,14 @@ en:
       Let’s get it!
     session_auto_confirmed_first_timers: >
       Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!.
-      Feel free to use the gated parking lot attached to the building.
-      Please remember to arrive at least 10 minutes early, the first 10 players to check-in start the first game.
-      Please note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point.
+      Feel free to use the gated parking lot attached to the building. Please remember to arrive at
+      least 10 minutes early, the first 10 players to check-in start the first game.
+      IMPORTANT: Please bring proof of vaccination and photo identification with you
+      to your session if you haven’t presented it to the club previously. Please note that the
+      cancellation window has passed so no refunds will be issued for cancellations beyond this point.
       Also, due to limited capacity, spectators or guests will not be allowed to watch your session.
-      To improve your Crosscourt experience, you can use this link to install our app on your mobile device %{app_link}.
-      %{invite_friend}
+      To improve your Crosscourt experience, you can use this link to install our app on your
+      mobile device %{app_link}. %{invite_friend}
       Let’s get it!
     employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear. Let’s get it!"
     session_canceled_in_time: "We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}"

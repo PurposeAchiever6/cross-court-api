@@ -101,7 +101,7 @@ ActiveAdmin.register Session do
         }
       end
 
-      panel 'Yet to Arrived Users' do
+      panel 'Yet to Arrive Users' do
         user_sessions = resource.user_sessions
                                 .joins(:user)
                                 .not_canceled

@@ -1,6 +1,6 @@
 <% if user_sessions.length.zero? %>
   <div>
-    No users has reserved this session yet
+    No users have reserved this session yet
   </div>
 <% else %>
   <table>
@@ -8,6 +8,7 @@
       <th>User</th>
       <th>First Session</th>
       <th>Status</th>
+      <th>Vaccine</th>
       <th></th>
       <th></th>
       <th></th>
@@ -20,13 +21,16 @@
                     local: true) do %>
         <tr>
           <td>
-            <%= link_to user_session.user.full_name, admin_user_path(user_session.user_id) %>
+            <%= link_to user_session.user_full_name, admin_user_path(user_session.user_id) %>
           </td>
           <td>
             <%= status_tag user_session.is_free_session %>
           </td>
           <td>
             <%= user_session.state.humanize %>
+          </td>
+          <td>
+            <%= user_session.user_vaccinated ? 'Yes' : 'No' %>
           </td>
           <td>
             <div class='flex items-center'>
@@ -49,7 +53,7 @@
             </div>
           </td>
           <td>
-            <%= submit_tag('Update', data: { disable_with: "Loading..." }) %>
+            <%= submit_tag('Update', data: { disable_with: 'Loading...' }) %>
           </td>
         </tr>
       <% end %>
