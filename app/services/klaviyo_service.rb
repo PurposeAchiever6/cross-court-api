@@ -54,7 +54,7 @@ class KlaviyoService
           purchase_name: purchase.product_name
         }
       when Event::SESSION_BOOKED, Event::SESSION_REMINDER_24_HOURS, Event::SESSION_REMINDER_8_HOURS,
-           Event::SESSION_REMINDER_6_HOURS, Event::SESSION_ULTIMATUM, Event::SESSION_CONFIRMATION,
+           Event::SESSION_REMINDER_6_HOURS, Event::SESSION_CONFIRMATION,
            Event::SESSION_CANCELED_IN_TIME, Event::SESSION_CANCELED_OUT_OF_TIME
 
         extra_params = args[:extra_params] || {}

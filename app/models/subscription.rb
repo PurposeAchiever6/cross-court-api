@@ -31,7 +31,7 @@ class Subscription < ApplicationRecord
   belongs_to :product, with_deleted: true
   belongs_to :promo_code, optional: true
 
-  delegate :credits, :name, to: :product, prefix: false
+  delegate :credits, :name, :unlimited?, to: :product, prefix: false
 
   enum status: {
     trialing: 'trialing',

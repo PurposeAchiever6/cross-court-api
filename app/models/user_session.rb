@@ -41,7 +41,6 @@ class UserSession < ApplicationRecord
            to: :user,
            prefix: true
 
-  scope :not_canceled, -> { where.not(state: :canceled) }
   scope :past, (lambda do
     joins(session: :location)
       .where('date < (current_timestamp at time zone locations.time_zone)::date OR

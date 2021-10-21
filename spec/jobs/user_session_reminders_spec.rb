@@ -47,21 +47,10 @@ describe UserSessionRemindersJob do
                time: time_6)
       end
 
-      # In 5 hours
-      let(:time_5)         { (la_time + 5.hours).strftime(Session::TIME_FORMAT) }
-      let(:s4)             { create(:session, :daily, time: time_5) }
-      let!(:user_session4) { create(:user_session, date: la_date, session: s4, user: user) }
-      let(:message_ultimatum) do
-        I18n.t('notifier.ultimatum',
-               name: user.first_name,
-               time: time_5)
-      end
-
       it 'calls the SonarService with the correct parameters' do
         expect(SonarService).to receive(:send_message).with(user, message_24_hours).once
         expect(SonarService).to receive(:send_message).with(user, message_8_hours).once
         expect(SonarService).to receive(:send_message).with(user, message_6_hours).once
-        expect(SonarService).to receive(:send_message).with(user, message_ultimatum).once
 
         described_class.perform_now
       end

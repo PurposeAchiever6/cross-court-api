@@ -20,5 +20,6 @@ class UserSessionConfirmed
     SlackService.new(user, date, time, location).session_confirmed
 
     user_session.save!
+    user_session
   end
 end

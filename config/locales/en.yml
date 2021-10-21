@@ -102,23 +102,28 @@ en:
       Please remember to arrive at least 10 minutes early with your jersey if you purchased one, otherwise, you can rent one.
       Also, the first 10 players to check-in start the first game.
       Please note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point.
+      If you need to cancel for any reason, please respond ‘N’ to this message.
       Also, due to limited capacity, spectators or guests will not be allowed to watch your session.
       %{invite_friend}
       Let’s get it!
     session_auto_confirmed_first_timers: >
       Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!.
-      Feel free to use the gated parking lot attached to the building. Please remember to arrive at
-      least 10 minutes early, the first 10 players to check-in start the first game.
-      IMPORTANT: Please bring proof of vaccination and photo identification with you
-      to your session if you haven’t presented it to the club previously. Please note that the
-      cancellation window has passed so no refunds will be issued for cancellations beyond this point.
+      Feel free to use the gated parking lot attached to the building.
+      Please remember to arrive at least 10 minutes early, the first 10 players to check-in start the first game.
+      Please note that the cancellation window has passed so no refunds will be issued for cancellations beyond this point.
+      IMPORTANT: Please bring proof of vaccination and photo identification with you to your session if you haven’t presented it to the club previously.
+      If you need to cancel for any reason, please respond ‘N’ to this message.
       Also, due to limited capacity, spectators or guests will not be allowed to watch your session.
       To improve your Crosscourt experience, you can use this link to install our app on your
       mobile device %{app_link}. %{invite_friend}
       Let’s get it!
     employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear. Let’s get it!"
-    session_canceled_in_time: "We’ll miss you! Your credits have been refunded to your account. To find another session, here’s the link to the upcoming schedule: %{schedule_url}"
-    session_canceled_out_of_time: "We’ll miss you! Unfortunately, we’re not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here’s a link to the upcoming schedule: %{schedule_url}"
+    unlimited_session_canceled_in_time: "You successfully cancelled your booked session. We'll miss you! To find another session, here's the link to the upcoming schedule: %{schedule_url}"
+    unlimited_session_canceled_out_of_time: "Your booked session was cancelled. Please note, you were charged $%{unlimited_session_canceled_out_of_time_fee} due to the cancellation being less than %{cancellation_period} hrs prior to the session start time. To find another session, here's a link to the upcoming schedule: %{schedule_url}"
+    first_free_session_canceled_in_time: "You successfully cancelled your first booked session. Please note, the %{free_session_exp_days} day expiration window does not reset. To find another session, here's the link to the upcoming schedule: %{schedule_url}"
+    first_free_session_canceled_out_of_time: "Your first booked session was cancelled. Please note, you were charged $%{free_session_canceled_out_of_time_fee} due to the cancellation being less than %{cancellation_period} hrs prior to the session start time, however, we kept the free session credit in your account. To find another session, here's a link to the upcoming schedule: %{schedule_url}"
+    session_canceled_in_time: "You successfully cancelled your booked session. Your credits have been refunded to your account. To find another session, here's the link to the upcoming schedule: %{schedule_url}"
+    session_canceled_out_of_time: "Your booked session was cancelled. Unfortunately, we're not able to refund your credits due to the cancellation less than %{cancellation_period} hrs prior to the session start time. To find another session, here's a link to the upcoming schedule: %{schedule_url}"
     unreadable_text: "We couldn’t process your response. Please respond ‘Y’ to confirm."
     no_session_booked: "You don’t have any session booked yet."
     tomorrow_reminder: >
@@ -131,10 +136,6 @@ en:
       respond ‘Y’ to confirm so we can verify your spot. Thank you!
     sem_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
     referee_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
-    ultimatum: >
-      Hey %{name}! As a reminder you’re signed up for today’s %{time} session at Crosscourt. Please
-      respond ‘Y’ to confirm so we can verify your spot. Also, please note that the cancellation
-      window has passed so no refunds will be issued for cancellations beyond this point. Thank you!
     survey_reminder: >
       Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate your
       feedback. %{survey_link}
