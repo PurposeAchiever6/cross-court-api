@@ -1,4 +1,4 @@
-.table-sessions {
+.table-user-sessions-checked-in {
   border-spacing: 0;
 
   tbody {
@@ -13,17 +13,17 @@
         padding-bottom: 1rem;
       }
     }
-
-    .session-team-light {
-      background-color: #F9FAFB;
-    }
-
-    .session-team-dark {
-      background-color: #D1D5DB;
-    }
-
-    .session-no-team {
-      background-color: #FEE2E2;
-    }
   }
+
+  .session-team-light {
+    background-color: #f9fafb;
   }
+
+  .session-team-dark {
+    background-color: #d1d5db;
+  }
+
+  .session-no-team {
+    background-color: #fee2e2;
+  }
+}

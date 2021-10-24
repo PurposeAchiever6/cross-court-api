@@ -40,14 +40,23 @@
               </td>
               <td>
                 <div class='flex items-center'>
-                  <%= check_box_tag(:checked_in, true, user_session.checked_in, class: 'mr-1') %>
-                  <%= label_tag(:checked_in, 'Check In User') %>
+                  <%= check_box_tag(:checked_in,
+                                    true,
+                                    user_session.checked_in,
+                                    id: "checked_in-#{user_session.id}",
+                                    class: 'mr-1') %>
+                  <%= label_tag("checked_in-#{user_session.id}", 'Check In User') %>
                 </div>
               </td>
               <td>
                 <div class='flex items-center'>
-                  <%= check_box_tag(:jersey_rental, true, user_session.jersey_rental, class: 'mr-1') %>
-                  <%= label_tag(:jersey_rental, "Jersey Rental - (#{number_to_currency(jersey_rental_price)})") %>
+                  <%= check_box_tag(:jersey_rental,
+                                    true,
+                                    user_session.jersey_rental,
+                                    id: "jersey_rental-#{user_session.id}",
+                                    class: 'mr-1') %>
+                  <%= label_tag("jersey_rental-#{user_session.id}",
+                                "Jersey Rental - (#{number_to_currency(jersey_rental_price)})") %>
                 </div>
               </td>
               <td>
