@@ -32,7 +32,7 @@ module App
     ActionMailer::Base.smtp_settings = {
       address: 'smtp.sendgrid.net',
       port: 25,
-      domain: 'www.api.com',
+      domain: ENV['SERVER_URL'],
       authentication: :plain,
       user_name: ENV['SENDGRID_USERNAME'],
       password: ENV['SENDGRID_PASSWORD']
