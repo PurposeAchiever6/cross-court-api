@@ -1,7 +1,9 @@
 module SonarService
   extend self
 
-  def add_customer(user)
+  CUSTOMER_ATTRS = %w[phone_number email first_name last_name].freeze
+
+  def add_update_customer(user)
     SendSonar.add_update_customer(
       phone_number: user.phone_number,
       email: user.email,
@@ -9,7 +11,7 @@ module SonarService
       last_name: user.last_name
     )
   rescue SendSonar::RequestException => e
-    Rails.logger.error(e)
+    Rails.logger.error("#{e} - #{user.phone_number}")
   end
 
   def send_message(user, message)

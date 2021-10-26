@@ -103,6 +103,7 @@ Rails/SkipsModelValidations:
   Exclude:
     - app/interactors/create_user_promo_code.rb
     - app/interactors/increment_times_used_promo_code.rb
+    - app/models/user.rb
 
 Rails/HasManyOrHasOneDependent:
   Exclude:
