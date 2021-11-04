@@ -1,6 +1,6 @@
 ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
-                :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating
+                :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated
 
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
@@ -18,6 +18,7 @@ ActiveAdmin.register User do
       f.input :confirmed_at, as: :hidden
       f.input :zipcode
       f.input :skill_rating
+      f.input :vaccinated, label: 'Proof of vaccination?'
 
       if f.object.new_record?
         f.input :password
@@ -41,6 +42,7 @@ ActiveAdmin.register User do
     column :skill_rating
     column :created_at
     column :zipcode
+    column :vaccinated
 
     actions
   end
@@ -72,6 +74,7 @@ ActiveAdmin.register User do
       row :free_session_state
       row :free_session_expiration_date
       row :skill_rating
+      row :vaccinated
       row :created_at
       row :updated_at
     end

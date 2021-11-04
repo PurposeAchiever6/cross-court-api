@@ -31,13 +31,13 @@ ActiveAdmin.register Session do
   end
 
   show title: proc { |session|
-                date = params[:date]
-                if date.present?
-                  "Session for #{date} at #{session.time.strftime(Session::TIME_FORMAT)}"
-                else
-                  "Session #{session.id}"
-                end
-              } do
+    date = params[:date]
+    if date.present?
+      "Session for #{date} at #{session.time.strftime(Session::TIME_FORMAT)}"
+    else
+      "Session #{session.id}"
+    end
+  } do
     attributes_table do
       row :id
       row :start_time
@@ -86,15 +86,31 @@ ActiveAdmin.register Session do
         end
       end
 
-      panel 'Users' do
+      panel 'Arrived Users' do
+        user_sessions = resource.user_sessions
+                                .not_canceled
+                                .by_date(date)
+                                .checked_in
+                                .includes(:user)
+                                .order(assigned_team: :desc, updated_at: :asc)
+
+        render partial: 'checked_in_user_sessions', locals: {
+          date: date,
+          user_sessions_by_team: user_sessions.group_by(&:assigned_team),
+          jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
+        }
+      end
+
+      panel 'Yet to Arrive Users' do
         user_sessions = resource.user_sessions
                                 .joins(:user)
                                 .not_canceled
                                 .by_date(date)
-                                .order('checked_in DESC, LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
+                                .not_checked_in
                                 .includes(:user)
+                                .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
 
-        render partial: 'show_users', locals: {
+        render partial: 'not_checked_in_user_sessions', locals: {
           date: date,
           user_sessions: user_sessions,
           jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']

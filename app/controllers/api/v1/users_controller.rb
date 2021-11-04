@@ -32,7 +32,7 @@ module Api
       end
 
       def user_params
-        params.require(:user).permit(:first_name, :last_name)
+        params.require(:user).permit(:first_name, :last_name, :phone_number)
       end
 
       def skill_rating_params

@@ -11,7 +11,6 @@ module Api
 
         ResendVerificationEmailJob.set(wait: 24.hours).perform_later(@resource.id)
         KlaviyoService.new.event(Event::SIGN_UP, @resource)
-        SonarService.add_customer(@resource)
       end
 
       private

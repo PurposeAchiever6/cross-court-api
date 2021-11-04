@@ -33,6 +33,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before :each do
+    allow(SonarService).to receive(:add_update_customer).and_return(1)
     ActionMailer::Base.deliveries.clear
   end
 end

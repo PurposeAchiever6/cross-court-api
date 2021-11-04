@@ -3,7 +3,6 @@ module Event
   SESSION_REMINDER_24_HOURS = 'Session Reminder 24 Hours'.freeze
   SESSION_REMINDER_8_HOURS = 'Session Reminder 8 Hours'.freeze
   SESSION_REMINDER_6_HOURS = 'Session Reminder 6 Hours'.freeze
-  SESSION_ULTIMATUM = 'Session Ultimatum'.freeze
   SESSION_CONFIRMATION = 'Session Confirmation'.freeze
   SESSION_CHECK_IN = 'Session Check In'.freeze
   FREE_SESSION_CHECK_IN = 'Free Session Check In'.freeze

@@ -238,7 +238,6 @@ The possible events are:
 
 - **Session Booked:** when a user books a new session.
 - **Session Reminder:** 24 hours before the session.
-- **Session Ultimatum:** 1 hour before the cancellation time is over.
 - **Session forfeited:** when the UserSession was canceled due to the lack of confirmation from the user.
 - **Session Confirmation:** when the user confirms the UserSession.
 - **Claimed Free Session:** when the user claims the free session.

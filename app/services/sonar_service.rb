@@ -1,7 +1,9 @@
 module SonarService
   extend self
 
-  def add_customer(user)
+  CUSTOMER_ATTRS = %w[phone_number email first_name last_name].freeze
+
+  def add_update_customer(user)
     SendSonar.add_update_customer(
       phone_number: user.phone_number,
       email: user.email,
@@ -9,7 +11,7 @@ module SonarService
       last_name: user.last_name
     )
   rescue SendSonar::RequestException => e
-    Rails.logger.error(e)
+    Rails.logger.error("#{e} - #{user.phone_number}")
   end
 
   def send_message(user, message)
@@ -20,9 +22,16 @@ module SonarService
 
   def message_received(user, message)
     if positive_message?(message)
-      user_session = find_next_to_confirm(user)
+      user_session = find_and_confirm_next(user)
       if user_session.present?
         send_message(user, confirmation_msg(user, user_session))
+      else
+        send_message(user, I18n.t('notifier.no_session_booked'))
+      end
+    elsif negative_message?(message)
+      user_session = find_and_cancel_user_session(user)
+      if user_session.present?
+        send_message(user, cancellation_msg(user_session))
       else
         send_message(user, I18n.t('notifier.no_session_booked'))
       end
@@ -35,20 +44,32 @@ module SonarService
     %w[yes y].include?(message.downcase)
   end
 
+  def negative_message?(message)
+    %w[no n].include?(message.downcase)
+  end
+
   def find_and_confirm_user_session(user)
     user_session = user.user_sessions.future.reserved.ordered_by_date.first
 
     return unless user_session
 
     UserSessionConfirmed.new(user_session).save!
-    user_session
   end
 
   def find_and_confirm_employee_session(user)
     EmployeeSessionConfirmed.new(user).save!
   end
 
-  def find_next_to_confirm(user)
+  def find_and_cancel_user_session(user)
+    user_session = user.user_sessions.future.not_canceled.ordered_by_date.first
+
+    return unless user_session
+
+    CanceledUserSession.new(user_session).save!
+    user_session
+  end
+
+  def find_and_confirm_next(user)
     user_session = find_and_confirm_user_session(user)
 
     return user_session if user_session
@@ -88,5 +109,41 @@ module SonarService
         invite_friend: invite_friend(user_session)
       )
     end
+  end
+
+  def cancellation_text(user_session)
+    user_subscription = user_session.user.active_subscription
+    in_cancellation_time = user_session.in_cancellation_time?
+
+    if user_session.is_free_session?
+      return 'notifier.first_free_session_canceled_in_time' if in_cancellation_time
+
+      return 'notifier.first_free_session_canceled_out_of_time'
+    end
+
+    if user_subscription&.unlimited?
+      return 'notifier.unlimited_session_canceled_in_time' if in_cancellation_time
+
+      return 'notifier.unlimited_session_canceled_out_of_time'
+    end
+
+    if in_cancellation_time
+      'notifier.session_canceled_in_time'
+    else
+      'notifier.session_canceled_out_of_time'
+    end
+  end
+
+  def cancellation_msg(user_session)
+    front_url = ENV['FRONTENT_URL']
+
+    I18n.t(
+      cancellation_text(user_session),
+      schedule_url: "#{front_url}/locations",
+      cancellation_period: ENV['CANCELLATION_PERIOD'],
+      free_session_exp_days: ENV['FREE_SESSION_EXPIRATION_DAYS'],
+      unlimited_session_canceled_out_of_time_fee: ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'],
+      free_session_canceled_out_of_time_fee: ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE']
+    )
   end
 end

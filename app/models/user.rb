@@ -37,6 +37,7 @@
 #  subscription_credits         :integer          default(0), not null
 #  skill_rating                 :decimal(2, 1)
 #  drop_in_expiration_date      :date
+#  vaccinated                   :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -104,6 +105,7 @@ class User < ApplicationRecord
   scope :no_credits, -> { where(credits: 0, subscription_credits: 0) }
 
   after_create :create_referral_code
+  after_save :add_update_sonar_customer
 
   def self.from_social_provider(provider, user_params)
     where(provider: provider, uid: user_params['id']).first_or_create! do |user|
@@ -151,9 +153,12 @@ class User < ApplicationRecord
       code = SecureRandom.hex(8)
       next if User.where(referral_code: code).exists?
 
-      self.referral_code = code
-      save!
+      update_column(:referral_code, code)
       break
     end
+  end
+
+  def add_update_sonar_customer
+    SonarService.add_update_customer(self) if SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes.keys.include?(a) }
   end
 end
