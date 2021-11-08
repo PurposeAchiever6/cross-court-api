@@ -14,7 +14,7 @@ sem_session_reminders:
   queue: default
 
 charge_no_show_up_players:
-  cron: "* 0 * * *"
+  cron: "0 2 * * *"
   class: "ChargeNotShowUpPlayersJob"
   queue: default
 
