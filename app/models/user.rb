@@ -98,14 +98,14 @@ class User < ApplicationRecord
             numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 7 },
             allow_nil: true
 
-  before_validation :init_uid
-
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
   scope :no_credits, -> { where(credits: 0, subscription_credits: 0) }
 
+  before_validation :init_uid
   after_create :create_referral_code
   after_save :add_update_sonar_customer
+  after_destroy :delete_stripe_customer
 
   def self.from_social_provider(provider, user_params)
     where(provider: provider, uid: user_params['id']).first_or_create! do |user|
@@ -160,5 +160,9 @@ class User < ApplicationRecord
 
   def add_update_sonar_customer
     SonarService.add_update_customer(self) if SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes.keys.include?(a) }
+  end
+
+  def delete_stripe_customer
+    StripeService.delete_user(self)
   end
 end

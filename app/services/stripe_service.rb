@@ -7,6 +7,10 @@ class StripeService
     user.update!(stripe_id: customer.id)
   end
 
+  def self.delete_user(user)
+    Stripe::Customer.delete(user.stripe_id)
+  end
+
   def self.create_payment_method(payment_method, user)
     Stripe::PaymentMethod.attach(
       payment_method,
