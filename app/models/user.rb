@@ -87,7 +87,7 @@ class User < ApplicationRecord
   has_many :purchases, dependent: :nullify
   has_many :subscriptions, dependent: :destroy
 
-  has_one_attached :image
+  has_one_attached :image, dependent: :destroy
 
   validates :uid, uniqueness: { scope: :provider }
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }

@@ -6,6 +6,7 @@
   <table class='table-user-sessions-checked-in'>
     <tr>
       <th>#</th>
+      <th>Image</th>
       <th>User</th>
       <th>First Session</th>
       <th>Status</th>
@@ -23,22 +24,25 @@
                                                                     user_session_id: user_session.id),
                         local: true) do %>
             <tr>
-              <td>
+              <td class='align-middle'>
                 <%= "##{index + 1}" if team.present? %>
               </td>
-              <td>
+              <td class='align-middle'>
+                <%= image_tag(user_session.user.image.attached? ? user_session.user.image : "missing-profile-image.png", class: 'rounded-full w-12 h-12 object-cover') %>
+              </td>
+              <td class='align-middle'>
                 <%= link_to user_session.user_full_name, admin_user_path(user_session.user_id) %>
               </td>
-              <td>
+              <td class='align-middle'>
                 <%= status_tag user_session.is_free_session %>
               </td>
-              <td>
+              <td class='align-middle'>
                 <%= user_session.state.humanize %>
               </td>
-              <td>
+              <td class='align-middle'>
                 <%= user_session.user_vaccinated ? 'Yes' : 'No' %>
               </td>
-              <td>
+              <td class='align-middle'>
                 <div class='flex items-center'>
                   <%= check_box_tag(:checked_in,
                                     true,
@@ -48,7 +52,7 @@
                   <%= label_tag("checked_in-#{user_session.id}", 'Check In User') %>
                 </div>
               </td>
-              <td>
+              <td class='align-middle'>
                 <div class='flex items-center'>
                   <%= check_box_tag(:jersey_rental,
                                     true,
@@ -59,7 +63,7 @@
                                 "Jersey Rental - (#{number_to_currency(jersey_rental_price)})") %>
                 </div>
               </td>
-              <td>
+              <td class='align-middle'>
                 <div class='flex items-center'>
                   <%= label_tag(:assigned_team, 'Assign team:', class: 'mr-2') %>
                   <%= select_tag(:assigned_team,
@@ -67,7 +71,7 @@
                                   include_blank: true) %>
                 </div>
               </td>
-              <td>
+              <td class='align-middle'>
                 <%= submit_tag('Update', data: { disable_with: 'Loading...' }) %>
               </td>
             </tr>

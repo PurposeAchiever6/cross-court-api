@@ -89,3 +89,23 @@ input[disabled] {
 .mw-200px {
   max-width: 200px;
 }
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.w-12 {
+  width: 3rem;
+}
+
+.h-12 {
+  height: 3rem;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+.object-cover {
+  object-fit: cover;
+}
