@@ -6,6 +6,8 @@
 #  answer                     :string
 #  session_survey_question_id :integer
 #  user_session_id            :integer
+#  created_at                 :datetime
+#  updated_at                 :datetime
 #
 # Indexes
 #
