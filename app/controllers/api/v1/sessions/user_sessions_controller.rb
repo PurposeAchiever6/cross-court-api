@@ -7,7 +7,7 @@ module Api
             Session.find(params[:session_id])
                    .user_sessions
                    .where(date: date, checked_in: true)
-                   .includes(:user).order(:created_at)
+                   .includes(:user, user: :image_attachment).order(:created_at)
         end
 
         def create

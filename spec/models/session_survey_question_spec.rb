@@ -6,6 +6,11 @@
 #  question     :string           not null
 #  is_enabled   :boolean          default(TRUE)
 #  is_mandatory :boolean          default(FALSE)
+#  type         :integer
+#
+# Indexes
+#
+#  index_session_survey_questions_on_type  (type)
 #
 
 require 'rails_helper'

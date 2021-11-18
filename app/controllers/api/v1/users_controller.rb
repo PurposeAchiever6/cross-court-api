@@ -11,6 +11,10 @@ module Api
 
       def update
         current_user.update!(user_params)
+        image = params[:user][:image]
+
+        add_image(image) if image.present?
+
         render :show
       end
 
@@ -37,6 +41,15 @@ module Api
 
       def skill_rating_params
         params.require(:user).permit(:skill_rating)
+      end
+
+      def add_image(image)
+        AddAttachment.call(
+          object: current_user,
+          column_name: 'image',
+          base_64_attachment: image,
+          attachment_name: 'profile_image'
+        )
       end
     end
   end

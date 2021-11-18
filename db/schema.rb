@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_18_235351) do
+ActiveRecord::Schema.define(version: 2021_11_17_011036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -182,6 +182,8 @@ ActiveRecord::Schema.define(version: 2021_10_18_235351) do
     t.string "answer"
     t.bigint "session_survey_question_id"
     t.bigint "user_session_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["session_survey_question_id"], name: "index_session_survey_answers_on_session_survey_question_id"
     t.index ["user_session_id"], name: "index_session_survey_answers_on_user_session_id"
   end
@@ -190,6 +192,8 @@ ActiveRecord::Schema.define(version: 2021_10_18_235351) do
     t.string "question", null: false
     t.boolean "is_enabled", default: true
     t.boolean "is_mandatory", default: false
+    t.integer "type"
+    t.index ["type"], name: "index_session_survey_questions_on_type"
   end
 
   create_table "sessions", force: :cascade do |t|

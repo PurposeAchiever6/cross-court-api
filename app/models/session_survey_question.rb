@@ -6,12 +6,21 @@
 #  question     :string           not null
 #  is_enabled   :boolean          default(TRUE)
 #  is_mandatory :boolean          default(FALSE)
+#  type         :integer
+#
+# Indexes
+#
+#  index_session_survey_questions_on_type  (type)
 #
 
 class SessionSurveyQuestion < ApplicationRecord
-  validates :question, presence: true
+  self.inheritance_column = :_type_disabled
 
   has_many :session_survey_answers, dependent: :nullify
+
+  enum type: { rated: 0, open: 1 }, _suffix: true
+
+  validates :question, presence: true
 
   scope :enabled, -> { where(is_enabled: true) }
   scope :mandatory, -> { where(is_mandatory: true) }

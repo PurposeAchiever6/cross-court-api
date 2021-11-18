@@ -30,7 +30,8 @@ detectors:
         "SonarService#confirmation_msg",
         "UserSessionAutoConfirmed#save!",
         "Api::V1::StripeController#webhook",
-        "SonarService#add_update_customer"
+        "SonarService#add_update_customer",
+        "AddAttachment#call"
       ]
     max_calls: 1
     allow_calls: []
