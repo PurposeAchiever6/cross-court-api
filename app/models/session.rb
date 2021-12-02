@@ -11,6 +11,7 @@
 #  location_id    :integer          not null
 #  end_time       :date
 #  skill_level_id :integer
+#  is_private     :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -50,6 +51,8 @@ class Session < ApplicationRecord
 
   after_update :remove_orphan_sessions
 
+  scope :visible_for, ->(user) { where(is_private: false) unless user&.private_access }
+
   scope :for_range, (lambda do |start_date, end_date|
     where('start_time >= ? AND start_time <= ?', start_date, end_date)
       .or(where.not(recurring: nil))
@@ -87,7 +90,8 @@ class Session < ApplicationRecord
           start_time: date,
           time: time,
           location_id: location_id,
-          skill_level_id: skill_level_id
+          skill_level_id: skill_level_id,
+          is_private: is_private
         )
       end
     end

@@ -1,21 +1,24 @@
 require 'rails_helper'
 
 describe 'GET api/v1/sessions', type: :request do
-  let(:user)              { create(:user) }
-  let(:los_angeles_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+  let(:user_private_access) { false }
+  let(:user) { create(:user, private_access: user_private_access) }
+  let(:los_angeles_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
   let(:beginning_of_week) { los_angeles_time.beginning_of_week }
-  let(:from_date)         { beginning_of_week.strftime(Session::DATE_FORMAT) }
-  let(:params)            { { from_date: from_date } }
-  let(:today)             { los_angeles_time.to_date.to_s }
+  let(:from_date) { beginning_of_week.strftime(Session::DATE_FORMAT) }
+  let(:params) { { from_date: from_date } }
+  let(:today) { los_angeles_time.to_date.to_s }
+  let(:request_headers) { auth_headers }
 
   subject do
     get api_v1_sessions_path(params),
-        headers: auth_headers,
+        headers: request_headers,
         as: :json
   end
 
   context 'when the session is a one time only' do
-    let!(:session) { create(:session, time: los_angeles_time + 1.hour) }
+    let(:is_private) { false }
+    let!(:session) { create(:session, time: los_angeles_time + 1.hour, is_private: is_private) }
 
     it 'returns success' do
       subject
@@ -38,6 +41,33 @@ describe 'GET api/v1/sessions', type: :request do
       it 'retruns full on true' do
         subject
         expect(json[:sessions][0][:full]).to be true
+      end
+    end
+
+    context 'when the session is private' do
+      let(:is_private) { true }
+
+      it 'returns no session' do
+        subject
+        expect(json[:sessions].count).to eq(0)
+      end
+
+      context 'when not logged in user' do
+        let(:request_headers) { nil }
+
+        it 'returns no session' do
+          subject
+          expect(json[:sessions].count).to eq(0)
+        end
+      end
+
+      context 'when user has private access' do
+        let(:user_private_access) { true }
+
+        it 'returns the expected session' do
+          subject
+          expect(json[:sessions].count).to eq(1)
+        end
       end
     end
   end

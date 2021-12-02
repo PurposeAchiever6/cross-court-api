@@ -11,6 +11,7 @@
 #  location_id    :integer          not null
 #  end_time       :date
 #  skill_level_id :integer
+#  is_private     :boolean          default(FALSE)
 #
 # Indexes
 #
