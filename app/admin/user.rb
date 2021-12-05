@@ -1,7 +1,7 @@
 ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
-                :private_access
+                :credits, :private_access
 
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
@@ -12,7 +12,12 @@ ActiveAdmin.register User do
       f.input :first_name
       f.input :last_name
       f.input :phone_number
-      f.input :credits, input_html: { value: resource.total_credits, type: type, disabled: true }
+      f.input :credits, label: 'Drop in credits'
+      f.input :subscription_credits,
+              input_html: { value: resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits,
+                            type: type,
+                            disabled: true }
+      f.input :total_credits, input_html: { value: resource.total_credits, type: type, disabled: true }
       f.input :is_referee
       f.input :is_sem
       f.input :image, as: :file
@@ -70,7 +75,11 @@ ActiveAdmin.register User do
         image_tag url_for(user.image) if user.image.attached?
       end
       row :phone_number
-      row :credits, &:total_credits
+      row :drop_in_credits, &:credits
+      row :subscription_credits do
+        user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
+      end
+      row :total_credits
       row :is_referee
       row :is_sem
       row :sign_in_count
