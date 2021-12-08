@@ -39,6 +39,7 @@
 #  drop_in_expiration_date      :date
 #  vaccinated                   :boolean          default(FALSE)
 #  private_access               :boolean          default(FALSE)
+#  active_campaign_id           :integer
 #
 # Indexes
 #

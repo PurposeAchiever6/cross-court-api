@@ -37,6 +37,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active-campaign-simple (0.3.1)
+      rest-client (~> 2.1)
     active_storage_base64 (1.0.0)
       rails (~> 6.0)
     activeadmin (2.2.0)
@@ -175,7 +177,6 @@ GEM
     equalizer (0.0.11)
     erubi (1.10.0)
     erubis (2.7.0)
-    escape (0.0.4)
     et-orbi (1.2.4)
       tzinfo
     execjs (2.7.0)
@@ -252,10 +253,6 @@ GEM
       activerecord
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
-    klaviyo (1.0.0)
-      escape
-      json
-      rack
     kwalify (0.7.2)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -512,6 +509,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active-campaign-simple
   active_storage_base64 (~> 1.0.0)
   activeadmin (~> 2.2)
   activeadmin_latlng (~> 1.5)
@@ -533,7 +531,6 @@ DEPENDENCIES
   haml-rails (~> 1.0.0)
   interactor (~> 3.1, >= 3.1.2)
   jb (~> 0.7.0)
-  klaviyo (~> 1.0)
   letter_opener (~> 1.4.1)
   listen (~> 3.0.5)
   pg (~> 1.0)

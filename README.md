@@ -230,31 +230,9 @@ Represents a survey question for after the session
 
 ## Integrations
 
-### Klaviyo
+### ActiveCampaign
 
 This integration is used to keep a record of the actions done by a User.
-
-The possible events are:
-
-- **Session Booked:** when a user books a new session.
-- **Session Reminder:** 24 hours before the session.
-- **Session forfeited:** when the UserSession was canceled due to the lack of confirmation from the user.
-- **Session Confirmation:** when the user confirms the UserSession.
-- **Claimed Free Session:** when the user claims the free session.
-- **Sign Up:** when a user creates an account.
-- **Purchase Placed:** when a user makes a purchase.
-
-Properties:
-
-- **email** (Text: unique)
-- **first_name** (Text)
-- **phone_number** (Text)
-- **credits** (Number: amount of credits left)
-- **upcoming_sessions** (Number: amount of sessions booked in the future)
-- **order_price** (Number: price of the last purchase made)
-- **session_date** (Date: date of the last session booked &rightarrow; `25-10-2020`)
-- **session_time** (Time: time of the last session booked &rightarrow; `18:00`)
-- **confirmation_url** (Text: link to the page where the user can confirm the session)
 
 ### Sendgrid
 
@@ -288,12 +266,6 @@ Runs Hourly at :00
 Confirms the UserSessions that didn't confirmed assistance when the confirmation window is closed.
 
 Runs Hourly at "00
-
-**klaviyo_check_in_users**
-
-Sends the 'Session Check In' event to klaviyo for the users that the SEM checked in
-
-Runs Hourly at :00
 
 ## Code quality
 

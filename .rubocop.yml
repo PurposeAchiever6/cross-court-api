@@ -44,6 +44,7 @@ Metrics/CyclomaticComplexity:
     - app/jobs/inactive_users_job.rb
     - app/decorators/employee_session_confirmed.rb
     - app/controllers/api/v1/stripe_controller.rb
+    - app/services/active_campaign_service.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
@@ -52,9 +53,10 @@ Metrics/MethodLength:
     - app/jobs/user_session_reminders_job.rb
     - app/jobs/sem_session_reminders_job.rb
     - app/jobs/referee_session_reminders_job.rb
-    - app/services/klaviyo_service.rb
+    - app/services/active_campaign_service.rb
     - app/controllers/api/v1/stripe_controller.rb
     - app/decorators/canceled_user_session.rb
+    - app/jobs/credits_job.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?
@@ -70,7 +72,7 @@ Metrics/LineLength:
     - db/migrate/20161011151353_devise_create_users.rb
     - db/migrate/20161027190856_create_delayed_jobs.rb
     - db/migrate/20181102142200_create_active_storage_tables.active_storage.rb
-    - app/services/klaviyo_service.rb
+    - app/services/active_campaign_service.rb
   URISchemes:
     - http
     - https

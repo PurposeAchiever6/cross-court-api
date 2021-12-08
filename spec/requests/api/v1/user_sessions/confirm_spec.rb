@@ -9,7 +9,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
 
   before do
     Timecop.freeze(Time.current)
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    ActiveCampaignMocker.new.mock
     allow_any_instance_of(SlackService).to receive(:session_confirmed).and_return(1)
   end
 
@@ -58,7 +58,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/confirm' do
     context 'when the session is in more the 24 hours' do
       let(:session) { create(:session, :daily) }
       let!(:user_session) do
-        create(:user_session, user: user, date: los_angeles_date.tomorrow, session: session)
+        create(:user_session, user: user, date: los_angeles_date + 2.days, session: session)
       end
 
       it "doesn't change the user_session state" do

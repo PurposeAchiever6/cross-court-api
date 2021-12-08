@@ -39,6 +39,7 @@
 #  drop_in_expiration_date      :date
 #  vaccinated                   :boolean          default(FALSE)
 #  private_access               :boolean          default(FALSE)
+#  active_campaign_id           :integer
 #
 # Indexes
 #
@@ -106,6 +107,7 @@ class User < ApplicationRecord
 
   before_validation :init_uid
   after_create :create_referral_code
+  # TODO: update in AC after save
   after_save :add_update_sonar_customer
   after_destroy :delete_stripe_customer
 

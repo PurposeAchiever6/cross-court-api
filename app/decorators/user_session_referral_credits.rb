@@ -8,10 +8,16 @@ class UserSessionReferralCredits
   end
 
   def save!
-    if referral && referral.id != user_id && user.first_session?
+    referral_id = referral.id
+
+    if referral_id != user_id && user.first_session?
       referral.increment(:credits)
       referral.save!
-      KlaviyoService.new.event(Event::REFERRAL_SUCCESS, referral, referred: user)
+      CreateActiveCampaignDealJob.perform_now(
+        ::ActiveCampaign::Deal::Event::REFERRAL_SUCCESS,
+        referral_id,
+        referred_id: user.id
+      )
     end
 
     user_session.save!

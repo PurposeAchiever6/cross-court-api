@@ -7,7 +7,7 @@ describe 'POST api/v1/users', type: :request do
   before do
     stub_request(:post, %r{stripe.com/v1/customers})
       .to_return(status: 200, body: File.new('spec/fixtures/customer_creation_ok.json'))
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    ActiveCampaignMocker.new.mock
     Timecop.freeze.change(hour: 10)
   end
 
@@ -60,8 +60,8 @@ describe 'POST api/v1/users', type: :request do
       expect(json[:user][:zipcode]).to eq(user.zipcode)
     end
 
-    it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    it 'calls the active campaign service' do
+      expect_any_instance_of(ActiveCampaignService).to receive(:create_update_contact)
       subject
     end
 

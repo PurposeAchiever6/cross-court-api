@@ -200,7 +200,7 @@ ActiveAdmin.register Session do
       assigned_team: assigned_team
     )
 
-    KlaviyoCheckInUsers.perform_async([user_session_id]) if checked_in
+    CheckInUsersJob.perform_async([user_session_id]) if checked_in
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session updated successfully'
@@ -233,7 +233,11 @@ ActiveAdmin.register Session do
       user_session = UserSessionNotFull.new(user_session)
       user_session.save!
 
-      KlaviyoService.new.event(Event::SESSION_BOOKED, user, user_session: user_session)
+      CreateActiveCampaignDealJob.perform_now(
+        ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
+        user.id,
+        user_session_id: user_session.id
+      )
       SessionMailer.with(user_session_id: user_session.id).session_booked.deliver_later
     end
 

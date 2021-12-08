@@ -7,7 +7,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:params)  { { date: date.strftime(Session::DATE_FORMAT) } }
 
   before do
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    ActiveCampaignMocker.new.mock
     allow_any_instance_of(SlackService).to receive(:session_booked).and_return(1)
     Timecop.freeze(Time.current.change(hour: 10))
   end
@@ -39,7 +39,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       it 'calls the Klaviyo service' do
-        expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+        expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).and_return(1)
         subject
       end
 

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UserSessionRemindersJob do
   describe '.perform' do
     before do
-      allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+      ActiveCampaignMocker.new.mock
       allow(SonarService).to receive(:send_message).and_return(1)
       Timecop.freeze(Time.current)
     end

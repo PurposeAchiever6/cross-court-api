@@ -3,7 +3,7 @@ require 'rails_helper'
 describe SonarService do
   describe '.message_received' do
     before do
-      allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+      ActiveCampaignMocker.new.mock
       allow_any_instance_of(SlackService).to receive(:session_confirmed).and_return(1)
       allow_any_instance_of(SlackService).to receive(:session_canceled_in_time).and_return(1)
       allow_any_instance_of(SlackService).to receive(:session_canceled_out_of_time).and_return(1)

@@ -23,7 +23,6 @@ module Api
         current_user.free_session_state = :claimed
         current_user.free_session_payment_intent = intent.id
         current_user.save!
-        KlaviyoService.new.event(Event::CLAIMED_FREE_SESSION, current_user)
       end
 
       private

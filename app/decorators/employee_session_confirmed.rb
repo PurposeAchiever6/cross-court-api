@@ -27,14 +27,12 @@ class EmployeeSessionConfirmed
 
   def confirm_referee_session(referee_session)
     referee_session.state = :confirmed if referee_session.unconfirmed?
-    KlaviyoService.new.event(Event::REFEREE_SESSION_CONFIRMATION, user, referee_session: referee_session)
     referee_session.save!
     referee_session
   end
 
   def confirm_sem_session(sem_session)
     sem_session.state = :confirmed if sem_session.unconfirmed?
-    KlaviyoService.new.event(Event::SEM_SESSION_CONFIRMATION, user, sem_session: sem_session)
     sem_session.save!
     sem_session
   end
