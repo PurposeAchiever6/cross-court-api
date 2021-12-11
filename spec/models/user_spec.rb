@@ -40,6 +40,7 @@
 #  vaccinated                   :boolean          default(FALSE)
 #  private_access               :boolean          default(FALSE)
 #  active_campaign_id           :integer
+#  birthday                     :date
 #
 # Indexes
 #
@@ -67,6 +68,7 @@ describe User do
                                                          .with_prefix(:free_session)
     end
     it { is_expected.to validate_presence_of(:zipcode) }
+    it { is_expected.to validate_presence_of(:birthday) }
 
     context 'when was created with regular login' do
       subject { build :user }

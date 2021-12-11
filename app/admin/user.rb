@@ -1,7 +1,7 @@
 ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
-                :drop_in_expiration_date, :credits, :private_access
+                :drop_in_expiration_date, :credits, :private_access, :birthday
 
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
@@ -21,6 +21,10 @@ ActiveAdmin.register User do
               input_html: { value: resource.total_credits, type: type, disabled: true }
       f.input :drop_in_expiration_date,
               as: :datepicker,
+              input_html: { autocomplete: :off }
+      f.input :birthday,
+              as: :datepicker,
+              datepicker_options: { change_year: true },
               input_html: { autocomplete: :off }
       f.input :is_referee
       f.input :is_sem
@@ -46,6 +50,7 @@ ActiveAdmin.register User do
     column :email
     column :first_name
     column :last_name
+    column :birthday
     column :is_sem
     column :is_referee
     column :phone_number
@@ -75,6 +80,7 @@ ActiveAdmin.register User do
       row :email
       row :first_name
       row :last_name
+      row :birthday
       row :image do
         image_tag url_for(user.image) if user.image.attached?
       end

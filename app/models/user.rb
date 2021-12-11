@@ -40,6 +40,7 @@
 #  vaccinated                   :boolean          default(FALSE)
 #  private_access               :boolean          default(FALSE)
 #  active_campaign_id           :integer
+#  birthday                     :date
 #
 # Indexes
 #
@@ -100,6 +101,7 @@ class User < ApplicationRecord
   validates :skill_rating,
             numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 7 },
             allow_nil: true
+  validates :birthday, presence: true, on: :create
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }

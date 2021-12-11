@@ -40,6 +40,7 @@
 #  vaccinated                   :boolean          default(FALSE)
 #  private_access               :boolean          default(FALSE)
 #  active_campaign_id           :integer
+#  birthday                     :date
 #
 # Indexes
 #
@@ -66,6 +67,7 @@ FactoryBot.define do
     drop_in_expiration_date      { Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS }
     phone_number                 { Faker::PhoneNumber.cell_phone }
     private_access               { false }
+    birthday                     { Time.zone.today - 20.years }
 
     trait :confirmed do
       confirmed_at { Time.current }
