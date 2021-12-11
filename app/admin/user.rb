@@ -1,7 +1,7 @@
 ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
-                :credits, :private_access
+                :drop_in_expiration_date, :credits, :private_access
 
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
@@ -17,7 +17,11 @@ ActiveAdmin.register User do
               input_html: { value: resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits,
                             type: type,
                             disabled: true }
-      f.input :total_credits, input_html: { value: resource.total_credits, type: type, disabled: true }
+      f.input :total_credits,
+              input_html: { value: resource.total_credits, type: type, disabled: true }
+      f.input :drop_in_expiration_date,
+              as: :datepicker,
+              input_html: { autocomplete: :off }
       f.input :is_referee
       f.input :is_sem
       f.input :image, as: :file
@@ -45,7 +49,7 @@ ActiveAdmin.register User do
     column :is_sem
     column :is_referee
     column :phone_number
-    column :credits, &:total_credits
+    column :total_credits
     column :skill_rating
     column :created_at
     column :zipcode
@@ -80,6 +84,7 @@ ActiveAdmin.register User do
         user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
       end
       row :total_credits
+      row :drop_in_expiration_date
       row :is_referee
       row :is_sem
       row :sign_in_count
