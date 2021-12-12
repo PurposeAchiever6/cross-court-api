@@ -12,6 +12,7 @@
 #  end_time       :date
 #  skill_level_id :integer
 #  is_private     :boolean          default(FALSE)
+#  coming_soon    :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -91,7 +92,8 @@ class Session < ApplicationRecord
           time: time,
           location_id: location_id,
           skill_level_id: skill_level_id,
-          is_private: is_private
+          is_private: is_private,
+          coming_soon: coming_soon
         )
       end
     end
