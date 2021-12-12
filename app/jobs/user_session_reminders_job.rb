@@ -14,7 +14,8 @@ class UserSessionRemindersJob < ApplicationJob
       )
       SonarService.send_message(user, I18n.t('notifier.tomorrow_reminder',
                                              name: user.first_name,
-                                             time: user_session.time.strftime(Session::TIME_FORMAT)))
+                                             time: user_session.time.strftime(Session::TIME_FORMAT),
+                                             location: user_session.location.name))
     end
 
     # 8 hour reminder
@@ -27,7 +28,8 @@ class UserSessionRemindersJob < ApplicationJob
       )
       SonarService.send_message(user, I18n.t('notifier.today_reminder',
                                              name: user.first_name,
-                                             time: user_session.time.strftime(Session::TIME_FORMAT)))
+                                             time: user_session.time.strftime(Session::TIME_FORMAT),
+                                             location: user_session.location.name))
     end
 
     # 6 hour reminder
@@ -40,7 +42,8 @@ class UserSessionRemindersJob < ApplicationJob
       )
       SonarService.send_message(user, I18n.t('notifier.today_reminder',
                                              name: user.first_name,
-                                             time: user_session.time.strftime(Session::TIME_FORMAT)))
+                                             time: user_session.time.strftime(Session::TIME_FORMAT),
+                                             location: user_session.location.name))
     end
   end
 end
