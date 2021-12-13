@@ -4,7 +4,7 @@ class DeviseMailer < Devise::Mailer
 
   def confirmation_instructions(record, token, options = {})
     options[:template_name] =
-      if record.confirmation_sent_at <= Date.yesterday
+      if record.confirmation_sent_at.to_date <= Date.yesterday
         're_confirmation_instructions'
       else
         'confirmation_instructions'
