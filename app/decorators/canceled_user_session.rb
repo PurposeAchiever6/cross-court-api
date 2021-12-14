@@ -43,7 +43,6 @@ class CanceledUserSession
         ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
         user_id,
         user_session_id: user_session_id,
-        cancellation_period: Session::CANCELLATION_PERIOD.to_i / (60 * 60),
         amount_charged: result.amount_charged,
         unlimited_credits: user.unlimited_credits?.to_s
       )

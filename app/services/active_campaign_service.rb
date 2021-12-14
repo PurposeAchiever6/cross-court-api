@@ -174,7 +174,7 @@ class ActiveCampaignService
           },
           {
             customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::CANCELLATION_PERIOD],
-            fieldValue: args[:cancellation_period] || ''
+            fieldValue: ENV['CANCELLATION_PERIOD']
           },
           {
             customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::AMOUNT_CHARGED],
