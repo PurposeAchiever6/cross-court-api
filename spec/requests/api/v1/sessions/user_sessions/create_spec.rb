@@ -139,6 +139,19 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
           expect { subject }.to change { other_user.reload.credits }.by(1)
         end
       end
+
+      context 'when the user is under 18' do
+        let(:user) { create(:user, credits: 1, birthday: (Time.zone.today - 15.years)) }
+
+        it 'returns bad request' do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "doesn't create the user_session" do
+          expect { subject }.not_to change(UserSession, :count)
+        end
+      end
     end
 
     context 'with invalid date' do

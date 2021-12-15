@@ -21,12 +21,12 @@ module Api
               date: params[:date],
               referral: referral
             )
-            user_session = UserSessionReferralCredits.new(user_session) if referral
-            user_session = UserSessionSlackNotification.new(user_session)
-            user_session = UserSessionAutoConfirmed.new(user_session)
-            user_session = UserSessionConsumeCredit.new(user_session)
-            user_session = UserSessionWithValidDate.new(user_session)
-            user_session = UserSessionNotFull.new(user_session)
+
+            if user_session.valid?
+              user_session = UserSessionReferralCredits.new(user_session) if referral
+              user_session = before_save_actions(user_session)
+            end
+
             user_session.save!
 
             user_session_id = user_session.id
@@ -40,6 +40,14 @@ module Api
         end
 
         private
+
+        def before_save_actions(user_session)
+          user_session = UserSessionSlackNotification.new(user_session)
+          user_session = UserSessionAutoConfirmed.new(user_session)
+          user_session = UserSessionConsumeCredit.new(user_session)
+          user_session = UserSessionWithValidDate.new(user_session)
+          UserSessionNotFull.new(user_session)
+        end
 
         def date
           params[:date] || Time.zone.today

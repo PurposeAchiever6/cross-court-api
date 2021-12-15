@@ -229,11 +229,13 @@ ActiveAdmin.register Session do
         date: date
       )
 
-      user_session = UserSessionSlackNotification.new(user_session)
-      user_session = UserSessionAutoConfirmed.new(user_session)
-      user_session = UserSessionConsumeCredit.new(user_session) unless not_charge_user_credit
-      user_session = UserSessionWithValidDate.new(user_session)
-      user_session = UserSessionNotFull.new(user_session)
+      if user_session.valid?
+        user_session = UserSessionSlackNotification.new(user_session)
+        user_session = UserSessionAutoConfirmed.new(user_session)
+        user_session = UserSessionConsumeCredit.new(user_session) unless not_charge_user_credit
+        user_session = UserSessionWithValidDate.new(user_session)
+        user_session = UserSessionNotFull.new(user_session)
+      end
       user_session.save!
 
       CreateActiveCampaignDealJob.perform_now(

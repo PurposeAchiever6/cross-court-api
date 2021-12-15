@@ -35,6 +35,7 @@ class UserSession < ApplicationRecord
   has_many :session_survey_answers, dependent: :destroy
 
   validates :state, :date, presence: true
+  validate :user_valid_age
 
   delegate :time, :time_zone, :location, :location_name, :location_description, to: :session
   delegate :phone_number, :email, :full_name, :vaccinated,
@@ -111,6 +112,14 @@ class UserSession < ApplicationRecord
   end
 
   private
+
+  def user_valid_age
+    user_age = user&.age
+
+    return unless user_age
+
+    errors.add(:user_age, "can't be under 18 years old") if user_age < 18
+  end
 
   def remaining_time
     current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))

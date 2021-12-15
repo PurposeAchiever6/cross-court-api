@@ -144,6 +144,20 @@ class User < ApplicationRecord
     unlimited_credits? ? 'Unlimited' : credits + subscription_credits
   end
 
+  def age
+    return if birthday.blank?
+
+    today = Time.zone.today
+
+    birthday_month = birthday.month
+    today_month = today.month
+
+    age = today.year - birthday.year
+    age -= 1 if today_month < birthday_month || (today_month == birthday_month && today.day < birthday.day)
+
+    age
+  end
+
   private
 
   def uses_email?
