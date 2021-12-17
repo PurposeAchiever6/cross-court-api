@@ -27,7 +27,7 @@ class ActiveCampaignService
   end
 
   def deal_stages
-    ActiveCampaign.get('/dealStages')
+    ActiveCampaign.get("/dealStages?filters[d_groupid]=#{ENV['ACTIVE_CAMPAING_EMAILS_PIPELINE_ID']}")
   end
 
   def create_deal(event, user, args = [])
