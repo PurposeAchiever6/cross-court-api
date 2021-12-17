@@ -2,6 +2,8 @@
   id: session.id,
   start_time: session.start_time.iso8601,
   past: session.past?,
+  is_private: session.is_private,
+  coming_soon: session.coming_soon,
   time: session.time.iso8601,
   reserved: user_sessions.values_at([session.id, session.start_time]).compact.present?,
   full: user_sessions_count.values_at([session.id, session.start_time]).sum ==

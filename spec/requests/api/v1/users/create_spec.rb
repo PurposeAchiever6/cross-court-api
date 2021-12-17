@@ -7,7 +7,7 @@ describe 'POST api/v1/users', type: :request do
   before do
     stub_request(:post, %r{stripe.com/v1/customers})
       .to_return(status: 200, body: File.new('spec/fixtures/customer_creation_ok.json'))
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    ActiveCampaignMocker.new.mock
     Timecop.freeze.change(hour: 10)
   end
 
@@ -21,6 +21,7 @@ describe 'POST api/v1/users', type: :request do
     let(:last_name)             { 'Doe' }
     let(:phone_number)          { '1234567' }
     let(:zipcode)               { '12345' }
+    let(:birthday)              { Time.zone.today - 20.years }
 
     let(:params) do
       {
@@ -28,6 +29,7 @@ describe 'POST api/v1/users', type: :request do
           first_name: first_name,
           last_name: last_name,
           email: email,
+          birthday: birthday,
           password: password,
           password_confirmation: password_confirmation,
           phone_number: phone_number,
@@ -58,10 +60,11 @@ describe 'POST api/v1/users', type: :request do
       expect(json[:user][:last_name]).to eq(user.last_name)
       expect(json[:user][:phone_number]).to eq(user.phone_number)
       expect(json[:user][:zipcode]).to eq(user.zipcode)
+      expect(json[:user][:birthday]).to eq(user.birthday.iso8601)
     end
 
-    it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    it 'calls the active campaign service' do
+      expect_any_instance_of(ActiveCampaignService).to receive(:create_update_contact)
       subject
     end
 
@@ -103,6 +106,21 @@ describe 'POST api/v1/users', type: :request do
       let(:password)              { 'shouldmatch' }
       let(:password_confirmation) { 'dontmatch' }
       let(:new_user)              { User.find_by(email: email) }
+
+      it 'does not create a user' do
+        subject
+        expect(new_user).to be_nil
+      end
+
+      it 'does not return a successful response' do
+        subject
+        expect(response.status).to eq(failed_response)
+      end
+    end
+
+    context 'when birthday is not present' do
+      let(:birthday) { nil }
+      let(:new_user) { User.find_by(email: email) }
 
       it 'does not create a user' do
         subject

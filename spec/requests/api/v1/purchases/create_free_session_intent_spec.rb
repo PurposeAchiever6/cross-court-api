@@ -7,7 +7,7 @@ describe 'PUT api/v1/purchases/create_free_session_intent' do
   before do
     stub_request(:post, %r{stripe.com/v1/payment_intents})
       .to_return(status: 200, body: File.new('spec/fixtures/charge_succeeded.json'))
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    ActiveCampaignMocker.new.mock
   end
 
   subject do
@@ -27,11 +27,6 @@ describe 'PUT api/v1/purchases/create_free_session_intent' do
 
     it 'updates user free_session_payment_intent' do
       expect { subject }.to change { user.reload.free_session_payment_intent }
-    end
-
-    it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
-      subject
     end
   end
 

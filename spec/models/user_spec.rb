@@ -38,6 +38,9 @@
 #  skill_rating                 :decimal(2, 1)
 #  drop_in_expiration_date      :date
 #  vaccinated                   :boolean          default(FALSE)
+#  private_access               :boolean          default(FALSE)
+#  active_campaign_id           :integer
+#  birthday                     :date
 #
 # Indexes
 #
@@ -47,6 +50,7 @@
 #  index_users_on_free_session_expiration_date  (free_session_expiration_date)
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
+#  index_users_on_private_access                (private_access)
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
@@ -64,6 +68,7 @@ describe User do
                                                          .with_prefix(:free_session)
     end
     it { is_expected.to validate_presence_of(:zipcode) }
+    it { is_expected.to validate_presence_of(:birthday) }
 
     context 'when was created with regular login' do
       subject { build :user }

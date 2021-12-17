@@ -21,6 +21,7 @@ module Api
         @sessions = SessionDecorator.decorate_collection(
           Session.eager_load(:location, :session_exceptions, :referee_sessions, :sem_sessions, :skill_level)
                  .by_location(params[:location_id])
+                 .visible_for(current_user)
                  .for_range(from_date, to_date)
                  .flat_map do |session_event|
                    session_event.calendar_events(from_date, to_date)

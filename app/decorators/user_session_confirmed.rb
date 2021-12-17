@@ -12,10 +12,10 @@ class UserSessionConfirmed
 
     user_session.state = :confirmed if user_session.reserved?
 
-    KlaviyoService.new.event(
-      Event::SESSION_CONFIRMATION,
-      user,
-      user_session: user_session
+    CreateActiveCampaignDealJob.perform_now(
+      ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
+      user.id,
+      user_session_id: user_session.id
     )
     SlackService.new(user, date, time, location).session_confirmed
 

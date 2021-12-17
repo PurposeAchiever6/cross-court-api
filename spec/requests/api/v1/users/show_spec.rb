@@ -14,5 +14,6 @@ describe 'GET api/v1/users/:id', type: :request do
     expect(json[:user][:id]).to eq user.id
     expect(json[:user][:first_name]).to eq user.first_name
     expect(json[:user][:last_name]).to eq user.last_name
+    expect(json[:user][:birthday]).to eq user.birthday.iso8601
   end
 end

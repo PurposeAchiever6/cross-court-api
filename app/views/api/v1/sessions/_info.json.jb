@@ -2,6 +2,8 @@ json = {
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
+  is_private: session.is_private,
+  coming_soon: session.coming_soon,
   full: full,
   past: session.past?(date),
   spots_left: spots_left,

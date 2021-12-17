@@ -2,15 +2,23 @@ ActiveAdmin.register Session do
   actions :all, except: :destroy
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
-                session_exceptions_attributes: %i[id date _destroy]
+                :is_private, :coming_soon, session_exceptions_attributes: %i[id date _destroy]
   includes :location, :session_exceptions
 
   form do |f|
     f.inputs 'Session Details' do
       f.input :location
       f.input :skill_level
-      f.input :start_time, as: :datepicker, datepicker_options: { min_date: Date.current }, input_html: { autocomplete: :off }
-      f.input :end_time, as: :datepicker, datepicker_options: { min_date: Date.current }, input_html: { autocomplete: :off }
+      f.input :is_private
+      f.input :coming_soon
+      f.input :start_time,
+              as: :datepicker,
+              datepicker_options: { min_date: Date.current },
+              input_html: { autocomplete: :off }
+      f.input :end_time,
+              as: :datepicker,
+              datepicker_options: { min_date: Date.current },
+              input_html: { autocomplete: :off }
       f.input :time
       f.select_recurring :recurring, nil, allow_blank: true
       f.has_many :session_exceptions, allow_destroy: true do |p|
@@ -26,6 +34,8 @@ ActiveAdmin.register Session do
     column :location_name
     column :skill_level_name
     column :time
+    column :is_private
+    column :coming_soon
 
     actions
   end
@@ -54,6 +64,8 @@ ActiveAdmin.register Session do
       end
       row :location_name
       row :skill_level_name
+      row :is_private
+      row :coming_soon
       row :created_at
       row :updated_at
     end
@@ -191,7 +203,7 @@ ActiveAdmin.register Session do
       assigned_team: assigned_team
     )
 
-    KlaviyoCheckInUsers.perform_async([user_session_id]) if checked_in
+    CheckInUsersJob.perform_async([user_session_id]) if checked_in
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session updated successfully'
@@ -217,14 +229,20 @@ ActiveAdmin.register Session do
         date: date
       )
 
-      user_session = UserSessionSlackNotification.new(user_session)
-      user_session = UserSessionAutoConfirmed.new(user_session)
-      user_session = UserSessionConsumeCredit.new(user_session) unless not_charge_user_credit
-      user_session = UserSessionWithValidDate.new(user_session)
-      user_session = UserSessionNotFull.new(user_session)
+      if user_session.valid?
+        user_session = UserSessionSlackNotification.new(user_session)
+        user_session = UserSessionAutoConfirmed.new(user_session)
+        user_session = UserSessionConsumeCredit.new(user_session) unless not_charge_user_credit
+        user_session = UserSessionWithValidDate.new(user_session)
+        user_session = UserSessionNotFull.new(user_session)
+      end
       user_session.save!
 
-      KlaviyoService.new.event(Event::SESSION_BOOKED, user, user_session: user_session)
+      CreateActiveCampaignDealJob.perform_now(
+        ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
+        user.id,
+        user_session_id: user_session.id
+      )
       SessionMailer.with(user_session_id: user_session.id).session_booked.deliver_later
     end
 

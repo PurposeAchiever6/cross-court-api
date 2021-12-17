@@ -8,8 +8,8 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
   before do
     allow_any_instance_of(SlackService).to receive(:session_canceled_in_time).and_return(1)
     allow_any_instance_of(SlackService).to receive(:session_canceled_out_of_time).and_return(1)
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
     Timecop.freeze(Time.current)
+    ActiveCampaignMocker.new.mock
   end
 
   after do
@@ -50,8 +50,8 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
       subject
     end
 
-    it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    it 'calls the Active Campaign service' do
+      expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).and_return(1)
       subject
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_17_011036) do
+ActiveRecord::Schema.define(version: 2021_12_11_224917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -205,6 +205,8 @@ ActiveRecord::Schema.define(version: 2021_11_17_011036) do
     t.bigint "location_id", null: false
     t.date "end_time"
     t.bigint "skill_level_id"
+    t.boolean "is_private", default: false
+    t.boolean "coming_soon", default: false
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
   end
@@ -302,12 +304,16 @@ ActiveRecord::Schema.define(version: 2021_11_17_011036) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
+    t.integer "active_campaign_id"
+    t.boolean "private_access", default: false
+    t.date "birthday"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["free_session_expiration_date"], name: "index_users_on_free_session_expiration_date"
     t.index ["is_referee"], name: "index_users_on_is_referee"
     t.index ["is_sem"], name: "index_users_on_is_sem"
+    t.index ["private_access"], name: "index_users_on_private_access"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

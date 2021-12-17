@@ -7,7 +7,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:params)  { { date: date.strftime(Session::DATE_FORMAT) } }
 
   before do
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    ActiveCampaignMocker.new.mock
     allow_any_instance_of(SlackService).to receive(:session_booked).and_return(1)
     Timecop.freeze(Time.current.change(hour: 10))
   end
@@ -39,7 +39,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       it 'calls the Klaviyo service' do
-        expect_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+        expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).and_return(1)
         subject
       end
 
@@ -137,6 +137,19 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
         it 'increments the credits of the other user' do
           expect { subject }.to change { other_user.reload.credits }.by(1)
+        end
+      end
+
+      context 'when the user is under 18' do
+        let(:user) { create(:user, credits: 1, birthday: (Time.zone.today - 15.years)) }
+
+        it 'returns bad request' do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "doesn't create the user_session" do
+          expect { subject }.not_to change(UserSession, :count)
         end
       end
     end

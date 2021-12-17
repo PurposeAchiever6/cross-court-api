@@ -10,7 +10,7 @@ detectors:
     exclude: []
   ControlParameter:
     enabled: true
-    exclude: ["KlaviyoService#specific_event_attributes", "Product#price"]
+    exclude: ["ActiveCampaignService#custom_deal_fields", "Product#price"]
   DataClump:
     enabled: true
     exclude: ["SlackService"]
@@ -28,10 +28,10 @@ detectors:
         "Subscription#assign_stripe_attrs",
         "CreditsJob#perform",
         "SonarService#confirmation_msg",
-        "UserSessionAutoConfirmed#save!",
         "Api::V1::StripeController#webhook",
         "SonarService#add_update_customer",
-        "AddAttachment#call"
+        "AddAttachment#call",
+        ActiveCampaignService#custom_deal_fields
       ]
     max_calls: 1
     allow_calls: []

@@ -49,7 +49,7 @@ describe InactiveUsersJob do
           I18n.t('notifier.slack.inactive_user', name: user.full_name, phone: user.phone_number),
           channel: ENV['SLACK_CHANNEL_CHURN']
         ).once
-        expect_any_instance_of(KlaviyoService).not_to receive(:event)
+        expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
 
         subject
       end
@@ -101,7 +101,7 @@ describe InactiveUsersJob do
       end
 
       it 'do not call service' do
-        expect_any_instance_of(KlaviyoService).not_to receive(:event)
+        expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
         expect_any_instance_of(SlackService).not_to receive(:notify)
 
         subject
@@ -112,7 +112,7 @@ describe InactiveUsersJob do
       let(:date_ago_last_session) { [27.days, 10.days, 5.days].sample }
 
       it 'do not call service' do
-        expect_any_instance_of(KlaviyoService).not_to receive(:event)
+        expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
         expect_any_instance_of(SlackService).not_to receive(:notify)
 
         subject
@@ -124,7 +124,7 @@ describe InactiveUsersJob do
       let(:date_ago_last_session) { [1.month, 14.days, 7.days].sample }
 
       it 'do not call service' do
-        expect_any_instance_of(KlaviyoService).not_to receive(:event)
+        expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
         expect_any_instance_of(SlackService).not_to receive(:notify)
 
         subject
@@ -137,7 +137,7 @@ describe InactiveUsersJob do
       before { user.subscriptions << subscription }
 
       it 'do not call service' do
-        expect_any_instance_of(KlaviyoService).not_to receive(:event)
+        expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
         expect_any_instance_of(SlackService).not_to receive(:notify)
 
         subject

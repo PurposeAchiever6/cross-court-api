@@ -59,6 +59,10 @@ Rails.application.routes.draw do
         resources :subscriptions, except: %i[show new edit] do
           post :reactivate, on: :member
         end
+        namespace :active_campaign do
+          resources :deals, only: %i[create]
+          resources :contacts, only: %i[create]
+        end
       end
     end
   end

@@ -14,7 +14,7 @@ describe 'POST api/v1/subscriptions' do
     before do
       stub_request(:post, %r{stripe.com/v1/subscriptions})
         .to_return(status: 200, body: File.new('spec/fixtures/subscription_succeeded.json'))
-      allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+      ActiveCampaignMocker.new.mock
     end
 
     it 'returns success' do
@@ -34,8 +34,8 @@ describe 'POST api/v1/subscriptions' do
       expect { subject }.to change { user.reload.subscription_credits }.from(0).to(product.credits)
     end
 
-    it 'calls the klaviyo service' do
-      expect_any_instance_of(KlaviyoService).to receive(:event)
+    it 'calls the Active Campaign service' do
+      expect_any_instance_of(ActiveCampaignService).to receive(:create_deal)
       subject
     end
   end
@@ -44,7 +44,7 @@ describe 'POST api/v1/subscriptions' do
     before do
       stub_request(:post, %r{stripe.com/v1/subscriptions})
         .to_return(status: 400, body: '{}')
-      allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+      ActiveCampaignMocker.new.mock
     end
 
     it "doesn't create the subscription" do
@@ -55,8 +55,8 @@ describe 'POST api/v1/subscriptions' do
       expect { subject }.not_to change { user.reload.subscription_credits }
     end
 
-    it "doesn't call the klaviyo service" do
-      expect_any_instance_of(KlaviyoService).not_to receive(:event)
+    it "doesn't call the Active Campaign service" do
+      expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
       subject
     end
   end

@@ -1,0 +1,78 @@
+<body style="padding: 0; min-width: 100%; margin: 0 auto; background-color: #1a1a1a" width="100%">
+  <table
+    width="100%"
+    cellspacing="0"
+    cellpadding="0"
+    style="background-color: #1a1a1a;">
+    <tbody width="100%">
+      <tr style="vertical-align: top" valign="top">
+        <td style="vertical-align: top" valign="top">
+          <table cellspacing="0" cellpadding="0" align="center" style="background-color: #1a1a1a;">
+            <tr>
+              <td align="center">
+                <tr>
+                  <td align="center" style="padding: 2rem">
+                    <div style="border-collapse: collapse; display: table; width: 100%; background-color: transparent">
+                      <div style="display: table-cell; vertical-align: top; min-width: 246px; width: 250px">
+                        <div style="width: 100% !important">
+                          <div style="border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent; padding-top: 5px; padding-bottom: 5px; padding-right: 0px; padding-left: 0px;">
+                            <div style="text-align: left">
+                              <img
+                                src="https://content.app-us1.com/OvYpm/2021/12/11/630ccc6c-1bfb-4cb4-8fe2-1c43fdeb532a.png"
+                                style="width: 80px"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style="display: table-cell; vertical-align: top; max-width: 320px; min-width: 246px; width: 250px">
+                        <div style="width: 100% !important">
+                          <div style="border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent; padding-top: 5px; padding-bottom: 5px; padding-right: 0px; padding-left: 0px;">
+                            <div style="text-align: right">
+                              <img
+                                src="https://content.app-us1.com/OvYpm/2021/12/11/01dbcc78-d496-45b7-9159-2ecbe5b2e11f.png"
+                                style="width: 67px"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <img
+                      style="margin-top: 40px; margin-bottom: 40px"
+                      src="https://content.app-us1.com/OvYpm/2021/12/11/d9f46c99-40f3-49ba-ae5a-9bdaca606a80.png"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 2rem; color: white; font-size: 16px; font-family: arial; font-weight: 400; max-width: 500px; padding-top: 1rem;">
+                    <p>
+                      Hey <%= @resource.first_name %>,
+                    </p>
+                    <p>
+                      It looks like you forgot to verify your email. Confirm your account below and receive your Free Session Credit.
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding-bottom: 10rem">
+                    <%= link_to confirmation_url(@resource, confirmation_token: @token) do %>
+                      <img
+                        src="https://content.app-us1.com/OvYpm/2021/12/11/6e4afdfa-e909-4326-9546-c3654d9f3908.png"
+                        style="width: 160px; margin-top: 2rem"
+                      />
+                    <% end %>
+                  </td>
+                </tr>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>

@@ -2,6 +2,10 @@ class SendPurchasePlacedEvent
   include Interactor
 
   def call
-    KlaviyoService.new.event(Event::PURCHASE_PLACED, context.user, purchase: context.purchase)
+    CreateActiveCampaignDealJob.perform_now(
+      ::ActiveCampaign::Deal::Event::PURCHASE_PLACED,
+      context.user.id,
+      purchase_id: context.purchase.id
+    )
   end
 end

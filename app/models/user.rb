@@ -38,6 +38,9 @@
 #  skill_rating                 :decimal(2, 1)
 #  drop_in_expiration_date      :date
 #  vaccinated                   :boolean          default(FALSE)
+#  private_access               :boolean          default(FALSE)
+#  active_campaign_id           :integer
+#  birthday                     :date
 #
 # Indexes
 #
@@ -47,6 +50,7 @@
 #  index_users_on_free_session_expiration_date  (free_session_expiration_date)
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
+#  index_users_on_private_access                (private_access)
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
@@ -97,6 +101,7 @@ class User < ApplicationRecord
   validates :skill_rating,
             numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 7 },
             allow_nil: true
+  validates :birthday, presence: true, on: :create
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
@@ -104,6 +109,7 @@ class User < ApplicationRecord
 
   before_validation :init_uid
   after_create :create_referral_code
+  # TODO: update in AC after save
   after_save :add_update_sonar_customer
   after_destroy :delete_stripe_customer
 
@@ -136,6 +142,20 @@ class User < ApplicationRecord
 
   def total_credits
     unlimited_credits? ? 'Unlimited' : credits + subscription_credits
+  end
+
+  def age
+    return if birthday.blank?
+
+    today = Time.zone.today
+
+    birthday_month = birthday.month
+    today_month = today.month
+
+    age = today.year - birthday.year
+    age -= 1 if today_month < birthday_month || (today_month == birthday_month && today.day < birthday.day)
+
+    age
   end
 
   private

@@ -6,7 +6,10 @@ describe CreditsJob do
     let!(:user_2) { create(:user, credits: 1, free_session_state: 0, free_session_expiration_date: Time.zone.today + 30.days) }
     let!(:user_3) { create(:user, credits: 1, free_session_state: 0, drop_in_expiration_date: Time.zone.today - 4.days) }
 
-    before { described_class.perform_now }
+    before do
+      ActiveCampaignMocker.new.mock
+      described_class.perform_now
+    end
 
     it { expect(user_1.reload.credits).to eq(0) }
     it { expect(user_1.reload.free_session_state).to eq('expired') }

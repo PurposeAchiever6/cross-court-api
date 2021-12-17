@@ -1,6 +1,8 @@
 {
   id: session.id,
   start_time: session.start_time.iso8601,
+  is_private: session.is_private,
+  coming_soon: session.coming_soon,
   time: session.time.iso8601,
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location })
 }

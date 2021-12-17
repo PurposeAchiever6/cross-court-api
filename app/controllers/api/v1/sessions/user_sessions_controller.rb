@@ -12,26 +12,42 @@ module Api
 
         def create
           ActiveRecord::Base.transaction do
+            current_user_id = current_user.id
+            referral = User.find_by(referral_code: params[:referral_code])
+
             user_session = UserSession.new(
               session_id: params[:session_id],
-              user_id: current_user.id,
+              user_id: current_user_id,
               date: params[:date],
-              referral: User.find_by(referral_code: params[:referral_code])
+              referral: referral
             )
-            user_session = UserSessionReferralCredits.new(user_session)
-            user_session = UserSessionSlackNotification.new(user_session)
-            user_session = UserSessionAutoConfirmed.new(user_session)
-            user_session = UserSessionConsumeCredit.new(user_session)
-            user_session = UserSessionWithValidDate.new(user_session)
-            user_session = UserSessionNotFull.new(user_session)
+
+            if user_session.valid?
+              user_session = UserSessionReferralCredits.new(user_session) if referral
+              user_session = before_save_actions(user_session)
+            end
+
             user_session.save!
 
-            KlaviyoService.new.event(Event::SESSION_BOOKED, current_user.reload, user_session: user_session)
-            SessionMailer.with(user_session_id: user_session.id).session_booked.deliver_later
+            user_session_id = user_session.id
+            CreateActiveCampaignDealJob.perform_now(
+              ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
+              current_user_id,
+              user_session_id: user_session_id
+            )
+            SessionMailer.with(user_session_id: user_session_id).session_booked.deliver_later
           end
         end
 
         private
+
+        def before_save_actions(user_session)
+          user_session = UserSessionSlackNotification.new(user_session)
+          user_session = UserSessionAutoConfirmed.new(user_session)
+          user_session = UserSessionConsumeCredit.new(user_session)
+          user_session = UserSessionWithValidDate.new(user_session)
+          UserSessionNotFull.new(user_session)
+        end
 
         def date
           params[:date] || Time.zone.today

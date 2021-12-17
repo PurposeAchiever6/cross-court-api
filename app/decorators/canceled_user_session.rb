@@ -10,7 +10,8 @@ class CanceledUserSession
   def save!
     in_cancellation_time = user_session.in_cancellation_time?
     is_free_session = user_session.is_free_session
-    session_date = user_session.date.strftime(Session::DAY_MONTH_NAME_FORMAT)
+    user_id = user.id
+    user_session_id = user_session.id
 
     if in_cancellation_time || is_free_session
       user.increment(:credits)
@@ -22,11 +23,11 @@ class CanceledUserSession
 
     if in_cancellation_time
       SlackService.new(user, date, time, location).session_canceled_in_time
-      KlaviyoService.new.event(
-        Event::SESSION_CANCELED_IN_TIME,
-        user,
-        user_session: user_session,
-        extra_params: { session_date: session_date }
+
+      CreateActiveCampaignDealJob.perform_now(
+        ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_IN_TIME,
+        user_id,
+        user_session_id: user_session_id
       )
     else
       result = ChargeCanceledOutOfTimeUserSession.call(user_session: user_session)
@@ -38,16 +39,12 @@ class CanceledUserSession
         SlackService.new(user, date, time, location).session_canceled_out_of_time
       end
 
-      KlaviyoService.new.event(
-        Event::SESSION_CANCELED_OUT_OF_TIME,
-        user,
-        user_session: user_session,
-        extra_params: {
-          session_date: session_date,
-          cancellation_period: Session::CANCELLATION_PERIOD.to_i / (60 * 60),
-          amount_charged: result.amount_charged,
-          unlimited_credits: user.unlimited_credits?
-        }
+      CreateActiveCampaignDealJob.perform_now(
+        ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
+        user_id,
+        user_session_id: user_session_id,
+        amount_charged: result.amount_charged,
+        unlimited_credits: user.unlimited_credits?.to_s
       )
     end
 

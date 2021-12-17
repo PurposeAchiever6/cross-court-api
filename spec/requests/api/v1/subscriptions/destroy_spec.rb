@@ -27,7 +27,7 @@ describe 'DELETE api/v1/subscriptions/:id' do
   before do
     allow(StripeService).to receive(:cancel_subscription_at_period_end).and_return(double(stripe_response))
     allow_any_instance_of(SlackService).to receive(:subscription_canceled)
-    allow_any_instance_of(KlaviyoService).to receive(:event).and_return(1)
+    ActiveCampaignMocker.new.mock
   end
 
   subject do
@@ -58,8 +58,8 @@ describe 'DELETE api/v1/subscriptions/:id' do
     subject
   end
 
-  it 'calls the klaviyo service' do
-    expect_any_instance_of(KlaviyoService).to receive(:event)
+  it 'calls the Active Campaign service' do
+    expect_any_instance_of(ActiveCampaignService).to receive(:create_deal)
     subject
   end
 
