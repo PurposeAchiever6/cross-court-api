@@ -91,7 +91,9 @@ class Session < ApplicationRecord
           start_time: date,
           time: time,
           location_id: location_id,
+          location: location,
           skill_level_id: skill_level_id,
+          skill_level: skill_level,
           is_private: is_private,
           coming_soon: coming_soon
         )
