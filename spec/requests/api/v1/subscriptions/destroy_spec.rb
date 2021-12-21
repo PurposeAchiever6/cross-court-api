@@ -59,8 +59,7 @@ describe 'DELETE api/v1/subscriptions/:id' do
   end
 
   it 'calls the Active Campaign service' do
-    expect_any_instance_of(ActiveCampaignService).to receive(:create_deal)
-    subject
+    expect { subject }.to have_enqueued_job(CreateActiveCampaignDealJob).on_queue('default')
   end
 
   context 'when the subscription is already canceled at period end' do

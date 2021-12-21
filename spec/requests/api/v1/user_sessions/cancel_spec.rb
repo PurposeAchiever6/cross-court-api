@@ -51,8 +51,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     end
 
     it 'calls the Active Campaign service' do
-      expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).and_return(1)
-      subject
+      expect { subject }.to have_enqueued_job(CreateActiveCampaignDealJob).on_queue('default')
     end
   end
 
