@@ -13,7 +13,7 @@ class UserSessionReferralCredits
     if referral_id != user_id && user.first_session?
       referral.increment(:credits)
       referral.save!
-      CreateActiveCampaignDealJob.perform_now(
+      CreateActiveCampaignDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::REFERRAL_SUCCESS,
         referral_id,
         referred_id: user.id

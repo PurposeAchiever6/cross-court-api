@@ -11,32 +11,33 @@ module Api
         end
 
         def create
-          ActiveRecord::Base.transaction do
-            current_user_id = current_user.id
-            referral = User.find_by(referral_code: params[:referral_code])
+          user_session =
+            ActiveRecord::Base.transaction do
+              referral = User.find_by(referral_code: params[:referral_code])
 
-            user_session = UserSession.new(
-              session_id: params[:session_id],
-              user_id: current_user_id,
-              date: params[:date],
-              referral: referral
-            )
+              user_session = UserSession.new(
+                session_id: params[:session_id],
+                user_id: current_user_id,
+                date: params[:date],
+                referral: referral
+              )
 
-            if user_session.valid?
-              user_session = UserSessionReferralCredits.new(user_session) if referral
-              user_session = before_save_actions(user_session)
+              if user_session.valid?
+                user_session = UserSessionReferralCredits.new(user_session) if referral
+                user_session = before_save_actions(user_session)
+              end
+
+              user_session.save!
+              user_session
             end
 
-            user_session.save!
-
-            user_session_id = user_session.id
-            CreateActiveCampaignDealJob.perform_now(
-              ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
-              current_user_id,
-              user_session_id: user_session_id
-            )
-            SessionMailer.with(user_session_id: user_session_id).session_booked.deliver_later
-          end
+          user_session_id = user_session.id
+          CreateActiveCampaignDealJob.perform_later(
+            ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
+            current_user_id,
+            user_session_id: user_session_id
+          )
+          SessionMailer.with(user_session_id: user_session_id).session_booked.deliver_later
         end
 
         private
@@ -51,6 +52,10 @@ module Api
 
         def date
           params[:date] || Time.zone.today
+        end
+
+        def current_user_id
+          current_user.id
         end
       end
     end

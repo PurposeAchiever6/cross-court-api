@@ -39,8 +39,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       it 'calls the Klaviyo service' do
-        expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).and_return(1)
-        subject
+        expect { subject }.to have_enqueued_job(CreateActiveCampaignDealJob).on_queue('default')
       end
 
       it 'calls the Slack service' do

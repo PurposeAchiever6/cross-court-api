@@ -31,14 +31,14 @@ module Api
       private
 
       def send_first_free_credit_added_event
-        CreateActiveCampaignDealJob.perform_now(
+        CreateActiveCampaignDealJob.perform_later(
           ::ActiveCampaign::Deal::Event::FIRST_FREE_CREDIT_ADDED,
           signed_in_resource.id
         )
       end
 
       def send_account_confirmation_event
-        CreateActiveCampaignDealJob.perform_now(
+        CreateActiveCampaignDealJob.perform_later(
           ::ActiveCampaign::Deal::Event::ACCOUNT_CONFIRMATION,
           signed_in_resource.id
         )

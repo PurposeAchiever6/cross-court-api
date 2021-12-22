@@ -12,7 +12,7 @@ class UserSessionConfirmed
 
     user_session.state = :confirmed if user_session.reserved?
 
-    CreateActiveCampaignDealJob.perform_now(
+    CreateActiveCampaignDealJob.perform_later(
       ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
       user.id,
       user_session_id: user_session.id
