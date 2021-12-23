@@ -51,7 +51,10 @@ module Api
         end
 
         def date
-          params[:date] || Time.zone.today
+          date = params[:date]
+          return Time.zone.today unless date
+
+          Date.strptime(date, '%m/%d/%Y')
         end
 
         def current_user_id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_11_224917) do
+ActiveRecord::Schema.define(version: 2021_12_22_223648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 2021_12_11_224917) do
     t.decimal "price_for_members", precision: 10, scale: 2
     t.string "stripe_product_id"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
+    t.index ["product_type"], name: "index_products_on_product_type"
   end
 
   create_table "products_promo_codes", force: :cascade do |t|
@@ -304,8 +305,8 @@ ActiveRecord::Schema.define(version: 2021_12_11_224917) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.boolean "private_access", default: false
     t.integer "active_campaign_id"
+    t.boolean "private_access", default: false
     t.date "birthday"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"

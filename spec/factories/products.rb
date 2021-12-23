@@ -18,7 +18,8 @@
 #
 # Indexes
 #
-#  index_products_on_deleted_at  (deleted_at)
+#  index_products_on_deleted_at    (deleted_at)
+#  index_products_on_product_type  (product_type)
 #
 
 FactoryBot.define do
