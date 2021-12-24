@@ -22,19 +22,5 @@ class CreditsJob < ApplicationJob
         user
       )
     end
-
-    UsersQuery.new.free_session_not_used_in(7.days).each do |user|
-      active_campaign_service.create_deal(
-        ::ActiveCampaign::Deal::Event::FREE_SESSION_NOT_USED_IN_7_DAYS,
-        user
-      )
-    end
-
-    UsersQuery.new.free_session_expires_in(15.days).each do |user|
-      active_campaign_service.create_deal(
-        ::ActiveCampaign::Deal::Event::FREE_SESSION_EXPIRES_SOON,
-        user
-      )
-    end
   end
 end
