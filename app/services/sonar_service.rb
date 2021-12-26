@@ -141,7 +141,7 @@ module SonarService
       cancellation_text(user_session),
       schedule_url: "#{front_url}/locations",
       cancellation_period: ENV['CANCELLATION_PERIOD'],
-      free_session_exp_days: ENV['FREE_SESSION_EXPIRATION_DAYS'],
+      free_session_exp_days: User::FREE_SESSION_EXPIRATION_DAYS.parts[:days],
       unlimited_session_canceled_out_of_time_fee: ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'],
       free_session_canceled_out_of_time_fee: ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE']
     )
