@@ -21,6 +21,8 @@ module SonarService
   end
 
   def message_received(user, message)
+    message = message.downcase.strip
+
     if positive_message?(message)
       user_session = find_and_confirm_next(user)
       if user_session.present?
@@ -41,11 +43,11 @@ module SonarService
   end
 
   def positive_message?(message)
-    %w[yes y].include?(message.downcase)
+    %w[yes y].include?(message)
   end
 
   def negative_message?(message)
-    %w[no n].include?(message.downcase)
+    %w[no n].include?(message)
   end
 
   def find_and_confirm_user_session(user)
