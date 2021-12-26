@@ -71,6 +71,10 @@ class Session < ApplicationRecord
     IceCube::Rule.from_hash recurring
   end
 
+  def recurring_text
+    recurring? ? IceCube::Rule.from_hash(recurring).to_s : 'Single occurrence'
+  end
+
   def schedule
     schedule = IceCube::Schedule.new(start_time)
     schedule.add_recurrence_rule(rule.until(end_time))

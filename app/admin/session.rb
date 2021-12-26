@@ -33,7 +33,12 @@ ActiveAdmin.register Session do
     id_column
     column :location_name
     column :skill_level_name
-    column :time
+    column :recurring, &:recurring_text
+    column :time do |session|
+      session.time.strftime(Session::TIME_FORMAT)
+    end
+    column :start_time
+    column :end_time
     column :is_private
     column :coming_soon
 
@@ -55,13 +60,7 @@ ActiveAdmin.register Session do
       row :time do |session|
         session.time.strftime(Session::TIME_FORMAT)
       end
-      row :recurring do |session|
-        if session.recurring?
-          IceCube::Rule.from_hash(session.recurring).to_s
-        else
-          'Single occurrence'
-        end
-      end
+      row :recurring, &:recurring_text
       row :location_name
       row :skill_level_name
       row :is_private
