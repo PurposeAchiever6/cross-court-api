@@ -4,20 +4,22 @@ module SonarService
   CUSTOMER_ATTRS = %w[phone_number email first_name last_name].freeze
 
   def add_update_customer(user)
+    phone = user.phone_number
     SendSonar.add_update_customer(
-      phone_number: user.phone_number,
+      phone_number: phone,
       email: user.email,
       first_name: user.first_name,
       last_name: user.last_name
     )
   rescue SendSonar::RequestException => e
-    Rails.logger.error("#{e} - #{user.phone_number}")
+    logger.error { "Error when adding/updating customer: #{e.class}: #{e.message} - #{phone}" }
   end
 
   def send_message(user, message)
-    SendSonar.message_customer(text: message, to: user.phone_number)
+    phone = user.phone_number
+    SendSonar.message_customer(text: message, to: phone)
   rescue SendSonar::RequestException => e
-    Rails.logger.error(e)
+    logger.error { "Error when sending message: #{e.class}: #{e.message} - #{phone}" }
   end
 
   def message_received(user, message)
@@ -147,5 +149,9 @@ module SonarService
       unlimited_session_canceled_out_of_time_fee: ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'],
       free_session_canceled_out_of_time_fee: ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE']
     )
+  end
+
+  def logger
+    @logger ||= Logger.new("#{Rails.root}/log/sonar.log")
   end
 end

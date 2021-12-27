@@ -33,6 +33,8 @@ Metrics/BlockNesting:
 Metrics/ClassLength:
   CountComments: false # count full line comments?
   Max: 200
+  Exclude:
+    - app/services/active_campaign_service.rb
 
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:

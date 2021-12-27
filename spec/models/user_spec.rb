@@ -76,4 +76,13 @@ describe User do
       it { is_expected.to validate_presence_of(:email) }
     end
   end
+
+  context 'when updating any sonar or active campaign attribute' do
+    let(:user) { create(:user) }
+
+    subject { user.update(first_name: 'Other') }
+
+    it { expect { subject }.to have_enqueued_job(CreateUpdateActiveCampaignContactJob).on_queue('default') }
+    it { expect { subject }.to have_enqueued_job(CreateUpdateSonarCustomerJob).on_queue('default') }
+  end
 end

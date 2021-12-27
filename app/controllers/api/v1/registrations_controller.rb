@@ -3,7 +3,7 @@ module Api
     class RegistrationsController < DeviseTokenAuth::RegistrationsController
       protect_from_forgery with: :exception
       include Api::Concerns::ActAsApiRequest
-      after_action :create_stripe_user, :create_active_campaign_user, only: :create
+      after_action :create_external_records, only: :create
 
       def create
         super
@@ -23,12 +23,12 @@ module Api
         render json: { user: resource_data }
       end
 
-      def create_stripe_user
-        StripeService.create_user(@resource) if @resource.persisted?
-      end
+      def create_external_records
+        return unless @resource.persisted?
 
-      def create_active_campaign_user
-        CreateUpdateActiveCampaignContactJob.perform_now(@resource.id) if @resource.persisted?
+        StripeService.create_user(@resource)
+        ActiveCampaignService.new.create_update_contact(@resource)
+        SonarService.add_update_customer(@resource)
       end
     end
   end
