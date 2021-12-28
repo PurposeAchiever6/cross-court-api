@@ -1,97 +1,132 @@
-<body style="padding:0">
-  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="color: black">
-    <tr>
-      <td style="padding-top:20px;" valign="top" width="100%">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-          <tr width="100%">
-            <td width="100%">
-              <table border="0" cellpadding="0" cellspacing="0" style="margin:0 auto;font-size: 12px;" width="100%">
-                <table
-                  border="0"
-                  cellpadding="0"
-                  cellspacing="0"
-                  class="image_block"
-                  role="presentation"
-                  style="mso-table-lspace: 0pt; mso-table-rspace: 0pt"
-                  width="100%"
-                >
-                  <tr>
-                    <td style="width: 100%; padding-right: 0px; padding-left: 0px">
-                      <div align="center" style="line-height: 10px">
-                        <a
-                          href="#{ENV['FRONTENT_URL']}"
-                          style="outline: none"
-                          tabindex="-1"
-                          target="_blank"
-                          ><img
-                            alt="Logo"
-                            src="https://content.app-us1.com/OvYpm/2021/12/11/a80a1124-113a-45c7-8198-7a971f0772b3.png"
-                            style="
-                              display: block;
-                              height: auto;
-                              border: 0;
-                              width: 250px;
-                              max-width: 100%;
-                            "
-                            title="Logo"
-                            width="250"
-                        /></a>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-                <tr width="100%">
-                  <td align="center" width="100%">
-                    <a href="https://www.cross-court.com/">
-                      <img
-                        border="0"
-                        class="device-width mens"
-                        src="https://content.app-us1.com/OvYpm/2021/12/11/814818a6-04c9-4d45-9919-f9fda3eb9bb5.png"
-                      />
-                    </a>
-                  </td>
-                </tr>
-                <tr width="100%">
-                  <td class="location-info" width="100%">
-                    <span class="location-info-title">DATE</span><br/>
-                    <span class="location-info-item"><%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %></span><br/>
-                    <span class="location-info-title">TIME</span><br/>
-                    <span class="location-info-item"><%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %></span><br/>
-                    <span class="location-info-title">LOCATION</span><br/>
-                    <span class="location-info-item"><%= @location.name %></span>
-                    <a href=<%= @location.google_maps_link %>
-                      <span class="location-info-item-blue"><%= @location.full_address %></span><br/>
-                    </a>
-                  </td>
-                </tr>
-                <tr width="100%">
-                  <td align="center" width="100%">
-                    <a href="https://vimeo.com/438000525">
-                      <img
-                        alt="What to Expect Video"
-                        border="0"
-                        class="device-width video-img"
-                        src="https://content.app-us1.com/OvYpm/2021/12/11/dd63faac-8721-4971-8fd2-4c33ef511b58.png"
-                      />
-                    </a>
-                  </td>
-                </tr>
-                <tr width="100%">
-                  <td class="more-info" width="100%">
-                    FOR MORE INFORMATION, CHECK OUT OUR FAQ PAGE
-                    <a href="https://www.cross-court.com/how-it-works" style="text-decoration:none;color:#3358ff;">HERE</a>.
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-        <div class="footer">
-          <br/>
-          CROSSCOURT
-          <br/>
-        </div>
-      </td>
-    </tr>
-  </table>
+<body style='padding:0;'>
+  <div style='margin:0 auto; width: max-content;'>
+    <a href=<%= ENV['FRONTENT_URL'] %>>
+      <img alt='Logo' style='width: 200px; margin: 0 auto;' src='https://content.app-us1.com/OvYpm/2021/12/13/4db103c5-71d0-44d3-9e61-7ed632316355.png'>
+    </a>
+
+    <div style='margin: 30px 0px 0px 0px; text-align: center'>
+      <% if @user_session.is_free_session %>
+        <img alt='First Session Booked' style='width: 350px; display: block; margin: 10px;' src='https://content.app-us1.com/OvYpm/2021/12/24/86fe132b-fb2d-4e69-bf23-0597e564c4b5.png'>
+        <img alt='Important' style='width: 200px;' src='https://content.app-us1.com/OvYpm/2021/12/23/15498133-5296-442f-b31a-5738834f3dcf.png'>
+      <% else %>
+        <img alt='Session Booked' style='width: 350px;' src='https://content.app-us1.com/OvYpm/2021/12/24/c9235f44-a258-49f4-aa7e-736f344b7270.png'>
+      <% end %>
+    </div>
+
+    <div class="location-info">
+      <p>Hey <%= @user.first_name.capitalize %>!</p>
+      <% if @user_session.is_free_session %>
+        <p>Your first session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is officialy booked.</p>
+        <p>To prepare for your first session, please take a look at the following items to make sure you're ready to go!</p>
+      <% else %>
+        <p>Your session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is officialy booked.</p>
+        <p>Just in case you forgot,  we've put together some helpful reminders below.</p>
+      <% end %>
+    </div>
+
+    <table class='content-info'>
+      <tr>
+        <td class='info-table-image-container'>
+          <img alt='What To Bring' style='width: 60px;' src='https://content.app-us1.com/OvYpm/2021/12/24/bd550368-764a-4628-a70d-6b4e4903441a.png'>
+        </td>
+        <td>
+          <p class='info-table-title'>WHAT TO BRING</p>
+          <p style="margin:2px;"><strong class='font-black'>Required:</strong> Athletic gear, basketball shoes, and mask for common areas</p>
+          <p style="margin:2px;"><strong class='font-black'>Optional:</strong> Towel and water</p>
+          <p style="margin:2px;"><strong class='font-black'>Do not bring:</strong> Basketball, colored beverages, food, and guests</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td class='info-table-image-container'>
+          <img alt='What We Provide' style='width: 50px;' src='https://content.app-us1.com/OvYpm/2021/12/24/a0c48ee6-fb90-4e6e-8690-3d0efe9b4b24.png'>
+        </td>
+        <td>
+          <p class='info-table-title'>WHAT WE PROVIDE</p>
+          <p style="margin:2px;">Parking, jersey, lockers, restrooms, water filler, and good vibes</p>
+          <p style="margin:2px;"><strong class='font-black'>Available for purchase:</strong> Water bottle, towels, jersey</p>
+        </td>
+      </tr>
+
+      <% if @user_session.is_free_session %>
+        <tr>
+          <td class='info-table-image-container'>
+            <img alt='COVID Compliance' style='width: 60px;' src='https://content.app-us1.com/OvYpm/2021/12/24/1a0f62f4-f840-4077-a19c-d1b8df8d47b2.png'>
+          </td>
+          <td>
+            <p class='info-table-title'>COVID COMPLIANCE</p>
+            <p style="margin:2px;">
+              Due to recent city wide mandates as of November 8th 2021, our club requires all players to show proof of vaccination upon their first visit.
+              Those exempt from the mandate have the option to provide proof of a negative COVID-19 test conducted within 72 hours of a booked session.
+              We will note in our system that your vaccination status has been verified, which allows us to avoid having to ask you for proof each time you show up to sweat
+            </p>
+          </td>
+        </tr>
+      <% end %>
+
+
+      <tr>
+        <td class='info-table-image-container'>
+          <img alt='Where To Park' style='width: 60px;' src='https://content.app-us1.com/OvYpm/2021/12/24/3c4a8161-48f4-4bc2-935f-8ae29937e4a2.png'>
+        </td>
+        <td>
+          <p class='info-table-title'>WHERE TO PARK</p>
+          <p style="margin: 2px 0 10px 0;">There is a gated parking lot attached to the club</p>
+          <img alt='Where To Park' style='width: 300px;' src='https://content.app-us1.com/OvYpm/2021/12/24/9fda34d2-4c50-456d-afe1-f98dd3429852.png'>
+        </td>
+      </tr>
+
+      <tr>
+        <td class='info-table-image-container'>
+          <img alt='What to Expect' style='width: 60px; margin: 20px 0 0 0;' src='https://content.app-us1.com/OvYpm/2021/12/24/bb962d94-94f3-4802-89ee-d36a804bdc91.png'>
+        </td>
+        <td>
+          <p class='info-table-title'>WHAT TO EXPECT</p>
+          <p style="margin: 2px 0 10px 0;">Check out our Rules and Format <a href=<%= "#{ENV['FRONTENT_URL']}/rules" %>>here</a> and our How It Works video below</p>
+          <a href=<%= "#{ENV['FRONTENT_URL']}/how-it-works" %>>
+            <img alt='What to Expect' style='width: 300px;' src='https://content.app-us1.com/OvYpm/2021/12/22/a3aee08d-ee10-49fd-a5a1-4af18f6de028.png'>
+          </a>
+        </td>
+      </tr>
+
+      <tr>
+        <td class='info-table-image-container'>
+          <img alt='Additional Notes' style='width: 50px;' src='https://content.app-us1.com/OvYpm/2021/12/24/d0c75f7f-e091-46f9-8350-4605c39ad7d9.png'>
+        </td>
+        <td>
+          <p class='info-table-title'>ADDITIONAL NOTES</p>
+          <table>
+            <tr>
+              <td class='info-table-item-ball'>
+                <img style='width: 25px;' src='https://content.app-us1.com/OvYpm/2021/12/24/8dbd455c-d21c-4eae-b24f-cf0e7fc87ea1.png'>
+              </td>
+              <td><p class='info-table-item-text'>Please show up at least 10 minutes early. First 10 players to check in start the first game</p></td>
+            </tr>
+            <tr>
+              <td class='info-table-item-ball'>
+                <img style='width: 25px;' src='https://content.app-us1.com/OvYpm/2021/12/24/8dbd455c-d21c-4eae-b24f-cf0e7fc87ea1.png'>
+              </td>
+              <td><p class='info-table-item-text'>Keep an eye out for a text message leading up to your session that will ask you to confirm your reservation</p></td>
+            </tr>
+            <tr>
+              <td class='info-table-item-ball'>
+                <img style='width: 25px;' src='https://content.app-us1.com/OvYpm/2021/12/24/8dbd455c-d21c-4eae-b24f-cf0e7fc87ea1.png'>
+              </td>
+              <td><p class='info-table-item-text'>You have up until 5 hours before your session to cancel</p></td>
+            </tr>
+            <tr>
+              <td class='info-table-item-ball'>
+                <img style='width: 25px;' src='https://content.app-us1.com/OvYpm/2021/12/24/8dbd455c-d21c-4eae-b24f-cf0e7fc87ea1.png'>
+              </td>
+              <td><p class='info-table-item-text'>Feel free to review our FAQ page or reach out using our website if you have any questions</p></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <div style='margin: 30px 0px 0px 0px; text-align: center'>
+      <img alt="Let's Get It" style='width: 200px;' src='https://content.app-us1.com/OvYpm/2021/12/23/4e870ab4-f20a-4b39-9044-6002b0f56726.png'>
+    </div>
+  </div>
 </body>

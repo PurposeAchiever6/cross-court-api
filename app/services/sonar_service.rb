@@ -4,23 +4,27 @@ module SonarService
   CUSTOMER_ATTRS = %w[phone_number email first_name last_name].freeze
 
   def add_update_customer(user)
+    phone = user.phone_number
     SendSonar.add_update_customer(
-      phone_number: user.phone_number,
+      phone_number: phone,
       email: user.email,
       first_name: user.first_name,
       last_name: user.last_name
     )
   rescue SendSonar::RequestException => e
-    Rails.logger.error("#{e} - #{user.phone_number}")
+    logger.error { "Error when adding/updating customer: #{e.class}: #{e.message} - #{phone}" }
   end
 
   def send_message(user, message)
-    SendSonar.message_customer(text: message, to: user.phone_number)
+    phone = user.phone_number
+    SendSonar.message_customer(text: message, to: phone)
   rescue SendSonar::RequestException => e
-    Rails.logger.error(e)
+    logger.error { "Error when sending message: #{e.class}: #{e.message} - #{phone}" }
   end
 
   def message_received(user, message)
+    message = message.downcase.strip
+
     if positive_message?(message)
       user_session = find_and_confirm_next(user)
       if user_session.present?
@@ -41,11 +45,11 @@ module SonarService
   end
 
   def positive_message?(message)
-    %w[yes y].include?(message.downcase)
+    %w[yes y].include?(message)
   end
 
   def negative_message?(message)
-    %w[no n].include?(message.downcase)
+    %w[no n].include?(message)
   end
 
   def find_and_confirm_user_session(user)
@@ -141,9 +145,13 @@ module SonarService
       cancellation_text(user_session),
       schedule_url: "#{front_url}/locations",
       cancellation_period: ENV['CANCELLATION_PERIOD'],
-      free_session_exp_days: ENV['FREE_SESSION_EXPIRATION_DAYS'],
+      free_session_exp_days: User::FREE_SESSION_EXPIRATION_DAYS.parts[:days],
       unlimited_session_canceled_out_of_time_fee: ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'],
       free_session_canceled_out_of_time_fee: ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE']
     )
+  end
+
+  def logger
+    @logger ||= Logger.new("#{Rails.root}/log/sonar.log")
   end
 end

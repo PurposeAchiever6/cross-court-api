@@ -80,22 +80,22 @@ en:
         %{name} (phone: %{phone}) has *reactivated* his subscription (%{subscription_name}).
     invite_friend_msg: "If you want to sweat with a friend, they can sign up for your session here: %{link}. "
     session_confirmed: >
-      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!.
+      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!
       Please arrive at least 10 minutes early since the first 10 players to check-in start the first
       game. %{invite_friend}Let’s get it!
     session_confirmed_first_timers: >
-      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!.
+      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!
       Please arrive at least 10 minutes early since the first 10 players to check-in start the first
       game. Also note that due to limited capacity, spectators or guests will not be allowed to
       watch. %{invite_friend}Let’s get it!
     session_auto_confirmed: >
-      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!.
+      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!
       Please arrive at least 10 minutes early since the first 10 players to check-in start the first
       game. If you need to cancel for any reason, then please respond ‘N’ to this message, but note
       that the cancellation window has passed so no refunds will be issued for cancellations
       beyond this point. %{invite_friend}Let’s get it!
     session_auto_confirmed_first_timers: >
-      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!.
+      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!
       Please arrive at least 10 minutes early since the first 10 players to check-in start the first
       game. If you need to cancel for any reason, then please respond ‘N’ to this message, but note
       that the cancellation window has passed so no refunds will be issued for cancellations

@@ -3,6 +3,7 @@ module ActiveCampaign
     module Field
       CREDITS = 'Credits'.freeze
       SUBSCRIPTION_CREDITS = 'Subscription Credits'.freeze
+      BIRTHDAY = 'Birthday'.freeze
     end
   end
 end

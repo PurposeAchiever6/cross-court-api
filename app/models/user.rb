@@ -109,8 +109,7 @@ class User < ApplicationRecord
 
   before_validation :init_uid
   after_create :create_referral_code
-  # TODO: update in AC after save
-  after_save :add_update_sonar_customer
+  after_commit :update_external_records, on: [:update]
   after_destroy :delete_stripe_customer
 
   def self.from_social_provider(provider, user_params)
@@ -178,8 +177,13 @@ class User < ApplicationRecord
     end
   end
 
-  def add_update_sonar_customer
-    SonarService.add_update_customer(self) if SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes.keys.include?(a) }
+  def update_external_records
+    saved_changes_keys = saved_changes.keys
+    return unless persisted?
+
+    CreateUpdateActiveCampaignContactJob.perform_later(id) if ActiveCampaignService::CONTACT_ATTRS.any? { |a| saved_changes_keys.include?(a) }
+
+    CreateUpdateSonarCustomerJob.perform_later(id) if SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes_keys.include?(a) }
   end
 
   def delete_stripe_customer

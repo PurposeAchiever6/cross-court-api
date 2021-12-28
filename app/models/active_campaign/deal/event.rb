@@ -13,8 +13,6 @@ module ActiveCampaign
       SESSION_CANCELLED_OUT_OF_TIME = 'Session Cancelled Out Of Time'.freeze
       DROP_IN_SESSION_EXPIRE_SOON = 'Drop in Session Expire Soon'.freeze
       TIME_TO_RE_UP = 'Time To Re Up'.freeze
-      FREE_SESSION_NOT_USED_IN_7_DAYS = 'Free Session Not Used In 7 Days'.freeze
-      FREE_SESSION_EXPIRES_SOON = 'Free Session Expires Soon'.freeze
       STARTED_CHECKOUT = 'Started Checkout'.freeze
       FREE_SESSION_CHECK_IN = 'Free Session Check In'.freeze
       FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze

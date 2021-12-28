@@ -1,6 +1,8 @@
 class ActiveCampaignService
   attr_reader :mapped_contact_fields, :mapped_deal_fields, :mapped_deal_stages
 
+  CONTACT_ATTRS = %w[email first_name last_name phone_number credits subscription_credits birthday].freeze
+
   def initialize
     @mapped_contact_fields = contact_fields_map
     @mapped_deal_fields = deal_fields_map
@@ -8,7 +10,8 @@ class ActiveCampaignService
   end
 
   def create_update_contact(user)
-    response = ActiveCampaign.post('/contact/sync', payload: contact_payload(user))
+    payload = contact_payload(user)
+    response = ActiveCampaign.post('/contact/sync', payload: payload)
 
     if user.id && !user.active_campaign_id
       active_campaign_id = response['contact']['id'].to_i
@@ -16,6 +19,9 @@ class ActiveCampaignService
     end
 
     response
+  rescue StandardError => e
+    logger.error { "Error when creating/updating contact. #{e.class}: #{e.message}. Payload: #{payload}" }
+    raise e
   end
 
   def contact_fields
@@ -31,10 +37,18 @@ class ActiveCampaignService
   end
 
   def create_deal(event, user, args = [])
-    ActiveCampaign.post('/deals', payload: deal_payload(event, user, args))
+    payload = deal_payload(event, user, args)
+    ActiveCampaign.post('/deals', payload: payload)
+  rescue StandardError => e
+    logger.error { "Error when creating deal. #{e.class}: #{e.message}. Event: #{event}, payload: #{payload}" }
+    raise e
   end
 
   private
+
+  def logger
+    @logger ||= Logger.new("#{Rails.root}/log/active_campaign.log")
+  end
 
   def contact_fields_map
     @contact_fields_map ||=
@@ -65,7 +79,11 @@ class ActiveCampaignService
           },
           {
             field: mapped_contact_fields[::ActiveCampaign::Contact::Field::SUBSCRIPTION_CREDITS],
-            value: user.subscription_credits
+            value: user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
+          },
+          {
+            field: mapped_contact_fields[::ActiveCampaign::Contact::Field::BIRTHDAY],
+            value: user.birthday.strftime('%Y-%m-%d')
           }
         ]
       }
