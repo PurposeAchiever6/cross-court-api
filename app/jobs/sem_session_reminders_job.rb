@@ -3,7 +3,9 @@ class SemSessionRemindersJob < ApplicationJob
 
   def perform
     # 24 hour reminder
-    SessionReminderQuery.new(SemSession.all.future.unconfirmed).in_24_hours.find_each do |sem_session|
+    SessionReminderQuery.new(
+      SemSession.all.future.unconfirmed
+    ).in_24_hours.find_each do |sem_session|
       user = sem_session.user
       SonarService.send_message(user, I18n.t('notifier.sem_tomorrow_reminder',
                                              name: user.first_name,

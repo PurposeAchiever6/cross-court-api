@@ -30,7 +30,11 @@ class UserSession < ApplicationRecord
   belongs_to :user
   belongs_to :session
 
-  belongs_to :referral, class_name: 'User', foreign_key: :referral_id, optional: true, inverse_of: :user_sessions
+  belongs_to :referral,
+             class_name: 'User',
+             foreign_key: :referral_id,
+             optional: true,
+             inverse_of: :user_sessions
 
   has_many :session_survey_answers, dependent: :destroy
 
@@ -89,7 +93,11 @@ class UserSession < ApplicationRecord
     ).utc
 
     options = { 'CN' => 'Crosscourt' }
-    organizer_property = RiCal::PropertyValue::CalAddress.new(nil, value: 'mailto:ccteam@cross-court.com', params: options)
+    organizer_property = RiCal::PropertyValue::CalAddress.new(
+      nil,
+      value: 'mailto:ccteam@cross-court.com',
+      params: options
+    )
 
     event = RiCal.Calendar do |cal|
       cal.event do |calendar_event|

@@ -5,6 +5,7 @@ ActiveAdmin.register User do
 
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
+    subscription_credits = resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits
 
     f.object.confirmed_at = Time.current
     f.inputs 'Details' do
@@ -14,7 +15,7 @@ ActiveAdmin.register User do
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
       f.input :subscription_credits,
-              input_html: { value: resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits,
+              input_html: { value: subscription_credits,
                             type: type,
                             disabled: true }
       f.input :total_credits,

@@ -14,7 +14,10 @@ json = {
     name: sem&.full_name
   },
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
-  skill_level: render(partial: 'api/v1/skill_levels/info', locals: { skill_level: session.skill_level })
+  skill_level: render(
+    partial: 'api/v1/skill_levels/info',
+    locals: { skill_level: session.skill_level }
+  )
 }
 
 json[:referee][:image_url] = polymorphic_url(referee.image) if referee&.image&.attached?

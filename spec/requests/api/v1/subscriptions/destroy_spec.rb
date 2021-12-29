@@ -25,7 +25,9 @@ describe 'DELETE api/v1/subscriptions/:id' do
   end
 
   before do
-    allow(StripeService).to receive(:cancel_subscription_at_period_end).and_return(double(stripe_response))
+    allow(StripeService).to receive(
+      :cancel_subscription_at_period_end
+    ).and_return(double(stripe_response))
     allow_any_instance_of(SlackService).to receive(:subscription_canceled)
     ActiveCampaignMocker.new.mock
   end

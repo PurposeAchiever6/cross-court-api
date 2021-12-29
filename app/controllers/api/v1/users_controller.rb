@@ -1,7 +1,8 @@
 module Api
   module V1
     class UsersController < Api::V1::ApiUserController
-      skip_before_action :authenticate_user!, only: %i[resend_confirmation_instructions update_skill_rating]
+      skip_before_action :authenticate_user!,
+                         only: %i[resend_confirmation_instructions update_skill_rating]
 
       def show; end
 

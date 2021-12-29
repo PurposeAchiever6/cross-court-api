@@ -7,8 +7,13 @@ class CreateSubscription
     payment_method_id = context.payment_method
     promo_code = context.promo_code
 
-    context.fail!(message: I18n.t('api.errors.subscriptions.user_has_active')) if user.active_subscription
-    context.fail!(message: I18n.t('api.errors.promo_code.invalid')) if promo_code&.invalid?(user, product)
+    if user.active_subscription
+      context.fail!(message: I18n.t('api.errors.subscriptions.user_has_active'))
+    end
+
+    if promo_code&.invalid?(user, product)
+      context.fail!(message: I18n.t('api.errors.promo_code.invalid'))
+    end
 
     stripe_subscription = StripeService.create_subscription(
       user,

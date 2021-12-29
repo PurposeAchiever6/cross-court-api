@@ -20,7 +20,9 @@ describe RefereeSessionRemindersJob do
       # In 24 hours
       let(:time_24)           { la_time.strftime(Session::TIME_FORMAT) }
       let(:s1)                { create(:session, :daily, time: time_24) }
-      let!(:referee_session1) { create(:referee_session, date: la_date.tomorrow, session: s1, user: user) }
+      let!(:referee_session1) do
+        create(:referee_session, date: la_date.tomorrow, session: s1, user: user)
+      end
       let(:message_24_hours) do
         I18n.t('notifier.referee_tomorrow_reminder',
                name: user.first_name,

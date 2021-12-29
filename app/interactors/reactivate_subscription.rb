@@ -4,7 +4,9 @@ class ReactivateSubscription
   def call
     subscription = context.subscription
 
-    context.fail!(message: I18n.t('api.errors.subscriptions.is_not_canceled')) unless subscription.cancel_at_period_end
+    unless subscription.cancel_at_period_end
+      context.fail!(message: I18n.t('api.errors.subscriptions.is_not_canceled'))
+    end
 
     stripe_subscription = StripeService.reactivate_subscription(subscription)
 

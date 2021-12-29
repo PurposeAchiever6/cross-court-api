@@ -1,3 +1,7 @@
 {
-  survey_questions: render(partial: 'info', collection: @survey_questions, as: :session_survey_question)
+  survey_questions: render(
+    partial: 'info',
+    collection: @survey_questions,
+    as: :session_survey_question
+  )
 }

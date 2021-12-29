@@ -25,7 +25,9 @@ describe 'PUT api/v1/subscriptions/:id' do
     end
 
     it 'changes the product subscription' do
-      expect { subject }.to change { user.reload.active_subscription.product }.from(product).to(new_product)
+      expect { subject }.to change {
+        user.reload.active_subscription.product
+      }.from(product).to(new_product)
     end
 
     it 'changes the product credits' do

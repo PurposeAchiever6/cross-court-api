@@ -23,11 +23,15 @@ describe SessionReminderQuery do
     end
 
     context 'when there are referee_sessions in 24 hours' do
-      let(:s1)                { create(:session, time: los_angeles_time) }
-      let(:s2)                { create(:session, time: los_angeles_time + 1.hour) }
+      let(:s1) { create(:session, time: los_angeles_time) }
+      let(:s2) { create(:session, time: los_angeles_time + 1.hour) }
       let!(:referee_session1) { create(:referee_session, session: s1, date: los_angeles_date) }
-      let!(:referee_session2) { create(:referee_session, session: s1, date: los_angeles_date + 1.day) }
-      let!(:referee_session3) { create(:referee_session, session: s2, date: los_angeles_date + 1.day) }
+      let!(:referee_session2) do
+        create(:referee_session, session: s1, date: los_angeles_date + 1.day)
+      end
+      let!(:referee_session3) do
+        create(:referee_session, session: s2, date: los_angeles_date + 1.day)
+      end
 
       it 'returns only one referee_sessions' do
         expect(reminder_ready_query.in_24_hours.count).to eq(1)
@@ -40,10 +44,14 @@ describe SessionReminderQuery do
   end
 
   describe '.in' do
-    let(:s1)                { create(:session, time: los_angeles_time + 12.hours) }
-    let(:s2)                { create(:session, time: los_angeles_time + 7.hours) }
-    let!(:referee_session1) { create(:referee_session, session: s1, date: los_angeles_date + 12.hours) }
-    let!(:referee_session2) { create(:referee_session, session: s2, date: los_angeles_date + 7.hours) }
+    let(:s1) { create(:session, time: los_angeles_time + 12.hours) }
+    let(:s2) { create(:session, time: los_angeles_time + 7.hours) }
+    let!(:referee_session1) do
+      create(:referee_session, session: s1, date: los_angeles_date + 12.hours)
+    end
+    let!(:referee_session2) do
+      create(:referee_session, session: s2, date: los_angeles_date + 7.hours)
+    end
     let!(:referee_session3) { create(:referee_session, session: s2, date: 2.days.from_now) }
 
     describe 'in 12 hours' do

@@ -140,13 +140,14 @@ module SonarService
 
   def cancellation_msg(user_session)
     front_url = ENV['FRONTENT_URL']
+    unlimited_session_canceled_out_of_time_fee = ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE']
 
     I18n.t(
       cancellation_text(user_session),
       schedule_url: "#{front_url}/locations",
       cancellation_period: ENV['CANCELLATION_PERIOD'],
       free_session_exp_days: User::FREE_SESSION_EXPIRATION_DAYS.parts[:days],
-      unlimited_session_canceled_out_of_time_fee: ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'],
+      unlimited_session_canceled_out_of_time_fee: unlimited_session_canceled_out_of_time_fee,
       free_session_canceled_out_of_time_fee: ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE']
     )
   end

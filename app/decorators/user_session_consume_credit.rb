@@ -8,7 +8,9 @@ class UserSessionConsumeCredit
   end
 
   def save!
-    raise NotEnoughCreditsException, I18n.t('api.errors.user_session.not_enough_credits') unless user.credits?
+    unless user.credits?
+      raise NotEnoughCreditsException, I18n.t('api.errors.user_session.not_enough_credits')
+    end
 
     if user.free_session_claimed?
       user_session.is_free_session = true

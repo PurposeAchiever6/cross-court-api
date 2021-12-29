@@ -11,7 +11,8 @@ describe 'PUT api/v1/purchases/create_free_session_intent' do
   end
 
   subject do
-    put create_free_session_intent_api_v1_purchases_path, params: params, headers: auth_headers, as: :json
+    put create_free_session_intent_api_v1_purchases_path,
+        params: params, headers: auth_headers, as: :json
   end
 
   context "when the user hasn't claimed the free session" do

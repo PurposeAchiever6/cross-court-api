@@ -180,7 +180,10 @@ class StripeService
     }
 
     expiration_date = promo_code_params[:expiration_date]
-    promo_code_attrs.merge!(expires_at: (DateTime.parse(expiration_date) + 1.day).to_i) if expiration_date.present?
+
+    if expiration_date.present?
+      promo_code_attrs.merge!(expires_at: (DateTime.parse(expiration_date) + 1.day).to_i)
+    end
 
     Stripe::PromotionCode.create(promo_code_attrs)
   end

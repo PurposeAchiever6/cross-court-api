@@ -14,7 +14,10 @@ class CheckInUsersJob
         end
 
       active_campaign_service.create_deal(event, user)
-      active_campaign_service.create_deal(::ActiveCampaign::Deal::Event::TIME_TO_RE_UP, user) if send_time_to_re_up?(user)
+
+      next unless send_time_to_re_up?(user)
+
+      active_campaign_service.create_deal(::ActiveCampaign::Deal::Event::TIME_TO_RE_UP, user)
     end
   end
 

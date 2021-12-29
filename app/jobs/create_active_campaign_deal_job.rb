@@ -6,7 +6,8 @@ class CreateActiveCampaignDealJob < ApplicationJob
   end
 
   def log_error(job, exception)
-    message = "Error when calling ActiveCampaign: #{exception.message} with arguments: #{job.arguments}"
+    message =
+      "Error when calling ActiveCampaign: #{exception.message} with arguments: #{job.arguments}"
     Rails.logger.error(message)
   end
 

@@ -1,12 +1,16 @@
 require 'rails_helper'
 
 describe 'GET api/v1/session_surveys/questions' do
-  let(:user)                      { create(:user) }
-  let!(:enabled_questions_count)  { rand(1..5) }
-  let!(:questions_count)          { rand(1..5) }
-  let!(:enabled_questions)        { create_list(:session_survey_question, enabled_questions_count, is_enabled: true) }
-  let!(:disabled_questions)       { create_list(:session_survey_question, questions_count, is_enabled: false) }
-  let!(:user_session)             { create(:user_session, user: user, checked_in: true) }
+  let(:user) { create(:user) }
+  let!(:enabled_questions_count) { rand(1..5) }
+  let!(:questions_count) { rand(1..5) }
+  let!(:enabled_questions) do
+    create_list(:session_survey_question, enabled_questions_count, is_enabled: true)
+  end
+  let!(:disabled_questions) do
+    create_list(:session_survey_question, questions_count, is_enabled: false)
+  end
+  let!(:user_session) { create(:user_session, user: user, checked_in: true) }
 
   let(:params) { { user_session_id: user_session.id } }
 

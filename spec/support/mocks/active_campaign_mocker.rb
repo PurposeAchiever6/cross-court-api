@@ -36,7 +36,9 @@ class ActiveCampaignMocker
   end
 
   def deal_stages
-    WebMock.stub_request(:get, "#{base_url}/api/3/dealStages?filters[d_groupid]=#{ENV['ACTIVE_CAMPAING_EMAILS_PIPELINE_ID']}").with(
+    url =
+      "#{base_url}/api/3/dealStages?filters[d_groupid]=#{ENV['ACTIVE_CAMPAING_EMAILS_PIPELINE_ID']}"
+    WebMock.stub_request(:get, url).with(
       body: {},
       headers: default_headers
     ).to_return(

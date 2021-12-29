@@ -9,14 +9,22 @@ describe RemoveOrphanSessions do
     Timecop.return
   end
 
-  let!(:los_angeles_time)       { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
-  let!(:los_angeles_date)       { los_angeles_time.to_date }
+  let!(:los_angeles_time) do
+    Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
+  end
+  let!(:los_angeles_date) { los_angeles_time.to_date }
 
-  let(:session)                 { create(:session, :daily) }
-  let!(:yesterday_sem_session)  { create(:sem_session, session: session, date: los_angeles_date.yesterday) }
-  let!(:yesterday_ref_session)  { create(:referee_session, session: session, date: los_angeles_date.yesterday) }
-  let!(:yesterday_user_session) { create(:user_session, session: session, date: los_angeles_date.yesterday) }
-  let(:user)                    { create(:user) }
+  let(:session) { create(:session, :daily) }
+  let!(:yesterday_sem_session) do
+    create(:sem_session, session: session, date: los_angeles_date.yesterday)
+  end
+  let!(:yesterday_ref_session) do
+    create(:referee_session, session: session, date: los_angeles_date.yesterday)
+  end
+  let!(:yesterday_user_session) do
+    create(:user_session, session: session, date: los_angeles_date.yesterday)
+  end
+  let(:user) { create(:user) }
 
   before do
     8.times do |i|

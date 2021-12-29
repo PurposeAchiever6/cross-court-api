@@ -33,16 +33,23 @@ ActiveAdmin.register Product do
   end
 
   form do |f|
+    persisted = resource.persisted?
     checkbox = []
     checkbox << label_tag('unlimited')
-    checkbox << check_box_tag('unlimited', '1', resource.persisted? && resource.unlimited?, disabled: resource.persisted?, id: 'product-unlimited')
+    checkbox << check_box_tag(
+      'unlimited',
+      '1',
+      persisted && resource.unlimited?,
+      disabled: persisted,
+      id: 'product-unlimited'
+    )
 
     f.inputs 'Product details' do
-      f.input :product_type, input_html: { disabled: resource.persisted? }
-      f.input :name, input_html: { disabled: resource.persisted? }
-      f.input :credits, input_html: { disabled: resource.persisted? }
+      f.input :product_type, input_html: { disabled: persisted }
+      f.input :name, input_html: { disabled: persisted }
+      f.input :credits, input_html: { disabled: persisted }
       f.li checkbox
-      f.input :price, input_html: { disabled: resource.persisted? && resource.recurring? }
+      f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
       f.input :label
       f.input :order_number

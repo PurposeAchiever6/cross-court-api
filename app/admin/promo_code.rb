@@ -95,7 +95,8 @@ ActiveAdmin.register PromoCode do
           @resource.save!
 
           redirect_to admin_promo_codes_path,
-                      notice: I18n.t('admin.promo_codes.created', type: promo_code_params[:type].underscore.humanize)
+                      notice: I18n.t('admin.promo_codes.created',
+                                     type: promo_code_params[:type].underscore.humanize)
         else
           render action: 'new'
         end
@@ -119,7 +120,8 @@ ActiveAdmin.register PromoCode do
         resource.destroy!
 
         redirect_to admin_promo_codes_path,
-                    notice: I18n.t('admin.promo_codes.destroyed', type: promo_code.type.underscore.humanize)
+                    notice: I18n.t('admin.promo_codes.destroyed',
+                                   type: promo_code.type.underscore.humanize)
       else
         super
       end

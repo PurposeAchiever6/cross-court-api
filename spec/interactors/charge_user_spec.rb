@@ -27,7 +27,9 @@ describe ChargeUser do
       before { allow(StripeService).to receive(:fetch_payment_methods).and_return([]) }
 
       it { expect(subject.success?).to eq(false) }
-      it { expect(subject.message).to eq('The user does not have a saved credit card to be charged') }
+      it do
+        expect(subject.message).to eq('The user does not have a saved credit card to be charged')
+      end
     end
   end
 end

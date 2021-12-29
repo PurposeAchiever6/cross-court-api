@@ -21,7 +21,9 @@ describe SonarService do
 
     let!(:time_24) { la_time.strftime(Session::TIME_FORMAT) }
     let!(:session) { create(:session, :daily, time: time_24) }
-    let!(:user_session) { create(:user_session, date: la_date.tomorrow, session: session, user: user) }
+    let!(:user_session) do
+      create(:user_session, date: la_date.tomorrow, session: session, user: user)
+    end
 
     subject { SonarService.message_received(user, text) }
 
@@ -38,7 +40,9 @@ describe SonarService do
         )
       end
 
-      it { expect { subject }.to change { user_session.reload.state }.from('reserved').to('confirmed') }
+      it do
+        expect { subject }.to change { user_session.reload.state }.from('reserved').to('confirmed')
+      end
 
       it 'sends the confirmation message' do
         expect(SonarService).to receive(:send_message).with(user, expected_message).once
@@ -68,7 +72,9 @@ describe SonarService do
         )
       end
 
-      it { expect { subject }.to change { user_session.reload.state }.from('reserved').to('canceled') }
+      it do
+        expect { subject }.to change { user_session.reload.state }.from('reserved').to('canceled')
+      end
 
       it 'sends the cancelation message' do
         expect(SonarService).to receive(:send_message).with(user, expected_message).once
