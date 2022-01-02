@@ -73,6 +73,10 @@ FactoryBot.define do
       confirmed_at { Time.current }
     end
 
+    trait :unconfirmed do
+      confirmed_at { nil }
+    end
+
     trait :referee do
       is_referee true
     end
