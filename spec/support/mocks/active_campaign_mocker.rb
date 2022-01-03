@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 class ActiveCampaignMocker
-  attr_reader :base_url, :options
+  attr_reader :base_url, :options, :pipeline_id
 
-  def initialize
+  def initialize(pipeline_name: ActiveCampaign::Deal::Pipeline::EMAILS)
+    @pipeline_id = deal_pipelines_map[pipeline_name]
     @base_url = ENV['ACTIVE_CAMPAING_API_URL']
   end
 
   def mock
     contact_fields
+    deal_pipelines
     deal_fields
     deal_stages
     create_deal
@@ -25,6 +27,16 @@ class ActiveCampaignMocker
     )
   end
 
+  def deal_pipelines
+    WebMock.stub_request(:get, "#{base_url}/api/3/dealGroups").with(
+      body: {},
+      headers: default_headers
+    ).to_return(
+      status: 200,
+      body: deal_pipelines_response
+    )
+  end
+
   def deal_fields
     WebMock.stub_request(:get, "#{base_url}/api/3/dealCustomFieldMeta").with(
       body: {},
@@ -37,7 +49,7 @@ class ActiveCampaignMocker
 
   def deal_stages
     url =
-      "#{base_url}/api/3/dealStages?filters[d_groupid]=#{ENV['ACTIVE_CAMPAING_EMAILS_PIPELINE_ID']}"
+      "#{base_url}/api/3/dealStages?filters[d_groupid]=#{pipeline_id}"
     WebMock.stub_request(:get, url).with(
       body: {},
       headers: default_headers
@@ -95,6 +107,28 @@ class ActiveCampaignMocker
         {
           id: '1',
           fieldLabel: 'Order Price'
+        }
+      ]
+    }.to_json
+  end
+
+  def deal_pipelines_map
+    @deal_pipelines_map ||=
+      JSON.parse(deal_pipelines_response)['dealGroups'].map { |field|
+        [field['title'], field['id']]
+      }.to_h
+  end
+
+  def deal_pipelines_response
+    {
+      dealGroups: [
+        {
+          id: '1',
+          title: 'Emails'
+        },
+        {
+          id: '2',
+          title: 'Crosscourt Membership Funnel'
         }
       ]
     }.to_json

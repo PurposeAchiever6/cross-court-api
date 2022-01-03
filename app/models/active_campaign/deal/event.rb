@@ -20,6 +20,7 @@ module ActiveCampaign
       REFERRAL_SUCCESS = 'Referral Success'.freeze
       SESSION_CHECK_IN = 'Session Check In'.freeze
       RE_CONFIRMATION_INSTRUCTIONS = 'Re Confirmation Instructions'.freeze
+      FREE_SESSION_NO_SHOW = 'Free Session No Show'.freeze
     end
   end
 end
