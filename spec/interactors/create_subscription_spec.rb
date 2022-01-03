@@ -25,13 +25,20 @@ describe CreateSubscription do
     end
 
     subject do
-      CreateSubscription.call(user: user, product: product, payment_method: payment_method, promo_code: promo_code)
+      CreateSubscription.call(
+        user: user,
+        product: product,
+        payment_method: payment_method,
+        promo_code: promo_code
+      )
     end
 
     it { expect { subject }.to change(Subscription, :count).by(1) }
 
     it 'calls the stripes create_subscription method with the correct params' do
-      expect(StripeService).to receive(:create_subscription).with(user, product, payment_method, promo_code)
+      expect(StripeService).to receive(
+        :create_subscription
+      ).with(user, product, payment_method, promo_code)
       subject
     end
 

@@ -11,5 +11,8 @@
   spots_left: Session::MAX_CAPACITY -
     user_sessions_count.values_at([session.id, session.start_time]).sum,
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
-  skill_level: render(partial: 'api/v1/skill_levels/info', locals: { skill_level: session.skill_level })
+  skill_level: render(
+    partial: 'api/v1/skill_levels/info',
+    locals: { skill_level: session.skill_level }
+  )
 }

@@ -64,8 +64,9 @@ describe User do
     it { is_expected.to validate_numericality_of(:credits).is_greater_than_or_equal_to(0) }
     it { is_expected.to validate_presence_of(:free_session_state) }
     it 'defines free session states' do
-      is_expected.to define_enum_for(:free_session_state).with_values(%i[not_claimed claimed used expired])
-                                                         .with_prefix(:free_session)
+      is_expected.to define_enum_for(
+        :free_session_state
+      ).with_values(%i[not_claimed claimed used expired]).with_prefix(:free_session)
     end
     it { is_expected.to validate_presence_of(:zipcode) }
     it { is_expected.to validate_presence_of(:birthday) }
@@ -82,7 +83,11 @@ describe User do
 
     subject { user.update(first_name: 'Other') }
 
-    it { expect { subject }.to have_enqueued_job(CreateUpdateActiveCampaignContactJob).on_queue('default') }
+    it do
+      expect {
+        subject
+      }.to have_enqueued_job(CreateUpdateActiveCampaignContactJob).on_queue('default')
+    end
     it { expect { subject }.to have_enqueued_job(CreateUpdateSonarCustomerJob).on_queue('default') }
   end
 end

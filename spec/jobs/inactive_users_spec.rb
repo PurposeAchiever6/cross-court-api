@@ -69,7 +69,8 @@ describe InactiveUsersJob do
 
         it 'calls service with the correct parameters' do
           expect_any_instance_of(SlackService).to receive(:notify).with(
-            I18n.t('notifier.slack.inactive_first_timer_user', name: user.full_name, phone: user.phone_number),
+            I18n.t('notifier.slack.inactive_first_timer_user',
+                   name: user.full_name, phone: user.phone_number),
             channel: ENV['SLACK_CHANNEL_CHURN']
           ).once
 

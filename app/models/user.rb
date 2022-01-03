@@ -67,7 +67,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable
 
-  enum free_session_state: { not_claimed: 0, claimed: 1, used: 2, expired: 3 }, _prefix: :free_session
+  enum free_session_state: { not_claimed: 0, claimed: 1, used: 2, expired: 3 },
+       _prefix: :free_session
 
   has_one :last_checked_in_user_session,
           -> { where(checked_in: true).order(date: :desc) },
@@ -152,7 +153,10 @@ class User < ApplicationRecord
     today_month = today.month
 
     age = today.year - birthday.year
-    age -= 1 if today_month < birthday_month || (today_month == birthday_month && today.day < birthday.day)
+
+    if today_month < birthday_month || (today_month == birthday_month && today.day < birthday.day)
+      age -= 1
+    end
 
     age
   end
@@ -181,9 +185,13 @@ class User < ApplicationRecord
     saved_changes_keys = saved_changes.keys
     return unless persisted?
 
-    CreateUpdateActiveCampaignContactJob.perform_later(id) if ActiveCampaignService::CONTACT_ATTRS.any? { |a| saved_changes_keys.include?(a) }
+    if ActiveCampaignService::CONTACT_ATTRS.any? { |a| saved_changes_keys.include?(a) }
+      CreateUpdateActiveCampaignContactJob.perform_later(id)
+    end
 
-    CreateUpdateSonarCustomerJob.perform_later(id) if SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes_keys.include?(a) }
+    return unless SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes_keys.include?(a) }
+
+    CreateUpdateSonarCustomerJob.perform_later(id)
   end
 
   def delete_stripe_customer

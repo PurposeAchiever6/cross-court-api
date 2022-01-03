@@ -50,8 +50,12 @@ describe SurveySmsJob do
     subject { described_class.perform_now }
 
     it 'calls the SonarService with the correct parameters' do
-      expect(SonarService).to receive(:send_message).with(user_session_1.user, expected_message_user_1).once
-      expect(SonarService).to receive(:send_message).with(user_session_2.user, expected_message_user_2).once
+      expect(SonarService).to receive(
+        :send_message
+      ).with(user_session_1.user, expected_message_user_1).once
+      expect(SonarService).to receive(
+        :send_message
+      ).with(user_session_2.user, expected_message_user_2).once
 
       subject
     end

@@ -23,7 +23,9 @@ json = {
   last_name: user.last_name,
   birthday: user.birthday&.iso8601,
   phone_number: user.phone_number,
-  skill_rating: number_with_precision(user.skill_rating, precision: 1, strip_insignificant_zeros: true),
+  skill_rating: number_with_precision(
+    user.skill_rating, precision: 1, strip_insignificant_zeros: true
+  ),
   credits: user.credits,
   subscription_credits: user.subscription_credits,
   total_credits: user.credits + user.subscription_credits,

@@ -4,7 +4,9 @@ class DeleteSubscriptionAtPeriodEnd
   def call
     subscription = context.subscription
 
-    context.fail!(message: I18n.t('api.errors.subscriptions.is_not_active')) if subscription.cancel_at_period_end
+    if subscription.cancel_at_period_end
+      context.fail!(message: I18n.t('api.errors.subscriptions.is_not_active'))
+    end
 
     stripe_subscription = StripeService.cancel_subscription_at_period_end(subscription)
 

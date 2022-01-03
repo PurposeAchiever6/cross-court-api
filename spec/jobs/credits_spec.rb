@@ -2,9 +2,24 @@ require 'rails_helper'
 
 describe CreditsJob do
   describe '#perform' do
-    let!(:user_1) { create(:user, credits: 1, free_session_state: 0, free_session_expiration_date: Time.zone.today - 4.days) }
-    let!(:user_2) { create(:user, credits: 1, free_session_state: 0, free_session_expiration_date: Time.zone.today + 30.days) }
-    let!(:user_3) { create(:user, credits: 1, free_session_state: 0, drop_in_expiration_date: Time.zone.today - 4.days) }
+    let!(:user_1) do
+      create(:user,
+             credits: 1,
+             free_session_state: 0,
+             free_session_expiration_date: Time.zone.today - 4.days)
+    end
+    let!(:user_2) do
+      create(:user,
+             credits: 1,
+             free_session_state: 0,
+             free_session_expiration_date: Time.zone.today + 30.days)
+    end
+    let!(:user_3) do
+      create(:user,
+             credits: 1,
+             free_session_state: 0,
+             drop_in_expiration_date: Time.zone.today - 4.days)
+    end
 
     before do
       ActiveCampaignMocker.new.mock

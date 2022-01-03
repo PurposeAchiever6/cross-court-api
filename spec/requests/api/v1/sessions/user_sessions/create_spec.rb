@@ -48,7 +48,9 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       it 'sends session booked email' do
-        expect { SessionMailer.session_booked.deliver_later }.to have_enqueued_job.on_queue('mailers')
+        expect {
+          SessionMailer.session_booked.deliver_later
+        }.to have_enqueued_job.on_queue('mailers')
         subject
       end
 
@@ -70,7 +72,9 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         end
 
         let(:time) do
-          Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) + Session::CANCELLATION_PERIOD - 1.minute
+          Time.zone.local_to_utc(
+            Time.current.in_time_zone('America/Los_Angeles')
+          ) + Session::CANCELLATION_PERIOD - 1.minute
         end
         let(:session) { create(:session, :daily, time: time.strftime(Session::TIME_FORMAT)) }
         let(:date)    { time.to_date }

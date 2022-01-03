@@ -45,6 +45,9 @@ class Subscription < ApplicationRecord
   scope :recent, -> { order('current_period_end DESC NULLS LAST') }
 
   def assign_stripe_attrs(stripe_subscription)
+    canceled_at =
+      stripe_subscription.canceled_at ? Time.zone.at(stripe_subscription.canceled_at) : nil
+
     assign_attributes(
       stripe_id: stripe_subscription.id,
       stripe_item_id: stripe_subscription.items.data.first.id,
@@ -52,7 +55,7 @@ class Subscription < ApplicationRecord
       current_period_start: Time.zone.at(stripe_subscription.current_period_start),
       current_period_end: Time.zone.at(stripe_subscription.current_period_end),
       cancel_at: stripe_subscription.cancel_at ? Time.zone.at(stripe_subscription.cancel_at) : nil,
-      canceled_at: stripe_subscription.canceled_at ? Time.zone.at(stripe_subscription.canceled_at) : nil,
+      canceled_at: canceled_at,
       cancel_at_period_end: stripe_subscription.cancel_at_period_end
     )
 

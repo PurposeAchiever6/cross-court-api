@@ -31,8 +31,10 @@ describe Session do
     Timecop.return
   end
 
-  let!(:los_angeles_time)       { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
-  let!(:los_angeles_date)       { los_angeles_time.to_date }
+  let!(:los_angeles_time) do
+    Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
+  end
+  let!(:los_angeles_date) { los_angeles_time.to_date }
 
   describe 'validations' do
     subject { build :session }
@@ -42,10 +44,12 @@ describe Session do
   end
 
   describe 'callbacks' do
-    let!(:session)               { create(:session, :daily) }
-    let!(:yesterday_sem_session) { create(:sem_session, session: session, date: los_angeles_date.yesterday) }
-    let(:new_recurring_rule)     { IceCube::Rule.weekly }
-    let(:user)                   { create(:user) }
+    let!(:session) { create(:session, :daily) }
+    let!(:yesterday_sem_session) do
+      create(:sem_session, session: session, date: los_angeles_date.yesterday)
+    end
+    let(:new_recurring_rule) { IceCube::Rule.weekly }
+    let(:user) { create(:user) }
     before do
       8.times do |i|
         create(:sem_session, session: session, date: los_angeles_date + i.days)

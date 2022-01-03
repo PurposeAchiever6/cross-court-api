@@ -50,7 +50,7 @@ Metrics/CyclomaticComplexity:
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
-  Max: 24
+  Max: 30
   Exclude:
     - app/jobs/user_session_reminders_job.rb
     - app/jobs/sem_session_reminders_job.rb
@@ -65,7 +65,7 @@ Metrics/ModuleLength:
   Max: 200
 
 Metrics/LineLength:
-  Max: 200
+  Max: 100
   # To make it possible to copy or click on URIs in the code, we allow lines
   # containing a URI to be longer than Max.
   AllowURI: true

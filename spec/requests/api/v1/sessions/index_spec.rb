@@ -3,7 +3,9 @@ require 'rails_helper'
 describe 'GET api/v1/sessions', type: :request do
   let(:user_private_access) { false }
   let(:user) { create(:user, private_access: user_private_access) }
-  let(:los_angeles_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+  let(:los_angeles_time) do
+    Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
+  end
   let(:beginning_of_week) { los_angeles_time.beginning_of_week }
   let(:from_date) { beginning_of_week.strftime(Session::DATE_FORMAT) }
   let(:params) { { from_date: from_date } }

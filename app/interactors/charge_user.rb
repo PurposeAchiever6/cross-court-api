@@ -6,11 +6,15 @@ class ChargeUser
     price = context.price
     description = context.description
 
-    context.fail!(message: I18n.t('api.errors.users.charges.price_not_positive')) unless price.positive?
+    unless price.positive?
+      context.fail!(message: I18n.t('api.errors.users.charges.price_not_positive'))
+    end
 
     payment_method = StripeService.fetch_payment_methods(user).first
 
-    context.fail!(message: I18n.t('api.errors.users.charges.missing_payment_method')) unless payment_method
+    unless payment_method
+      context.fail!(message: I18n.t('api.errors.users.charges.missing_payment_method'))
+    end
 
     payment_intent = StripeService.charge(user, payment_method, price, description)
 
