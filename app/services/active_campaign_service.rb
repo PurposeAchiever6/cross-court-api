@@ -47,7 +47,7 @@ class ActiveCampaignService
   private
 
   def logger
-    @logger ||= Logger.new("#{Rails.root}/log/active_campaign.log")
+    @logger ||= Logger.new(STDOUT)
   end
 
   def contact_fields_map

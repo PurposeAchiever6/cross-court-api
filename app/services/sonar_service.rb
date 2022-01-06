@@ -153,6 +153,6 @@ module SonarService
   end
 
   def logger
-    @logger ||= Logger.new("#{Rails.root}/log/sonar.log")
+    @logger ||= Logger.new(STDOUT)
   end
 end
