@@ -1,12 +1,17 @@
 class ActiveCampaignService
-  attr_reader :mapped_contact_fields, :mapped_deal_fields, :mapped_deal_stages
+  attr_reader :mapped_contact_fields, :mapped_deal_fields, :mapped_deal_stages, :pipeline_id,
+              :mapped_deal_pipelines
 
-  CONTACT_ATTRS = %w[email first_name last_name phone_number credits subscription_credits birthday].freeze
+  CONTACT_ATTRS = %w[
+    email first_name last_name phone_number credits subscription_credits birthday
+  ].freeze
 
-  def initialize
+  def initialize(pipeline_name: ActiveCampaign::Deal::Pipeline::EMAILS)
+    @pipeline_id = deal_pipelines_map[pipeline_name]
     @mapped_contact_fields = contact_fields_map
     @mapped_deal_fields = deal_fields_map
     @mapped_deal_stages = deal_stages_map
+    @mapped_deal_pipelines = deal_pipelines_map
   end
 
   def create_update_contact(user)
@@ -20,7 +25,9 @@ class ActiveCampaignService
 
     response
   rescue StandardError => e
-    logger.error { "Error when creating/updating contact. #{e.class}: #{e.message}. Payload: #{payload}" }
+    logger.error do
+      "Error when creating/updating contact. #{e.class}: #{e.message}. Payload: #{payload}"
+    end
     raise e
   end
 
@@ -28,19 +35,25 @@ class ActiveCampaignService
     ActiveCampaign.get('/fields')
   end
 
+  def deal_pipelines
+    ActiveCampaign.get('/dealGroups')
+  end
+
   def deal_fields
     ActiveCampaign.get('/dealCustomFieldMeta')
   end
 
   def deal_stages
-    ActiveCampaign.get("/dealStages?filters[d_groupid]=#{ENV['ACTIVE_CAMPAING_EMAILS_PIPELINE_ID']}")
+    ActiveCampaign.get("/dealStages?filters[d_groupid]=#{pipeline_id}")
   end
 
   def create_deal(event, user, args = [])
     payload = deal_payload(event, user, args)
     ActiveCampaign.post('/deals', payload: payload)
   rescue StandardError => e
-    logger.error { "Error when creating deal. #{e.class}: #{e.message}. Event: #{event}, payload: #{payload}" }
+    logger.error do
+      "Error when creating deal. #{e.class}: #{e.message}. Event: #{event}, payload: #{payload}"
+    end
     raise e
   end
 
@@ -65,7 +78,14 @@ class ActiveCampaignService
       deal_stages['dealStages'].map { |field| [field['title'], field['id']] }.to_h
   end
 
+  def deal_pipelines_map
+    @deal_pipelines_map ||=
+      deal_pipelines['dealGroups'].map { |field| [field['title'], field['id']] }.to_h
+  end
+
   def contact_payload(user)
+    birthday = user.birthday
+
     {
       contact: {
         email: user.email,
@@ -83,7 +103,7 @@ class ActiveCampaignService
           },
           {
             field: mapped_contact_fields[::ActiveCampaign::Contact::Field::BIRTHDAY],
-            value: user.birthday.strftime('%Y-%m-%d')
+            value: birthday ? birthday.strftime('%Y-%m-%d') : ''
           }
         ]
       }
@@ -141,7 +161,9 @@ class ActiveCampaignService
       when ::ActiveCampaign::Deal::Event::CANCELLED_MEMBERSHIP
         [
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::CANCELLED_MEMBERSHIP_NAME],
+            customFieldId: mapped_deal_fields[
+              ActiveCampaign::Deal::Field::CANCELLED_MEMBERSHIP_NAME
+            ],
             fieldValue: args[:cancelled_membership_name]
           }
         ]
@@ -187,7 +209,9 @@ class ActiveCampaignService
             fieldValue: location.name
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::SESSION_LOCATION_ADDRESS],
+            customFieldId: mapped_deal_fields[
+              ActiveCampaign::Deal::Field::SESSION_LOCATION_ADDRESS
+            ],
             fieldValue: location.full_address
           },
           {
