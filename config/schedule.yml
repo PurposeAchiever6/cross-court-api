@@ -1,15 +1,15 @@
 user_session_reminders:
-  cron: "0,15,30,45 * * * *"
+  cron: "0 * * * *"
   class: "UserSessionRemindersJob"
   queue: default
 
 referee_session_reminders:
-  cron: "0,15,30,45 * * * *"
+  cron: "0 * * * *"
   class: "RefereeSessionRemindersJob"
   queue: default
 
 sem_session_reminders:
-  cron: "0,15,30,45 * * * *"
+  cron: "0 * * * *"
   class: "SemSessionRemindersJob"
   queue: default
 
