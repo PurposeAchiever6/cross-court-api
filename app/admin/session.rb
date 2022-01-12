@@ -167,6 +167,7 @@ ActiveAdmin.register Session do
 
     user_session = UserSession.find(user_session_id)
 
+    execute_checked_in_job = checked_in && !user_session.checked_in
     jersey_rental_payment_intent_id = user_session.jersey_rental_payment_intent_id
 
     if user_session.jersey_rental && !jersey_rental
@@ -202,7 +203,8 @@ ActiveAdmin.register Session do
       assigned_team: assigned_team
     )
 
-    CheckInUsersJob.perform_async([user_session_id]) if checked_in
+    # Perform in 15 minutes in case front desk guy checked in wrong user by accident
+    CheckInActiveCampaignJob.perform_in(15.minutes, user_session_id) if execute_checked_in_job
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session updated successfully'
