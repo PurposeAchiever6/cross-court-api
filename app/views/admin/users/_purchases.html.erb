@@ -8,6 +8,15 @@
                   purchase_admin_user_path(user.id, purchase_type: :jersey),
                   data: { disable_with: "Loading..." } %>
   </div>
+  <div class="flex items-center mb-3">
+    <div class="mr-4" style="width: 200px">
+      Purchase a towel for
+      <strong><%= number_to_currency(towel_purchase_price) %></strong>
+    </div>
+    <%= button_to "Buy",
+                  purchase_admin_user_path(user.id, purchase_type: :towel),
+                  data: { disable_with: "Loading..." } %>
+  </div>
   <div class="flex items-center">
     <div class="mr-4" style="width: 200px">
       Purchase a water bottle for
