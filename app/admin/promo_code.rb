@@ -50,8 +50,14 @@ ActiveAdmin.register PromoCode do
   form data: { recurring_product_ids: Product.recurring.ids } do |f|
     disabled = !f.object.new_record?
 
+    products_disabled = disabled ? Product.ids : []
+
     f.inputs 'Promo Code Details' do
-      f.input :products, as: :check_boxes, input_html: { disabled: disabled }
+      f.input :products,
+              as: :check_boxes,
+              disabled: products_disabled,
+              include_blank: false,
+              hidden_fields: true
       f.input :type, as: :select, collection: collection, input_html: { disabled: disabled }
       f.input :code, input_html: { disabled: disabled }
       f.input :discount, input_html: { disabled: disabled }
@@ -126,7 +132,8 @@ ActiveAdmin.register PromoCode do
         super
       end
     rescue Stripe::StripeError => e
-      redirect_to admin_promo_codes_path, error: e.message
+      flash[:error] = e.message
+      redirect_to admin_promo_codes_path
     end
   end
 end
