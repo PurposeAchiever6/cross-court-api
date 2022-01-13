@@ -106,6 +106,7 @@ class StripeService
         { id: subscription.stripe_item_id, deleted: true },
         { price: product.stripe_price_id }
       ],
+      cancel_at_period_end: false,
       default_payment_method: payment_method_id
     }
 
