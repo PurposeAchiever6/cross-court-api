@@ -10,11 +10,12 @@ class CanceledUserSession
   def save!
     in_cancellation_time = user_session.in_cancellation_time?
     is_free_session = user_session.is_free_session
+    user_unlimited_credits = user.unlimited_credits?
     user_id = user.id
     user_session_id = user_session.id
 
     if in_cancellation_time || is_free_session
-      user.increment(:credits)
+      user.increment(:credits) unless user_unlimited_credits
       user.free_session_state = :claimed if is_free_session
       user.save!
 
@@ -44,7 +45,7 @@ class CanceledUserSession
         user_id,
         user_session_id: user_session_id,
         amount_charged: result.amount_charged,
-        unlimited_credits: user.unlimited_credits?.to_s
+        unlimited_credits: user_unlimited_credits.to_s
       )
     end
 

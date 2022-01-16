@@ -88,5 +88,10 @@ FactoryBot.define do
     trait :with_image do
       image { Rack::Test::UploadedFile.new('spec/fixtures/blank.png', 'image/png') }
     end
+
+    trait :with_unlimited_subscription do
+      subscription_credits { Product::UNLIMITED }
+      active_subscription { create(:subscription, :with_unlimited_product) }
+    end
   end
 end

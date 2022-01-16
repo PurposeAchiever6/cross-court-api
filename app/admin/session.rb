@@ -102,7 +102,7 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .checked_in
-                                .includes(:user)
+                                .includes(user: { image_attachment: :blob })
                                 .order(assigned_team: :desc, updated_at: :asc)
 
         render partial: 'checked_in_user_sessions', locals: {
@@ -118,7 +118,7 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .not_checked_in
-                                .includes(:user)
+                                .includes(user: { image_attachment: :blob })
                                 .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
 
         render partial: 'not_checked_in_user_sessions', locals: {
@@ -251,6 +251,20 @@ ActiveAdmin.register Session do
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session created successfully'
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to admin_session_path(id: session_id, date: date)
+  end
+
+  member_action :cancel_user_session, method: :post do
+    session_id = params[:id]
+    date = params[:date]
+    user_session = UserSession.find(params[:user_session_id])
+
+    CanceledUserSession.new(user_session).save!
+
+    redirect_to admin_session_path(id: session_id, date: date),
+                notice: 'User session cancelled successfully'
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to admin_session_path(id: session_id, date: date)

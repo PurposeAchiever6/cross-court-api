@@ -45,4 +45,8 @@ FactoryBot.define do
       user.save!
     end
   end
+
+  trait :with_unlimited_product do
+    product { create(:product, :unlimited) }
+  end
 end
