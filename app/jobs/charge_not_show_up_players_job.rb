@@ -2,9 +2,7 @@ class ChargeNotShowUpPlayersJob < ApplicationJob
   queue_as :default
 
   def perform
-    relation = UserSession.includes(:user).for_yesterday
-
-    UserSessionsQuery.new(relation).not_checked_in.find_each do |user_session|
+    UserSession.includes(:user).for_yesterday.confirmed.not_checked_in.find_each do |user_session|
       user = user_session.user
 
       if user_session.is_free_session

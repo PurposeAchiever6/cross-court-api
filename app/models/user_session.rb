@@ -70,6 +70,7 @@ class UserSession < ApplicationRecord
   scope :by_session, ->(session_id) { where(session_id: session_id) }
   scope :checked_in, -> { where(checked_in: true) }
   scope :not_checked_in, -> { where(checked_in: false) }
+  scope :free_sessions, -> { where(is_free_session: true) }
 
   def in_cancellation_time?
     remaining_time > Session::CANCELLATION_PERIOD
