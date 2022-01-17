@@ -61,6 +61,7 @@ ActiveAdmin.register User do
     column :zipcode
     column :private_access
     column :vaccinated
+    column :email_confirmed, &:confirmed?
 
     actions
   end
@@ -101,6 +102,7 @@ ActiveAdmin.register User do
       row :skill_rating
       row :private_access
       row :vaccinated
+      row :email_confirmed, &:confirmed?
       row :created_at
       row :updated_at
     end
