@@ -10,9 +10,9 @@ class ChargeCanceledOutOfTimeUserSession
     price_to_charge = 0
 
     if user.unlimited_credits?
-      price_to_charge = ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'].to_i
+      price_to_charge = ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'].to_f
     elsif user_session.is_free_session
-      price_to_charge = ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'].to_i
+      price_to_charge = ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'].to_f
     end
 
     context.amount_charged = price_to_charge

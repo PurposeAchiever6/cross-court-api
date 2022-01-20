@@ -184,7 +184,7 @@ ActiveAdmin.register Session do
 
       result = ChargeUser.call(
         user: user,
-        price: ENV['JERSEY_RENTAL_PRICE'].to_i,
+        price: ENV['JERSEY_RENTAL_PRICE'].to_f,
         description: 'Jersey rental'
       )
 
