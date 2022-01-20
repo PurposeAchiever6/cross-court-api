@@ -16,7 +16,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     Timecop.return
   end
 
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
 
   subject do
     put api_v1_user_session_cancel_path(user_session), headers: auth_headers, as: :json
@@ -52,6 +52,14 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
 
     it 'calls the Active Campaign service' do
       expect { subject }.to have_enqueued_job(CreateActiveCampaignDealJob).on_queue('default')
+    end
+
+    context 'when user has unlimited credits' do
+      let!(:user) { create(:user, :with_unlimited_subscription) }
+
+      it 'do not reimburse the credit to the user' do
+        expect { subject }.not_to change { user.reload.credits }
+      end
     end
   end
 

@@ -67,6 +67,13 @@
           </td>
           <td class='align-middle'>
             <%= submit_tag('Update', data: { disable_with: 'Loading...' }) %>
+            <%= link_to('Cancel',
+                        cancel_user_session_admin_session_path(id: resource.id,
+                                                               date: date,
+                                                               user_session_id: user_session.id),
+                        method: :post,
+                        data: { confirm: 'This will cancel the user session. Are you sure?' },
+                        class: 'ml-2') %>
           </td>
         </tr>
       <% end %>

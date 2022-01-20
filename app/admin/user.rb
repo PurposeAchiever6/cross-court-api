@@ -61,6 +61,7 @@ ActiveAdmin.register User do
     column :zipcode
     column :private_access
     column :vaccinated
+    column :email_confirmed, &:confirmed?
 
     actions
   end
@@ -101,6 +102,7 @@ ActiveAdmin.register User do
       row :skill_rating
       row :private_access
       row :vaccinated
+      row :email_confirmed, &:confirmed?
       row :created_at
       row :updated_at
     end
@@ -109,6 +111,7 @@ ActiveAdmin.register User do
       render partial: 'purchases', locals: {
         user: user,
         jersey_purchase_price: ENV['JERSEY_PURCHASE_PRICE'],
+        towel_purchase_price: ENV['TOWEL_PURCHASE_PRICE'],
         water_purchase_price: ENV['WATER_PURCHASE_PRICE']
       }
     end
@@ -122,13 +125,19 @@ ActiveAdmin.register User do
     when :jersey
       result = ChargeUser.call(
         user: user,
-        price: ENV['JERSEY_PURCHASE_PRICE'].to_i,
+        price: ENV['JERSEY_PURCHASE_PRICE'].to_f,
         description: 'Jersey purchase'
+      )
+    when :towel
+      result = ChargeUser.call(
+        user: user,
+        price: ENV['TOWEL_PURCHASE_PRICE'].to_f,
+        description: 'Towel purchase'
       )
     when :water
       result = ChargeUser.call(
         user: user,
-        price: ENV['WATER_PURCHASE_PRICE'].to_i,
+        price: ENV['WATER_PURCHASE_PRICE'].to_f,
         description: 'Water bottle purchase'
       )
     end

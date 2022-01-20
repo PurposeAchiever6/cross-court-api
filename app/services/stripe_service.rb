@@ -35,7 +35,7 @@ class StripeService
 
   def self.charge(user, payment_method, price, description = nil)
     Stripe::PaymentIntent.create(
-      amount: price * 100,
+      amount: (price.to_f * 100).to_i,
       currency: 'usd',
       payment_method: payment_method,
       customer: user.stripe_id,
@@ -48,13 +48,13 @@ class StripeService
   def self.refund(payment_intent_id, amount = nil)
     Stripe::Refund.create(
       payment_intent: payment_intent_id,
-      amount: amount
+      amount: amount.present? ? (amount.to_f * 100).to_i : nil
     )
   end
 
   def self.create_free_session_intent(user, payment_method)
     Stripe::PaymentIntent.create(
-      amount: ENV['FREE_SESSION_PRICE'].to_i * 100,
+      amount: (ENV['FREE_SESSION_PRICE'].to_f * 100).to_i,
       currency: 'usd',
       payment_method: payment_method,
       customer: user.stripe_id,
@@ -72,7 +72,7 @@ class StripeService
 
     price_attrs = {
       currency: 'usd',
-      unit_amount: product_attrs[:price].to_i * 100,
+      unit_amount: (product_attrs[:price].to_f * 100).to_i,
       nickname: product_name,
       product: product_attrs[:stripe_product_id]
     }
@@ -164,7 +164,7 @@ class StripeService
     if promo_code_attrs[:type] == PercentageDiscount.to_s
       coupon_attrs.merge!(percent_off: discount)
     else
-      coupon_attrs.merge!(amount_off: discount.to_i * 100)
+      coupon_attrs.merge!(amount_off: (discount.to_f * 100).to_i)
     end
 
     Stripe::Coupon.create(coupon_attrs)

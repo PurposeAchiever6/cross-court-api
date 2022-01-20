@@ -37,8 +37,8 @@ describe UserSessionsQuery do
     end
   end
 
-  describe '.last_hour_checked_in' do
-    subject { user_sessions_query.last_hour_checked_in }
+  describe '.free_sessions_last_hour_checked_in' do
+    subject { user_sessions_query.free_sessions_last_hour_checked_in }
 
     context 'when there are no user_sessions' do
       it { is_expected.to be_empty }
@@ -49,16 +49,49 @@ describe UserSessionsQuery do
       let!(:session_2) { create(:session, time: los_angeles_time - 1.hour) }
 
       let!(:user_session_1) do
-        create(:user_session, session: session_1, checked_in: true, date: los_angeles_date)
+        create(
+          :user_session,
+          session: session_1,
+          is_free_session: true,
+          checked_in: true,
+          date: los_angeles_date
+        )
       end
       let!(:user_session_2) do
-        create(:user_session, session: session_2, checked_in: true, date: los_angeles_date)
+        create(
+          :user_session,
+          session: session_1,
+          is_free_session: false,
+          checked_in: true,
+          date: los_angeles_date
+        )
       end
       let!(:user_session_3) do
-        create(:user_session, session: session_1, checked_in: true, date: los_angeles_date + 1.day)
+        create(
+          :user_session,
+          session: session_2,
+          is_free_session: true,
+          checked_in: true,
+          date: los_angeles_date
+        )
       end
       let!(:user_session_4) do
-        create(:user_session, session: session_1, checked_in: false, date: los_angeles_date)
+        create(
+          :user_session,
+          session: session_1,
+          is_free_session: true,
+          checked_in: true,
+          date: los_angeles_date + 1.day
+        )
+      end
+      let!(:user_session_5) do
+        create(
+          :user_session,
+          session: session_1,
+          is_free_session: true,
+          checked_in: false,
+          date: los_angeles_date
+        )
       end
 
       it { is_expected.to match_array([user_session_1]) }

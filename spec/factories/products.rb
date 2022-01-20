@@ -32,4 +32,8 @@ FactoryBot.define do
     order_number { Faker::Number.number(1) }
     price        { Faker::Commerce.price }
   end
+
+  trait :unlimited do
+    credits { Product::UNLIMITED }
+  end
 end
