@@ -4,7 +4,7 @@ describe ChargeNotShowUpPlayersJob do
   describe '#perform' do
     before do
       ActiveCampaignMocker.new(
-        pipeline_name: ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
       ).mock
       allow(StripeService).to receive(:confirm_intent)
       allow(StripeService).to receive(:charge).and_return(double(id: rand(1_000)))

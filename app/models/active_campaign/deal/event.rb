@@ -21,6 +21,7 @@ module ActiveCampaign
       SESSION_CHECK_IN = 'Session Check In'.freeze
       RE_CONFIRMATION_INSTRUCTIONS = 'Re Confirmation Instructions'.freeze
       FREE_SESSION_NO_SHOW = 'Free Session No Show'.freeze
+      BAD_REVIEW = 'Bad Review'.freeze
     end
   end
 end

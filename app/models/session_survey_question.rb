@@ -18,7 +18,7 @@ class SessionSurveyQuestion < ApplicationRecord
 
   has_many :session_survey_answers, dependent: :nullify
 
-  enum type: { rated: 0, open: 1 }, _suffix: true
+  enum type: { rate: 0, open: 1 }, _suffix: true
 
   validates :question, presence: true
 
