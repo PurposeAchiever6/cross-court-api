@@ -5,7 +5,6 @@ variables = %w[
   FREE_SESSION_PRICE
   MAX_CAPACITY
   CANCELLATION_PERIOD
-  KLAVIYO_API_KEY
 ]
 
 unless Rails.env.test?

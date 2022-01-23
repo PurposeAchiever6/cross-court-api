@@ -257,8 +257,6 @@ Runs Daily at 12:00 AM UTC
 
 **session_reminders**
 
-Send the reminder events to Klaviyo.
-
 Runs Hourly at :00
 
 **confirm_unconfirmed_sessions**
