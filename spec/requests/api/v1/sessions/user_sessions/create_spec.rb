@@ -38,7 +38,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         expect { subject }.to change { user.reload.credits }.from(1).to(0)
       end
 
-      it 'calls the Klaviyo service' do
+      it 'calls the Active Campaign service' do
         expect { subject }.to have_enqueued_job(CreateActiveCampaignDealJob).on_queue('default')
       end
 
