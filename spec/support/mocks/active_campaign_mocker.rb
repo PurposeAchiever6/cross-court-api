@@ -3,7 +3,7 @@
 class ActiveCampaignMocker
   attr_reader :base_url, :options, :pipeline_id
 
-  def initialize(pipeline_name: ActiveCampaign::Deal::Pipeline::EMAILS)
+  def initialize(pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS)
     @pipeline_id = deal_pipelines_map[pipeline_name]
     @base_url = ENV['ACTIVE_CAMPAING_API_URL']
   end

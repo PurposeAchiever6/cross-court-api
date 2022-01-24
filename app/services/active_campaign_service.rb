@@ -6,7 +6,7 @@ class ActiveCampaignService
     email first_name last_name phone_number credits subscription_credits birthday
   ].freeze
 
-  def initialize(pipeline_name: ActiveCampaign::Deal::Pipeline::EMAILS)
+  def initialize(pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS)
     @pipeline_id = deal_pipelines_map[pipeline_name]
     @mapped_contact_fields = contact_fields_map
     @mapped_deal_fields = deal_fields_map
@@ -138,23 +138,23 @@ class ActiveCampaignService
 
         [
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::ORDER_PRICE],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_PRICE],
             fieldValue: format('%.2f', price)
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::ORDER_DISCOUNT],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_DISCOUNT],
             fieldValue: format('%.2f', discount)
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::ORDER_FINAL_PRICE],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_FINAL_PRICE],
             fieldValue: format('%.2f', final_price)
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::APPLY_DISCOUNT],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::APPLY_DISCOUNT],
             fieldValue: discount.positive?.to_s
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::PURCHASE_NAME],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::PURCHASE_NAME],
             fieldValue: purchase.product_name
           }
         ]
@@ -162,7 +162,7 @@ class ActiveCampaignService
         [
           {
             customFieldId: mapped_deal_fields[
-              ActiveCampaign::Deal::Field::CANCELLED_MEMBERSHIP_NAME
+              ::ActiveCampaign::Deal::Field::CANCELLED_MEMBERSHIP_NAME
             ],
             fieldValue: args[:cancelled_membership_name]
           }
@@ -189,41 +189,41 @@ class ActiveCampaignService
 
         [
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::FREE_SESSION],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::FREE_SESSION],
             fieldValue: user_session.is_free_session.to_s
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::SESSION_DATE],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::SESSION_DATE],
             fieldValue: formatted_date
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::SESSION_TIME],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::SESSION_TIME],
             fieldValue: user_session.time.strftime(Session::TIME_FORMAT).upcase
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::CONFIRMATION_URL],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::CONFIRMATION_URL],
             fieldValue: "#{front_end_url}/session/#{session_id}?date=#{formatted_date}"
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::SESSION_LOCATION_NAME],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::SESSION_LOCATION_NAME],
             fieldValue: location.name
           },
           {
             customFieldId: mapped_deal_fields[
-              ActiveCampaign::Deal::Field::SESSION_LOCATION_ADDRESS
+              ::ActiveCampaign::Deal::Field::SESSION_LOCATION_ADDRESS
             ],
             fieldValue: location.full_address
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::CANCELLATION_PERIOD],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::CANCELLATION_PERIOD],
             fieldValue: ENV['CANCELLATION_PERIOD']
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::AMOUNT_CHARGED],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::AMOUNT_CHARGED],
             fieldValue: args[:amount_charged].to_s || ''
           },
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::UNLIMITED_CREDITS],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::UNLIMITED_CREDITS],
             fieldValue: unlimited_credits
           }
         ]
@@ -232,7 +232,7 @@ class ActiveCampaignService
 
         [
           {
-            customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::REFERRED_FULL_NAME],
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::REFERRED_FULL_NAME],
             fieldValue: referred.full_name
           }
         ]
@@ -248,7 +248,7 @@ class ActiveCampaignService
       end
 
     fields << {
-      customFieldId: mapped_deal_fields[ActiveCampaign::Deal::Field::FRONT_END_URL],
+      customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::FRONT_END_URL],
       fieldValue: front_end_url
     }
 
