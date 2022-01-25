@@ -204,7 +204,9 @@ ActiveAdmin.register Session do
     )
 
     # Perform in 15 minutes in case front desk guy checked in wrong user by accident
-    CheckInActiveCampaignJob.perform_in(15.minutes, user_session_id) if execute_checked_in_job
+    if execute_checked_in_job
+      CheckInActiveCampaignJob.set(wait: 15.minutes).perform_later(user_session_id)
+    end
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session updated successfully'

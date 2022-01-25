@@ -30,5 +30,7 @@ FactoryBot.define do
     session
     date { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')).to_date }
     state { 'reserved' }
+    is_free_session { false }
+    checked_in { false }
   end
 end
