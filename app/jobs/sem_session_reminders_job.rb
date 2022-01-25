@@ -2,6 +2,8 @@ class SemSessionRemindersJob < ApplicationJob
   queue_as :default
 
   def perform
+    return unless ENV['SEM_SESSIONS_NOTIFICATIONS_ENABLED'] == 'true'
+
     # 24 hour reminder
     SessionReminderQuery.new(
       SemSession.all.future.unconfirmed
