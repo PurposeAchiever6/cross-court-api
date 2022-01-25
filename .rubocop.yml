@@ -59,6 +59,7 @@ Metrics/MethodLength:
     - app/controllers/api/v1/stripe_controller.rb
     - app/decorators/canceled_user_session.rb
     - app/jobs/credits_job.rb
+    - app/interactors/user_sessions/create_user_session.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

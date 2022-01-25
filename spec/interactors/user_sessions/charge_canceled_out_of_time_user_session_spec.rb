@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ChargeCanceledOutOfTimeUserSession do
+describe UserSessions::ChargeCanceledOutOfTimeUserSession do
   describe '.call' do
     let(:los_angeles_time) do
       Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
@@ -26,7 +26,7 @@ describe ChargeCanceledOutOfTimeUserSession do
       allow(StripeService).to receive(:charge).and_return(double(id: payment_intent_id))
     end
 
-    subject { ChargeCanceledOutOfTimeUserSession.call(user_session: user_session) }
+    subject { UserSessions::ChargeCanceledOutOfTimeUserSession.call(user_session: user_session) }
 
     it { expect(subject.charge_payment_intent_id).to eq(nil) }
 
