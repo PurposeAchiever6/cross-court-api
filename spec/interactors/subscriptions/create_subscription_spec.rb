@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CreateSubscription do
+describe Subscriptions::CreateSubscription do
   describe '.call' do
     let(:user) { create(:user) }
     let(:product) { create(:product) }
@@ -25,7 +25,7 @@ describe CreateSubscription do
     end
 
     subject do
-      CreateSubscription.call(
+      Subscriptions::CreateSubscription.call(
         user: user,
         product: product,
         payment_method: payment_method,

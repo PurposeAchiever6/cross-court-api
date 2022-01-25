@@ -2,7 +2,7 @@ module Api
   module V1
     class SubscriptionsController < Api::V1::ApiUserController
       def create
-        result = PlaceSubscription.call(
+        result = Subscriptions::PlaceSubscription.call(
           product: product,
           user: current_user,
           payment_method: payment_method,
@@ -19,7 +19,7 @@ module Api
       end
 
       def destroy
-        result = CancelSubscriptionAtPeriodEnd.call(
+        result = Subscriptions::CancelSubscriptionAtPeriodEnd.call(
           user: current_user,
           subscription: subscription
         )
@@ -30,7 +30,7 @@ module Api
       end
 
       def update
-        result = UpdateSubscription.call(
+        result = Subscriptions::UpdateSubscription.call(
           user: current_user,
           subscription: subscription,
           product: product,
@@ -44,7 +44,9 @@ module Api
       end
 
       def reactivate
-        result = SubscriptionReactivation.call(user: current_user, subscription: subscription)
+        result = Subscriptions::SubscriptionReactivation.call(
+          user: current_user, subscription: subscription
+        )
 
         raise SubscriptionException, result.message unless result.success?
 
