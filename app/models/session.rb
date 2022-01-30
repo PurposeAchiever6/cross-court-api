@@ -35,12 +35,14 @@ class Session < ApplicationRecord
   serialize :recurring, Hash
 
   belongs_to :location, with_deleted: true
+  belongs_to :skill_level
+
   has_many :user_sessions, dependent: :destroy
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
   has_many :referee_sessions, dependent: :nullify
   has_many :sem_sessions, dependent: :nullify
-  belongs_to :skill_level
+  has_many :user_session_waitlists, dependent: :destroy
 
   validates :start_time, :time, presence: true
 

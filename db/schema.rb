@@ -250,6 +250,18 @@ ActiveRecord::Schema.define(version: 2022_02_11_182722) do
     t.index ["user_id"], name: "index_user_promo_codes_on_user_id"
   end
 
+  create_table "user_session_waitlists", force: :cascade do |t|
+    t.date "date"
+    t.boolean "reached", default: false
+    t.bigint "user_id"
+    t.bigint "session_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["date", "session_id", "user_id"], name: "index_user_session_waitlists_on_date_and_session_id_and_user_id", unique: true
+    t.index ["session_id"], name: "index_user_session_waitlists_on_session_id"
+    t.index ["user_id"], name: "index_user_session_waitlists_on_user_id"
+  end
+
   create_table "user_sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "session_id", null: false
