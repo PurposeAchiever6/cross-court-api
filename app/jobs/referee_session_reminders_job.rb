@@ -2,6 +2,8 @@ class RefereeSessionRemindersJob < ApplicationJob
   queue_as :default
 
   def perform
+    return unless ENV['REFEREE_SESSIONS_NOTIFICATIONS_ENABLED'] == 'true'
+
     # 24 hour reminder
     SessionReminderQuery.new(
       RefereeSession.all.future.unconfirmed

@@ -31,7 +31,7 @@ class CanceledUserSession
         user_session_id: user_session_id
       )
     else
-      result = ChargeCanceledOutOfTimeUserSession.call(user_session: user_session)
+      result = UserSessions::ChargeCanceledOutOfTimeUserSession.call(user_session: user_session)
 
       if result.failure?
         SlackService.new(user, date, time, location)

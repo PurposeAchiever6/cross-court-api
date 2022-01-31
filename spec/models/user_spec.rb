@@ -90,4 +90,35 @@ describe User do
     end
     it { expect { subject }.to have_enqueued_job(CreateUpdateSonarCustomerJob).on_queue('default') }
   end
+
+  describe '#first_not_free_session?' do
+    let(:user) { create(:user) }
+    subject { user.first_not_free_session? }
+
+    context 'when it only has only one free user_session' do
+      before { create(:user_session, user: user, is_free_session: true, checked_in: true) }
+
+      it { is_expected.to eq(false) }
+    end
+
+    context 'when it has multiple user_sessions' do
+      before do
+        create(:user_session, user: user, is_free_session: true, checked_in: true)
+        create(:user_session, user: user, is_free_session: false, checked_in: true)
+        create(:user_session, user: user, is_free_session: false, checked_in: true)
+        create(:user_session, user: user, is_free_session: false, checked_in: true)
+      end
+
+      it { is_expected.to eq(false) }
+    end
+
+    context 'when is not free first user_session' do
+      before do
+        create(:user_session, user: user, is_free_session: true, checked_in: true)
+        create(:user_session, user: user, is_free_session: false, checked_in: true)
+      end
+
+      it { is_expected.to eq(true) }
+    end
+  end
 end

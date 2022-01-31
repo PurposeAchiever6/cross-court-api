@@ -2,10 +2,13 @@ require 'rails_helper'
 
 describe RefereeSessionRemindersJob do
   describe '.perform' do
+    let(:referee_sessions_notifications_enabled) { 'true' }
+
     before do
       ActiveCampaignMocker.new.mock
       allow(SonarService).to receive(:send_message).and_return(1)
       Timecop.freeze(Time.current)
+      ENV['REFEREE_SESSIONS_NOTIFICATIONS_ENABLED'] = referee_sessions_notifications_enabled
     end
 
     after do
@@ -46,6 +49,17 @@ describe RefereeSessionRemindersJob do
         expect(SonarService).to receive(:send_message).with(user, message_12_hours).once
 
         described_class.perform_now
+      end
+
+      context 'when notifications are disabled' do
+        let(:referee_sessions_notifications_enabled) { 'false' }
+
+        it 'does not call the SonarService' do
+          expect(SonarService).not_to receive(:send_message)
+          expect(SonarService).not_to receive(:send_message)
+
+          described_class.perform_now
+        end
       end
     end
   end

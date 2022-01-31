@@ -31,17 +31,19 @@ module Api
         case type
         when INVOICE_PAYMENT_FAILED
           if active_subscription
-            CancelSubscription.call(user: user, subscription: active_subscription)
+            Subscriptions::CancelSubscription.call(user: user, subscription: active_subscription)
           end
         when INVOICE_PAYMENT_SUCCEEDED
           subscription = StripeService.retrieve_subscription(object.subscription)
           update_database_subscription(subscription)
           if object.billing_reason == SUBSCRIPTION_CYCLE
-            RenewUserSubscriptionCredits.call(user: user, subscription: active_subscription)
+            Subscriptions::RenewUserSubscriptionCredits.call(
+              user: user, subscription: active_subscription
+            )
           end
         when CUSTOMER_SUBSCRIPTION_DELETED
           update_database_subscription(object)
-          ResetUserSubscriptionCredits.call(user: user)
+          Subscriptions::ResetUserSubscriptionCredits.call(user: user)
         when CUSTOMER_SUBSCRIPTION_UPDATED
           update_database_subscription(object)
         else

@@ -204,7 +204,9 @@ ActiveAdmin.register Session do
     )
 
     # Perform in 15 minutes in case front desk guy checked in wrong user by accident
-    CheckInActiveCampaignJob.perform_in(15.minutes, user_session_id) if execute_checked_in_job
+    if execute_checked_in_job
+      CheckInActiveCampaignJob.set(wait: 15.minutes).perform_later(user_session_id)
+    end
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session updated successfully'
@@ -221,33 +223,12 @@ ActiveAdmin.register Session do
       return redirect_to admin_session_path(id: session_id, date: date)
     end
 
-    user = User.find(user_id)
-
-    user_session =
-      ActiveRecord::Base.transaction do
-        user_session = UserSession.new(
-          session_id: session_id,
-          user_id: user_id,
-          date: date
-        )
-
-        if user_session.valid?
-          user_session = UserSessionSlackNotification.new(user_session)
-          user_session = UserSessionAutoConfirmed.new(user_session)
-          user_session = UserSessionConsumeCredit.new(user_session) unless not_charge_user_credit
-          user_session = UserSessionWithValidDate.new(user_session)
-          user_session = UserSessionNotFull.new(user_session)
-        end
-        user_session.save!
-        user_session
-      end
-
-    CreateActiveCampaignDealJob.perform_later(
-      ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
-      user.id,
-      user_session_id: user_session.id
+    UserSessions::CreateUserSession.call(
+      session_id: session_id,
+      user_id: user_id,
+      date: date,
+      not_charge_user_credit: not_charge_user_credit
     )
-    SessionMailer.with(user_session_id: user_session.id).session_booked.deliver_later
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session created successfully'

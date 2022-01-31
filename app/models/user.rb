@@ -161,6 +161,10 @@ class User < ApplicationRecord
     age
   end
 
+  def first_not_free_session?
+    user_sessions.checked_in.not_free_sessions.count == 1
+  end
+
   private
 
   def uses_email?
