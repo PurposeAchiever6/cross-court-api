@@ -8,6 +8,7 @@ module UserSessions
       date = context.date
       referral_code = context.referral_code || nil
       not_charge_user_credit = context.not_charge_user_credit || false
+      from_waitlist = context.from_waitlist || false
 
       raise FullSessionException, I18n.t('api.errors.session.full') if session.full?(date)
 
@@ -23,8 +24,9 @@ module UserSessions
           )
 
           user_session = UserSessionReferralCredits.new(user_session) if referral
-          user_session = UserSessionSlackNotification.new(user_session)
-          user_session = UserSessionAutoConfirmed.new(user_session)
+          user_session = UserSessionAutoConfirmed.new(user_session) unless from_waitlist
+          user_session = UserSessionWaitlistConfirmed.new(user_session) if from_waitlist
+          user_session = UserSessionSlackNotification.new(user_session) unless from_waitlist
           user_session = UserSessionConsumeCredit.new(user_session, not_charge_user_credit)
           user_session = UserSessionWithValidDate.new(user_session)
 
@@ -40,6 +42,7 @@ module UserSessions
         user.id,
         user_session_id: user_session_id
       )
+
       SessionMailer.with(user_session_id: user_session_id).session_booked.deliver_later
     end
   end

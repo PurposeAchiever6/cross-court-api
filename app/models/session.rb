@@ -127,6 +127,10 @@ class Session < ApplicationRecord
     MAX_CAPACITY - reservations_count(date)
   end
 
+  def waitlist(date)
+    user_session_waitlists.where(date: date).order(:created_at)
+  end
+
   private
 
   def remove_orphan_sessions
