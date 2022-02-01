@@ -12,3 +12,4 @@ SLACK_CHANNEL: ''
 SCHEDULE_URL: ''
 ACTIVE_CAMPAING_API_URL: https://crosscourt1636135649.api-us1.com
 ACTIVE_CAMPAING_API_KEY: fake-key
+SONAR_ENV: 'sandbox'
