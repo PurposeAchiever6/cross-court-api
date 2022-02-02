@@ -33,6 +33,7 @@ en:
         not_enough_credits: "Not enough credits. Please buy more."
       free_session: "Free session already claimed"
       legal: "Invalid param"
+      invalid_date_format: "The date value format is invalid"
       session:
         full: "Session is full"
       promo_code:
@@ -50,6 +51,8 @@ en:
         charges:
           price_not_positive: "Price should be greater than 0"
           missing_payment_method: "The user does not have a saved credit card to be charged"
+      sessions:
+        invalid_date: "The date is not valid for the requested session"
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:

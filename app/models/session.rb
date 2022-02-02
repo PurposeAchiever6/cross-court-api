@@ -131,6 +131,24 @@ class Session < ApplicationRecord
     user_session_waitlists.by_date(date).sorted
   end
 
+  def invalid_date?(date)
+    no_session_for_date = if recurring.empty?
+                            start_time != date
+                          else
+                            calendar_events(date, date).empty?
+                          end
+
+    no_session_for_date || past?(date)
+  end
+
+  def past?(date = nil)
+    current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))
+    date = start_time if date.blank?
+    session_time = "#{date} #{time}".to_datetime
+
+    current_time > session_time
+  end
+
   private
 
   def remove_orphan_sessions
