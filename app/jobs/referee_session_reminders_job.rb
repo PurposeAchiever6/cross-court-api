@@ -9,7 +9,7 @@ class RefereeSessionRemindersJob < ApplicationJob
       RefereeSession.all.future.unconfirmed
     ).in_24_hours.find_each do |referee_session|
       user = referee_session.user
-      SonarService.send_message(user, I18n.t('notifier.referee_tomorrow_reminder',
+      SonarService.send_message(user, I18n.t('notifier.sonar.referee_tomorrow_reminder',
                                              name: user.first_name,
                                              time: referee_session.time.strftime(
                                                Session::TIME_FORMAT
@@ -22,7 +22,7 @@ class RefereeSessionRemindersJob < ApplicationJob
       RefereeSession.all.future.unconfirmed
     ).in(12).find_each do |referee_session|
       user = referee_session.user
-      SonarService.send_message(user, I18n.t('notifier.referee_today_reminder',
+      SonarService.send_message(user, I18n.t('notifier.sonar.referee_today_reminder',
                                              name: user.first_name,
                                              time: referee_session.time.strftime(
                                                Session::TIME_FORMAT

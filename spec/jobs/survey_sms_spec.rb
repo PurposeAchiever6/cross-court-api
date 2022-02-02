@@ -57,7 +57,7 @@ describe SurveySmsJob do
 
     let(:expected_message_user_1) do
       I18n.t(
-        'notifier.survey_reminder',
+        'notifier.sonar.survey_reminder',
         name: user_session_1.user.first_name,
         survey_link: "#{ENV['FRONTENT_URL']}/survey"
       )
@@ -65,7 +65,7 @@ describe SurveySmsJob do
 
     let(:expected_message_user_2) do
       I18n.t(
-        'notifier.survey_reminder',
+        'notifier.sonar.survey_reminder',
         name: user_session_2.user.first_name,
         survey_link: "#{ENV['FRONTENT_URL']}/survey"
       )

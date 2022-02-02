@@ -25,7 +25,7 @@ describe SemSessionRemindersJob do
       let(:s1)            { create(:session, :daily, time: time_24) }
       let!(:sem_session1) { create(:sem_session, date: la_date.tomorrow, session: s1, user: user) }
       let(:message_24_hours) do
-        I18n.t('notifier.sem_tomorrow_reminder',
+        I18n.t('notifier.sonar.sem_tomorrow_reminder',
                name: user.first_name,
                time: time_24,
                location: sem_session1.location.name)
@@ -36,7 +36,7 @@ describe SemSessionRemindersJob do
       let(:s2)            { create(:session, :daily, time: time_12) }
       let!(:sem_session2) { create(:sem_session, date: la_date, session: s2, user: user) }
       let(:message_12_hours) do
-        I18n.t('notifier.sem_today_reminder',
+        I18n.t('notifier.sonar.sem_today_reminder',
                name: user.first_name,
                time: time_12,
                location: sem_session2.location.name)

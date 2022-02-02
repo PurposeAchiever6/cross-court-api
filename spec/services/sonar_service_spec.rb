@@ -31,12 +31,11 @@ describe SonarService do
       let(:text) { %w[yes y].sample }
       let(:expected_message) do
         I18n.t(
-          'notifier.session_confirmed',
-          name: user.first_name,
+          'notifier.sonar.session_confirmed',
           when: 'tomorrow',
           time: user_session.time.strftime(Session::TIME_FORMAT),
           location: "#{user_session.location.name} (#{user_session.location.address})",
-          invite_friend: I18n.t('notifier.invite_friend_msg', link: user_session.invite_link)
+          invite_friend: I18n.t('notifier.sonar.invite_friend_msg', link: user_session.invite_link)
         )
       end
 
@@ -53,7 +52,7 @@ describe SonarService do
       context 'when the user does not have any session' do
         before { user_session.destroy! }
 
-        let(:expected_message) { I18n.t('notifier.no_session_booked') }
+        let(:expected_message) { I18n.t('notifier.sonar.no_session_booked') }
 
         it 'sends the no session booked message' do
           expect(SonarService).to receive(:send_message).with(user, expected_message).once
@@ -67,7 +66,7 @@ describe SonarService do
       let(:text) { %w[no n].sample }
       let(:expected_message) do
         I18n.t(
-          'notifier.session_canceled_in_time',
+          'notifier.sonar.session_canceled',
           schedule_url: "#{ENV['FRONTENT_URL']}/locations"
         )
       end
@@ -85,7 +84,7 @@ describe SonarService do
       context 'when the user does not have any session' do
         before { user_session.destroy! }
 
-        let(:expected_message) { I18n.t('notifier.no_session_booked') }
+        let(:expected_message) { I18n.t('notifier.sonar.no_session_booked') }
 
         it 'sends the no session booked message' do
           expect(SonarService).to receive(:send_message).with(user, expected_message).once
@@ -97,7 +96,7 @@ describe SonarService do
 
     context 'when the message is not negative nor positive' do
       let(:text) { 'anything' }
-      let(:expected_message) { I18n.t('notifier.unreadable_text') }
+      let(:expected_message) { I18n.t('notifier.sonar.unreadable_text') }
 
       it 'sends the cancelation message' do
         expect(SonarService).to receive(:send_message).with(user, expected_message).once

@@ -78,71 +78,27 @@ en:
         %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
       session_reactivated: >
         %{name} (phone: %{phone}) has *reactivated* his subscription (%{subscription_name}).
-    invite_friend_msg: "If you want to sweat with a friend, they can sign up for your session here: %{link}. "
-    session_confirmed: >
-      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!
-      Please arrive at least 10 minutes early since the first 10 players to check-in start the first
-      game. %{invite_friend}Let’s get it!
-    session_confirmed_first_timers: >
-      Hey %{name}, you’re locked in for %{when}’s %{time} session at Crosscourt %{location}!
-      Please arrive at least 10 minutes early since the first 10 players to check-in start the first
-      game. Also note that due to limited capacity, spectators or guests will not be allowed to
-      watch. %{invite_friend}Let’s get it!
-    session_auto_confirmed: >
-      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!
-      Please arrive at least 10 minutes early since the first 10 players to check-in start the first
-      game. If you need to cancel for any reason, then please respond ‘N’ to this message, but note
-      that the cancellation window has passed so no refunds will be issued for cancellations
-      beyond this point. %{invite_friend}Let’s get it!
-    session_auto_confirmed_first_timers: >
-      Hey %{name}, you’re locked in for today’s %{time} session at Crosscourt %{location}!
-      Please arrive at least 10 minutes early since the first 10 players to check-in start the first
-      game. If you need to cancel for any reason, then please respond ‘N’ to this message, but note
-      that the cancellation window has passed so no refunds will be issued for cancellations
-      beyond this point. Also, due to limited capacity, spectators or guests will not be allowed to
-      watch your session. %{invite_friend}Let’s get it!
-    employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear. Let’s get it!"
-    unlimited_session_canceled_in_time: >
-      You successfully cancelled your booked session. We'll miss you! To find another session, here's the link to the upcoming schedule: %{schedule_url}
-    unlimited_session_canceled_out_of_time: >
-      Your booked session was cancelled. Please note, you were charged
-      $%{unlimited_session_canceled_out_of_time_fee} due to the cancellation being less than
-      %{cancellation_period} hrs prior to the session start time. To find another session, here's
-      a link to the upcoming schedule: %{schedule_url}
-    first_free_session_canceled_in_time: >
-      You successfully cancelled your first booked session. Please note, the %{free_session_exp_days}
-      day expiration window does not reset. To find another session, here's the link to the upcoming
-      schedule: %{schedule_url}
-    first_free_session_canceled_out_of_time: >
-      Your first booked session was cancelled. Please note, you were charged
-      $%{free_session_canceled_out_of_time_fee} due to the cancellation being less than
-      %{cancellation_period} hrs prior to the session start time, however, we kept the free
-      session credit in your account. To find another session, here's a link to the upcoming
-      schedule: %{schedule_url}
-    session_canceled_in_time: >
-      You successfully cancelled your booked session. Your credit have been refunded to your
-      account. To find another session, here's the link to the upcoming schedule: %{schedule_url}
-    session_canceled_out_of_time: >
-      Your booked session was cancelled. Unfortunately, we're not able to refund your credit due
-      to the cancellation being less than %{cancellation_period} hrs prior to the session start
-      time. To find another session, here's a link to the upcoming schedule: %{schedule_url}
-    unreadable_text: "We couldn’t process your response. Please respond ‘Y’ to confirm."
-    no_session_booked: "You don’t have any session booked yet."
-    tomorrow_reminder: >
-      Hey %{name}! As a reminder, you’re signed up for tomorrow’s %{time} session at Crosscourt
-      %{location}. Please respond ‘Y’ to confirm so we can verify your spot, or ‘N’ if you can't
-      make it. The cancellation window ends 5 hrs before your session start time. Thank you!
-    sem_tomorrow_reminder: "Hey %{name}! You’re scheduled to Manage tomorrow’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!"
-    referee_tomorrow_reminder: "Hey %{name}! You’re scheduled to Officiate tomorrow’s %{time} session at Crosscourt %{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!"
-    today_reminder: >
-      Hey %{name}! As a reminder, you’re signed up for today’s %{time} session at Crosscourt
-      %{location}. Please respond ‘Y’ to confirm so we can verify your spot, or ‘N’ if you can't
-      make it. The cancellation window ends 5 hrs before your session start time. Thank you!
-    sem_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
-    referee_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at Crosscourt %{location}. Respond ‘Y’ so we know you’re going to be there"
-    survey_reminder: >
-      Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate your
-      feedback. %{survey_link}
+    sonar:
+      invite_friend_msg: "Share this link to sweat with a friend: %{link}"
+      session_confirmed: >
+        You’re locked in for %{when}’s %{time} session at CC%{location}! %{invite_friend}
+      session_auto_confirmed: >
+        Hey %{name}, you’re locked in for today’s %{time} session at CC%{location}! Respond ‘N’ to cancel. %{invite_friend}
+      employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear."
+      session_canceled: >
+        Thank you for letting us know! Credit loss or cancelation fee may be applied. You can book another session here: %{schedule_url}
+      unreadable_text: "We couldn’t process your response. Please respond ‘Y’ to confirm."
+      no_session_booked: "You don’t have any session booked yet."
+      sem_tomorrow_reminder: >
+        Hey %{name}! You’re scheduled to Manage tomorrow’s %{time} session at CC%{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!
+      referee_tomorrow_reminder: >
+        Hey %{name}! You’re scheduled to Officiate tomorrow’s %{time} session at CC%{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!
+      today_reminder: >
+        Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. Please respond ‘Y’ to confirm or ‘N’ to cancel. Thank you!
+      sem_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at CC%{location}. Respond ‘Y’ so we know you’re going to be there"
+      referee_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at CC%{location}. Respond ‘Y’ so we know you’re going to be there"
+      survey_reminder: >
+        Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate your feedback. %{survey_link}
   admin:
     products:
       created: "Product created successfully"
