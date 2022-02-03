@@ -5,8 +5,8 @@ class CreditsJob < ApplicationJob
     active_campaign_service = ActiveCampaignService.new
 
     UsersQuery.new.expired_free_session_users.each do |user|
-      user.decrement(:credits)
-      user.free_session_state = 'expired'
+      user.decrement(:credits) if user.credits.positive?
+      user.free_session_state = :expired
       user.save!
     end
 

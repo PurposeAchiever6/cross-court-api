@@ -6,7 +6,7 @@ class UsersQuery
   end
 
   def expired_free_session_users
-    relation.where(free_session_state: :not_claimed)
+    relation.where(free_session_state: %i[not_claimed claimed])
             .where('free_session_expiration_date < ?', Time.zone.today)
   end
 
