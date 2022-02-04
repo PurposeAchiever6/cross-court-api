@@ -5,7 +5,7 @@ class ActiveCampaignMocker
 
   def initialize(pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS)
     @pipeline_id = deal_pipelines_map[pipeline_name]
-    @base_url = ENV['ACTIVE_CAMPAING_API_URL']
+    @base_url = "#{ENV['ACTIVE_CAMPAING_API_URL']}/api/3"
   end
 
   def mock
@@ -18,66 +18,63 @@ class ActiveCampaignMocker
   end
 
   def contact_fields
-    WebMock.stub_request(:get, "#{base_url}/api/3/fields").with(
-      body: {},
-      headers: default_headers
-    ).to_return(
-      status: 200,
-      body: contact_fields_response
+    mock_request(
+      url_path: '/fields',
+      method: :get,
+      response_body: contact_fields_response
     )
   end
 
   def deal_pipelines
-    WebMock.stub_request(:get, "#{base_url}/api/3/dealGroups").with(
-      body: {},
-      headers: default_headers
-    ).to_return(
-      status: 200,
-      body: deal_pipelines_response
+    mock_request(
+      url_path: '/dealGroups',
+      method: :get,
+      response_body: deal_pipelines_response
     )
   end
 
   def deal_fields
-    WebMock.stub_request(:get, "#{base_url}/api/3/dealCustomFieldMeta").with(
-      body: {},
-      headers: default_headers
-    ).to_return(
-      status: 200,
-      body: deal_fields_response
+    mock_request(
+      url_path: '/dealCustomFieldMeta',
+      method: :get,
+      response_body: deal_fields_response
     )
   end
 
   def deal_stages
-    url =
-      "#{base_url}/api/3/dealStages?filters[d_groupid]=#{pipeline_id}"
-    WebMock.stub_request(:get, url).with(
-      body: {},
-      headers: default_headers
-    ).to_return(
-      status: 200,
-      body: deal_stages_response
+    mock_request(
+      url_path: "/dealStages?filters[d_groupid]=#{pipeline_id}",
+      method: :get,
+      response_body: deal_stages_response
     )
   end
 
   def create_deal
-    WebMock.stub_request(:post, "#{base_url}/api/3/deals").with(
-      headers: default_headers
-    ).to_return(
-      status: 200,
-      body: {}.to_json
+    mock_request(
+      url_path: '/deals',
+      method: :post
     )
   end
 
   def create_update_contact
-    WebMock.stub_request(:post, "#{base_url}/api/3/contact/sync").with(
-      headers: default_headers
-    ).to_return(
-      status: 200,
-      body: create_update_contact_response
+    mock_request(
+      url_path: '/contact/sync',
+      method: :post,
+      response_body: create_update_contact_response
     )
   end
 
   private
+
+  def mock_request(url_path:, method:, response_body: {}.to_json, status: 200)
+    WebMock.stub_request(method, "#{base_url}#{url_path}").with(
+      headers: default_headers
+    ).to_return(
+      status: status,
+      body: response_body,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+  end
 
   def default_headers
     {

@@ -109,6 +109,6 @@ module SonarService
   end
 
   def logger
-    @logger ||= Logger.new(STDOUT)
+    @logger ||= Rails.logger
   end
 end
