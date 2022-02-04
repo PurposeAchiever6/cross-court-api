@@ -42,7 +42,7 @@ describe UsersQuery do
       :user,
       credits: 0,
       drop_in_expiration_date: Time.zone.today + 15.days,
-      free_session_state: %i[claimed used].sample,
+      free_session_state: :used,
       free_session_expiration_date: Time.zone.today + 23.days
     )
   end
@@ -52,7 +52,7 @@ describe UsersQuery do
       :user,
       credits: 1,
       drop_in_expiration_date: Time.zone.today + 20.days,
-      free_session_state: %i[claimed used].sample,
+      free_session_state: :used,
       free_session_expiration_date: Time.zone.today - 2.days
     )
   end
