@@ -128,7 +128,7 @@ class Session < ApplicationRecord
   end
 
   def waitlist(date)
-    user_session_waitlists.where(date: date).order(:created_at)
+    user_session_waitlists.by_date(date).sorted
   end
 
   private

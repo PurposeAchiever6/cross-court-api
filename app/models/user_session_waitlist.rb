@@ -23,5 +23,7 @@ class UserSessionWaitlist < ApplicationRecord
 
   validates :date, presence: true, uniqueness: { scope: %i[session_id user_id] }
 
+  scope :by_date, ->(date) { where(date: date) }
   scope :not_reached, -> { where(reached: false) }
+  scope :sorted, -> { order(reached: :desc, created_at: :asc) }
 end

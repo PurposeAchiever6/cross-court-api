@@ -1,0 +1,28 @@
+<% if waitlist.length.zero? %>
+  <div>
+    No users on the waitlist
+  </div>
+<% else %>
+  <table>
+    <tr>
+      <th>Position</th>
+      <th>Image</th>
+      <th>User</th>
+    </tr>
+    <% waitlist.each_with_index do |waitlist_item, index| %>
+      <% user = waitlist_item.user %>
+      <tr>
+        <td class='align-middle'>
+          <%= index + 1 %>
+        </td>
+        <td class='align-middle'>
+          <%= image_tag(user.image.attached? ? user.image : "missing-profile-image.png",
+                        class: 'rounded-full w-12 h-12 object-cover') %>
+        </td>
+        <td class='align-middle'>
+          <%= link_to user.full_name, admin_user_path(user.id) %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

@@ -128,6 +128,14 @@ ActiveAdmin.register Session do
         }
       end
 
+      panel 'Waitlist' do
+        waitlist = resource.waitlist(date)
+                           .not_reached
+                           .includes(user: { image_attachment: :blob })
+
+        render partial: 'waitlist', locals: { waitlist: waitlist }
+      end
+
       panel 'Create User Session Manually' do
         users_for_select = User.order('LOWER(last_name)', 'LOWER(first_name)').map do |user|
           ["#{user.last_name}, #{user.first_name}", user.id]
