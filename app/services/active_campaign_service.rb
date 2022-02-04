@@ -27,11 +27,6 @@ class ActiveCampaignService
     end
 
     response
-  rescue StandardError => e
-    logger.error do
-      "Error when creating/updating contact. #{e.class}: #{e.message}. Payload: #{payload}"
-    end
-    raise e
   end
 
   def contact_fields
@@ -53,11 +48,6 @@ class ActiveCampaignService
   def create_deal(event, user, args = [])
     payload = deal_payload(event, user, args)
     execute_request(:post, '/deals', payload)
-  rescue StandardError => e
-    logger.error do
-      "Error when creating deal. #{e.class}: #{e.message}. Event: #{event}, payload: #{payload}"
-    end
-    raise e
   end
 
   private
@@ -75,9 +65,9 @@ class ActiveCampaignService
     response_code = response.code
     parsed_response = response.parsed_response
 
-    raise ActiveCampaignException, parsed_response unless response.success?
-
     log_info("ActiveCampaign response: #{response_code} - #{parsed_response}")
+
+    raise ActiveCampaignException, parsed_response unless response.success?
 
     parsed_response
   end

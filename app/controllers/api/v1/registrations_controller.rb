@@ -3,13 +3,19 @@ module Api
     class RegistrationsController < DeviseTokenAuth::RegistrationsController
       protect_from_forgery with: :exception
       include Api::Concerns::ActAsApiRequest
-      after_action :create_external_records, only: :create
 
       def create
-        super
-        return unless @resource.persisted?
+        ActiveRecord::Base.transaction do
+          super do |resource|
+            ActiveCampaignService.new.create_update_contact(resource)
+            StripeService.create_user(resource)
+            SonarService.add_update_customer(resource)
 
-        ResendVerificationEmailJob.set(wait: 24.hours).perform_later(@resource.id)
+            ResendVerificationEmailJob.set(wait: 24.hours).perform_later(resource.id)
+          end
+        end
+      rescue StandardError
+        render_error(:conflict, I18n.t('api.errors.users.registration.communication'))
       end
 
       private
@@ -21,14 +27,6 @@ module Api
 
       def render_create_success
         render json: { user: resource_data }
-      end
-
-      def create_external_records
-        return unless @resource.persisted?
-
-        StripeService.create_user(@resource)
-        ActiveCampaignService.new.create_update_contact(@resource)
-        SonarService.add_update_customer(@resource)
       end
     end
   end

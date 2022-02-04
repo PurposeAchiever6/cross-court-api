@@ -128,10 +128,6 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def first_session?
-    user_sessions.empty?
-  end
-
   def credits?
     credits.positive? || subscription_credits.positive? || unlimited_credits?
   end

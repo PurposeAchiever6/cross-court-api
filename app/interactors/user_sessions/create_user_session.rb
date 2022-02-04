@@ -13,7 +13,7 @@ module UserSessions
         ActiveRecord::Base.transaction do
           referral = User.find_by(referral_code: referral_code)
 
-          user_session = UserSession.new(
+          user_session = UserSession.create!(
             session_id: session_id,
             user_id: user_id,
             date: date,
