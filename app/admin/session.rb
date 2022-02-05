@@ -131,9 +131,9 @@ ActiveAdmin.register Session do
       panel 'Waitlist' do
         waitlist = resource.waitlist(date)
                            .not_reached
-                           .includes(user: { image_attachment: :blob })
+                           .includes(user: [:active_subscription, { image_attachment: :blob }])
 
-        render partial: 'waitlist', locals: { waitlist: waitlist }
+        render partial: 'waitlist', locals: { waitlist: waitlist, time_zone: session.time_zone }
       end
 
       panel 'Create User Session Manually' do

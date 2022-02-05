@@ -25,5 +25,9 @@ class UserSessionWaitlist < ApplicationRecord
 
   scope :by_date, ->(date) { where(date: date) }
   scope :not_reached, -> { where(reached: false) }
-  scope :sorted, -> { order(reached: :desc, created_at: :asc) }
+
+  def self.sorted
+    joins(:user).left_outer_joins(user: :active_subscription)
+                .order(reached: :desc, 'subscriptions.status': :asc, created_at: :asc)
+  end
 end

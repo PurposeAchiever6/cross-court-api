@@ -8,6 +8,8 @@
       <th>Position</th>
       <th>Image</th>
       <th>User</th>
+      <th>Joined Waitlist At</th>
+      <th>Active Subscription</th>
     </tr>
     <% waitlist.each_with_index do |waitlist_item, index| %>
       <% user = waitlist_item.user %>
@@ -21,6 +23,12 @@
         </td>
         <td class='align-middle'>
           <%= link_to user.full_name, admin_user_path(user.id) %>
+        </td>
+        <td class='align-middle'>
+          <%= waitlist_item.created_at.in_time_zone(time_zone).strftime('%B %e, %Y %T') %>
+        </td>
+        <td class='align-middle'>
+          <%= status_tag !!user.active_subscription %>
         </td>
       </tr>
     <% end %>
