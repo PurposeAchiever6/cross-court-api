@@ -68,6 +68,7 @@ FactoryBot.define do
     phone_number                 { Faker::PhoneNumber.cell_phone }
     private_access               { false }
     birthday                     { Time.zone.today - 20.years }
+    skill_rating                 { rand(1..5) }
 
     trait :confirmed do
       confirmed_at { Time.current }

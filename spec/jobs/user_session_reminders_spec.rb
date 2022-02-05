@@ -23,19 +23,13 @@ describe UserSessionRemindersJob do
       let!(:user_session1) do
         create(:user_session, date: la_date.tomorrow, session: s1, user: user)
       end
-      let(:message_24_hours) do
-        I18n.t('notifier.tomorrow_reminder',
-               name: user.first_name,
-               time: time_24,
-               location: user_session1.location.name)
-      end
 
       # In 8 hours
       let(:time_8)         { (la_time + 8.hours).strftime(Session::TIME_FORMAT) }
       let(:s2)             { create(:session, :daily, time: time_8) }
       let!(:user_session2) { create(:user_session, date: la_date, session: s2, user: user) }
       let(:message_8_hours) do
-        I18n.t('notifier.today_reminder',
+        I18n.t('notifier.sonar.today_reminder',
                name: user.first_name,
                time: time_8,
                location: user_session2.location.name)
@@ -46,14 +40,13 @@ describe UserSessionRemindersJob do
       let(:s3)             { create(:session, :daily, time: time_6) }
       let!(:user_session3) { create(:user_session, date: la_date, session: s3, user: user) }
       let(:message_6_hours) do
-        I18n.t('notifier.today_reminder',
+        I18n.t('notifier.sonar.today_reminder',
                name: user.first_name,
                time: time_6,
                location: user_session3.location.name)
       end
 
       it 'calls the SonarService with the correct parameters' do
-        expect(SonarService).to receive(:send_message).with(user, message_24_hours).once
         expect(SonarService).to receive(:send_message).with(user, message_8_hours).once
         expect(SonarService).to receive(:send_message).with(user, message_6_hours).once
 

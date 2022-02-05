@@ -10,7 +10,7 @@ class UserSessionReferralCredits
   def save!
     referral_id = referral.id
 
-    if referral_id != user_id && user.first_session?
+    if referral_id != user_id && user.user_sessions.count == 1
       referral.increment(:credits)
       referral.save!
       CreateActiveCampaignDealJob.perform_later(

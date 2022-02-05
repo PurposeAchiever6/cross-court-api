@@ -30,17 +30,17 @@ module SonarService
       if user_session.present?
         send_message(user, confirmation_msg(user, user_session))
       else
-        send_message(user, I18n.t('notifier.no_session_booked'))
+        send_message(user, I18n.t('notifier.sonar.no_session_booked'))
       end
     elsif negative_message?(message)
       user_session = find_and_cancel_user_session(user)
       if user_session.present?
-        send_message(user, cancellation_msg(user_session))
+        send_message(user, cancellation_msg)
       else
-        send_message(user, I18n.t('notifier.no_session_booked'))
+        send_message(user, I18n.t('notifier.sonar.no_session_booked'))
       end
     else
-      send_message(user, I18n.t('notifier.unreadable_text'))
+      send_message(user, I18n.t('notifier.sonar.unreadable_text'))
     end
   end
 
@@ -84,75 +84,31 @@ module SonarService
   def invite_friend(user_session)
     return '' if user_session.session.full?(user_session.date)
 
-    I18n.t('notifier.invite_friend_msg', link: user_session.invite_link)
+    I18n.t('notifier.sonar.invite_friend_msg', link: user_session.invite_link)
   end
 
   def confirmation_msg(user, user_session)
-    return I18n.t('notifier.employee_session_confirmed') if user.employee?
+    return I18n.t('notifier.sonar.employee_session_confirmed') if user.employee?
 
     today = Time.current.in_time_zone(user_session.time_zone).to_date
     location = user_session.location
 
-    if user_session.is_free_session
-      I18n.t(
-        'notifier.session_confirmed_first_timers',
-        name: user.first_name,
-        when: user_session.date == today ? 'today' : 'tomorrow',
-        time: user_session.time.strftime(Session::TIME_FORMAT),
-        location: "#{location.name} (#{location.address})",
-        invite_friend: invite_friend(user_session),
-        app_link: "#{ENV['FRONTENT_URL']}/app"
-      )
-    else
-      I18n.t(
-        'notifier.session_confirmed',
-        name: user.first_name,
-        when: user_session.date == today ? 'today' : 'tomorrow',
-        time: user_session.time.strftime(Session::TIME_FORMAT),
-        location: "#{location.name} (#{location.address})",
-        invite_friend: invite_friend(user_session)
-      )
-    end
-  end
-
-  def cancellation_text(user_session)
-    user_subscription = user_session.user.active_subscription
-    in_cancellation_time = user_session.in_cancellation_time?
-
-    if user_session.is_free_session?
-      return 'notifier.first_free_session_canceled_in_time' if in_cancellation_time
-
-      return 'notifier.first_free_session_canceled_out_of_time'
-    end
-
-    if user_subscription&.unlimited?
-      return 'notifier.unlimited_session_canceled_in_time' if in_cancellation_time
-
-      return 'notifier.unlimited_session_canceled_out_of_time'
-    end
-
-    if in_cancellation_time
-      'notifier.session_canceled_in_time'
-    else
-      'notifier.session_canceled_out_of_time'
-    end
-  end
-
-  def cancellation_msg(user_session)
-    front_url = ENV['FRONTENT_URL']
-    unlimited_session_canceled_out_of_time_fee = ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE']
-
     I18n.t(
-      cancellation_text(user_session),
-      schedule_url: "#{front_url}/locations",
-      cancellation_period: ENV['CANCELLATION_PERIOD'],
-      free_session_exp_days: User::FREE_SESSION_EXPIRATION_DAYS.parts[:days],
-      unlimited_session_canceled_out_of_time_fee: unlimited_session_canceled_out_of_time_fee,
-      free_session_canceled_out_of_time_fee: ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE']
+      'notifier.sonar.session_confirmed',
+      when: user_session.date == today ? 'today' : 'tomorrow',
+      time: user_session.time.strftime(Session::TIME_FORMAT),
+      location: "#{location.name} (#{location.address})",
+      invite_friend: invite_friend(user_session)
     )
   end
 
+  def cancellation_msg
+    front_end_url = ENV['FRONTENT_URL']
+
+    I18n.t('notifier.sonar.session_canceled', schedule_url: "#{front_end_url}/locations")
+  end
+
   def logger
-    @logger ||= Logger.new(STDOUT)
+    @logger ||= Rails.logger
   end
 end

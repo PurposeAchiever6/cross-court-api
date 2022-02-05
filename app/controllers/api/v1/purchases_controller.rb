@@ -19,10 +19,12 @@ module Api
       end
 
       def create_free_session_intent
-        intent = StripeService.create_free_session_intent(current_user, payment_method)
-        current_user.free_session_state = :claimed
-        current_user.free_session_payment_intent = intent.id
-        current_user.save!
+        result = Users::ClaimFreeSession.call(
+          user: current_user,
+          payment_method: payment_method
+        )
+
+        raise ClaimFreeSessionException, result.message unless result.success?
       end
 
       private

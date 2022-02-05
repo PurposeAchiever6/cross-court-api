@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe 'POST api/v1/users', type: :request do
-  let(:user)            { User.last }
-  let(:failed_response) { 422 }
+  let(:user) { User.last }
 
   before do
     stub_request(:post, %r{stripe.com/v1/customers})
@@ -82,7 +81,7 @@ describe 'POST api/v1/users', type: :request do
 
       it 'does not return a successful response' do
         subject
-        expect(response.status).to eq(failed_response)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -98,7 +97,7 @@ describe 'POST api/v1/users', type: :request do
 
       it 'does not return a successful response' do
         subject
-        expect(response.status).to eq(failed_response)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -114,7 +113,7 @@ describe 'POST api/v1/users', type: :request do
 
       it 'does not return a successful response' do
         subject
-        expect(response.status).to eq(failed_response)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -129,8 +128,23 @@ describe 'POST api/v1/users', type: :request do
 
       it 'does not return a successful response' do
         subject
-        expect(response.status).to eq(failed_response)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
+    end
+
+    context 'when the communication with an external service fails' do
+      before do
+        allow_any_instance_of(
+          ActiveCampaignService
+        ).to receive(:create_update_contact).and_raise(ActiveCampaignException, 'error')
+      end
+
+      it 'return an json error' do
+        subject
+        expect(response).to have_http_status(:conflict)
+      end
+
+      it { expect { subject }.not_to change { User.count } }
     end
   end
 end

@@ -49,4 +49,27 @@ describe 'PUT api/v1/purchases/create_free_session_intent' do
       expect { subject }.not_to change { user.reload.free_session_state }
     end
   end
+
+  context 'when calling stripe fails' do
+    let(:stripe_error_msg) { 'Stripe Error' }
+
+    before do
+      allow_any_instance_of(
+        Users::ClaimFreeSession
+      ).to receive(:call).and_raise(Stripe::StripeError, stripe_error_msg)
+    end
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns the correct error message' do
+      subject
+      expect(json[:error]).to eq(stripe_error_msg)
+    end
+
+    it { expect { subject }.not_to change { user.reload.free_session_state } }
+    it { expect { subject }.not_to change { user.reload.free_session_payment_intent } }
+  end
 end

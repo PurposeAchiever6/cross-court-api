@@ -9,7 +9,7 @@ class SemSessionRemindersJob < ApplicationJob
       SemSession.all.future.unconfirmed
     ).in_24_hours.find_each do |sem_session|
       user = sem_session.user
-      SonarService.send_message(user, I18n.t('notifier.sem_tomorrow_reminder',
+      SonarService.send_message(user, I18n.t('notifier.sonar.sem_tomorrow_reminder',
                                              name: user.first_name,
                                              time: sem_session.time.strftime(Session::TIME_FORMAT),
                                              location: sem_session.location.name))
@@ -18,7 +18,7 @@ class SemSessionRemindersJob < ApplicationJob
     # 12 hour reminder
     SessionReminderQuery.new(SemSession.all.future.unconfirmed).in(12).find_each do |sem_session|
       user = sem_session.user
-      SonarService.send_message(user, I18n.t('notifier.sem_today_reminder',
+      SonarService.send_message(user, I18n.t('notifier.sonar.sem_today_reminder',
                                              name: user.first_name,
                                              time: sem_session.time.strftime(Session::TIME_FORMAT),
                                              location: sem_session.location.name))

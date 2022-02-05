@@ -1,4 +1,7 @@
 class ActiveCampaignService
+  include HTTParty
+  base_uri "#{ENV['ACTIVE_CAMPAING_API_URL']}/api/3"
+
   attr_reader :mapped_contact_fields, :mapped_deal_fields, :mapped_deal_stages, :pipeline_id,
               :mapped_deal_pipelines
 
@@ -16,7 +19,7 @@ class ActiveCampaignService
 
   def create_update_contact(user)
     payload = contact_payload(user)
-    response = ActiveCampaign.post('/contact/sync', payload: payload)
+    response = execute_request(:post, '/contact/sync', payload)
 
     if user.id && !user.active_campaign_id
       active_campaign_id = response['contact']['id'].to_i
@@ -24,43 +27,65 @@ class ActiveCampaignService
     end
 
     response
-  rescue StandardError => e
-    logger.error do
-      "Error when creating/updating contact. #{e.class}: #{e.message}. Payload: #{payload}"
-    end
-    raise e
   end
 
   def contact_fields
-    ActiveCampaign.get('/fields')
+    execute_request(:get, '/fields')
   end
 
   def deal_pipelines
-    ActiveCampaign.get('/dealGroups')
+    execute_request(:get, '/dealGroups')
   end
 
   def deal_fields
-    ActiveCampaign.get('/dealCustomFieldMeta')
+    execute_request(:get, '/dealCustomFieldMeta')
   end
 
   def deal_stages
-    ActiveCampaign.get("/dealStages?filters[d_groupid]=#{pipeline_id}")
+    execute_request(:get, "/dealStages?filters[d_groupid]=#{pipeline_id}")
   end
 
   def create_deal(event, user, args = [])
     payload = deal_payload(event, user, args)
-    ActiveCampaign.post('/deals', payload: payload)
-  rescue StandardError => e
-    logger.error do
-      "Error when creating deal. #{e.class}: #{e.message}. Event: #{event}, payload: #{payload}"
-    end
-    raise e
+    execute_request(:post, '/deals', payload)
   end
 
   private
 
+  def execute_request(method, url, body = nil)
+    log_info("ActiveCampaign request: #{method} #{url} - #{body}")
+
+    response = self.class.send(
+      method,
+      url,
+      body: body.present? ? body.to_json : body,
+      headers: headers
+    )
+
+    response_code = response.code
+    parsed_response = response.parsed_response
+
+    log_info("ActiveCampaign response: #{response_code} - #{parsed_response}")
+
+    raise ActiveCampaignException, parsed_response unless response.success?
+
+    parsed_response
+  end
+
+  def headers
+    @headers ||=
+      {
+        'Content-Type': 'application/json',
+        'Api-Token': ENV['ACTIVE_CAMPAING_API_KEY']
+      }
+  end
+
   def logger
-    @logger ||= Logger.new(STDOUT)
+    @logger ||= Rails.logger
+  end
+
+  def log_info(info)
+    logger.info { info }
   end
 
   def contact_fields_map

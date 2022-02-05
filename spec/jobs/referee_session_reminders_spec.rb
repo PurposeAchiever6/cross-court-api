@@ -27,7 +27,7 @@ describe RefereeSessionRemindersJob do
         create(:referee_session, date: la_date.tomorrow, session: s1, user: user)
       end
       let(:message_24_hours) do
-        I18n.t('notifier.referee_tomorrow_reminder',
+        I18n.t('notifier.sonar.referee_tomorrow_reminder',
                name: user.first_name,
                time: time_24,
                location: referee_session1.location.name)
@@ -38,7 +38,7 @@ describe RefereeSessionRemindersJob do
       let(:s2)                { create(:session, :daily, time: time_12) }
       let!(:referee_session2) { create(:referee_session, date: la_date, session: s2, user: user) }
       let(:message_12_hours) do
-        I18n.t('notifier.referee_today_reminder',
+        I18n.t('notifier.sonar.referee_today_reminder',
                name: user.first_name,
                time: time_12,
                location: referee_session2.location.name)
