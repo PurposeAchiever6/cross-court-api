@@ -26,6 +26,9 @@ module Api
         object = data.object
         type = event.type
         user = User.find_by(stripe_id: object.customer)
+
+        return head 200 unless user
+
         active_subscription = user.active_subscription
 
         case type

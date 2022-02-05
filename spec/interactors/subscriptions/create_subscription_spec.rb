@@ -6,12 +6,13 @@ describe Subscriptions::CreateSubscription do
     let(:product) { create(:product) }
     let(:payment_method) { 'some-stripe-pm-id' }
     let(:promo_code) { nil }
+    let(:stripe_response_status) { 'active' }
 
     let(:stripe_response) do
       {
         id: 'stripe-subscription-id',
         items: double(data: [double(id: 'stripe-subscription-item-id')]),
-        status: 'active',
+        status: stripe_response_status,
         current_period_start: Time.current.to_i,
         current_period_end: (Time.current + 1.month).to_i,
         cancel_at: nil,
@@ -46,6 +47,14 @@ describe Subscriptions::CreateSubscription do
       let!(:active_subscription) { create(:subscription, user: user, product: product) }
 
       it { expect(subject.success?).to eq(false) }
+      it { expect { subject }.not_to change(Subscription, :count) }
+    end
+
+    context 'when stripe subscription returns with incomplete status' do
+      let(:stripe_response_status) { 'incomplete' }
+
+      it { expect(subject.success?).to eq(false) }
+      it { expect { subject }.not_to change(Subscription, :count) }
     end
   end
 end

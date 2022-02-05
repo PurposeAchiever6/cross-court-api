@@ -23,6 +23,10 @@ module Subscriptions
         promo_code
       )
 
+      if stripe_subscription.status.to_sym == :incomplete
+        context.fail!(message: I18n.t('api.errors.subscriptions.incomplete_status'))
+      end
+
       subscription = Subscription.new(user: user, product: product, promo_code: promo_code)
                                  .assign_stripe_attrs(stripe_subscription)
 
