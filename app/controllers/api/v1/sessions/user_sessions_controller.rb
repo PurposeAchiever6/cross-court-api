@@ -11,10 +11,12 @@ module Api
         end
 
         def create
+          session = Session.find(params[:session_id])
+
           UserSessions::CreateUserSession.call(
             referral_code: params[:referral_code],
-            session_id: params[:session_id],
-            user_id: current_user.id,
+            session: session,
+            user: current_user,
             date: params[:date]
           )
         end

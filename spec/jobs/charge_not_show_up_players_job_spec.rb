@@ -26,7 +26,8 @@ describe ChargeNotShowUpPlayersJob do
         checked_in: false,
         date: la_date.yesterday,
         state: :confirmed,
-        is_free_session: true
+        is_free_session: true,
+        free_session_payment_intent: rand(1_000)
       )
     end
     let!(:user_session_2) do

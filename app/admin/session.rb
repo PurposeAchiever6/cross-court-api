@@ -219,6 +219,7 @@ ActiveAdmin.register Session do
     not_charge_user_credit = params[:not_charge_user_credit] == 'true'
 
     session = Session.find(session_id)
+    user = User.find(user_id)
 
     if session.user_sessions.not_canceled.by_date(date).where(user_id: user_id).exists?
       flash[:error] = 'The player is already in the session'
@@ -230,14 +231,16 @@ ActiveAdmin.register Session do
       return redirect_to admin_session_path(id: session_id, date: date)
     end
 
-    Users::ClaimFreeSession.call(user: User.find(user_id))
+    ActiveRecord::Base.transaction do
+      Users::ClaimFreeSession.call(user: user)
 
-    UserSessions::CreateUserSession.call(
-      session_id: session_id,
-      user_id: user_id,
-      date: date,
-      not_charge_user_credit: not_charge_user_credit
-    )
+      UserSessions::CreateUserSession.call(
+        session: session,
+        user: user,
+        date: date,
+        not_charge_user_credit: not_charge_user_credit
+      )
+    end
 
     redirect_to admin_session_path(id: session_id, date: date),
                 notice: 'User session created successfully'

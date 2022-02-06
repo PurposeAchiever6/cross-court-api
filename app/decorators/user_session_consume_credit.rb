@@ -3,12 +3,13 @@ class UserSessionConsumeCredit
 
   attr_reader :user_session
 
-  def initialize(user_session)
+  def initialize(user_session, not_charge_user_credit = false)
     @user_session = user_session
+    @not_charge_user_credit = not_charge_user_credit
   end
 
   def save!
-    unless user.credits?
+    unless user.credits? || @not_charge_user_credit
       raise NotEnoughCreditsException, I18n.t('api.errors.user_session.not_enough_credits')
     end
 
@@ -18,10 +19,12 @@ class UserSessionConsumeCredit
       user.free_session_state = :used
     end
 
-    if user.credits.positive?
-      user.decrement(:credits)
-    else
-      user.decrement(:subscription_credits) unless user.unlimited_credits?
+    unless @not_charge_user_credit
+      if user.credits.positive?
+        user.decrement(:credits)
+      else
+        user.decrement(:subscription_credits) unless user.unlimited_credits?
+      end
     end
 
     user.save!

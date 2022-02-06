@@ -4,9 +4,11 @@ module Users
 
     def call
       user = context.user
-      payment_method = context.payment_method
 
       return unless user.free_session_not_claimed?
+
+      payment_method = context.payment_method || Users::GetPaymentMethods.call(user: user)
+                                                                         .default_payment_method
 
       if payment_method.present?
         intent = StripeService.create_free_session_intent(user, payment_method)

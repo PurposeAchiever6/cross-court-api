@@ -4,7 +4,7 @@ detectors:
     exclude: []
   BooleanParameter:
     enabled: true
-    exclude: []
+    exclude: ["UserSessionConsumeCredit#initialize"]
   ClassVariable:
     enabled: false
     exclude: []
@@ -14,7 +14,7 @@ detectors:
       [
         "ActiveCampaignService#custom_deal_fields",
         "Product#price",
-        "ActiveCampaignService#initialize"
+        "ActiveCampaignService#initialize",
       ]
   DataClump:
     enabled: true
@@ -37,7 +37,7 @@ detectors:
         "SonarService#add_update_customer",
         "AddAttachment#call",
         "ActiveCampaignService#custom_deal_fields",
-        "User#update_external_records"
+        "User#update_external_records",
       ]
     max_calls: 1
     allow_calls: []

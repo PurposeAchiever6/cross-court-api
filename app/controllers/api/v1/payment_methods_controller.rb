@@ -6,7 +6,7 @@ module Api
       end
 
       def index
-        @payment_methods = StripeService.fetch_payment_methods(current_user)
+        @payment_methods = Users::GetPaymentMethods.call(user: current_user).payment_methods
       end
 
       def destroy

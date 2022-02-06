@@ -3,8 +3,8 @@ module UserSessions
     include Interactor
 
     def call
-      user_id = context.user_id
-      session_id = context.session_id
+      user = context.user
+      session = context.session
       date = context.date
       referral_code = context.referral_code || nil
       not_charge_user_credit = context.not_charge_user_credit || false
@@ -14,8 +14,8 @@ module UserSessions
           referral = User.find_by(referral_code: referral_code)
 
           user_session = UserSession.create!(
-            session_id: session_id,
-            user_id: user_id,
+            session: session,
+            user: user,
             date: date,
             referral: referral
           )
@@ -24,7 +24,7 @@ module UserSessions
             user_session = UserSessionReferralCredits.new(user_session) if referral
             user_session = UserSessionSlackNotification.new(user_session)
             user_session = UserSessionAutoConfirmed.new(user_session)
-            user_session = UserSessionConsumeCredit.new(user_session) unless not_charge_user_credit
+            user_session = UserSessionConsumeCredit.new(user_session, not_charge_user_credit)
             user_session = UserSessionWithValidDate.new(user_session)
             user_session = UserSessionNotFull.new(user_session)
           end
@@ -36,7 +36,7 @@ module UserSessions
       user_session_id = user_session.id
       CreateActiveCampaignDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
-        user_id,
+        user.id,
         user_session_id: user_session_id
       )
       SessionMailer.with(user_session_id: user_session_id).session_booked.deliver_later
