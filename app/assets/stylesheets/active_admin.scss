@@ -80,6 +80,10 @@
   margin-top: 0.5rem;
 }
 
+.mt-4 {
+  margin-top: 1rem;
+}
+
 .day {
   height: 100px;
 }
@@ -110,6 +114,10 @@ input[disabled] {
   width: 3rem;
 }
 
+.w-1\/5 {
+  width: 20%;
+}
+
 .h-12 {
   height: 3rem;
 }
@@ -120,4 +128,8 @@ input[disabled] {
 
 .object-cover {
   object-fit: cover;
+}
+
+.text-center {
+  text-align: center;
 }

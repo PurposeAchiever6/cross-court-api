@@ -157,59 +157,71 @@ ActiveAdmin.register Session do
     redirect_to admin_root_path, notice: 'Employees assigned successfully'
   end
 
-  member_action :update_user_session, method: :post do
+  member_action :update_user_sessions, method: :post do
     session_id = params[:id]
     date = params[:date]
-    user_session_id = params[:user_session_id]
-    checked_in = params[:checked_in] == 'true'
-    jersey_rental = params[:jersey_rental] == 'true'
-    assigned_team = params[:assigned_team]
+    user_sessions = params[:user_sessions]
+    checked_in_user_session_ids = []
+    warnings = []
 
-    user_session = UserSession.find(user_session_id)
+    user_sessions.each do |user_session_params|
+      user_session_id = user_session_params[:id]
+      checked_in = user_session_params[:checked_in] == 'true'
+      jersey_rental = user_session_params[:jersey_rental] == 'true'
+      assigned_team = user_session_params[:assigned_team]
 
-    execute_checked_in_job = checked_in && !user_session.checked_in
-    jersey_rental_payment_intent_id = user_session.jersey_rental_payment_intent_id
-
-    if user_session.jersey_rental && !jersey_rental
-      result = RefundPayment.call(payment_intent_id: jersey_rental_payment_intent_id)
-
-      if result.failure?
-        flash[:error] = result.message
-        return redirect_to admin_session_path(id: session_id, date: date)
-      end
-
-      jersey_rental_payment_intent_id = nil
-    elsif !user_session.jersey_rental && jersey_rental
+      user_session = UserSession.find(user_session_id)
       user = user_session.user
 
-      result = ChargeUser.call(
-        user: user,
-        price: ENV['JERSEY_RENTAL_PRICE'].to_f,
-        description: 'Jersey rental'
-      )
+      execute_checked_in_job = checked_in && !user_session.checked_in
+      jersey_rental_payment_intent_id = user_session.jersey_rental_payment_intent_id
 
-      if result.failure?
-        flash[:error] = result.message
-        return redirect_to admin_session_path(id: session_id, date: date)
+      if user_session.jersey_rental && !jersey_rental
+        result = RefundPayment.call(payment_intent_id: jersey_rental_payment_intent_id)
+
+        if result.failure?
+          warnings << "#{user.full_name.titleize}: #{result.message}"
+          next
+        end
+
+        jersey_rental_payment_intent_id = nil
+      elsif !user_session.jersey_rental && jersey_rental
+        result = ChargeUser.call(
+          user: user,
+          price: ENV['JERSEY_RENTAL_PRICE'].to_f,
+          description: 'Jersey rental'
+        )
+
+        if result.failure?
+          warnings << "#{user.full_name.titleize}: #{result.message}"
+          next
+        end
+
+        jersey_rental_payment_intent_id = result.charge_payment_intent_id
       end
 
-      jersey_rental_payment_intent_id = result.charge_payment_intent_id
+      user_session.update!(
+        checked_in: checked_in,
+        jersey_rental: jersey_rental,
+        jersey_rental_payment_intent_id: jersey_rental_payment_intent_id,
+        assigned_team: assigned_team
+      )
+
+      checked_in_user_session_ids << user_session_id if execute_checked_in_job
     end
 
-    user_session.update!(
-      checked_in: checked_in,
-      jersey_rental: jersey_rental,
-      jersey_rental_payment_intent_id: jersey_rental_payment_intent_id,
-      assigned_team: assigned_team
-    )
-
-    # Perform in 15 minutes in case front desk guy checked in wrong user by accident
-    if execute_checked_in_job
-      CheckInActiveCampaignJob.set(wait: 15.minutes).perform_later(user_session_id)
+    if checked_in_user_session_ids.present?
+      # Perform in 15 minutes in case front desk guy checked in wrong user by accident
+      CheckInActiveCampaignJob.set(wait: 15.minutes).perform_later(checked_in_user_session_ids)
     end
 
-    redirect_to admin_session_path(id: session_id, date: date),
-                notice: 'User session updated successfully'
+    if warnings.present?
+      flash[:warning] = warnings
+    else
+      flash[:notice] = 'Users sessions updated successfully'
+    end
+
+    redirect_to admin_session_path(id: session_id, date: date)
   end
 
   member_action :create_user_session, method: :post do

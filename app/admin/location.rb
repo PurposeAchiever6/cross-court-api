@@ -47,9 +47,9 @@ ActiveAdmin.register Location do
       row :images do |location|
         if location.images.attached?
           div class: 'flex' do
-            location.images.each do |img|
+            location.images.includes(:blob).each do |location_img|
               div class: 'mr-2' do
-                image_tag polymorphic_url(img), class: 'mw-200px'
+                image_tag location_img, class: 'mw-200px'
               end
             end
           end
