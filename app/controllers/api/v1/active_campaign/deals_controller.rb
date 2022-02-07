@@ -5,7 +5,15 @@ module Api
         skip_before_action :authenticate_user!, if: :stay_in_the_loop_event?
 
         def create
-          ActiveCampaignService.new.create_deal(event, user, deal[:args])
+          active_campaign_service = ActiveCampaignService.new
+
+          active_campaign_service.create_deal(event, user, deal[:args])
+          if stay_in_the_loop_event?
+            active_campaign_service.add_contact_to_list(
+              ::ActiveCampaign::Contact::List::MASTER_LIST,
+              user.active_campaign_id
+            )
+          end
 
           head :ok
         end

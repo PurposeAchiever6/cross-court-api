@@ -15,6 +15,26 @@ class ActiveCampaignMocker
     deal_stages
     create_deal
     create_update_contact
+    add_contact_to_list
+    lists('Crosscourt Master List')
+  end
+
+  def add_contact_to_list
+    mock_request(
+      url_path: '/contactLists',
+      method: :post
+    )
+  end
+
+  def lists(name = nil)
+    url = '/lists'
+    url += "?filters[name]=#{name}" if name.present?
+
+    mock_request(
+      url_path: url,
+      method: :get,
+      response_body: lists_response
+    )
   end
 
   def contact_fields
@@ -147,6 +167,17 @@ class ActiveCampaignMocker
       contact: {
         id: '1'
       }
+    }.to_json
+  end
+
+  def lists_response
+    {
+      lists: [
+        {
+          name: 'Crosscourt Master List',
+          id: 1
+        }
+      ]
     }.to_json
   end
 end

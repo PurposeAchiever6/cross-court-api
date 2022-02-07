@@ -45,9 +45,21 @@ class ActiveCampaignService
     execute_request(:get, "/dealStages?filters[d_groupid]=#{pipeline_id}")
   end
 
+  def lists(name = nil)
+    url = '/lists'
+    url += "?filters[name]=#{name}" if name.present?
+
+    execute_request(:get, url)
+  end
+
   def create_deal(event, user, args = [])
     payload = deal_payload(event, user, args)
     execute_request(:post, '/deals', payload)
+  end
+
+  def add_contact_to_list(list_name, active_campaign_id)
+    payload = add_contact_to_list_payload(list_name, active_campaign_id)
+    execute_request(:post, '/contactLists', payload)
   end
 
   private
@@ -131,6 +143,18 @@ class ActiveCampaignService
             value: birthday ? birthday.strftime('%Y-%m-%d') : ''
           }
         ]
+      }
+    }.compact.deep_transform_keys { |key| key.to_s.camelcase(:lower) }
+  end
+
+  def add_contact_to_list_payload(list_name, active_campaign_id)
+    list_id = lists(list_name)['lists'].first['id']
+
+    {
+      contact_list: {
+        list: list_id,
+        contact: active_campaign_id,
+        status: 1 # subscribed status
       }
     }.compact.deep_transform_keys { |key| key.to_s.camelcase(:lower) }
   end
