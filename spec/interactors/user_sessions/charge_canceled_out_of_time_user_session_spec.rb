@@ -35,8 +35,8 @@ describe UserSessions::ChargeCanceledOutOfTimeUserSession do
 
       it { expect(subject.charge_payment_intent_id).to eq(payment_intent_id) }
 
-      it 'calls ChargeUser with right price' do
-        expect(ChargeUser).to receive(:call).with(
+      it 'calls Users::Charge with right price' do
+        expect(Users::Charge).to receive(:call).with(
           user: user,
           price: free_session_price_to_charge.to_i,
           description: 'Session canceled out of time fee'
@@ -51,8 +51,8 @@ describe UserSessions::ChargeCanceledOutOfTimeUserSession do
 
       it { expect(subject.charge_payment_intent_id).to eq(payment_intent_id) }
 
-      it 'calls ChargeUser with right price' do
-        expect(ChargeUser).to receive(:call).with(
+      it 'calls Users::Charge with right price' do
+        expect(Users::Charge).to receive(:call).with(
           user: user,
           price: unlimited_credits_price_to_charge.to_i,
           description: 'Session canceled out of time fee'

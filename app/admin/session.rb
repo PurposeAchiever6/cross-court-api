@@ -186,7 +186,7 @@ ActiveAdmin.register Session do
 
         jersey_rental_payment_intent_id = nil
       elsif !user_session.jersey_rental && jersey_rental
-        result = ChargeUser.call(
+        result = Users::Charge.call(
           user: user,
           price: ENV['JERSEY_RENTAL_PRICE'].to_f,
           description: 'Jersey rental'
