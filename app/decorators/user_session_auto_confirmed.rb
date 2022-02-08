@@ -12,7 +12,7 @@ class UserSessionAutoConfirmed
       user_session.state = :confirmed
 
       SonarService.send_message(user, message)
-      CreateActiveCampaignDealJob.perform_later(
+      ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
         user.id,
         user_session_id: user_session.id

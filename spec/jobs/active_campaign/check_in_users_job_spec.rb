@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CheckInActiveCampaignJob do
+describe ::ActiveCampaign::CheckInUsersJob do
   describe '#perform' do
     let(:la_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
     let!(:la_date) { la_time.to_date }
