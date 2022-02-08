@@ -10,7 +10,7 @@ class ChargeUser
       context.fail!(message: I18n.t('api.errors.users.charges.price_not_positive'))
     end
 
-    payment_method = StripeService.fetch_payment_methods(user).first
+    payment_method = Users::GetPaymentMethods.call(user: user).default_payment_method
 
     unless payment_method
       context.fail!(message: I18n.t('api.errors.users.charges.missing_payment_method'))

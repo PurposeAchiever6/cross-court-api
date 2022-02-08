@@ -6,7 +6,10 @@ class ChargeNotShowUpPlayersJob < ApplicationJob
       user = user_session.user
 
       if user_session.is_free_session
-        StripeService.confirm_intent(user_session.free_session_payment_intent)
+        free_session_payment_intent = user_session.free_session_payment_intent
+
+        StripeService.confirm_intent(free_session_payment_intent) if free_session_payment_intent
+
         ActiveCampaignService.new(
           pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
         ).create_deal(
