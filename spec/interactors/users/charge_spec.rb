@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ChargeUser do
+describe Users::Charge do
   describe '.call' do
     let(:user) { create(:user) }
     let(:price) { rand(100) }
@@ -12,7 +12,7 @@ describe ChargeUser do
       allow(StripeService).to receive(:charge).and_return(double(id: payment_intent_id))
     end
 
-    subject { ChargeUser.call(user: user, price: price, description: description) }
+    subject { Users::Charge.call(user: user, price: price, description: description) }
 
     it { expect(subject.charge_payment_intent_id).to eq(payment_intent_id) }
 

@@ -15,14 +15,14 @@
       <th></th>
       <th></th>
     </tr>
-    <% user_sessions.each do |user_session| %>
-      <%= form_with(url: update_user_session_admin_session_path(id: resource.id,
-                                                                date: date,
-                                                                user_session_id: user_session.id),
-                    local: true) do %>
+    <%= form_with(url: update_user_sessions_admin_session_path(id: resource.id,date: date),
+                  local: true) do %>
+      <% user_sessions.each do |user_session| %>
+        <%= hidden_field_tag('user_sessions[][id]', user_session.id) %>
         <tr>
           <td class='align-middle'>
-            <%= image_tag(user_session.user.image.attached? ? user_session.user.image : "missing-profile-image.png", class: 'rounded-full w-12 h-12 object-cover') %>
+            <%= image_tag(user_session.user.image.attached? ? user_session.user.image : 'missing-profile-image.png',
+                          class: 'rounded-full w-12 h-12 object-cover') %>
           </td>
           <td class='align-middle'>
             <%= link_to user_session.user_full_name, admin_user_path(user_session.user_id) %>
@@ -38,7 +38,7 @@
           </td>
           <td class='align-middle'>
             <div class='flex items-center'>
-              <%= check_box_tag(:checked_in,
+              <%= check_box_tag('user_sessions[][checked_in]',
                                 true,
                                 user_session.checked_in,
                                 id: "checked_in-#{user_session.id}",
@@ -48,7 +48,7 @@
           </td>
           <td class='align-middle'>
             <div class='flex items-center'>
-              <%= check_box_tag(:jersey_rental,
+              <%= check_box_tag('user_sessions[][jersey_rental]',
                                 true,
                                 user_session.jersey_rental,
                                 id: "jersey_rental-#{user_session.id}",
@@ -60,13 +60,12 @@
           <td class='align-middle'>
             <div class='flex items-center'>
               <%= label_tag(:assigned_team, 'Assign team:', class: 'mr-2') %>
-              <%= select_tag(:assigned_team,
+              <%= select_tag('user_sessions[][assigned_team]',
                              options_for_select(['light', 'dark'], user_session.assigned_team),
                              include_blank: true) %>
             </div>
           </td>
           <td class='align-middle'>
-            <%= submit_tag('Update', data: { disable_with: 'Loading...' }) %>
             <%= link_to('Cancel',
                         cancel_user_session_admin_session_path(id: resource.id,
                                                                date: date,
@@ -77,6 +76,11 @@
           </td>
         </tr>
       <% end %>
+      <tr>
+        <td class="text-center" colspan='9'>
+          <%= submit_tag('Update All', class: 'w-1/5 mt-4', data: { disable_with: 'Loading...' }) %>
+        </td>
+      </tr>
     <% end %>
   </table>
 <% end %>

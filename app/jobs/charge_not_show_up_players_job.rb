@@ -17,7 +17,7 @@ class ChargeNotShowUpPlayersJob < ApplicationJob
           user
         )
       elsif user.unlimited_credits?
-        ChargeUser.call(
+        Users::Charge.call(
           user: user,
           price: ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
           description: 'Unlimited membership no show fee'

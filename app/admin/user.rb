@@ -123,19 +123,19 @@ ActiveAdmin.register User do
 
     case purchase
     when :jersey
-      result = ChargeUser.call(
+      result = Users::Charge.call(
         user: user,
         price: ENV['JERSEY_PURCHASE_PRICE'].to_f,
         description: 'Jersey purchase'
       )
     when :towel
-      result = ChargeUser.call(
+      result = Users::Charge.call(
         user: user,
         price: ENV['TOWEL_PURCHASE_PRICE'].to_f,
         description: 'Towel purchase'
       )
     when :water
-      result = ChargeUser.call(
+      result = Users::Charge.call(
         user: user,
         price: ENV['WATER_PURCHASE_PRICE'].to_f,
         description: 'Water bottle purchase'

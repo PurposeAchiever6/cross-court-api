@@ -7,7 +7,13 @@ module Api
       def create
         ActiveRecord::Base.transaction do
           super do |resource|
-            ActiveCampaignService.new.create_update_contact(resource)
+            active_campaign_service = ActiveCampaignService.new
+            active_campaign_service.create_update_contact(resource)
+            active_campaign_service.add_contact_to_list(
+              ::ActiveCampaign::Contact::List::MASTER_LIST,
+              resource.active_campaign_id
+            )
+
             StripeService.create_user(resource)
             SonarService.add_update_customer(resource)
 
