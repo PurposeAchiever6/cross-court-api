@@ -9,6 +9,8 @@ module UserSessions
       referral_code = context.referral_code || nil
       not_charge_user_credit = context.not_charge_user_credit || false
 
+      raise FullSessionException, I18n.t('api.errors.session.full') if session.full?(date)
+
       user_session =
         ActiveRecord::Base.transaction do
           referral = User.find_by(referral_code: referral_code)
@@ -20,14 +22,11 @@ module UserSessions
             referral: referral
           )
 
-          if user_session.valid?
-            user_session = UserSessionReferralCredits.new(user_session) if referral
-            user_session = UserSessionSlackNotification.new(user_session)
-            user_session = UserSessionAutoConfirmed.new(user_session)
-            user_session = UserSessionConsumeCredit.new(user_session, not_charge_user_credit)
-            user_session = UserSessionWithValidDate.new(user_session)
-            user_session = UserSessionNotFull.new(user_session)
-          end
+          user_session = UserSessionReferralCredits.new(user_session) if referral
+          user_session = UserSessionSlackNotification.new(user_session)
+          user_session = UserSessionAutoConfirmed.new(user_session)
+          user_session = UserSessionConsumeCredit.new(user_session, not_charge_user_credit)
+          user_session = UserSessionWithValidDate.new(user_session)
 
           user_session.save!
           user_session
