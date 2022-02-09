@@ -3,7 +3,13 @@ class SessionDecorator < Draper::Decorator
 
   def title(date)
     text = time.utc.strftime(Session::TIME_FORMAT)
-    text += ' (EM)' unless referee(date).present? && sem(date).present?
+
+    text += if referee(date).present? && sem(date).present?
+              " - #{reservations_count(date)}/#{Session::MAX_CAPACITY}"
+            else
+              ' (EM)'
+            end
+
     text
   end
 

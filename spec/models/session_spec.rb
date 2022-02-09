@@ -84,4 +84,48 @@ describe Session do
       end
     end
   end
+
+  describe '#reservations_count' do
+    let!(:session) { create(:session) }
+    let!(:user_sessions) do
+      create_list(
+        :user_session,
+        11,
+        session: session,
+        date: date,
+        state: %i[reserved confirmed].sample
+      )
+    end
+
+    let!(:user_session_1) do
+      create(
+        :user_session,
+        session: session,
+        date: date,
+        state: :canceled
+      )
+    end
+    let!(:user_session_2) do
+      create(
+        :user_session,
+        session: session,
+        date: date + 1.day,
+        state: %i[reserved confirmed].sample
+      )
+    end
+    let!(:user_session_3) do
+      create(
+        :user_session,
+        session: session,
+        date: date - 1.day,
+        state: %i[reserved confirmed].sample
+      )
+    end
+
+    let(:date) { Date.current + 2.days }
+
+    subject { session.reservations_count(date) }
+
+    it { is_expected.to eq(11) }
+  end
 end
