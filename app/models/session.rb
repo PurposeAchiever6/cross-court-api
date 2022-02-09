@@ -113,12 +113,16 @@ class Session < ApplicationRecord
     sem_sessions.find_by(date: date)&.sem
   end
 
+  def reservations_count(date)
+    user_sessions.not_canceled.by_date(date).count
+  end
+
   def full?(date)
-    user_sessions.not_canceled.by_date(date).count >= MAX_CAPACITY
+    reservations_count(date) >= MAX_CAPACITY
   end
 
   def spots_left(date)
-    MAX_CAPACITY - user_sessions.not_canceled.by_date(date).count
+    MAX_CAPACITY - reservations_count(date)
   end
 
   private

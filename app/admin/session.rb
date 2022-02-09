@@ -212,7 +212,8 @@ ActiveAdmin.register Session do
 
     if checked_in_user_session_ids.present?
       # Perform in 15 minutes in case front desk guy checked in wrong user by accident
-      CheckInActiveCampaignJob.set(wait: 15.minutes).perform_later(checked_in_user_session_ids)
+      ::ActiveCampaign::CheckInUsersJob.set(wait: 15.minutes)
+                                       .perform_later(checked_in_user_session_ids)
     end
 
     if warnings.present?

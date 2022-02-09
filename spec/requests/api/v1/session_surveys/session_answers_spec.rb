@@ -41,7 +41,7 @@ describe 'POST api/v1/session_surveys/answers' do
         it 'creates a bad review deal' do
           expect {
             subject
-          }.to have_enqueued_job(CreateActiveCampaignDealJob).on_queue('default').with(
+          }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default').with(
             ::ActiveCampaign::Deal::Event::BAD_REVIEW,
             user.id,
             {},
@@ -56,7 +56,7 @@ describe 'POST api/v1/session_surveys/answers' do
         it 'creates a bad review deal' do
           expect {
             subject
-          }.not_to have_enqueued_job(CreateActiveCampaignDealJob).on_queue('default')
+          }.not_to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default')
         end
       end
     end

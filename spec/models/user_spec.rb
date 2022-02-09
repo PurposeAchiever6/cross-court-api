@@ -86,7 +86,7 @@ describe User do
     it do
       expect {
         subject
-      }.to have_enqueued_job(CreateUpdateActiveCampaignContactJob).on_queue('default')
+      }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactJob).on_queue('default')
     end
     it { expect { subject }.to have_enqueued_job(CreateUpdateSonarCustomerJob).on_queue('default') }
   end

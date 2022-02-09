@@ -186,7 +186,7 @@ class User < ApplicationRecord
     return unless persisted?
 
     if ActiveCampaignService::CONTACT_ATTRS.any? { |a| saved_changes_keys.include?(a) }
-      CreateUpdateActiveCampaignContactJob.perform_later(id)
+      ::ActiveCampaign::CreateUpdateContactJob.perform_later(id)
     end
 
     return unless SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes_keys.include?(a) }

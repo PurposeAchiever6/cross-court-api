@@ -25,7 +25,7 @@ class CanceledUserSession
     if in_cancellation_time
       SlackService.new(user, date, time, location).session_canceled_in_time
 
-      CreateActiveCampaignDealJob.perform_later(
+      ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_IN_TIME,
         user_id,
         user_session_id: user_session_id
@@ -40,7 +40,7 @@ class CanceledUserSession
         SlackService.new(user, date, time, location).session_canceled_out_of_time
       end
 
-      CreateActiveCampaignDealJob.perform_later(
+      ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
         user_id,
         user_session_id: user_session_id,

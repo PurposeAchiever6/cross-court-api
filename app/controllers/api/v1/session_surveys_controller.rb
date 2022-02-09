@@ -29,7 +29,7 @@ module Api
       end
 
       def create_bad_review_deal
-        CreateActiveCampaignDealJob.perform_later(
+        ::ActiveCampaign::CreateDealJob.perform_later(
           ::ActiveCampaign::Deal::Event::BAD_REVIEW,
           current_user.id,
           {},
