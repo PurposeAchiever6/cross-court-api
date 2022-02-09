@@ -6,13 +6,23 @@ module Api
           @session = Session.find(params[:session_id])
           @date = date
 
-          result = Waitlists::AddUser.call(
+          Waitlists::AddUser.call(
             session: @session,
             user: current_user,
             date: @date
           )
+        end
 
-          render_error(:unprocessable_entity, result.error) if result.failure?
+        def destroy
+          session = Session.find(params[:session_id])
+
+          Waitlists::RemoveUser.call(
+            session: session,
+            user: current_user,
+            date: date
+          )
+
+          head :ok
         end
 
         private

@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Waitlists::AddUser do
   describe '.call' do
-    let(:user) { create(:user) }
-    let(:session) { create(:session) }
+    let!(:user) { create(:user) }
+    let!(:session) { create(:session) }
     let(:date) { session.start_time }
 
     subject { Waitlists::AddUser.call(session: session, user: user, date: date) }

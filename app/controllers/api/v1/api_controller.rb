@@ -21,6 +21,7 @@ module Api
       rescue_from PurchaseException,                   with: :render_custom_exception
       rescue_from SubscriptionException,               with: :render_custom_exception
       rescue_from ClaimFreeSessionException,           with: :render_custom_exception
+      rescue_from UserNotInWaitlistException,          with: :render_custom_exception
       rescue_from Stripe::StripeError,                 with: :render_custom_exception
 
       def status

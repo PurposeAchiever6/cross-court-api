@@ -53,6 +53,8 @@ en:
           missing_payment_method: "The user does not have a saved credit card to be charged"
       sessions:
         invalid_date: "The date is not valid for the requested session"
+      waitlists:
+        user_not_in_waitlist: "The user is not in the waitlist"
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:

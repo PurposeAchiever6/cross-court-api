@@ -1,9 +1,20 @@
 require 'rails_helper'
 
-describe 'POST api/v1/sessions/:session_id/waitlists' do
+describe 'DELETE api/v1/sessions/:session_id/waitlists' do
   let!(:user) { create(:user) }
   let!(:session) { create(:session) }
+  let!(:user_session_waitlist) do
+    create(
+      :user_session_waitlist,
+      session: session,
+      user: user,
+      date: session.start_time,
+      reached: reached
+    )
+  end
+
   let(:date) { session.start_time }
+  let(:reached) { false }
 
   let(:params) { { date: date.strftime('%m/%d/%Y') } }
   let(:request_headers) { auth_headers }
@@ -13,16 +24,16 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
   end
 
   subject do
-    post api_v1_session_waitlists_path(session_id: session.id),
-         headers: request_headers,
-         params: params,
-         as: :json
+    delete api_v1_session_waitlists_path(session_id: session.id),
+           headers: request_headers,
+           params: params,
+           as: :json
     response
   end
 
   it { is_expected.to be_successful }
-  it { expect { subject }.to change(UserSessionWaitlist, :count).by(1) }
-  it { expect(response_body[:session][:waitlist][0][:id]).to eq(UserSessionWaitlist.last.id) }
+  it { expect { subject }.to change(UserSessionWaitlist, :count).by(-1) }
+  it { expect(subject.body).to be_blank }
 
   context 'when user is not logged in' do
     let(:request_headers) { nil }
@@ -47,19 +58,27 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
     it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
   end
 
-  context 'when there is no session for the date' do
+  context 'when the user is not in the waitlist for that date' do
     let(:date) { session.start_time + 1.day }
 
     it { is_expected.to have_http_status(:bad_request) }
-    it { expect(response_body[:error]).to eq('The date is not valid for the requested session') }
+    it { expect(response_body[:error]).to eq('The user is not in the waitlist') }
     it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
   end
 
-  context 'when user is already in the waitlist' do
-    before { create(:user_session_waitlist, session: session, user: user, date: date) }
+  context 'when the user session waitlist does not exist' do
+    before { user_session_waitlist.destroy }
 
     it { is_expected.to have_http_status(:bad_request) }
-    it { expect(response_body[:errors][:date]).to eq(['has already been taken']) }
+    it { expect(response_body[:error]).to eq('The user is not in the waitlist') }
+    it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
+  end
+
+  context 'if the user has already been reached' do
+    let(:reached) { true }
+
+    it { is_expected.to have_http_status(:bad_request) }
+    it { expect(response_body[:error]).to eq('The user is not in the waitlist') }
     it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
   end
 end
