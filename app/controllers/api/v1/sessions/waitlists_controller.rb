@@ -29,7 +29,7 @@ module Api
 
         def date
           date = params.require(:date)
-          Date.strptime(date, '%m/%d/%Y')
+          Date.strptime(date, '%d/%m/%Y')
         rescue ArgumentError
           raise WrongParameterException, I18n.t('api.errors.invalid_date_format')
         end
