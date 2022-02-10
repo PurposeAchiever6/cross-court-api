@@ -32,6 +32,8 @@ module UserSessions
           user_session
         end
 
+      context.user_session = user_session
+
       user_session_id = user_session.id
       ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_BOOKED,

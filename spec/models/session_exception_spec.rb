@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  session_id :integer          not null
-#  date       :datetime         not null
+#  date       :date             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
