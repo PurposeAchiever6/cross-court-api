@@ -7,6 +7,7 @@ module ActiveCampaign
       DROP_IN_RE_UP = 'Drop in Re Up'.freeze
       DROP_IN_SESSION_EXPIRE_SOON = 'Drop in Session Expire Soon'.freeze
       FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze
+      FREE_LOADERS = 'Free Loaders'.freeze
       FREE_SESSION_CHECK_IN = 'Free Session Check In'.freeze
       FREE_SESSION_NO_SHOW = 'Free Session No Show'.freeze
       PURCHASE_PLACED = 'Purchase Placed'.freeze
