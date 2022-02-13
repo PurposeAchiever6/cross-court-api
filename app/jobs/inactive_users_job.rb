@@ -22,7 +22,11 @@ class InactiveUsersJob < ApplicationJob
       when today_date - 14.days
         if last_session.is_free_session
           SlackService.new(user).inactive_first_timer_user
-          active_campaign_service.create_deal(::ActiveCampaign::Deal::Event::FREE_LOADERS, user)
+          active_campaign_service.create_deal(
+            ::ActiveCampaign::Deal::Event::FREE_LOADERS,
+            user,
+            user_session_id: last_session.id
+          )
         end
       when today_date - 1.month
         SlackService.new(user).inactive_user

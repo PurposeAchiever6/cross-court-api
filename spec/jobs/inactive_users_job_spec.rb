@@ -81,7 +81,7 @@ describe InactiveUsersJob do
           ).once
 
           expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::FREE_LOADERS, user
+            ::ActiveCampaign::Deal::Event::FREE_LOADERS, user, user_session_id: user_session_2.id
           ).once
 
           subject
