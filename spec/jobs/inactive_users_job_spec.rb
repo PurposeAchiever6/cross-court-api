@@ -39,6 +39,12 @@ describe InactiveUsersJob do
     let(:date_ago_last_session) { [1.month, 14.days, 7.days].sample }
     let(:free_session) { false }
 
+    before do
+      ActiveCampaignMocker.new(
+        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+      ).mock
+    end
+
     subject { described_class.perform_now }
 
     context 'when user last checked in session was 1 month ago' do
@@ -72,6 +78,10 @@ describe InactiveUsersJob do
             I18n.t('notifier.slack.inactive_first_timer_user',
                    name: user.full_name, phone: user.phone_number),
             channel: ENV['SLACK_CHANNEL_CHURN']
+          ).once
+
+          expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).with(
+            ::ActiveCampaign::Deal::Event::FREE_LOADERS, user
           ).once
 
           subject

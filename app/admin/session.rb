@@ -22,7 +22,7 @@ ActiveAdmin.register Session do
       f.input :time
       f.select_recurring :recurring, nil, allow_blank: true
       f.has_many :session_exceptions, allow_destroy: true do |p|
-        p.input :date, as: :datepicker
+        p.input :date, as: :datepicker, input_html: { autocomplete: :off }
       end
     end
     f.actions

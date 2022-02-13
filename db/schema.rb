@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_22_223648) do
+ActiveRecord::Schema.define(version: 2022_02_10_220603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 2021_12_22_223648) do
 
   create_table "session_exceptions", force: :cascade do |t|
     t.bigint "session_id", null: false
-    t.datetime "date", null: false
+    t.date "date", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["date", "session_id"], name: "index_session_exceptions_on_date_and_session_id"
@@ -305,8 +305,8 @@ ActiveRecord::Schema.define(version: 2021_12_22_223648) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.integer "active_campaign_id"
     t.boolean "private_access", default: false
+    t.integer "active_campaign_id"
     t.date "birthday"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
