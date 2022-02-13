@@ -1,6 +1,6 @@
 {
   id: session.id,
-  start_time: session.start_time.iso8601,
+  start_time: waitlist_date.iso8601,
   time: session.time.iso8601,
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
   waitlist: render(partial: 'info', collection: session.waitlist(waitlist_date), as: :waitlist_item)
