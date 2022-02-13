@@ -18,6 +18,10 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*
 
+Lint/HandleExceptions:
+  Exclude:
+    - app/jobs/charge_not_show_up_players_job.rb
+
 Metrics/BlockLength:
   CountComments: false # count full line comments?
   Max: 25
@@ -59,7 +63,7 @@ Metrics/MethodLength:
     - app/controllers/api/v1/stripe_controller.rb
     - app/decorators/canceled_user_session.rb
     - app/jobs/credits_job.rb
-    - app/interactors/user_sessions/create_user_session.rb
+    - app/interactors/user_sessions/create.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

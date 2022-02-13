@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UserSessions::CreateUserSession do
+describe UserSessions::Create do
   describe '.call' do
     let!(:session) { create(:session, :daily, time: session_time) }
     let!(:user) do
@@ -27,7 +27,7 @@ describe UserSessions::CreateUserSession do
     end
 
     subject do
-      UserSessions::CreateUserSession.call(subject_args)
+      UserSessions::Create.call(subject_args)
     end
 
     it { expect { subject }.to change(UserSession, :count).by(1) }
@@ -68,7 +68,7 @@ describe UserSessions::CreateUserSession do
       it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
 
       context 'when user has unlimited subscription' do
-        let(:subscription_credits) { -1 }
+        let(:subscription_credits) { Product::UNLIMITED }
 
         it { expect { subject }.to change(UserSession, :count).by(1) }
         it { expect { subject }.not_to change { user.reload.credits } }

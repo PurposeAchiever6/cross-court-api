@@ -247,7 +247,7 @@ ActiveAdmin.register Session do
     ActiveRecord::Base.transaction do
       Users::ClaimFreeSession.call(user: user)
 
-      UserSessions::CreateUserSession.call(
+      UserSessions::Create.call(
         session: session,
         user: user,
         date: date,

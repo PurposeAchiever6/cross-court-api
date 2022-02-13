@@ -25,13 +25,6 @@ class SlackService
     notify_booking('notifier.slack.session_canceled_out_of_time')
   end
 
-  def session_canceled_out_of_time_with_charge_error(error_message)
-    notify_booking(
-      'notifier.slack.session_canceled_out_of_time_with_charge_error',
-      error_message: error_message
-    )
-  end
-
   def session_confirmed
     notify_booking('notifier.slack.session_confirmed')
   end
@@ -54,6 +47,10 @@ class SlackService
 
   def subscription_reactivated(subscription)
     notify_subscription('notifier.slack.session_reactivated', subscription)
+  end
+
+  def charge_error(description, error_message)
+    notify_charge_error('notifier.slack.charge_error', description, error_message)
   end
 
   private
@@ -93,6 +90,18 @@ class SlackService
         subscription_name: subscription.name
       ),
       channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
+    )
+  end
+
+  def notify_charge_error(i18n_message, description, error_message)
+    notify(
+      I18n.t(
+        i18n_message,
+        name: user.full_name,
+        description: description,
+        error_message: error_message
+      ),
+      channel: ENV['SLACK_CHANNEL_CHARGE_ERROR']
     )
   end
 

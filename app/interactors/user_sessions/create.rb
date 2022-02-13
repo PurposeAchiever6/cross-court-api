@@ -1,5 +1,5 @@
 module UserSessions
-  class CreateUserSession
+  class Create
     include Interactor
 
     def call

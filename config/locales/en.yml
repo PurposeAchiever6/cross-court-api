@@ -69,9 +69,6 @@ en:
       session_auto_confirmed: "Session *auto confirmed* for user %{name} for %{date} at %{time} on %{location}"
       session_canceled_in_time: "%{name} *canceled in time* the reservation for %{date} at %{time} on %{location}"
       session_canceled_out_of_time: "%{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}"
-      session_canceled_out_of_time_with_charge_error: >
-        %{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}. There was
-        an *error* when charging the user for the out of time cancellation. Error: %{error_message}
       inactive_user: >
         %{name} (phone: %{phone}) has played his last session 1 month ago and doesn't have any
         remaining credits.
@@ -81,6 +78,9 @@ en:
         %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
       session_reactivated: >
         %{name} (phone: %{phone}) has *reactivated* his subscription (%{subscription_name}).
+      charge_error: >
+        There was an *error* when charging the user %{name} on *%{description}*.
+        Error: %{error_message}
     sonar:
       invite_friend_msg: "Share this link to sweat with a friend: %{link}"
       session_confirmed: >

@@ -52,10 +52,25 @@ describe ChargeNotShowUpPlayersJob do
         is_free_session: false
       )
     end
+    let!(:user_session_4) do
+      create(
+        :user_session,
+        user: user,
+        session: session,
+        checked_in: false,
+        date: la_date.yesterday,
+        state: :confirmed,
+        is_free_session: true,
+        free_session_payment_intent: rand(1_000),
+        no_show_up_fee_charged: true
+      )
+    end
 
     subject { described_class.perform_now }
 
     context 'when is free session' do
+      it { expect { subject }.to change { user_session_1.reload.no_show_up_fee_charged }.to(true) }
+
       it do
         expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).once
         expect(StripeService).to receive(:confirm_intent).once
@@ -64,8 +79,9 @@ describe ChargeNotShowUpPlayersJob do
       end
     end
 
-    # This test is failing in circle-ci but not locally, we need to check
-    xcontext 'when user has unlimited credits' do
+    context 'when user has unlimited credits' do
+      it { expect { subject }.to change { user_session_2.reload.no_show_up_fee_charged }.to(true) }
+
       it do
         expect(StripeService).to receive(:fetch_payment_methods).once
         expect(StripeService).to receive(:charge).once

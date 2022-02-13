@@ -5,6 +5,7 @@ describe Users::Charge do
     let(:user) { create(:user) }
     let(:price) { rand(100) }
     let(:description) { nil }
+    let(:notify_error) { false }
     let(:payment_intent_id) { rand(1_000) }
 
     before do
@@ -12,7 +13,14 @@ describe Users::Charge do
       allow(StripeService).to receive(:charge).and_return(double(id: payment_intent_id))
     end
 
-    subject { Users::Charge.call(user: user, price: price, description: description) }
+    subject do
+      Users::Charge.call(
+        user: user,
+        price: price,
+        description: description,
+        notify_error: notify_error
+      )
+    end
 
     it { expect(subject.charge_payment_intent_id).to eq(payment_intent_id) }
 
@@ -27,8 +35,64 @@ describe Users::Charge do
       before { allow(StripeService).to receive(:fetch_payment_methods).and_return([]) }
 
       it { expect(subject.success?).to eq(false) }
-      it do
+
+      it 'returns the correct error message' do
         expect(subject.message).to eq('The user does not have a saved credit card to be charged')
+      end
+
+      it 'do not send a Slack message' do
+        expect_any_instance_of(Slack::Notifier).not_to receive(:ping)
+        subject
+      end
+
+      context 'when notify_error is true' do
+        let(:notify_error) { true }
+
+        it 'calls Slack service' do
+          expect_any_instance_of(SlackService).to receive(:charge_error).with(
+            description,
+            'The user does not have a saved credit card to be charged'
+          )
+          subject
+        end
+
+        it 'sends a Slack message' do
+          expect_any_instance_of(Slack::Notifier).to receive(:ping)
+          subject
+        end
+      end
+    end
+
+    context 'when stripe fails' do
+      let(:stripe_error_msg) { 'Some error message' }
+
+      before do
+        allow(StripeService).to receive(:charge).and_raise(Stripe::StripeError, stripe_error_msg)
+      end
+
+      it { expect(subject.success?).to eq(false) }
+      it { expect(subject.message).to eq(stripe_error_msg) }
+
+      it 'do not send a Slack message' do
+        expect_any_instance_of(Slack::Notifier).not_to receive(:ping)
+        subject
+      end
+
+      context 'when notify_error is true' do
+        let(:notify_error) { true }
+
+        it 'calls Slack service' do
+          expect_any_instance_of(SlackService).to receive(:charge_error).with(
+            description,
+            stripe_error_msg
+          )
+          subject
+        end
+
+        it 'sends a Slack message' do
+          expect_any_instance_of(Slack::Notifier).to receive(:ping)
+          subject
+        end
       end
     end
   end
