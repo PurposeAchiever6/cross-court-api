@@ -12,7 +12,7 @@ class ReachUserOnWaitlistJob < ApplicationJob
 
     return unless waitlist_item
 
-    UserSessions::CreateUserSession.call(
+    UserSessions::Create.call(
       session: session,
       user: waitlist_item.user,
       date: date,
