@@ -6,8 +6,10 @@ module Api
           @user_sessions =
             Session.find(params[:session_id])
                    .user_sessions
-                   .where(date: date, checked_in: true)
-                   .includes(:user, user: :image_attachment).order(:created_at)
+                   .by_date(date)
+                   .checked_in
+                   .includes(user: { image_attachment: :blob })
+                   .order(:created_at)
         end
 
         def create

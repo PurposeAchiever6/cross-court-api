@@ -22,9 +22,7 @@ describe UserSessions::Create do
     let(:subject_args) { { user: user, session: session, date: date } }
     let(:created_user_session) { UserSession.last }
 
-    before do
-      allow_any_instance_of(SlackService).to receive(:session_booked)
-    end
+    before { allow_any_instance_of(Slack::Notifier).to receive(:ping) }
 
     subject do
       UserSessions::Create.call(subject_args)
@@ -150,10 +148,7 @@ describe UserSessions::Create do
     context 'when reservation is inside window cancellation' do
       let(:session_time) { time_now + Session::CANCELLATION_PERIOD - 1.minute }
 
-      before do
-        allow(SonarService).to receive(:send_message)
-        allow_any_instance_of(SlackService).to receive(:session_auto_confirmed)
-      end
+      before { allow(SonarService).to receive(:send_message) }
 
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect(subject.user_session.state).to eq('confirmed') }
@@ -228,6 +223,58 @@ describe UserSessions::Create do
             referral_user.id,
             referred_id: user.id
           )
+        end
+      end
+    end
+
+    context 'when from_waitlist is true' do
+      before do
+        subject_args.merge!(from_waitlist: true)
+        allow(SonarService).to receive(:send_message)
+      end
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+      it { expect(subject.user_session.state).to eq('confirmed') }
+
+      it 'calls Sonar service' do
+        expect(SonarService).to receive(:send_message)
+        subject
+      end
+
+      it 'enques ActiveCampaign::CreateDealJob' do
+        expect { subject }.to have_enqueued_job(
+          ::ActiveCampaign::CreateDealJob
+        ).with(
+          ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
+          user.id,
+          user_session_id: anything
+        )
+      end
+
+      it 'calls Slack service for session_waitlist_confirmed' do
+        expect_any_instance_of(SlackService).to receive(:session_waitlist_confirmed)
+        subject
+      end
+
+      it 'does not call Slack service for session_booked' do
+        expect_any_instance_of(SlackService).not_to receive(:session_booked)
+        subject
+      end
+
+      context 'when reservation is inside window cancellation' do
+        let(:session_time) { time_now + Session::CANCELLATION_PERIOD - 1.minute }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+        it { expect(subject.user_session.state).to eq('confirmed') }
+
+        it 'calls Slack service for session_waitlist_confirmed' do
+          expect_any_instance_of(SlackService).to receive(:session_waitlist_confirmed)
+          subject
+        end
+
+        it 'does not call Slack service for session_auto_confirmed' do
+          expect_any_instance_of(SlackService).not_to receive(:session_auto_confirmed)
+          subject
         end
       end
     end

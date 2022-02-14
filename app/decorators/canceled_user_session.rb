@@ -25,6 +25,8 @@ class CanceledUserSession
     user_session.state = :canceled
     user_session.save!
 
+    ReachUserOnWaitlistJob.perform_later(session.id, date)
+
     if in_cancellation_time
       SlackService.new(user, date, time, location).session_canceled_in_time
 

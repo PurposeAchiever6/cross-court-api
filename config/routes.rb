@@ -33,6 +33,7 @@ Rails.application.routes.draw do
         resources :sessions, only: %i[index show] do
           scope module: :sessions do
             resources :user_sessions, only: %i[create index]
+            resource :waitlists, only: %i[create destroy]
           end
         end
         resources :products, only: :index

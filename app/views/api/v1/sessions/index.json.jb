@@ -6,7 +6,8 @@
     locals: {
       user_sessions: @user_sessions,
       user_id: current_user&.id,
-      user_sessions_count: @user_sessions_count
+      user_sessions_count: @user_sessions_count,
+      user_sessions_waitlists: @user_sessions_waitlists
     }
   )
 }

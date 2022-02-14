@@ -33,6 +33,7 @@ en:
         not_enough_credits: "Not enough credits. Please buy more."
       free_session: "Free session already claimed"
       legal: "Invalid param"
+      invalid_date_format: "The date value format is invalid"
       session:
         full: "Session is full"
       promo_code:
@@ -50,6 +51,10 @@ en:
         charges:
           price_not_positive: "Price should be greater than 0"
           missing_payment_method: "The user does not have a saved credit card to be charged"
+      sessions:
+        invalid_date: "The date is not valid for the requested session"
+      waitlists:
+        user_not_in_waitlist: "The user is not in the waitlist"
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:
@@ -66,7 +71,10 @@ en:
     slack:
       session_booked: "%{name} made a *reservation* for %{date} at %{time} on %{location}"
       session_confirmed: "%{name} *confirmed* the reservation for %{date} at %{time} on %{location}"
-      session_auto_confirmed: "Session *auto confirmed* for user %{name} for %{date} at %{time} on %{location}"
+      session_auto_confirmed: >
+        Session *auto confirmed* for user %{name} for %{date} at %{time} on %{location}
+      session_waitlist_confirmed: >
+        Session *confirmed from waitlist* for user %{name} for %{date} at %{time} on %{location}
       session_canceled_in_time: "%{name} *canceled in time* the reservation for %{date} at %{time} on %{location}"
       session_canceled_out_of_time: "%{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}"
       inactive_user: >
@@ -86,22 +94,36 @@ en:
       session_confirmed: >
         You’re locked in for %{when}’s %{time} session at CC%{location}! %{invite_friend}
       session_auto_confirmed: >
-        Hey %{name}, you’re locked in for today’s %{time} session at CC%{location}! Respond ‘N’ to cancel. %{invite_friend}
-      employee_session_confirmed: "You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear."
+        Hey %{name}, you’re locked in for today’s %{time} session at CC%{location}! Respond ‘N’ to
+        cancel. %{invite_friend}
+      employee_session_confirmed: >
+        You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear.
       session_canceled: >
-        Thank you for letting us know! Credit loss or cancelation fee may be applied. You can book another session here: %{schedule_url}
+        Thank you for letting us know! Credit loss or cancelation fee may be applied. You can book
+        another session here: %{schedule_url}
       unreadable_text: "We couldn’t process your response. Please respond ‘Y’ to confirm."
       no_session_booked: "You don’t have any session booked yet."
       sem_tomorrow_reminder: >
-        Hey %{name}! You’re scheduled to Manage tomorrow’s %{time} session at CC%{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!
+        Hey %{name}! You’re scheduled to Manage tomorrow’s %{time} session at CC%{location}.
+        Please respond ‘Y’ so we know you’re good to go. Thank you!
       referee_tomorrow_reminder: >
-        Hey %{name}! You’re scheduled to Officiate tomorrow’s %{time} session at CC%{location}. Please respond ‘Y’ so we know you’re good to go. Thank you!
+        Hey %{name}! You’re scheduled to Officiate tomorrow’s %{time} session at CC%{location}.
+        Please respond ‘Y’ so we know you’re good to go. Thank you!
       today_reminder: >
-        Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. Please respond ‘Y’ to confirm or ‘N’ to cancel. Thank you!
-      sem_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at CC%{location}. Respond ‘Y’ so we know you’re going to be there"
-      referee_today_reminder: "Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at CC%{location}. Respond ‘Y’ so we know you’re going to be there"
+        Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. Please
+        respond ‘Y’ to confirm or ‘N’ to cancel. Thank you!
+      sem_today_reminder: >
+        Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at
+        CC%{location}. Respond ‘Y’ so we know you’re going to be there"
+      referee_today_reminder: >
+        Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at
+        CC%{location}. Respond ‘Y’ so we know you’re going to be there
       survey_reminder: >
-        Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate your feedback. %{survey_link}
+        Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate
+        your feedback. %{survey_link}
+      session_waitlist_confirmed: >
+        Hey %{name}, you made it off the waitlist and are in for %{when}’s %{time} session
+        at CC%{location}!
   admin:
     products:
       created: "Product created successfully"

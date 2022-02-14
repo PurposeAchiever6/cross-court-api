@@ -54,6 +54,13 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
       expect { subject }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default')
     end
 
+    it 'calls waitlist job' do
+      expect { subject }.to have_enqueued_job(ReachUserOnWaitlistJob).with(
+        session.id,
+        user_session.date
+      ).on_queue('default')
+    end
+
     context 'when user has unlimited credits' do
       let!(:user) { create(:user, :with_unlimited_subscription) }
 
@@ -85,6 +92,13 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     it 'calls the slack service session_canceled_out_of_time method' do
       expect_any_instance_of(SlackService).to receive(:session_canceled_out_of_time).and_return(1)
       subject
+    end
+
+    it 'calls waitlist job' do
+      expect { subject }.to have_enqueued_job(ReachUserOnWaitlistJob).with(
+        session.id,
+        user_session.date
+      ).on_queue('default')
     end
   end
 
