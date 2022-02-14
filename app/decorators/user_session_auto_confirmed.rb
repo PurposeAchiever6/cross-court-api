@@ -12,11 +12,13 @@ class UserSessionAutoConfirmed
       user_session.state = :confirmed
 
       SonarService.send_message(user, message)
+
       ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
         user.id,
         user_session_id: user_session.id
       )
+
       SlackService.new(user, date, time, location).session_auto_confirmed
     end
     user_session.save!
