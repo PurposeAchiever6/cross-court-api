@@ -5,7 +5,7 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
   let!(:session) { create(:session) }
   let(:date) { session.start_time }
 
-  let(:params) { { date: date.strftime('%m/%d/%Y') } }
+  let(:params) { { date: date.strftime('%d/%m/%Y') } }
   let(:request_headers) { auth_headers }
 
   let(:response_body) do
