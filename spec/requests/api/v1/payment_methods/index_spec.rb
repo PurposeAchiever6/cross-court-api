@@ -2,11 +2,7 @@ require 'rails_helper'
 
 describe 'GET api/v1/payment_methods' do
   let(:user) { create(:user) }
-
-  before do
-    stub_request(:get, %r{stripe.com/v1/payment_methods})
-      .to_return(status: 200, body: File.new('spec/fixtures/payment_methods.json'))
-  end
+  let!(:payment_method) { create(:payment_method, user: user) }
 
   subject do
     get api_v1_payment_methods_path, headers: auth_headers, as: :json

@@ -2,15 +2,18 @@ module Api
   module V1
     class PaymentMethodsController < Api::V1::ApiUserController
       def create
-        StripeService.create_payment_method(params[:payment_method], current_user)
+        @payment_method = Users::CreatePaymentMethod.call(
+          payment_method_stripe_id: params[:payment_method_stripe_id],
+          user: current_user
+        ).payment_method
       end
 
       def index
-        @payment_methods = Users::GetPaymentMethods.call(user: current_user).payment_methods
+        @payment_methods = current_user.payment_methods
       end
 
       def destroy
-        StripeService.destroy_payment_method(params[:id])
+        Users::DestroyPaymentMethod.call(payment_method_id: params[:id], user: current_user)
       end
     end
   end

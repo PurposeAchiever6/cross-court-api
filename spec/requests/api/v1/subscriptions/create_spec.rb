@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 describe 'POST api/v1/subscriptions' do
-  let!(:user)          { create(:user) }
-  let!(:product)       { create(:product, price: 100, product_type: :recurring) }
-  let(:payment_method) { 'pm123456789' }
-  let(:params)         { { product_id: product.id, payment_method: payment_method } }
+  let!(:user) { create(:user) }
+  let!(:payment_method) { create(:payment_method, user: user) }
+  let!(:product) { create(:product, price: 100, product_type: :recurring) }
+  let(:params) { { product_id: product.id, payment_method_id: payment_method.id } }
 
   subject do
     post api_v1_subscriptions_path, params: params, headers: auth_headers, as: :json

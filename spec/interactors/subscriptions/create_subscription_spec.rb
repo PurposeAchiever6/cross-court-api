@@ -3,8 +3,8 @@ require 'rails_helper'
 describe Subscriptions::CreateSubscription do
   describe '.call' do
     let(:user) { create(:user) }
+    let!(:payment_method) { create(:payment_method, user: user) }
     let(:product) { create(:product) }
-    let(:payment_method) { 'some-stripe-pm-id' }
     let(:promo_code) { nil }
     let(:stripe_response_status) { 'active' }
 
@@ -29,7 +29,7 @@ describe Subscriptions::CreateSubscription do
       Subscriptions::CreateSubscription.call(
         user: user,
         product: product,
-        payment_method: payment_method,
+        payment_method_id: payment_method.id,
         promo_code: promo_code
       )
     end
@@ -39,7 +39,7 @@ describe Subscriptions::CreateSubscription do
     it 'calls the stripes create_subscription method with the correct params' do
       expect(StripeService).to receive(
         :create_subscription
-      ).with(user, product, payment_method, promo_code)
+      ).with(user, product, payment_method.stripe_id, promo_code)
       subject
     end
 

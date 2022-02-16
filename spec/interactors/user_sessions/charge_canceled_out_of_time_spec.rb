@@ -20,7 +20,7 @@ describe UserSessions::ChargeCanceledOutOfTime do
     before do
       ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'] = free_session_price_to_charge
       ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'] = unlimited_credits_price_to_charge
-      allow(StripeService).to receive(:fetch_payment_methods).and_return([true])
+      create(:payment_method, user: user, default: true)
       allow(StripeService).to receive(:charge).and_return(double(id: payment_intent_id))
     end
 

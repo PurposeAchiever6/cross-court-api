@@ -14,15 +14,15 @@ class StripeService
     Stripe::Customer.delete(stripe_id)
   end
 
-  def self.create_payment_method(payment_method, user)
+  def self.create_payment_method(payment_method_stripe_id, user)
     Stripe::PaymentMethod.attach(
-      payment_method,
+      payment_method_stripe_id,
       customer: user.stripe_id
     )
   end
 
-  def self.destroy_payment_method(payment_method)
-    Stripe::PaymentMethod.detach(payment_method)
+  def self.destroy_payment_method(payment_method_stripe_id)
+    Stripe::PaymentMethod.detach(payment_method_stripe_id)
   end
 
   def self.fetch_payment_methods(user)
@@ -33,11 +33,11 @@ class StripeService
     payment_methods.data
   end
 
-  def self.charge(user, payment_method, price, description = nil)
+  def self.charge(user, payment_method_stripe_id, price, description = nil)
     Stripe::PaymentIntent.create(
       amount: (price.to_f * 100).to_i,
       currency: 'usd',
-      payment_method: payment_method,
+      payment_method: payment_method_stripe_id,
       customer: user.stripe_id,
       confirm: true,
       description: description,
@@ -52,11 +52,11 @@ class StripeService
     )
   end
 
-  def self.create_free_session_intent(user, payment_method)
+  def self.create_free_session_intent(user, payment_method_stripe_id)
     Stripe::PaymentIntent.create(
       amount: (ENV['FREE_SESSION_PRICE'].to_f * 100).to_i,
       currency: 'usd',
-      payment_method: payment_method,
+      payment_method: payment_method_stripe_id,
       customer: user.stripe_id,
       description: 'First Free no show fee'
     )
@@ -86,11 +86,11 @@ class StripeService
     Stripe::Price.update(price_id, price_attrs)
   end
 
-  def self.create_subscription(user, product, payment_method_id, promo_code = nil)
+  def self.create_subscription(user, product, payment_method_stripe_id, promo_code = nil)
     subscription_params = {
       customer: user.stripe_id,
       items: [{ price: product.stripe_price_id }],
-      default_payment_method: payment_method_id
+      default_payment_method: payment_method_stripe_id
     }
 
     subscription_params.merge!(promotion_code: promo_code.stripe_promo_code_id) if promo_code
@@ -98,7 +98,7 @@ class StripeService
     Stripe::Subscription.create(subscription_params)
   end
 
-  def self.update_subscription(subscription, product, payment_method_id, promo_code = nil)
+  def self.update_subscription(subscription, product, payment_method_stripe_id, promo_code = nil)
     subscription_stripe_id = subscription.stripe_id
 
     subscription_params = {
@@ -107,7 +107,7 @@ class StripeService
         { price: product.stripe_price_id }
       ],
       cancel_at_period_end: false,
-      default_payment_method: payment_method_id
+      default_payment_method: payment_method_stripe_id
     }
 
     if promo_code

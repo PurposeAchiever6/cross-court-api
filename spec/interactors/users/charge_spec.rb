@@ -7,9 +7,9 @@ describe Users::Charge do
     let(:description) { nil }
     let(:notify_error) { false }
     let(:payment_intent_id) { rand(1_000) }
+    let!(:payment_method) { create(:payment_method, user: user, default: true) }
 
     before do
-      allow(StripeService).to receive(:fetch_payment_methods).and_return([true])
       allow(StripeService).to receive(:charge).and_return(double(id: payment_intent_id))
     end
 
@@ -32,7 +32,7 @@ describe Users::Charge do
     end
 
     context 'when user does not have any payment method' do
-      before { allow(StripeService).to receive(:fetch_payment_methods).and_return([]) }
+      let!(:payment_method) { nil }
 
       it { expect(subject.success?).to eq(false) }
 

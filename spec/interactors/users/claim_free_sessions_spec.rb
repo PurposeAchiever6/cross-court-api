@@ -6,13 +6,14 @@ describe Users::ClaimFreeSession do
 
     let(:free_session_state) { :not_claimed }
     let(:intent_id) { rand(1_000).to_s }
-    let(:payment_method) { 'payment_method' }
+    let!(:payment_method) { create(:payment_method, user: user) }
+    let(:payment_method_id) { payment_method.id }
 
     before do
       allow(StripeService).to receive(:create_free_session_intent).and_return(double(id: intent_id))
     end
 
-    subject { Users::ClaimFreeSession.call(user: user, payment_method: payment_method) }
+    subject { Users::ClaimFreeSession.call(user: user, payment_method_id: payment_method_id) }
 
     it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
     it { expect { subject }.to change { user.reload.free_session_payment_intent }.to(intent_id) }
@@ -23,44 +24,31 @@ describe Users::ClaimFreeSession do
     end
 
     it 'calls Stripe service create_free_session_intent with correct params' do
-      expect(StripeService).to receive(:create_free_session_intent).with(user, payment_method)
+      expect(
+        StripeService
+      ).to receive(:create_free_session_intent).with(user, payment_method.stripe_id)
       subject
     end
 
-    context 'when payment method is not passed as argument' do
-      let(:payment_method) { nil }
-      let(:user_payment_method) { :pm_1 }
-      let(:user_payment_methods) { [user_payment_method] }
-
-      before do
-        allow(StripeService).to receive(:fetch_payment_methods).and_return(user_payment_methods)
-      end
+    context 'when payment_method_id is not passed as argument' do
+      let(:payment_method_id) { nil }
+      let!(:user_payment_method) { create(:payment_method, user: user, default: true) }
 
       it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
       it { expect { subject }.to change { user.reload.free_session_payment_intent }.to(intent_id) }
 
-      it 'calls Stripe service fetch_payment_methods with correct params' do
-        expect(StripeService).to receive(:fetch_payment_methods).with(user)
-        subject
-      end
-
       it 'calls Stripe service create_free_session_intent with correct params' do
         expect(
           StripeService
-        ).to receive(:create_free_session_intent).with(user, user_payment_method)
+        ).to receive(:create_free_session_intent).with(user, user_payment_method.stripe_id)
         subject
       end
 
       context 'when user does not have any payment method' do
-        let(:user_payment_methods) { [] }
+        before { user.payment_methods.destroy_all }
 
         it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
         it { expect { subject }.not_to change { user.reload.free_session_payment_intent } }
-
-        it 'calls Stripe service fetch_payment_methods with correct params' do
-          expect(StripeService).to receive(:fetch_payment_methods).with(user)
-          subject
-        end
 
         it 'does not call Stripe service create_free_session_intent' do
           expect(StripeService).not_to receive(:create_free_session_intent)
@@ -85,11 +73,6 @@ describe Users::ClaimFreeSession do
       it { expect(subject.success?).to eq(true) }
       it { expect { subject }.not_to change { user.reload.free_session_state } }
       it { expect { subject }.not_to change { user.reload.free_session_payment_intent } }
-
-      it 'does not call Stripe service fetch_payment_methods' do
-        expect(StripeService).not_to receive(:fetch_payment_methods)
-        subject
-      end
 
       it 'does not call Stripe service create_free_session_intent' do
         expect(StripeService).not_to receive(:create_free_session_intent)
