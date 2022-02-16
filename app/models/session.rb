@@ -45,6 +45,9 @@ class Session < ApplicationRecord
   has_many :user_session_waitlists, dependent: :destroy
 
   validates :start_time, :time, presence: true
+  validates :end_time,
+            absence: { message: 'must be blank if session is not recurring' },
+            if: -> { recurring.empty? }
 
   delegate :name, :description, :time_zone, to: :location, prefix: true
   delegate :address, :time_zone, to: :location
