@@ -91,6 +91,7 @@ class User < ApplicationRecord
   has_many :sessions, through: :user_sessions
   has_many :purchases, dependent: :nullify
   has_many :subscriptions, dependent: :destroy
+  has_many :user_session_waitlists, dependent: :destroy
 
   has_one_attached :image, dependent: :destroy
 

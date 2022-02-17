@@ -22,6 +22,11 @@ class CanceledUserSession
       user_session.credit_reimbursed = true
     end
 
+    user_session.state = :canceled
+    user_session.save!
+
+    ReachUserOnWaitlistJob.perform_later(session.id, date)
+
     if in_cancellation_time
       SlackService.new(user, date, time, location).session_canceled_in_time
 
@@ -31,14 +36,9 @@ class CanceledUserSession
         user_session_id: user_session_id
       )
     else
-      result = UserSessions::ChargeCanceledOutOfTimeUserSession.call(user_session: user_session)
+      result = UserSessions::ChargeCanceledOutOfTime.call(user_session: user_session)
 
-      if result.failure?
-        SlackService.new(user, date, time, location)
-                    .session_canceled_out_of_time_with_charge_error(result.message)
-      else
-        SlackService.new(user, date, time, location).session_canceled_out_of_time
-      end
+      SlackService.new(user, date, time, location).session_canceled_out_of_time
 
       ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
@@ -48,8 +48,5 @@ class CanceledUserSession
         unlimited_credits: user_unlimited_credits.to_s
       )
     end
-
-    user_session.state = :canceled
-    user_session.save!
   end
 end

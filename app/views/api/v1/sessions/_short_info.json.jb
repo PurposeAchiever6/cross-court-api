@@ -6,6 +6,7 @@
   coming_soon: session.coming_soon,
   time: session.time.iso8601,
   reserved: user_sessions.values_at([session.id, session.start_time]).compact.present?,
+  on_waitlist: user_sessions_waitlists.values_at([session.id, session.start_time]).compact.present?,
   full: user_sessions_count.values_at([session.id, session.start_time]).sum ==
     Session::MAX_CAPACITY,
   spots_left: Session::MAX_CAPACITY -

@@ -18,6 +18,10 @@ module Api
       def index
         @user_sessions = UserSession.future.not_canceled.by_user(current_user)
                                     .group(:session_id, :date).count
+
+        @user_sessions_waitlists = UserSessionWaitlist.not_reached.by_user(current_user)
+                                                      .group(:session_id, :date).count
+
         @sessions = SessionDecorator.decorate_collection(
           Session.eager_load(
             :location,

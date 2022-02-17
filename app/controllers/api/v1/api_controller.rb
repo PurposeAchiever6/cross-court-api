@@ -6,7 +6,7 @@ module Api
       layout false
       respond_to :json
 
-      rescue_from Exception,                           with: :render_error
+      rescue_from Exception,                           with: :render_error_exception
       rescue_from ActiveRecord::RecordNotFound,        with: :render_not_found
       rescue_from ActiveRecord::RecordInvalid,         with: :render_record_invalid
       rescue_from ActionController::RoutingError,      with: :render_not_found
@@ -21,15 +21,20 @@ module Api
       rescue_from PurchaseException,                   with: :render_custom_exception
       rescue_from SubscriptionException,               with: :render_custom_exception
       rescue_from ClaimFreeSessionException,           with: :render_custom_exception
+      rescue_from UserNotInWaitlistException,          with: :render_custom_exception
       rescue_from Stripe::StripeError,                 with: :render_custom_exception
 
       def status
         render json: { online: true }
       end
 
+      def render_error(status, message)
+        render json: { error: message }, status: status
+      end
+
       private
 
-      def render_error(exception)
+      def render_error_exception(exception)
         raise exception if Rails.env.test?
 
         # To properly handle RecordNotFound errors in views

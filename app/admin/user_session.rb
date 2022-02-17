@@ -8,6 +8,7 @@ ActiveAdmin.register UserSession do
     column :time do |user_session|
       user_session.time.strftime(Session::TIME_FORMAT)
     end
+    column :state
     column :user_name do |user_session|
       user_session.user.full_name
     end

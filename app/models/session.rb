@@ -35,14 +35,19 @@ class Session < ApplicationRecord
   serialize :recurring, Hash
 
   belongs_to :location, with_deleted: true
+  belongs_to :skill_level
+
   has_many :user_sessions, dependent: :destroy
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
   has_many :referee_sessions, dependent: :nullify
   has_many :sem_sessions, dependent: :nullify
-  belongs_to :skill_level
+  has_many :user_session_waitlists, dependent: :destroy
 
   validates :start_time, :time, presence: true
+  validates :end_time,
+            absence: { message: 'must be blank if session is not recurring' },
+            if: -> { recurring.empty? }
 
   delegate :name, :description, :time_zone, to: :location, prefix: true
   delegate :address, :time_zone, to: :location
@@ -123,6 +128,28 @@ class Session < ApplicationRecord
 
   def spots_left(date)
     MAX_CAPACITY - reservations_count(date)
+  end
+
+  def waitlist(date)
+    user_session_waitlists.by_date(date).sorted
+  end
+
+  def invalid_date?(date)
+    no_session_for_date = if recurring.empty?
+                            start_time != date
+                          else
+                            calendar_events(date, date).empty?
+                          end
+
+    no_session_for_date || past?(date)
+  end
+
+  def past?(date = nil)
+    current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))
+    date = start_time if date.blank?
+    session_time = "#{date} #{time}".to_datetime
+
+    current_time > session_time
   end
 
   private

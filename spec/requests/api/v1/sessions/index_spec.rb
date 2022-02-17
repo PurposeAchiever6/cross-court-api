@@ -37,6 +37,11 @@ describe 'GET api/v1/sessions', type: :request do
       expect(json[:sessions][0][:spots_left]).to eq(Session::MAX_CAPACITY)
     end
 
+    it 'returns that user is not on the waitlist' do
+      subject
+      expect(json[:sessions][0][:on_waitlist]).to eq(false)
+    end
+
     context 'when the session is full' do
       let!(:user_session) { create_list(:user_session, 15, session: session, date: today) }
 
@@ -72,10 +77,26 @@ describe 'GET api/v1/sessions', type: :request do
         end
       end
     end
+
+    context 'when user is on waitlist' do
+      let!(:user_session_waitlist) do
+        create(
+          :user_session_waitlist,
+          session: session,
+          user: user,
+          date: session.start_time
+        )
+      end
+
+      it 'returns that user is on the waitlist' do
+        subject
+        expect(json[:sessions][0][:on_waitlist]).to eq(true)
+      end
+    end
   end
 
   context 'when the session is repeted everyday' do
-    let!(:session) { create(:session, :daily, start_time: Time.current.beginning_of_week) }
+    let!(:session) { create(:session, :daily, start_time: los_angeles_time.beginning_of_week) }
 
     it 'returns success' do
       subject
@@ -99,7 +120,7 @@ describe 'GET api/v1/sessions', type: :request do
 
     context 'when the session has an end_time' do
       let!(:session) do
-        create(:session, :daily, start_time: Time.current.beginning_of_week,
+        create(:session, :daily, start_time: los_angeles_time.beginning_of_week,
                                  end_time: beginning_of_week + 2.days)
       end
 

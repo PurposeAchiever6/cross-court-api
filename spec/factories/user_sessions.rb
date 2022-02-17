@@ -17,6 +17,7 @@
 #  jersey_rental                   :boolean          default(FALSE)
 #  jersey_rental_payment_intent_id :string
 #  assigned_team                   :string
+#  no_show_up_fee_charged          :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -32,5 +33,6 @@ FactoryBot.define do
     state { 'reserved' }
     is_free_session { false }
     checked_in { false }
+    no_show_up_fee_charged { false }
   end
 end

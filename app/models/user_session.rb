@@ -17,6 +17,7 @@
 #  jersey_rental                   :boolean          default(FALSE)
 #  jersey_rental_payment_intent_id :string
 #  assigned_team                   :string
+#  no_show_up_fee_charged          :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -72,6 +73,7 @@ class UserSession < ApplicationRecord
   scope :not_checked_in, -> { where(checked_in: false) }
   scope :free_sessions, -> { where(is_free_session: true) }
   scope :not_free_sessions, -> { where(is_free_session: false) }
+  scope :no_show_up_fee_not_charged, -> { where(no_show_up_fee_charged: false) }
 
   def in_cancellation_time?
     remaining_time > Session::CANCELLATION_PERIOD
