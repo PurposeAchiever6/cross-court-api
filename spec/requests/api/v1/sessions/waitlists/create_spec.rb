@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/waitlists' do
+  let!(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
   let!(:user) { create(:user) }
-  let!(:session) { create(:session) }
+  let!(:session) { create(:session, start_time: la_time.tomorrow) }
   let(:date) { session.start_time }
 
   let(:params) { { date: date.strftime('%d/%m/%Y') } }

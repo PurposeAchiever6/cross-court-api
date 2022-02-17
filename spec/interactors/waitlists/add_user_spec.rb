@@ -3,7 +3,8 @@ require 'rails_helper'
 describe Waitlists::AddUser do
   describe '.call' do
     let!(:user) { create(:user) }
-    let!(:session) { create(:session) }
+    let!(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+    let!(:session) { create(:session, start_time: la_time.tomorrow) }
     let(:date) { session.start_time }
 
     subject { Waitlists::AddUser.call(session: session, user: user, date: date) }
