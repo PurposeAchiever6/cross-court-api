@@ -13,6 +13,8 @@ module Api
                                         .by_date(date)
                                         .not_canceled
                                         .first
+
+        @on_waitlist = selected_session.waitlist(date).by_user(current_user).exists?
       end
 
       def index

@@ -28,8 +28,18 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
       start_time: session.start_time.iso8601,
       time: session.time.iso8601,
       full: false,
-      past: false
+      past: false,
+      on_waitlist: false
     )
+  end
+
+  context 'when user is on the waitlist' do
+    before { create(:user_session_waitlist, session: session, user: user, date: today) }
+
+    it "returns the user is on the session's waitlist" do
+      subject
+      expect(json[:session][:on_waitlist]).to eq(true)
+    end
   end
 
   context 'when the session has employees assigned' do
