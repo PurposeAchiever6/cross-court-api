@@ -380,6 +380,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     ri_cal (0.8.8)
+    rollbar (3.3.0)
     rspec-core (3.9.0)
       rspec-support (~> 3.9.0)
     rspec-expectations (3.9.0)
@@ -535,6 +536,7 @@ DEPENDENCIES
   recurring_select (~> 2.1)
   reek (~> 5.3.1)
   ri_cal (~> 0.8.8)
+  rollbar
   rspec-json_expectations (~> 2.2)
   rspec-rails (~> 3.9)
   rspec-sidekiq (~> 3.1.0)

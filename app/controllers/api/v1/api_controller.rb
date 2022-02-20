@@ -37,10 +37,8 @@ module Api
       def render_error_exception(exception)
         raise exception if Rails.env.test?
 
-        # To properly handle RecordNotFound errors in views
-        return render_not_found(exception) if exception.cause.is_a?(ActiveRecord::RecordNotFound)
-
-        logger.error(exception) # Report to your error managment tool here
+        logger.error(exception)
+        Rollbar.error(exception)
 
         return if performed?
 
