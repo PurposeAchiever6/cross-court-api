@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_13_145544) do
+ActiveRecord::Schema.define(version: 2022_02_22_203651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 2022_02_13_145544) do
     t.string "brand"
     t.integer "exp_month"
     t.integer "exp_year"
-    t.integer "last_4"
+    t.string "last_4"
     t.boolean "default"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

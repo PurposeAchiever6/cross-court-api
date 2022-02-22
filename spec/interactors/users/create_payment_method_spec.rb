@@ -10,7 +10,7 @@ describe Users::CreatePaymentMethod do
         brand: 'visa',
         exp_month: 9,
         exp_year: 2200,
-        last_4: 1234
+        last_4: '1234'
       }
     end
 

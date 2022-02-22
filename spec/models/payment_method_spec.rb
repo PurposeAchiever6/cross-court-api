@@ -8,7 +8,7 @@
 #  brand      :string
 #  exp_month  :integer
 #  exp_year   :integer
-#  last_4     :integer
+#  last_4     :string
 #  default    :boolean
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
