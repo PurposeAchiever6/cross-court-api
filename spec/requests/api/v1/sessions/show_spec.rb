@@ -34,11 +34,24 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   end
 
   context 'when user is on the waitlist' do
-    before { create(:user_session_waitlist, session: session, user: user, date: today) }
+    let(:reached) { false }
+
+    let!(:user_session_waitlist) do
+      create(:user_session_waitlist, session: session, user: user, date: today, reached: reached)
+    end
 
     it "returns the user is on the session's waitlist" do
       subject
       expect(json[:session][:on_waitlist]).to eq(true)
+    end
+
+    context 'when the user has already been reached' do
+      let(:reached) { true }
+
+      it "returns the user is on the session's waitlist" do
+        subject
+        expect(json[:session][:on_waitlist]).to eq(false)
+      end
     end
   end
 
