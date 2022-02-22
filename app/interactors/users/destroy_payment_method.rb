@@ -5,11 +5,17 @@ module Users
     def call
       payment_method_id = context.payment_method_id
       user = context.user
+      payment_methods = user.payment_methods
 
-      payment_method = user.payment_methods.find(payment_method_id)
+      payment_method_to_delete = payment_methods.find(payment_method_id)
 
-      StripeService.destroy_payment_method(payment_method.stripe_id)
-      payment_method.destroy!
+      deleted_was_default = payment_method_to_delete.default
+
+      StripeService.destroy_payment_method(payment_method_to_delete.stripe_id)
+      payment_method_to_delete.destroy!
+
+      other_payment_method = payment_methods.reload.order(created_at: :desc).first
+      other_payment_method.update!(default: true) if deleted_was_default && other_payment_method
     end
   end
 end

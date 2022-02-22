@@ -23,4 +23,9 @@ describe 'PUT api/v1/payment_methods/:id' do
     expect(payment_method.reload.default).to eq(true)
     expect(payment_method_2.reload.default).to eq(false)
   end
+
+  it 'returns user payments methods' do
+    subject
+    expect(json[:payment_methods].count).to eq(2)
+  end
 end

@@ -9,11 +9,13 @@ module Api
       end
 
       def index
-        @payment_methods = current_user.payment_methods.order(:created_at)
+        @payment_methods = current_user.payment_methods.order(created_at: :desc)
       end
 
       def destroy
         Users::DestroyPaymentMethod.call(payment_method_id: params[:id], user: current_user)
+
+        @payment_methods = current_user.payment_methods.order(created_at: :desc)
       end
 
       def update
@@ -24,7 +26,7 @@ module Api
           payment_methods.find(params[:id]).update!(update_params)
         end
 
-        @payment_methods = payment_methods.order(:created_at)
+        @payment_methods = payment_methods.order(created_at: :desc)
       end
 
       private

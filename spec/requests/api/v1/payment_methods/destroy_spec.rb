@@ -2,7 +2,10 @@ require 'rails_helper'
 
 describe 'DELETE api/v1/payment_methods' do
   let(:user) { create(:user) }
-  let(:payment_method) { create(:payment_method, user: user) }
+  let!(:payment_method) { create(:payment_method, user: user, default: true) }
+  let!(:payment_method_2) { create(:payment_method, user: user) }
+  let!(:payment_method_3) { create(:payment_method, user: user) }
+  let!(:payment_method_4) { create(:payment_method, user: user) }
 
   let(:payment_method_atts) { { stripe_id: payment_method.stripe_id } }
 
@@ -20,4 +23,25 @@ describe 'DELETE api/v1/payment_methods' do
   end
 
   it { expect { subject }.to change(PaymentMethod, :count).by(-1) }
+
+  it 'returns the remaining user payments methods' do
+    subject
+    expect(json[:payment_methods].count).to eq(3)
+  end
+
+  it 'assign default to the next most recent one' do
+    subject
+    expect(user.payment_methods.reload.order(created_at: :desc).first.default).to eq(true)
+  end
+
+  context 'when payment method is not found' do
+    let!(:other_user) { create(:user) }
+    let!(:payment_method) { create(:payment_method, user: other_user) }
+    let(:payment_method_atts) { { stripe_id: payment_method.stripe_id } }
+
+    it 'returns success' do
+      subject
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

@@ -3,6 +3,7 @@ require 'rails_helper'
 describe Users::DestroyPaymentMethod do
   describe '.call' do
     let(:stripe_id) { 'stripe-id' }
+    let!(:user) { create(:user) }
 
     let(:payment_method_atts) do
       {
@@ -24,14 +25,25 @@ describe Users::DestroyPaymentMethod do
     end
 
     context 'when the payment method is found' do
-      let!(:user) { create(:user) }
       let!(:payment_method) { create(:payment_method, user: user, stripe_id: stripe_id) }
 
       it { expect { subject }.to change(PaymentMethod, :count).by(-1) }
     end
 
+    context 'when the deleted is the default' do
+      let!(:payment_method) do
+        create(:payment_method, user: user, stripe_id: stripe_id, default: true)
+      end
+      let!(:payment_method_2) { create(:payment_method, user: user) }
+      let!(:payment_method_3) { create(:payment_method, user: user) }
+
+      it 'assign default to the next most recent one' do
+        subject
+        expect(user.payment_methods.reload.order(created_at: :desc).first.default).to eq(true)
+      end
+    end
+
     context 'when payment method is not found' do
-      let!(:user) { create(:user) }
       let!(:other_user) { create(:user) }
       let!(:payment_method) { create(:payment_method, user: other_user, stripe_id: stripe_id) }
 
