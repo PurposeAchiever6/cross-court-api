@@ -4,7 +4,8 @@ describe ReachUserOnWaitlistJob do
   describe '#perform' do
     let!(:user_1) { create(:user, credits: user_1_credits) }
     let!(:user_2) { create(:user, credits: user_2_credits) }
-    let!(:session) { create(:session) }
+    let!(:location) { create(:location) }
+    let!(:session) { create(:session, time: session_time, location: location) }
     let!(:user_sessions) do
       create_list(
         :user_session,
@@ -21,6 +22,8 @@ describe ReachUserOnWaitlistJob do
       create(:user_session_waitlist, user: user_2, session: session, date: date)
     end
 
+    let(:current_time) { Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)) }
+    let(:session_time) { current_time }
     let(:user_1_credits) { 1 }
     let(:user_2_credits) { 1 }
     let(:number_of_user_sessions) { Session::MAX_CAPACITY - 1 }
@@ -77,6 +80,23 @@ describe ReachUserOnWaitlistJob do
 
       context 'when all users has no credits' do
         let(:user_2_credits) { 0 }
+
+        it { is_expected.to eq(nil) }
+        it { expect { subject }.not_to change { waitlist_item_1.reload.reached } }
+        it { expect { subject }.not_to change { waitlist_item_2.reload.reached } }
+      end
+    end
+
+    context 'when the session starts before the waitlist tolerance' do
+      let(:session_time) { current_time + UserSessionWaitlist::MINUTES_TOLERANCE + 1.minute }
+      let(:date) { current_time.to_date }
+
+      it { is_expected.to eq(true) }
+      it { expect { subject }.to change { waitlist_item_1.reload.reached }.from(false).to(true) }
+      it { expect { subject }.not_to change { waitlist_item_2.reload.reached } }
+
+      context 'when the session starts after the waitlist tolerance' do
+        let(:session_time) { current_time + UserSessionWaitlist::MINUTES_TOLERANCE - 1.minute }
 
         it { is_expected.to eq(nil) }
         it { expect { subject }.not_to change { waitlist_item_1.reload.reached } }

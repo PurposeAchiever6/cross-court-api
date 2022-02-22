@@ -18,6 +18,8 @@
 #
 
 class UserSessionWaitlist < ApplicationRecord
+  MINUTES_TOLERANCE = ENV['WAITLIST_MINUTES_TOLERANCE'].to_i.minutes.freeze
+
   belongs_to :user
   belongs_to :session
 
