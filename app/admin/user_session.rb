@@ -9,6 +9,7 @@ ActiveAdmin.register UserSession do
       user_session.time.strftime(Session::TIME_FORMAT)
     end
     column :state
+    column :checked_in
     column :user_name do |user_session|
       user_session.user.full_name
     end
