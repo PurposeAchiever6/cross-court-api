@@ -36,6 +36,8 @@ gem 'slack-notifier', '~> 2.3', '>= 2.3.2'
 gem 'stripe', '~> 5.21'
 gem 'webpacker', '~> 4.0'
 gem 'sprockets', '~> 3.7.2'
+gem 'rollbar'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
