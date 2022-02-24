@@ -2,6 +2,7 @@ module ActiveCampaign
   module Deal
     module Event
       ACCOUNT_CONFIRMATION = 'Account Confirmation'.freeze
+      ACCOUNT_CREATION = 'Account Creation'.freeze
       BAD_REVIEW = 'Bad Review'.freeze
       CANCELLED_MEMBERSHIP = 'Cancelled Membership'.freeze
       DROP_IN_RE_UP = 'Drop in Re Up'.freeze

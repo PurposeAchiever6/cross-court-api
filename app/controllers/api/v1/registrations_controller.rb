@@ -7,16 +7,22 @@ module Api
       def create
         ActiveRecord::Base.transaction do
           super do |resource|
+            user_id = resource.id
+
             ActiveCampaignService.new.create_update_contact(resource)
             ::ActiveCampaign::AddContactToListJob.perform_later(
               ::ActiveCampaign::Contact::List::MASTER_LIST,
               resource.active_campaign_id
             )
+            ::ActiveCampaign::CreateDealJob.perform_later(
+              ::ActiveCampaign::Deal::Event::ACCOUNT_CREATION,
+              user_id
+            )
 
             StripeService.create_user(resource)
             SonarService.add_update_customer(resource)
 
-            ResendVerificationEmailJob.set(wait: 24.hours).perform_later(resource.id)
+            ResendVerificationEmailJob.set(wait: 24.hours).perform_later(user_id)
           end
         end
       rescue StandardError
