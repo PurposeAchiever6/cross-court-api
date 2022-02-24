@@ -3,9 +3,12 @@ module Api
     class ConfirmationsController < DeviseTokenAuth::ConfirmationsController
       def show
         @resource = resource_class.confirm_by_token(resource_params[:confirmation_token])
-        if @resource.errors.empty?
+
+        errors = @resource.errors
+
+        if errors.empty?
           sign_in(@resource)
-          redirect_header_options = { account_confirmation_success: true }
+          redirect_header_options = { success: true }
           if signed_in?(resource_name)
             token = signed_in_resource.create_token
 
@@ -25,10 +28,14 @@ module Api
           else
             redirect_to_link = DeviseTokenAuth::Url.generate(redirect_url, redirect_header_options)
           end
-          redirect_to(redirect_to_link)
         else
-          raise ActionController::RoutingError, 'Not Found'
+          redirect_to_link = DeviseTokenAuth::Url.generate(
+            redirect_url,
+            success: false,
+            error: errors.full_messages.first
+          )
         end
+        redirect_to(redirect_to_link)
       end
 
       private
