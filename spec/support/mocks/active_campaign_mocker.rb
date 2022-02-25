@@ -27,8 +27,8 @@ class ActiveCampaignMocker
   end
 
   def lists(name = nil)
-    url = '/lists'
-    url += "?filters[name]=#{name}" if name.present?
+    url = '/lists?limit=100'
+    url += "&filters[name]=#{name}" if name.present?
 
     mock_request(
       url_path: url,
@@ -39,7 +39,7 @@ class ActiveCampaignMocker
 
   def contact_fields
     mock_request(
-      url_path: '/fields',
+      url_path: '/fields?limit=100',
       method: :get,
       response_body: contact_fields_response
     )
@@ -47,7 +47,7 @@ class ActiveCampaignMocker
 
   def deal_pipelines
     mock_request(
-      url_path: '/dealGroups',
+      url_path: '/dealGroups?limit=100',
       method: :get,
       response_body: deal_pipelines_response
     )
@@ -55,7 +55,7 @@ class ActiveCampaignMocker
 
   def deal_fields
     mock_request(
-      url_path: '/dealCustomFieldMeta',
+      url_path: '/dealCustomFieldMeta?limit=100',
       method: :get,
       response_body: deal_fields_response
     )
@@ -63,7 +63,7 @@ class ActiveCampaignMocker
 
   def deal_stages
     mock_request(
-      url_path: "/dealStages?filters[d_groupid]=#{pipeline_id}",
+      url_path: "/dealStages?filters[d_groupid]=#{pipeline_id}&limit=100",
       method: :get,
       response_body: deal_stages_response
     )

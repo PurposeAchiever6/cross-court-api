@@ -69,6 +69,7 @@ FactoryBot.define do
     private_access               { false }
     birthday                     { Time.zone.today - 20.years }
     skill_rating                 { rand(1..5) }
+    stripe_id                    { 'cus_AJ6y81jMo1Na22' }
 
     trait :confirmed do
       confirmed_at { Time.current }

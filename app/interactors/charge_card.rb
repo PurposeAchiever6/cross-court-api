@@ -3,11 +3,14 @@ class ChargeCard
 
   def call
     price = context.price
+    user = context.user
+    payment_method = user.payment_methods.find(context.payment_method_id)
+
     return if price.zero?
 
     payment_intent = StripeService.charge(
-      context.user,
-      context.payment_method,
+      user,
+      payment_method.stripe_id,
       price,
       context.description
     )

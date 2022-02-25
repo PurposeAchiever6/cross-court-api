@@ -3,15 +3,16 @@ module Subscriptions
     include Interactor
 
     def call
+      user = context.user
       subscription = context.subscription
       product = context.product
-      payment_method_id = context.payment_method
+      payment_method = user.payment_methods.find(context.payment_method_id)
       promo_code = context.promo_code
 
       stripe_subscription = StripeService.update_subscription(
         subscription,
         product,
-        payment_method_id,
+        payment_method.stripe_id,
         promo_code
       )
 

@@ -1,9 +1,9 @@
 {
   id: payment_method.id,
-  card: {
-    last4: payment_method.card.last4,
-    exp_month: payment_method.card.exp_month,
-    exp_year: payment_method.card.exp_year,
-    brand: payment_method.card.brand
-  }
+  stripe_id: payment_method.stripe_id,
+  brand: payment_method.brand,
+  exp_month: payment_method.exp_month,
+  exp_year: payment_method.exp_year,
+  last_4: payment_method.last_4,
+  default: payment_method.default
 }

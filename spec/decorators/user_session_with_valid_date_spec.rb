@@ -3,11 +3,12 @@ require 'rails_helper'
 describe UserSessionWithValidDate do
   let(:user)    { create(:user) }
   let(:session) { create(:session, :daily) }
+  let(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
 
   describe '.save!' do
     context 'when the date is correct' do
       let!(:user_session) do
-        build(:user_session, user: user, session: session, date: Date.tomorrow)
+        build(:user_session, user: user, session: session, date: la_time.tomorrow)
       end
       let(:user_session_with_valid_date) { UserSessionWithValidDate.new(user_session) }
 
@@ -18,7 +19,7 @@ describe UserSessionWithValidDate do
 
     context 'when the date is incorrect' do
       let!(:user_session) do
-        build(:user_session, user: user, session: session, date: Date.yesterday)
+        build(:user_session, user: user, session: session, date: la_time.yesterday)
       end
       let(:user_session_with_valid_date) { UserSessionWithValidDate.new(user_session) }
 

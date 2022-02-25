@@ -8,7 +8,6 @@ describe ChargeNotShowUpPlayersJob do
       ).mock
       allow(StripeService).to receive(:confirm_intent)
       allow(StripeService).to receive(:charge).and_return(double(id: rand(1_000)))
-      allow(StripeService).to receive(:fetch_payment_methods).and_return([true])
     end
 
     let(:la_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
@@ -17,6 +16,8 @@ describe ChargeNotShowUpPlayersJob do
     let(:subscription_credits) { 0 }
     let!(:user) { create(:user, credits: 0, subscription_credits: 0) }
     let!(:user_2) { create(:user, credits: 0, subscription_credits: Product::UNLIMITED) }
+    let!(:payment_method) { create(:payment_method, user: user, default: true) }
+    let!(:payment_method_2) { create(:payment_method, user: user_2, default: true) }
 
     let!(:user_session_1) do
       create(
@@ -83,8 +84,12 @@ describe ChargeNotShowUpPlayersJob do
       it { expect { subject }.to change { user_session_2.reload.no_show_up_fee_charged }.to(true) }
 
       it do
-        expect(StripeService).to receive(:fetch_payment_methods).once
-        expect(StripeService).to receive(:charge).once
+        expect(StripeService).to receive(:charge).with(
+          user_2,
+          payment_method_2.stripe_id,
+          ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
+          'Unlimited membership no show fee'
+        )
 
         subject
       end

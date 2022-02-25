@@ -1,4 +1,6 @@
 user_active_subscription = nil
+default_payment_method = nil
+last_checked_in_user_session = nil
 
 if user.active_subscription
   user_active_subscription = render(
@@ -7,7 +9,12 @@ if user.active_subscription
   )
 end
 
-last_checked_in_user_session = nil
+if user.default_payment_method
+  default_payment_method = render(
+    partial: 'api/v1/payment_methods/info',
+    locals: { payment_method: user.default_payment_method }
+  )
+end
 
 if user.last_checked_in_user_session
   last_checked_in_user_session = render(
@@ -37,7 +44,8 @@ json = {
   referral_code: user.referral_code,
   active_subscription: user_active_subscription,
   last_checked_in_user_session: last_checked_in_user_session,
-  image_url: nil
+  image_url: nil,
+  default_payment_method: default_payment_method
 }
 
 json[:image_url] = polymorphic_url(user.image) if user.image.attached?

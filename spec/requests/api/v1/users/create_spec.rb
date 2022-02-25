@@ -67,6 +67,10 @@ describe 'POST api/v1/users', type: :request do
       subject
     end
 
+    it 'calls the active campaign service to create the deal' do
+      expect { subject }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default')
+    end
+
     it 'calls the sonar service' do
       expect(SonarService).to receive(:add_update_customer).and_return(1)
       subject

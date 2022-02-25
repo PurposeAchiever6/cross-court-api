@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe 'PUT api/v1/purchases/create_free_session_intent' do
-  let(:user)   { create(:user) }
-  let(:params) { { payment_method: 'pm123456789' } }
+  let(:user) { create(:user) }
+  let(:payment_method) { create(:payment_method, user: user) }
+  let(:params) { { payment_method_id: payment_method.id } }
 
   before do
     stub_request(:post, %r{stripe.com/v1/payment_intents})

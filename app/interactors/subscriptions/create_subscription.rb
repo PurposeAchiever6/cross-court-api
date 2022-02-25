@@ -5,7 +5,7 @@ module Subscriptions
     def call
       user = context.user
       product = context.product
-      payment_method_id = context.payment_method
+      payment_method = user.payment_methods.find(context.payment_method_id)
       promo_code = context.promo_code
 
       if user.active_subscription
@@ -19,7 +19,7 @@ module Subscriptions
       stripe_subscription = StripeService.create_subscription(
         user,
         product,
-        payment_method_id,
+        payment_method.stripe_id,
         promo_code
       )
 

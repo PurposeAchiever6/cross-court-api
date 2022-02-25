@@ -102,7 +102,8 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .checked_in
-                                .includes(user: { image_attachment: :blob })
+                                .includes(user: { active_subscription: :product,
+                                                  image_attachment: :blob })
                                 .order(assigned_team: :desc, updated_at: :asc)
 
         render partial: 'checked_in_user_sessions', locals: {
@@ -118,7 +119,8 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .not_checked_in
-                                .includes(user: { image_attachment: :blob })
+                                .includes(user: { active_subscription: :product,
+                                                  image_attachment: :blob })
                                 .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
 
         render partial: 'not_checked_in_user_sessions', locals: {

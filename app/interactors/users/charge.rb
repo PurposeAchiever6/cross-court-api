@@ -12,7 +12,7 @@ module Users
         context.fail!(message: I18n.t('api.errors.users.charges.price_not_positive'))
       end
 
-      payment_method = Users::GetPaymentMethods.call(user: user).default_payment_method
+      payment_method = user.default_payment_method
 
       unless payment_method
         message = I18n.t('api.errors.users.charges.missing_payment_method')
@@ -20,7 +20,7 @@ module Users
         context.fail!(message: message)
       end
 
-      payment_intent = StripeService.charge(user, payment_method, price, description)
+      payment_intent = StripeService.charge(user, payment_method.stripe_id, price, description)
 
       context.charge_payment_intent_id = payment_intent.id
     rescue Stripe::StripeError => e

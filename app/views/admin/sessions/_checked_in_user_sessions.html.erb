@@ -9,8 +9,10 @@
       <th>Image</th>
       <th>User</th>
       <th>First Session</th>
-      <th>Status</th>
       <th>Vaccine</th>
+      <th>Status</th>
+      <th>Membership</th>
+      <th>Skill Level</th>
       <th></th>
       <th></th>
       <th></th>
@@ -20,6 +22,7 @@
       <% user_sessions_by_team.each do |team, user_sessions| %>
         <tbody class=<%= "#{team.present? ? "session-team-#{team}" : 'session-no-team'}" %>>
           <% user_sessions.each_with_index do |user_session, index| %>
+            <% user = user_session.user %>
             <%= hidden_field_tag('user_sessions[][id]', user_session.id) %>
             <tr>
               <td class='align-middle'>
@@ -36,10 +39,16 @@
                 <%= status_tag user_session.is_free_session %>
               </td>
               <td class='align-middle'>
-                <%= user_session.state.humanize %>
+                <%= status_tag user.vaccinated %>
               </td>
               <td class='align-middle'>
-                <%= user_session.user_vaccinated ? 'Yes' : 'No' %>
+                <%= status_tag user_session.state %>
+              </td>
+              <td class='align-middle'>
+                <%= user.membership %>
+              </td>
+              <td class='align-middle'>
+                <%= user.skill_rating || 'Unset' %>
               </td>
               <td class='align-middle'>
                 <div class='flex items-center'>
@@ -75,7 +84,7 @@
         </tbody>
       <% end %>
       <tr>
-        <td class='text-center' colspan='9'>
+        <td class='text-center' colspan='11'>
           <%= submit_tag('Update All', class: 'w-1/5 mt-4', data: { disable_with: 'Loading...' }) %>
         </td>
       </tr>

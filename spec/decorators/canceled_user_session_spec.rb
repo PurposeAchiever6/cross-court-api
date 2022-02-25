@@ -3,6 +3,7 @@ require 'rails_helper'
 describe CanceledUserSession do
   let!(:session) { create(:session, :daily, time: session_time) }
   let!(:user) { create(:user, subscription_credits: subscription_credits) }
+  let!(:payment_method) { create(:payment_method, user: user, default: true) }
   let!(:user_session) do
     create(:user_session, session: session, user: user, date: date, is_free_session: free_session)
   end

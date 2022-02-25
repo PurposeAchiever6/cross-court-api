@@ -5,7 +5,7 @@ module Api
         result = Subscriptions::PlaceSubscription.call(
           product: product,
           user: current_user,
-          payment_method: payment_method,
+          payment_method_id: payment_method_id,
           promo_code: promo_code
         )
 
@@ -34,7 +34,7 @@ module Api
           user: current_user,
           subscription: subscription,
           product: product,
-          payment_method: payment_method,
+          payment_method_id: payment_method_id,
           promo_code: promo_code
         )
 
@@ -63,8 +63,8 @@ module Api
         PromoCode.find_by(code: params[:promo_code])
       end
 
-      def payment_method
-        params.require(:payment_method)
+      def payment_method_id
+        params.require(:payment_method_id)
       end
 
       def subscription

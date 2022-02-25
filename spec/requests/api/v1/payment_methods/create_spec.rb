@@ -2,12 +2,13 @@ require 'rails_helper'
 
 describe 'POST api/v1/payment_methods' do
   let(:user) { create(:user) }
-  let(:params) { { payment_method: 'pm_123456789' } }
+  let(:payment_method_stripe_id) { 'pm_123456789' }
+  let(:params) { { payment_method_stripe_id: payment_method_stripe_id } }
+  let(:payment_method_atts) { { stripe_id: payment_method_stripe_id } }
 
-  before do
-    stub_request(:post, %r{stripe.com/v1/payment_methods/*})
-      .to_return(status: 200, body: '{}')
-  end
+  let!(:user) { create(:user) }
+
+  before { StripeMocker.new.attach_payment_method(user.stripe_id, payment_method_atts) }
 
   subject do
     post api_v1_payment_methods_path, params: params, headers: auth_headers, as: :json

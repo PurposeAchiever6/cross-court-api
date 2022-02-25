@@ -46,6 +46,8 @@ describe 'POST api/v1/users/sign_in', type: :request do
     end
 
     context 'when the user stripe_id is nil' do
+      before { user.update(stripe_id: nil) }
+
       it 'calls the stripe service' do
         expect(StripeService).to receive(:create_user)
         subject

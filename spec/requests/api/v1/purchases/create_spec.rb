@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 describe 'POST api/v1/purchases' do
-  let!(:user)          { create(:user) }
-  let!(:product)       { create(:product, price: 100) }
-  let(:payment_method) { 'pm123456789' }
-  let(:params)         { { product_id: product.id, payment_method: payment_method } }
+  let!(:user) { create(:user) }
+  let!(:product) { create(:product, price: 100) }
+  let(:payment_method) { create(:payment_method, user: user) }
+  let(:payment_method_id) { payment_method.id }
+  let(:params) { { product_id: product.id, payment_method_id: payment_method_id } }
 
   subject do
     post api_v1_purchases_path, params: params, headers: auth_headers, as: :json
@@ -38,7 +39,7 @@ describe 'POST api/v1/purchases' do
       let(:params) do
         {
           product_id: product.id,
-          payment_method: payment_method,
+          payment_method_id: payment_method_id,
           promo_code: promo_code.code
         }
       end
@@ -50,7 +51,9 @@ describe 'POST api/v1/purchases' do
 
         context "when the user hasn't used the promo code yet" do
           it 'calls the stripes charge method with the correct params' do
-            expect(StripeService).to receive(:charge).with(user, payment_method, price, description)
+            expect(
+              StripeService
+            ).to receive(:charge).with(user, payment_method.stripe_id, price, description)
             subject rescue nil
           end
 

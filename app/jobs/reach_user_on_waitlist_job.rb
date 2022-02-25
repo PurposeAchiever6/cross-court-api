@@ -6,6 +6,11 @@ class ReachUserOnWaitlistJob < ApplicationJob
 
     return if session.full?(date)
 
+    current_time = Time.zone.local_to_utc(Time.current.in_time_zone(session.time_zone))
+    session_time = "#{date} #{session.time}".to_datetime
+
+    return if current_time > session_time - UserSessionWaitlist::MINUTES_TOLERANCE
+
     waitlist_item = session.waitlist(date).not_reached.includes(:user).find do |current|
       current.user.credits?
     end

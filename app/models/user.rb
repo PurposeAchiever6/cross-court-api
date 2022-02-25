@@ -85,6 +85,11 @@ class User < ApplicationRecord
           class_name: 'Subscription',
           inverse_of: :user
 
+  has_one :default_payment_method,
+          -> { where(default: true) },
+          class_name: 'PaymentMethod',
+          inverse_of: :user
+
   has_many :user_sessions, dependent: :destroy
   has_many :sem_sessions, dependent: :destroy
   has_many :referee_sessions, dependent: :destroy
@@ -92,6 +97,7 @@ class User < ApplicationRecord
   has_many :purchases, dependent: :nullify
   has_many :subscriptions, dependent: :destroy
   has_many :user_session_waitlists, dependent: :destroy
+  has_many :payment_methods, dependent: :destroy
 
   has_one_attached :image, dependent: :destroy
 
@@ -160,6 +166,10 @@ class User < ApplicationRecord
 
   def first_not_free_session?
     user_sessions.checked_in.not_free_sessions.count == 1
+  end
+
+  def membership
+    active_subscription ? active_subscription.product.name : 'Not a member'
   end
 
   private

@@ -30,24 +30,24 @@ class ActiveCampaignService
   end
 
   def contact_fields
-    execute_request(:get, '/fields')
+    execute_request(:get, '/fields?limit=100')
   end
 
   def deal_pipelines
-    execute_request(:get, '/dealGroups')
+    execute_request(:get, '/dealGroups?limit=100')
   end
 
   def deal_fields
-    execute_request(:get, '/dealCustomFieldMeta')
+    execute_request(:get, '/dealCustomFieldMeta?limit=100')
   end
 
   def deal_stages
-    execute_request(:get, "/dealStages?filters[d_groupid]=#{pipeline_id}")
+    execute_request(:get, "/dealStages?filters[d_groupid]=#{pipeline_id}&limit=100")
   end
 
   def lists(name = nil)
-    url = '/lists'
-    url += "?filters[name]=#{name}" if name.present?
+    url = '/lists?limit=100'
+    url += "&filters[name]=#{name}" if name.present?
 
     execute_request(:get, url)
   end

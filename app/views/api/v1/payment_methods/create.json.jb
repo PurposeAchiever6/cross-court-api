@@ -1,0 +1,1 @@
+render(partial: 'info', locals: { payment_method: @payment_method })
