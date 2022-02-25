@@ -168,6 +168,10 @@ class User < ApplicationRecord
     user_sessions.checked_in.not_free_sessions.count == 1
   end
 
+  def membership
+    active_subscription ? active_subscription.product.name : 'Not a member'
+  end
+
   private
 
   def uses_email?

@@ -3,6 +3,8 @@ ActiveAdmin.register User do
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
                 :drop_in_expiration_date, :credits, :private_access, :birthday
 
+  includes active_subscription: :product
+
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
     subscription_credits = resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits
@@ -55,6 +57,7 @@ ActiveAdmin.register User do
     column :is_sem
     column :is_referee
     column :phone_number
+    column :membership
     column :total_credits
     column :skill_rating
     column :created_at
@@ -84,9 +87,10 @@ ActiveAdmin.register User do
       row :last_name
       row :birthday
       row :image do
-        image_tag url_for(user.image) if user.image.attached?
+        image_tag url_for(user.image), class: 'mw-200px' if user.image.attached?
       end
       row :phone_number
+      row :membership
       row :drop_in_credits, &:credits
       row :subscription_credits do
         user.unlimited_credits? ? 'Unlimited' : user.subscription_credits

@@ -1,0 +1,11 @@
+.status_tag {
+  &.reserved {
+    background: #b1b8b2;
+  }
+  &.canceled {
+    background: #d1847c;
+  }
+  &.confirmed {
+    background: #7ebe88;
+  }
+}
