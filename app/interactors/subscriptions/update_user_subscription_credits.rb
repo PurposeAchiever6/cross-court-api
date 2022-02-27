@@ -5,9 +5,9 @@ module Subscriptions
     def call
       user = context.user
       new_product = context.product
-      new_product_credits = new_product.credits
-      active_subscription = user.active_subscription
       old_product = context.old_product
+      active_subscription = user.active_subscription
+      new_product_credits = new_product.credits
 
       credits =
         if !active_subscription || new_product.unlimited? || old_product.unlimited?
@@ -19,7 +19,6 @@ module Subscriptions
         end
 
       user.subscription_credits = credits
-
       user.save!
     end
   end

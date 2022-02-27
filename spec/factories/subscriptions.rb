@@ -16,20 +16,23 @@
 #  user_id              :integer
 #  product_id           :integer
 #  promo_code_id        :integer
+#  payment_method_id    :integer
 #
 # Indexes
 #
-#  index_subscriptions_on_product_id     (product_id)
-#  index_subscriptions_on_promo_code_id  (promo_code_id)
-#  index_subscriptions_on_status         (status)
-#  index_subscriptions_on_stripe_id      (stripe_id)
-#  index_subscriptions_on_user_id        (user_id)
+#  index_subscriptions_on_payment_method_id  (payment_method_id)
+#  index_subscriptions_on_product_id         (product_id)
+#  index_subscriptions_on_promo_code_id      (promo_code_id)
+#  index_subscriptions_on_status             (status)
+#  index_subscriptions_on_stripe_id          (stripe_id)
+#  index_subscriptions_on_user_id            (user_id)
 #
 
 FactoryBot.define do
   factory :subscription do
     user
     product
+    payment_method
     stripe_id { 'stripe-subscription-id' }
     stripe_item_id { 'stripe-subscription-item-id' }
     status { 'active' }

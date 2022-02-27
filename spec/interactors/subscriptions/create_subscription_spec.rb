@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe Subscriptions::CreateSubscription do
   describe '.call' do
-    let(:user) { create(:user) }
+    let!(:user) { create(:user) }
     let!(:payment_method) { create(:payment_method, user: user) }
-    let(:product) { create(:product) }
+    let!(:product) { create(:product) }
     let(:promo_code) { nil }
     let(:stripe_response_status) { 'active' }
 
@@ -35,6 +35,11 @@ describe Subscriptions::CreateSubscription do
     end
 
     it { expect { subject }.to change(Subscription, :count).by(1) }
+
+    it 'assigns the payment method to the subscription' do
+      subject
+      expect(Subscription.last.payment_method).to eq(payment_method)
+    end
 
     it 'calls the stripes create_subscription method with the correct params' do
       expect(StripeService).to receive(
