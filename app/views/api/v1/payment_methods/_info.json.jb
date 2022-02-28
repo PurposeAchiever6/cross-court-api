@@ -6,5 +6,5 @@
   exp_year: payment_method.exp_year,
   last_4: payment_method.last_4,
   default: payment_method.default,
-  with_active_subscription: !!payment_method.active_subscription
+  with_active_subscription: !payment_method.active_subscription.nil?
 }

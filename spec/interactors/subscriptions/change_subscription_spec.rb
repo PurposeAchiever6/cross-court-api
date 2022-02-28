@@ -73,9 +73,9 @@ describe Subscriptions::ChangeSubscription do
     context 'when the product is the same as the subscription' do
       let(:new_product) { old_product }
 
-      it 'raises error SubscriptionAlreadyHasProductException' do
+      it 'raises error SubscriptionHasSameProductException' do
         expect { subject }.to raise_error(
-          SubscriptionAlreadyHasProductException,
+          SubscriptionHasSameProductException,
           'The subscription already has the selected product'
         )
       end

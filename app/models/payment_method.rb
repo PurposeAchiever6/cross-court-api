@@ -21,7 +21,7 @@
 class PaymentMethod < ApplicationRecord
   belongs_to :user
 
-  has_many :subscriptions
+  has_many :subscriptions, dependent: :nullify
   has_one :active_subscription,
           -> { active.recent },
           class_name: 'Subscription',

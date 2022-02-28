@@ -12,7 +12,7 @@ module Subscriptions
       old_product = subscription.product
       old_promo_code = subscription.promo_code
 
-      raise SubscriptionAlreadyHasProductException if old_product == product
+      raise SubscriptionHasSameProductException if old_product == product
 
       payment_method = user.payment_methods.find(payment_method_id)
 
@@ -25,7 +25,7 @@ module Subscriptions
 
       subscription = subscription.assign_stripe_attrs(stripe_subscription)
 
-      subscription.payment_method_id = payment_method.id
+      subscription.payment_method_id = payment_method_id
       subscription.product_id = product.id
       subscription.promo_code_id = promo_code&.id
 

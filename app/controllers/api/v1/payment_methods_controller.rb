@@ -15,7 +15,7 @@ module Api
       def destroy
         Users::DestroyPaymentMethod.call(payment_method_id: params[:id], user: current_user)
 
-        @payment_methods = current_user.payment_methods.sorted
+        @payment_methods = current_user.payment_methods.sorted.includes(:active_subscription)
       end
 
       def update
@@ -26,7 +26,7 @@ module Api
           payment_methods.find(params[:id]).update!(update_params)
         end
 
-        @payment_methods = payment_methods.sorted
+        @payment_methods = payment_methods.sorted.includes(:active_subscription)
       end
 
       private

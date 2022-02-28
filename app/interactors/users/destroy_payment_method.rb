@@ -9,6 +9,10 @@ module Users
 
       payment_method_to_delete = payment_methods.find(payment_method_id)
 
+      if payment_method_to_delete.active_subscription
+        raise PaymentMethodHasActiveSubscriptionException
+      end
+
       deleted_was_default = payment_method_to_delete.default
 
       StripeService.destroy_payment_method(payment_method_to_delete.stripe_id)
