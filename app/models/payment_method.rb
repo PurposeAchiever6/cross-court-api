@@ -21,6 +21,14 @@
 class PaymentMethod < ApplicationRecord
   belongs_to :user
 
+  has_many :subscriptions
+  has_one :active_subscription,
+          -> { active.recent },
+          class_name: 'Subscription',
+          inverse_of: :payment_method
+
   validates :default, uniqueness: { scope: :user_id }, if: :default
   validates :user_id, :stripe_id, presence: true
+
+  scope :sorted, -> { order(created_at: :desc) }
 end
