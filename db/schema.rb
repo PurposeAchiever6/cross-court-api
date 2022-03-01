@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 2022_02_27_174421) do
     t.bigint "skill_level_id"
     t.boolean "is_private", default: false
     t.boolean "coming_soon", default: false
+    t.boolean "is_open_club", default: false
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
   end
@@ -333,8 +334,8 @@ ActiveRecord::Schema.define(version: 2022_02_27_174421) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.boolean "private_access", default: false
     t.integer "active_campaign_id"
+    t.boolean "private_access", default: false
     t.date "birthday"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"

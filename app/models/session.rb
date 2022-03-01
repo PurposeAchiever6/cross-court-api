@@ -13,6 +13,7 @@
 #  skill_level_id :integer
 #  is_private     :boolean          default(FALSE)
 #  coming_soon    :boolean          default(FALSE)
+#  is_open_club   :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -104,6 +105,7 @@ class Session < ApplicationRecord
           skill_level_id: skill_level_id,
           skill_level: skill_level,
           is_private: is_private,
+          is_open_club: is_open_club,
           coming_soon: coming_soon
         )
       end
