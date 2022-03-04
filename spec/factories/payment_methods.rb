@@ -18,17 +18,14 @@
 #  index_payment_methods_on_user_id  (user_id)
 #
 
-class PaymentMethod < ApplicationRecord
-  belongs_to :user
-
-  has_many :subscriptions, dependent: :nullify
-  has_one :active_subscription,
-          -> { active.recent },
-          class_name: 'Subscription',
-          inverse_of: :payment_method
-
-  validates :default, uniqueness: { scope: :user_id }, if: :default
-  validates :user_id, :stripe_id, presence: true
-
-  scope :sorted, -> { order(created_at: :desc) }
+FactoryBot.define do
+  factory :payment_method do
+    user
+    stripe_id { 'stripe-payment-method-id' }
+    brand { 'visa' }
+    exp_month { rand(1..12) }
+    exp_year { rand(10.years).seconds.from_now.year }
+    last_4 { rand(0..9999) }
+    default { false }
+  end
 end

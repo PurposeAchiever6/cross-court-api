@@ -45,6 +45,9 @@ en:
         is_not_active: "The subscription is not active"
         is_not_canceled: "The subscription has not been canceled"
         incomplete_status: "Your card was declined. Please change payment method or contact support"
+        has_same_product: "The subscription already has the selected product"
+      payment_methods:
+        has_active_subscription: "The payment method has an active membership"
       users:
         registration:
           communication: Communication error when creating the user. Try again later

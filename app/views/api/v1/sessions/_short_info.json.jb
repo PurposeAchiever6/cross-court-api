@@ -4,6 +4,7 @@
   past: session.past?,
   is_private: session.is_private,
   coming_soon: session.coming_soon,
+  is_open_club: session.is_open_club,
   time: session.time.iso8601,
   reserved: user_sessions.values_at([session.id, session.start_time]).compact.present?,
   on_waitlist: user_sessions_waitlists.values_at([session.id, session.start_time]).compact.present?,

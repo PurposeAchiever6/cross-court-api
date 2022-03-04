@@ -13,6 +13,7 @@
 #  skill_level_id :integer
 #  is_private     :boolean          default(FALSE)
 #  coming_soon    :boolean          default(FALSE)
+#  is_open_club   :boolean          default(FALSE)
 #
 # Indexes
 #

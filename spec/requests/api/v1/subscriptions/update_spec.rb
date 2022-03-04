@@ -45,11 +45,39 @@ describe 'PUT api/v1/subscriptions/:id' do
     end
   end
 
+  context 'when the product is the same as the subscription' do
+    before { params.merge!(product_id: product.id) }
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns the correct error message' do
+      subject
+      expect(json[:error]).to eq('The subscription already has the selected product')
+    end
+  end
+
   context 'when the transaction fails' do
+    let(:stripe_error_msg) { 'Stripe Error' }
+
     before do
-      stub_request(:post, %r{stripe.com/v1/subscriptions/stripe-subscription-id})
-        .to_return(status: 400, body: '{}')
       ActiveCampaignMocker.new.mock
+      expect(Stripe::Subscription).to receive(:update).and_raise(
+        Stripe::StripeError,
+        stripe_error_msg
+      )
+    end
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns the correct error message' do
+      subject
+      expect(json[:error]).to eq(stripe_error_msg)
     end
 
     it "doesn't change the subscription" do

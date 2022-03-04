@@ -5,8 +5,10 @@ module Subscriptions
     def call
       user = context.user
       product = context.product
-      payment_method = user.payment_methods.find(context.payment_method_id)
+      payment_method_id = context.payment_method_id
       promo_code = context.promo_code
+
+      payment_method = user.payment_methods.find(payment_method_id)
 
       if user.active_subscription
         context.fail!(message: I18n.t('api.errors.subscriptions.user_has_active'))
@@ -27,8 +29,12 @@ module Subscriptions
         context.fail!(message: I18n.t('api.errors.subscriptions.incomplete_status'))
       end
 
-      subscription = Subscription.new(user: user, product: product, promo_code: promo_code)
-                                 .assign_stripe_attrs(stripe_subscription)
+      subscription = Subscription.new(
+        user: user,
+        product: product,
+        promo_code: promo_code,
+        payment_method: payment_method
+      ).assign_stripe_attrs(stripe_subscription)
 
       subscription.save!
 

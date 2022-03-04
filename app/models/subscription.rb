@@ -16,20 +16,23 @@
 #  user_id              :integer
 #  product_id           :integer
 #  promo_code_id        :integer
+#  payment_method_id    :integer
 #
 # Indexes
 #
-#  index_subscriptions_on_product_id     (product_id)
-#  index_subscriptions_on_promo_code_id  (promo_code_id)
-#  index_subscriptions_on_status         (status)
-#  index_subscriptions_on_stripe_id      (stripe_id)
-#  index_subscriptions_on_user_id        (user_id)
+#  index_subscriptions_on_payment_method_id  (payment_method_id)
+#  index_subscriptions_on_product_id         (product_id)
+#  index_subscriptions_on_promo_code_id      (promo_code_id)
+#  index_subscriptions_on_status             (status)
+#  index_subscriptions_on_stripe_id          (stripe_id)
+#  index_subscriptions_on_user_id            (user_id)
 #
 
 class Subscription < ApplicationRecord
   belongs_to :user
   belongs_to :product, with_deleted: true
   belongs_to :promo_code, optional: true
+  belongs_to :payment_method
 
   delegate :credits, :name, :unlimited?, to: :product, prefix: false
 

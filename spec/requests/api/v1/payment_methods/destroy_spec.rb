@@ -39,9 +39,23 @@ describe 'DELETE api/v1/payment_methods' do
     let!(:payment_method) { create(:payment_method, user: other_user) }
     let(:payment_method_atts) { { stripe_id: payment_method.stripe_id } }
 
-    it 'returns success' do
+    it 'returns not_found' do
       subject
       expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  context 'when payment method has an active subscription' do
+    let!(:subscription) { create(:subscription, user: user, payment_method: payment_method) }
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns the correct error message' do
+      subject
+      expect(json[:error]).to eq('The payment method has an active membership')
     end
   end
 end
