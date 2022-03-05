@@ -32,7 +32,7 @@ class Subscription < ApplicationRecord
   belongs_to :user
   belongs_to :product, with_deleted: true
   belongs_to :promo_code, optional: true
-  belongs_to :payment_method
+  belongs_to :payment_method, optional: true
 
   delegate :credits, :name, :unlimited?, to: :product, prefix: false
 
