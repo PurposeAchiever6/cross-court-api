@@ -119,6 +119,13 @@ class StripeService
     Stripe::Subscription.update(subscription_stripe_id, subscription_params)
   end
 
+  def self.update_subscription_payment_method(subscription, payment_method)
+    Stripe::Subscription.update(
+      subscription.stripe_id,
+      default_payment_method: payment_method.stripe_id
+    )
+  end
+
   def self.retrieve_subscription(stripe_subscription_id)
     Stripe::Subscription.retrieve(stripe_subscription_id)
   end

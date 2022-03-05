@@ -29,7 +29,7 @@ describe Subscriptions::CreateSubscription do
       Subscriptions::CreateSubscription.call(
         user: user,
         product: product,
-        payment_method_id: payment_method.id,
+        payment_method: payment_method,
         promo_code: promo_code
       )
     end

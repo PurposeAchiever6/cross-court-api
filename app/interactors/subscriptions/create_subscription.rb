@@ -5,10 +5,8 @@ module Subscriptions
     def call
       user = context.user
       product = context.product
-      payment_method_id = context.payment_method_id
+      payment_method = context.payment_method
       promo_code = context.promo_code
-
-      payment_method = user.payment_methods.find(payment_method_id)
 
       if user.active_subscription
         context.fail!(message: I18n.t('api.errors.subscriptions.user_has_active'))
