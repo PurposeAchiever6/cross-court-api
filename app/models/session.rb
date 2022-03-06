@@ -2,18 +2,19 @@
 #
 # Table name: sessions
 #
-#  id             :integer          not null, primary key
-#  start_time     :date             not null
-#  recurring      :text
-#  time           :time             not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  location_id    :integer          not null
-#  end_time       :date
-#  skill_level_id :integer
-#  is_private     :boolean          default(FALSE)
-#  coming_soon    :boolean          default(FALSE)
-#  is_open_club   :boolean          default(FALSE)
+#  id               :integer          not null, primary key
+#  start_time       :date             not null
+#  recurring        :text
+#  time             :time             not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  location_id      :integer          not null
+#  end_time         :date
+#  skill_level_id   :integer
+#  is_private       :boolean          default(FALSE)
+#  coming_soon      :boolean          default(FALSE)
+#  is_open_club     :boolean          default(FALSE)
+#  duration_minutes :integer          default(60)
 #
 # Indexes
 #
@@ -45,7 +46,7 @@ class Session < ApplicationRecord
   has_many :sem_sessions, dependent: :nullify
   has_many :user_session_waitlists, dependent: :destroy
 
-  validates :start_time, :time, presence: true
+  validates :start_time, :time, :duration_minutes, presence: true
   validates :end_time,
             absence: { message: 'must be blank if session is not recurring' },
             if: -> { recurring.empty? }
@@ -100,6 +101,7 @@ class Session < ApplicationRecord
           id: id,
           start_time: date,
           time: time,
+          duration_minutes: duration_minutes,
           location_id: location_id,
           location: location,
           skill_level_id: skill_level_id,

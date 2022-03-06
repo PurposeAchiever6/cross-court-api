@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_27_174421) do
+ActiveRecord::Schema.define(version: 2022_03_06_163614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -222,6 +222,7 @@ ActiveRecord::Schema.define(version: 2022_02_27_174421) do
     t.boolean "is_private", default: false
     t.boolean "coming_soon", default: false
     t.boolean "is_open_club", default: false
+    t.integer "duration_minutes", default: 60
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
   end
@@ -334,8 +335,8 @@ ActiveRecord::Schema.define(version: 2022_02_27_174421) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.integer "active_campaign_id"
     t.boolean "private_access", default: false
+    t.integer "active_campaign_id"
     t.date "birthday"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"

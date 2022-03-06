@@ -2,18 +2,19 @@
 #
 # Table name: sessions
 #
-#  id             :integer          not null, primary key
-#  start_time     :date             not null
-#  recurring      :text
-#  time           :time             not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  location_id    :integer          not null
-#  end_time       :date
-#  skill_level_id :integer
-#  is_private     :boolean          default(FALSE)
-#  coming_soon    :boolean          default(FALSE)
-#  is_open_club   :boolean          default(FALSE)
+#  id               :integer          not null, primary key
+#  start_time       :date             not null
+#  recurring        :text
+#  time             :time             not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  location_id      :integer          not null
+#  end_time         :date
+#  skill_level_id   :integer
+#  is_private       :boolean          default(FALSE)
+#  coming_soon      :boolean          default(FALSE)
+#  is_open_club     :boolean          default(FALSE)
+#  duration_minutes :integer          default(60)
 #
 # Indexes
 #
@@ -28,8 +29,9 @@ FactoryBot.define do
     location
     skill_level
     start_time { los_angeles_time.to_date }
-    time       { los_angeles_time + 1.minute }
+    time { los_angeles_time + 1.minute }
     is_private { false }
+    duration_minutes { 60 }
 
     trait :daily do
       recurring { IceCube::Rule.daily }
