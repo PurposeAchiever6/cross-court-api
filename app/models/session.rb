@@ -59,6 +59,8 @@ class Session < ApplicationRecord
 
   after_update :remove_orphan_sessions
 
+  alias_attribute :open_club?, :is_open_club
+
   scope :visible_for, ->(user) { where(is_private: false) unless user&.private_access }
 
   scope :for_range, (lambda do |start_date, end_date|

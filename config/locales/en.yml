@@ -34,8 +34,6 @@ en:
       free_session: "Free session already claimed"
       legal: "Invalid param"
       invalid_date_format: "The date value format is invalid"
-      session:
-        full: "Session is full"
       promo_code:
         invalid: "Invalid promo code"
         no_longer_valid: "Promo code is no longer valid"
@@ -55,6 +53,8 @@ en:
           price_not_positive: "Price should be greater than 0"
           missing_payment_method: "The user does not have a saved credit card to be charged"
       sessions:
+        full: "Session is full"
+        is_open_club: "Can not reserve session for open club"
         invalid_date: "The date is not valid for the requested session"
       waitlists:
         user_not_in_waitlist: "The user is not in the waitlist"

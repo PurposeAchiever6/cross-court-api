@@ -25,6 +25,7 @@ module Api
       rescue_from SubscriptionHasSameProductException,         with: :render_custom_exception
       rescue_from PaymentMethodHasActiveSubscriptionException, with: :render_custom_exception
       rescue_from SubscriptionIsNotActiveException,            with: :render_custom_exception
+      rescue_from SessionIsOpenClubException,                  with: :render_custom_exception
       rescue_from Stripe::StripeError,                         with: :render_custom_exception
 
       def status

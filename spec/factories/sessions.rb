@@ -32,6 +32,7 @@ FactoryBot.define do
     time { los_angeles_time + 1.minute }
     is_private { false }
     duration_minutes { 60 }
+    is_open_club { false }
 
     trait :daily do
       recurring { IceCube::Rule.daily }
