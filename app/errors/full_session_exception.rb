@@ -1,5 +1,7 @@
 class FullSessionException < StandardError
-  def initialize(message)
+  def initialize(message = nil)
+    message ||= I18n.t('api.errors.sessions.full')
+
     super(message)
   end
 end

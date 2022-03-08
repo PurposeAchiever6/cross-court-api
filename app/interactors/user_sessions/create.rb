@@ -10,7 +10,8 @@ module UserSessions
       not_charge_user_credit = context.not_charge_user_credit || false
       from_waitlist = context.from_waitlist || false
 
-      raise FullSessionException, I18n.t('api.errors.session.full') if session.full?(date)
+      raise SessionIsOpenClubException if session.open_club?
+      raise FullSessionException if session.full?(date)
 
       user_session =
         ActiveRecord::Base.transaction do

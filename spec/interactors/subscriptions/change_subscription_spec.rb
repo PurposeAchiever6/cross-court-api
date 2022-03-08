@@ -41,7 +41,7 @@ describe Subscriptions::ChangeSubscription do
         user: user,
         subscription: active_subscription,
         product: new_product,
-        payment_method_id: new_payment_method.id,
+        payment_method: new_payment_method,
         promo_code: promo_code
       )
     end

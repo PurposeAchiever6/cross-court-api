@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UserSessions::Create do
   describe '.call' do
-    let!(:session) { create(:session, :daily, time: session_time) }
+    let!(:session) { create(:session, :daily, time: session_time, is_open_club: is_open_club) }
     let!(:user) do
       create(
         :user,
@@ -12,6 +12,7 @@ describe UserSessions::Create do
       )
     end
 
+    let(:is_open_club) { false }
     let(:credits) { 1 }
     let(:subscription_credits) { 0 }
     let(:free_session_state) { :used }
@@ -92,6 +93,13 @@ describe UserSessions::Create do
         it { expect { subject rescue nil }.not_to change(UserSession, :count) }
         it { expect { subject }.to raise_error(FullSessionException, 'Session is full') }
       end
+    end
+
+    context 'when session is open club' do
+      let(:is_open_club) { true }
+
+      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+      it { expect { subject }.to raise_error(SessionIsOpenClubException) }
     end
 
     context 'when invalid date' do

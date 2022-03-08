@@ -5,7 +5,7 @@ module Api
         result = Subscriptions::PlaceSubscription.call(
           product: product,
           user: current_user,
-          payment_method_id: payment_method_id,
+          payment_method: payment_method,
           promo_code: promo_code
         )
 
@@ -34,7 +34,7 @@ module Api
           user: current_user,
           subscription: subscription,
           product: product,
-          payment_method_id: payment_method_id,
+          payment_method: payment_method,
           promo_code: promo_code
         )
 
@@ -45,10 +45,20 @@ module Api
 
       def reactivate
         result = Subscriptions::SubscriptionReactivation.call(
-          user: current_user, subscription: subscription
+          user: current_user,
+          subscription: subscription
         )
 
         raise SubscriptionException, result.message unless result.success?
+
+        @subscription = result.subscription
+      end
+
+      def change_payment_method
+        result = Subscriptions::ChangePaymentMethod.call(
+          subscription: subscription,
+          payment_method: payment_method
+        )
 
         @subscription = result.subscription
       end
@@ -63,8 +73,8 @@ module Api
         PromoCode.find_by(code: params[:promo_code])
       end
 
-      def payment_method_id
-        params.require(:payment_method_id)
+      def payment_method
+        current_user.payment_methods.find(params[:payment_method_id])
       end
 
       def subscription

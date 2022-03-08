@@ -2,6 +2,7 @@ json = {
   id: session.id,
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
+  duration_minutes: session.duration_minutes,
   is_private: session.is_private,
   coming_soon: session.coming_soon,
   is_open_club: session.is_open_club,

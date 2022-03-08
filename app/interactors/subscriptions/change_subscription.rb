@@ -3,18 +3,15 @@ module Subscriptions
     include Interactor
 
     def call
-      user = context.user
       subscription = context.subscription
       product = context.product
-      payment_method_id = context.payment_method_id
+      payment_method = context.payment_method
       promo_code = context.promo_code
 
       old_product = subscription.product
       old_promo_code = subscription.promo_code
 
       raise SubscriptionHasSameProductException if old_product == product
-
-      payment_method = user.payment_methods.find(payment_method_id)
 
       stripe_subscription = StripeService.update_subscription(
         subscription,
@@ -25,7 +22,7 @@ module Subscriptions
 
       subscription = subscription.assign_stripe_attrs(stripe_subscription)
 
-      subscription.payment_method_id = payment_method_id
+      subscription.payment_method_id = payment_method.id
       subscription.product_id = product.id
       subscription.promo_code_id = promo_code&.id
 

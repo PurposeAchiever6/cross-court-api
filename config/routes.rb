@@ -58,7 +58,10 @@ Rails.application.routes.draw do
           post :answers, on: :collection
         end
         resources :subscriptions, except: %i[show new edit] do
-          post :reactivate, on: :member
+          member do
+            post :reactivate
+            post :payment_method, action: :change_payment_method
+          end
         end
         namespace :active_campaign do
           resources :deals, only: %i[create]
