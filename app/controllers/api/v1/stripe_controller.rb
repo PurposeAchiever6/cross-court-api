@@ -61,6 +61,9 @@ module Api
       def update_database_subscription(stripe_subscription)
         subscription = Subscription.find_by!(stripe_id: stripe_subscription.id)
         subscription.assign_stripe_attrs(stripe_subscription)
+        if stripe_subscription.discount.nil? && subscription.promo_code.present?
+          subscription.promo_code = nil
+        end
         subscription.save!
       end
     end
