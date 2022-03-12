@@ -32,6 +32,7 @@ class Product < ApplicationRecord
   has_one_attached :image
   has_many :purchases, dependent: :nullify
 
+  has_many :subscriptions
   has_many :products_promo_codes, dependent: :destroy
   has_many :promo_codes, through: :products_promo_codes
 
@@ -42,7 +43,7 @@ class Product < ApplicationRecord
   end
 
   def memberships_count
-    Subscription.joins(:user).where(product_id: id, status: :active).count
+    subscriptions.active.count
   end
 
   def price(user = nil)

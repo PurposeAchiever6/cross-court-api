@@ -29,7 +29,7 @@ class UserSession < ApplicationRecord
   enum state: { reserved: 0, canceled: 1, confirmed: 2 }
 
   belongs_to :user
-  belongs_to :session
+  belongs_to :session, -> { with_deleted }, inverse_of: :user_sessions
 
   belongs_to :referral,
              class_name: 'User',

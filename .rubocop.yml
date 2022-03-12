@@ -118,6 +118,8 @@ Rails/HasManyOrHasOneDependent:
   Exclude:
     - app/models/location.rb
     - app/models/skill_level.rb
+    - app/models/session.rb
+    - app/models/product.rb
 
 Rails/NotNullColumn:
   Exclude:

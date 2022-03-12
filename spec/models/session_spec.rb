@@ -15,9 +15,11 @@
 #  coming_soon      :boolean          default(FALSE)
 #  is_open_club     :boolean          default(FALSE)
 #  duration_minutes :integer          default(60)
+#  deleted_at       :datetime
 #
 # Indexes
 #
+#  index_sessions_on_deleted_at      (deleted_at)
 #  index_sessions_on_location_id     (location_id)
 #  index_sessions_on_skill_level_id  (skill_level_id)
 #
@@ -129,5 +131,94 @@ describe Session do
     subject { session.reservations_count(date) }
 
     it { is_expected.to eq(11) }
+  end
+
+  describe '#destroy' do
+    let!(:session) { create(:session, :daily) }
+    let!(:yesterday_sem_session) do
+      create(:sem_session, session: session, date: los_angeles_date.yesterday)
+    end
+    let!(:tomorrow_sem_session) do
+      create(:sem_session, session: session, date: los_angeles_date.tomorrow)
+    end
+    let!(:yesterday_referee_session) do
+      create(:referee_session, session: session, date: los_angeles_date.yesterday)
+    end
+    let!(:tomorrow_referee_session) do
+      create(:referee_session, session: session, date: los_angeles_date.tomorrow)
+    end
+
+    subject { session.destroy }
+
+    it { is_expected.to eq(session) }
+
+    it 'do not delete the past sem session' do
+      subject
+      expect(yesterday_sem_session.reload).to eq(yesterday_sem_session)
+    end
+
+    it 'do not delete the past referee session' do
+      subject
+      expect(yesterday_referee_session.reload).to eq(yesterday_referee_session)
+    end
+
+    it 'deletes the future sem session' do
+      subject
+      expect { tomorrow_sem_session.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'deletes the future referee session' do
+      subject
+      expect { tomorrow_referee_session.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    context 'when it has a future user session' do
+      let(:state) { %i[reserved confirmed].sample }
+      let!(:user_session) do
+        create(
+          :user_session,
+          session: session,
+          date: los_angeles_date.tomorrow,
+          state: state
+        )
+      end
+
+      it { is_expected.to eq(false) }
+
+      it 'do not delete the future sem session' do
+        subject
+        expect(tomorrow_sem_session.reload).to eq(tomorrow_sem_session)
+      end
+
+      it 'do not delete the future referee session' do
+        subject
+        expect(tomorrow_referee_session.reload).to eq(tomorrow_referee_session)
+      end
+
+      it 'adds the right error message to the session' do
+        subject
+        expect(session.errors.full_messages.first).to eq(
+          'The session has future user sessions reservations'
+        )
+      end
+
+      context 'when the user session has been cancelled' do
+        let(:state) { :canceled }
+
+        it { is_expected.to eq(session) }
+      end
+    end
+
+    context 'when it has a past user session' do
+      let!(:user_session) do
+        create(
+          :user_session,
+          session: session,
+          date: los_angeles_date.yesterday
+        )
+      end
+
+      it { is_expected.to eq(session) }
+    end
   end
 end

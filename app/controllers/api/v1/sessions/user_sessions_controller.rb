@@ -8,7 +8,7 @@ module Api
                    .user_sessions
                    .by_date(date)
                    .checked_in
-                   .includes(user: { image_attachment: :blob })
+                   .includes(:session, user: { image_attachment: :blob })
                    .order(:created_at)
         end
 
