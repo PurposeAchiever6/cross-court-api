@@ -20,6 +20,7 @@ module ActiveCampaign
       SESSION_LOCATION_ADDRESS = 'Session Location Address'.freeze
       SESSION_LOCATION_NAME = 'Session Location Name'.freeze
       SESSION_TIME = 'Session Time'.freeze
+      SUBSCRIPTION_NAME = 'Subscription Name'.freeze
       UNLIMITED_CREDITS = 'Unlimited Credits'.freeze
     end
   end

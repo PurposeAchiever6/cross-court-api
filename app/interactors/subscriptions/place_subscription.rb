@@ -7,6 +7,7 @@ module Subscriptions
              Subscriptions::UpdateUserSubscriptionCredits,
              IncrementTimesUsedPromoCode,
              CreateUserPromoCode,
-             SendPurchasePlacedEvent
+             Events::PurchasePlaced,
+             Events::NewMember
   end
 end

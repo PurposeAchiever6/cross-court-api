@@ -25,7 +25,8 @@ module Api
             ResendVerificationEmailJob.set(wait: 24.hours).perform_later(user_id)
           end
         end
-      rescue StandardError
+      rescue StandardError => e
+        Rollbar.error(e)
         render_error(:conflict, I18n.t('api.errors.users.registration.communication'))
       end
 

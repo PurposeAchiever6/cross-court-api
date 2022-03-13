@@ -35,7 +35,9 @@ describe 'POST api/v1/subscriptions' do
     end
 
     it 'calls the Active Campaign service' do
-      expect { subject }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default')
+      expect {
+        subject
+      }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).exactly(:twice).on_queue('default')
     end
   end
 

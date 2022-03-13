@@ -8,5 +8,5 @@ class PlacePurchase
            IncrementTimesUsedPromoCode,
            CreateUserPromoCode,
            SetDropInExpirationDate,
-           SendPurchasePlacedEvent
+           Events::PurchasePlaced
 end
