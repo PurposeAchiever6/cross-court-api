@@ -2,5 +2,6 @@
   id: session_survey_question.id,
   question: session_survey_question.question,
   is_enabled: session_survey_question.is_enabled,
-  is_mandatory: session_survey_question.is_mandatory
+  is_mandatory: session_survey_question.is_mandatory,
+  type: session_survey_question.type
 }

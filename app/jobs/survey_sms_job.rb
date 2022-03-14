@@ -6,7 +6,7 @@ class SurveySmsJob < ApplicationJob
       user = user_session.user
       SonarService.send_message(user, I18n.t('notifier.sonar.survey_reminder',
                                              name: user.first_name,
-                                             survey_link: "#{ENV['FRONTENT_URL']}/survey"))
+                                             survey_link: "#{ENV['FRONTENT_URL']}?openSurvey=true"))
     end
   end
 end

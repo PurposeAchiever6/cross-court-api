@@ -59,7 +59,7 @@ describe SurveySmsJob do
       I18n.t(
         'notifier.sonar.survey_reminder',
         name: user_session_1.user.first_name,
-        survey_link: "#{ENV['FRONTENT_URL']}/survey"
+        survey_link: "#{ENV['FRONTENT_URL']}?openSurvey=true"
       )
     end
 
@@ -67,7 +67,7 @@ describe SurveySmsJob do
       I18n.t(
         'notifier.sonar.survey_reminder',
         name: user_session_2.user.first_name,
-        survey_link: "#{ENV['FRONTENT_URL']}/survey"
+        survey_link: "#{ENV['FRONTENT_URL']}?openSurvey=true"
       )
     end
 
