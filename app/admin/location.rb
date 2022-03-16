@@ -30,6 +30,17 @@ ActiveAdmin.register Location do
     column :time_zone
     column :address
     column :state
+    column :images do |location|
+      if location.images.attached?
+        div class: 'flex' do
+          location.images.includes(:blob).each do |location_img|
+            div class: 'mr-2' do
+              image_tag location_img, class: 'mw-200px'
+            end
+          end
+        end
+      end
+    end
 
     actions
   end

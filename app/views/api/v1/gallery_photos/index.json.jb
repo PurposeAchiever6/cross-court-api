@@ -1,0 +1,3 @@
+{
+  gallery_photos: render(partial: 'info', collection: @gallery_photos, as: :gallery_photo)
+}
