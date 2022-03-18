@@ -60,7 +60,7 @@ module Api
       end
 
       def selected_session
-        @selected_session ||= Session.find(params[:id]).decorate
+        @selected_session ||= Session.with_deleted.find(params[:id]).decorate
       end
 
       def referee

@@ -11,6 +11,7 @@ module ActiveCampaign
       FREE_LOADERS = 'Free Loaders'.freeze
       FREE_SESSION_CHECK_IN = 'Free Session Check In'.freeze
       FREE_SESSION_NO_SHOW = 'Free Session No Show'.freeze
+      NEW_MEMBER = 'New Member'.freeze
       PURCHASE_PLACED = 'Purchase Placed'.freeze
       REFERRAL_SUCCESS = 'Referral Success'.freeze
       RE_CONFIRMATION_INSTRUCTIONS = 'Re Confirmation Instructions'.freeze

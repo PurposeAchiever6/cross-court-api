@@ -293,6 +293,13 @@ class ActiveCampaignService
             fieldValue: arg[:value]
           }
         end
+      when ::ActiveCampaign::Deal::Event::NEW_MEMBER
+        [
+          {
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::SUBSCRIPTION_NAME],
+            fieldValue: args[:subscription_name]
+          }
+        ]
       else
         []
       end

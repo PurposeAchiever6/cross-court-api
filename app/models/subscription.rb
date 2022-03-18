@@ -30,7 +30,7 @@
 
 class Subscription < ApplicationRecord
   belongs_to :user
-  belongs_to :product, with_deleted: true
+  belongs_to :product, -> { with_deleted }, inverse_of: :subscriptions
   belongs_to :promo_code, optional: true
   belongs_to :payment_method, optional: true
 

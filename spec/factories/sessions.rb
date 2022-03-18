@@ -15,9 +15,11 @@
 #  coming_soon      :boolean          default(FALSE)
 #  is_open_club     :boolean          default(FALSE)
 #  duration_minutes :integer          default(60)
+#  deleted_at       :datetime
 #
 # Indexes
 #
+#  index_sessions_on_deleted_at      (deleted_at)
 #  index_sessions_on_location_id     (location_id)
 #  index_sessions_on_skill_level_id  (skill_level_id)
 #

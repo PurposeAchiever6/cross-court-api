@@ -2,6 +2,10 @@ ActiveAdmin.register Product do
   permit_params :name, :credits, :price, :price_for_members, :order_number, :image, :label,
                 :product_type
 
+  filter :name
+  filter :product_type
+  filter :price
+
   scope :all, default: true
   scope 'Deleted', :only_deleted
 
@@ -23,7 +27,7 @@ ActiveAdmin.register Product do
       product.recurring? ? product.memberships_count : 'N/A'
     end
 
-    if params['scope'] == 'deletes'
+    if params['scope'] == 'deleted'
       column do |product|
         link_to 'Recover', recover_admin_product_path(product), method: :post
       end

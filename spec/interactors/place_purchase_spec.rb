@@ -10,7 +10,7 @@ describe PlacePurchase do
     allow_any_instance_of(ChargeCard).to receive(:call)
     allow_any_instance_of(CreatePurchase).to receive(:call)
     allow_any_instance_of(IncrementUserCredits).to receive(:call)
-    allow_any_instance_of(SendPurchasePlacedEvent).to receive(:call)
+    allow_any_instance_of(Events::PurchasePlaced).to receive(:call)
     allow_any_instance_of(CreateUserPromoCode).to receive(:call)
     allow_any_instance_of(SetDropInExpirationDate).to receive(:call)
   end
@@ -35,8 +35,8 @@ describe PlacePurchase do
     subject
   end
 
-  it 'calls the SendPurchasePlacedEvent interactor' do
-    expect_any_instance_of(SendPurchasePlacedEvent).to receive(:call)
+  it 'calls the Events::PurchasePlaced interactor' do
+    expect_any_instance_of(Events::PurchasePlaced).to receive(:call)
     subject
   end
 

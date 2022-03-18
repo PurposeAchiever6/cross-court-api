@@ -15,9 +15,11 @@
 #  coming_soon      :boolean          default(FALSE)
 #  is_open_club     :boolean          default(FALSE)
 #  duration_minutes :integer          default(60)
+#  deleted_at       :datetime
 #
 # Indexes
 #
+#  index_sessions_on_deleted_at      (deleted_at)
 #  index_sessions_on_location_id     (location_id)
 #  index_sessions_on_skill_level_id  (skill_level_id)
 #
@@ -32,24 +34,26 @@ class Session < ApplicationRecord
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
   MAX_CAPACITY = ENV['MAX_CAPACITY'].to_i.freeze
 
+  acts_as_paranoid
+
   attr_accessor :employees_assigned
 
   serialize :recurring, Hash
 
-  belongs_to :location, with_deleted: true
+  belongs_to :location, -> { with_deleted }, inverse_of: :sessions
   belongs_to :skill_level
 
-  has_many :user_sessions, dependent: :destroy
+  has_many :user_sessions
+  has_many :referee_sessions
+  has_many :sem_sessions
+  has_many :user_session_waitlists
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
-  has_many :referee_sessions, dependent: :nullify
-  has_many :sem_sessions, dependent: :nullify
-  has_many :user_session_waitlists, dependent: :destroy
 
   validates :start_time, :time, :duration_minutes, presence: true
   validates :end_time,
             absence: { message: 'must be blank if session is not recurring' },
-            if: -> { recurring.empty? }
+            if: -> { single_occurrence? }
 
   delegate :name, :description, :time_zone, to: :location, prefix: true
   delegate :address, :time_zone, to: :location
@@ -58,6 +62,7 @@ class Session < ApplicationRecord
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 
   after_update :remove_orphan_sessions
+  before_destroy :check_for_future_user_sessions
 
   alias_attribute :open_club?, :is_open_club
 
@@ -94,7 +99,7 @@ class Session < ApplicationRecord
   end
 
   def calendar_events(start_date, end_date)
-    if recurring.empty?
+    if single_occurrence?
       self.employees_assigned = referee_sessions.present? && sem_sessions.present?
       [self]
     else
@@ -141,7 +146,7 @@ class Session < ApplicationRecord
   end
 
   def invalid_date?(date)
-    no_session_for_date = if recurring.empty?
+    no_session_for_date = if single_occurrence?
                             start_time != date
                           else
                             calendar_events(date, date).empty?
@@ -158,11 +163,35 @@ class Session < ApplicationRecord
     current_time > session_time
   end
 
+  def active?
+    current_date = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone)).to_date
+
+    if single_occurrence?
+      current_date <= start_time
+    else
+      end_time ? current_date <= end_time : true
+    end
+  end
+
+  def single_occurrence?
+    !recurring?
+  end
+
   private
 
   def remove_orphan_sessions
     return unless saved_change_to_recurring? || saved_change_to_end_time?
 
     RemoveOrphanSessions.call(session: self)
+  end
+
+  def check_for_future_user_sessions
+    if user_sessions.future.not_canceled.exists?
+      errors.add(:base, 'The session has future user sessions reservations')
+      throw(:abort)
+    else
+      referee_sessions.future.destroy_all
+      sem_sessions.future.destroy_all
+    end
   end
 end

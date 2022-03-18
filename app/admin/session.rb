@@ -1,10 +1,11 @@
 ActiveAdmin.register Session do
-  actions :all, except: :destroy
-
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :duration_minutes,
                 session_exceptions_attributes: %i[id date _destroy]
   includes :location, :session_exceptions, :skill_level
+
+  scope :all, default: true
+  scope 'Deleted', :only_deleted
 
   form do |f|
     f.inputs 'Session Details' do
@@ -45,11 +46,12 @@ ActiveAdmin.register Session do
     column :duration do |session|
       "#{session.duration_minutes} mins"
     end
+    column :active, &:active?
     column :is_private
     column :is_open_club
     column :coming_soon
 
-    actions
+    actions unless params['scope'] == 'deleted'
   end
 
   show title: proc { |session|
@@ -159,6 +161,20 @@ ActiveAdmin.register Session do
           users_for_select: users_for_select
         }
       end
+    end
+  end
+
+  controller do
+    def destroy
+      session = Session.find(params[:id])
+
+      if session.destroy
+        flash[:notice] = 'Session successfully destroyed'
+      else
+        flash[:error] = session.errors.full_messages
+      end
+
+      redirect_to admin_sessions_path
     end
   end
 
