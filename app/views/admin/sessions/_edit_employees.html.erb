@@ -1,22 +1,17 @@
-<%= form_with(url: assign_employees_admin_session_path(id: resource.id, date: date), method: :put, local: true) do %>
-  <table>
-    <tr>
-      <td>
-        <b>Referee</b>
-      </td>
-      <td>
-        <%= select_tag(:referee_id, options_from_collection_for_select(User.referees, 'id', 'full_name', referee&.id), include_blank: true) %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <b>SEM</b>
-      </td>
-      <td>
-        <%= select_tag(:sem_id, options_from_collection_for_select(User.sems, 'id', 'full_name', sem&.id), include_blank: true) %>
-      </td>
-    </tr>
-  </table>
-  <br>
-  <%= submit_tag('Assign') %>
+<%= form_with url: assign_employees_admin_session_path(id: resource.id, date: date),
+              method: :put,
+              local: true do %>
+  <div class='mb-3'>
+    <%= label_tag :referee_id, 'Referee', class: 'inline-block w-12 mr-2 ' %>
+    <%= select_tag :referee_id,
+                  options_from_collection_for_select(User.referees, 'id', 'full_name', referee&.id),
+                  include_blank: true %>
+  </div>
+  <div class='mb-6'>
+    <%= label_tag :sem_id, 'SEM', class: 'inline-block w-12 mr-2' %>
+    <%= select_tag :sem_id,
+                  options_from_collection_for_select(User.sems, 'id', 'full_name', sem&.id),
+                  include_blank: true %>
+  </div>
+  <%= submit_tag 'Assign' %>
 <% end %>

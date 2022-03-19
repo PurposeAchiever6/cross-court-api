@@ -87,7 +87,7 @@ ActiveAdmin.register User do
       row :last_name
       row :birthday
       row :image do
-        image_tag url_for(user.image), class: 'mw-200px' if user.image.attached?
+        image_tag url_for(user.image), class: 'max-w-200' if user.image.attached?
       end
       row :phone_number
       row :membership

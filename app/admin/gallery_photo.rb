@@ -12,7 +12,7 @@ ActiveAdmin.register GalleryPhoto do
   index do
     selectable_column
     column :image do |gallery_photo|
-      image_tag url_for(gallery_photo.image), class: 'mh-100px' if gallery_photo.image.attached?
+      image_tag url_for(gallery_photo.image), class: 'max-h-100' if gallery_photo.image.attached?
     end
     column :created_at
 
@@ -23,7 +23,7 @@ ActiveAdmin.register GalleryPhoto do
     attributes_table do
       row :id
       row :image do |gallery_photo|
-        image_tag url_for(gallery_photo.image), class: 'mh-100px' if gallery_photo.image.attached?
+        image_tag url_for(gallery_photo.image), class: 'max-h-100' if gallery_photo.image.attached?
       end
       row :created_at
     end

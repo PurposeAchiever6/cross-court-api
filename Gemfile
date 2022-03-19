@@ -39,6 +39,7 @@ gem 'stripe', '~> 5.21'
 gem 'webpacker', '~> 4.0'
 gem 'sprockets', '~> 3.7.2'
 gem 'rollbar'
+gem 'activeadmin_addons'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
