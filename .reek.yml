@@ -29,6 +29,7 @@ detectors:
         "RefereeSessionRemindersJob#perform",
         "UserSessionRemindersJob#perform",
         "SonarService#message_received",
+        "SonarService#handle_employee_confirmation",
         "EmployeeSessionsQuery#sorted_future_sessions",
         "Subscription#assign_stripe_attrs",
         "CreditsJob#perform",

@@ -23,62 +23,70 @@ module SonarService
   end
 
   def message_received(user, message)
-    message = message.downcase.strip
-
-    if positive_message?(message)
-      user_session = find_and_confirm_next(user)
-      if user_session.present?
-        send_message(user, confirmation_msg(user, user_session))
-      else
-        send_message(user, I18n.t('notifier.sonar.no_session_booked'))
-      end
-    elsif negative_message?(message)
-      user_session = find_and_cancel_user_session(user)
-      if user_session.present?
-        send_message(user, cancellation_msg)
-      else
-        send_message(user, I18n.t('notifier.sonar.no_session_booked'))
-      end
+    case
+    when positive_message?(message) && user.employee?
+      handle_employee_confirmation(user)
+    when positive_message?(message)
+      handle_user_confirmation(user)
+    when negative_message?(message)
+      handle_user_cancelation(user)
     else
       send_message(user, I18n.t('notifier.sonar.unreadable_text'))
     end
   end
 
   def positive_message?(message)
-    %w[yes y].include?(message)
+    %w[yes y].include?(message.downcase.strip)
   end
 
   def negative_message?(message)
-    %w[no n].include?(message)
+    %w[no n].include?(message.downcase.strip)
   end
 
-  def find_and_confirm_user_session(user)
-    user_session = user.user_sessions.future.reserved.ordered_by_date.first
+  def handle_user_confirmation(user)
+    future_user_sessions = user.user_sessions.future
 
-    return unless user_session
+    if future_user_sessions.not_canceled.empty?
+      send_message(user, I18n.t('notifier.sonar.no_session_booked'))
+    end
 
-    UserSessionConfirmed.new(user_session).save!
+    user_session = future_user_sessions.reserved.ordered_by_date.first
+
+    if user_session
+      UserSessionConfirmed.new(user_session).save!
+      send_message(user, confirmation_msg(user, user_session))
+    else
+      send_message(user, I18n.t('notifier.sonar.no_reserved_session'))
+    end
   end
 
-  def find_and_confirm_employee_session(user)
-    EmployeeSessionConfirmed.new(user).save!
-  end
-
-  def find_and_cancel_user_session(user)
+  def handle_user_cancelation(user)
     user_session = user.user_sessions.future.not_canceled.ordered_by_date.first
 
-    return unless user_session
-
-    CanceledUserSession.new(user_session).save!
-    user_session
+    if user_session
+      CanceledUserSession.new(user_session).save!
+      send_message(user, cancellation_msg)
+    else
+      send_message(user, I18n.t('notifier.sonar.no_session_booked'))
+    end
   end
 
-  def find_and_confirm_next(user)
-    user_session = find_and_confirm_user_session(user)
+  def handle_employee_confirmation(user)
+    user_session = user.user_sessions.future.reserved.ordered_by_date.first
 
-    return user_session if user_session
+    if user_session
+      UserSessionConfirmed.new(user_session).save!
+      send_message(user, confirmation_msg(user, user_session))
+      return
+    end
 
-    find_and_confirm_employee_session(user) if user.employee?
+    employee_session = EmployeeSessionConfirmed.new(user).save!
+
+    if employee_session
+      send_message(user, confirmation_msg(user, employee_session))
+    else
+      send_message(user, I18n.t('notifier.sonar.no_employee_session'))
+    end
   end
 
   def invite_friend(user_session)
