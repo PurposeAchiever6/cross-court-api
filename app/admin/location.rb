@@ -35,7 +35,7 @@ ActiveAdmin.register Location do
         div class: 'flex' do
           location.images.includes(:blob).each do |location_img|
             div class: 'mr-2' do
-              image_tag location_img, class: 'mw-200px'
+              image_tag location_img, class: 'max-w-200'
             end
           end
         end
