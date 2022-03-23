@@ -2,7 +2,16 @@ ActiveAdmin.register Session do
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :duration_minutes,
                 session_exceptions_attributes: %i[id date _destroy]
+
   includes :location, :session_exceptions, :skill_level
+
+  filter :location
+  filter :skill_level
+  filter :start_time
+  filter :end_time
+  filter :is_private
+  filter :is_open_club
+  filter :coming_soon
 
   scope :all, default: true
   scope 'Deleted', :only_deleted
@@ -24,7 +33,13 @@ ActiveAdmin.register Session do
               input_html: { autocomplete: :off }
       f.input :time
       f.input :duration_minutes
-      f.select_recurring :recurring, nil, allow_blank: true
+      li do
+        f.label 'Schedule'
+        f.select_recurring :recurring, nil,
+                           { allow_blank: true },
+                           data: { select2: false },
+                           class: 'w-40 p-2 border-gray-300 rounded'
+      end
       f.has_many :session_exceptions, allow_destroy: true do |p|
         p.input :date, as: :datepicker, input_html: { autocomplete: :off }
       end
@@ -47,9 +62,9 @@ ActiveAdmin.register Session do
       "#{session.duration_minutes} mins"
     end
     column :active, &:active?
-    column :is_private
-    column :is_open_club
-    column :coming_soon
+    toggle_bool_column :is_private
+    toggle_bool_column :is_open_club
+    toggle_bool_column :coming_soon
 
     actions unless params['scope'] == 'deleted'
   end

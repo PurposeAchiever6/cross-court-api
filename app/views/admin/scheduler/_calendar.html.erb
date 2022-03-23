@@ -1,15 +1,22 @@
-<%= form_with(url: admin_scheduler_path, method: :get, local: true) do %>
-  <%= label_tag(:location, 'Filter by location:') %>
-  <%= select_tag(:location, options_from_collection_for_select(locations, 'id', 'name', selected_location), include_blank: true) %>
-  <%= submit_tag('Filter') %>
+<%= form_with url: admin_scheduler_path, method: :get, local: true, class: 'mb-5' do %>
+  <%= label_tag :location, 'Filter by location:', class: 'mr-2' %>
+  <%= select_tag :location,
+                options_from_collection_for_select(locations, 'id', 'name', selected_location),
+                include_blank: true,
+                class: 'w-40' %>
+  <%= submit_tag 'Filter', class: 'ml-4' %>
 <% end %>
 
 <%= month_calendar events: sessions do |date, events| %>
-  <div class='calendar-day'><strong><%= date.day %></strong></div>
-
-  <% events.sort_by(&:time).each do |event| %>
-    <div>
-      <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
+  <div class='pb-6'>
+    <div class='mb-4'>
+      <strong><%= date.day %></strong>
     </div>
-  <% end %>
+
+    <% events.sort_by(&:time).each do |event| %>
+      <div>
+        <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
+      </div>
+    <% end %>
+  </div>
 <% end %>

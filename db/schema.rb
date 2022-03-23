@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_09_192520) do
+ActiveRecord::Schema.define(version: 2022_03_09_230756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,11 @@ ActiveRecord::Schema.define(version: 2022_03_09_192520) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "gallery_photos", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "legals", force: :cascade do |t|
@@ -337,8 +342,8 @@ ActiveRecord::Schema.define(version: 2022_03_09_192520) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.boolean "private_access", default: false
     t.integer "active_campaign_id"
+    t.boolean "private_access", default: false
     t.date "birthday"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"

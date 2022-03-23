@@ -1,0 +1,4 @@
+{
+  id: gallery_photo.id,
+  image_url: polymorphic_url(gallery_photo.image)
+}

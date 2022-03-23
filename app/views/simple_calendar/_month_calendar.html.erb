@@ -1,7 +1,10 @@
 <div class="simple-calendar">
-  <div class="calendar-heading">
+  <div class="calendar-heading mb-6">
     <%= link_to fa_icon("chevron-left", class: "fa-2x"), calendar.url_for_previous_view %>
-    <span class="calendar-title"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></span>
+    <span class="text-4xl px-4">
+      <%= t('date.month_names')[start_date.month] %>
+      <%= start_date.year %>
+    </span>
     <%= link_to fa_icon("chevron-right", class: "fa-2x"), calendar.url_for_next_view %>
   </div>
 
@@ -16,7 +19,7 @@
 
     <tbody>
       <% date_range.each_slice(7).with_index do |week, index| %>
-        <tr class="<%= 'odd-row' if index.odd? %>">
+        <tr class="<%= 'bg-gray-100' if index.odd? %>">
           <% week.each do |day| %>
             <%= content_tag :td, class: calendar.td_classes_for(day) do %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(block) %>

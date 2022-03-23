@@ -16,10 +16,8 @@ ActiveAdmin.register Product do
     column :credits do |product|
       product.unlimited? ? 'Unlimited' : product.credits
     end
-    column :price
-    column :price_for_members do |product|
-      product.recurring? ? 'N/A' : product.price_for_members
-    end
+    number_column :price, as: :currency
+    number_column :price_for_members, as: :currency
     column :label
     column :order_number
     column :product_type
@@ -69,15 +67,15 @@ ActiveAdmin.register Product do
       row :credits do |product|
         product.unlimited? ? 'Unlimited' : product.credits
       end
-      row :price
-      row :price_for_members if resource.one_time?
+      number_row :price, as: :currency
+      number_row :price_for_members, as: :currency if resource.one_time?
       row :label
       row :order_number
       row :memberships_count do |product|
         product.recurring? ? product.memberships_count : 'N/A'
       end
       row :image do |product|
-        image_tag polymorphic_url(product.image), class: 'mw-200px' if product.image.attached?
+        image_tag polymorphic_url(product.image), class: 'max-w-200' if product.image.attached?
       end
     end
   end

@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
-ruby '2.6.3'
+
+ruby '~> 2.7.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.0'
@@ -20,6 +21,7 @@ gem 'haml-rails', '~> 1.0.0'
 gem 'httparty', '~> 0.20.0'
 gem 'interactor', '~> 3.1', '>= 3.1.2'
 gem 'jb', '~> 0.7.0'
+gem 'json', '~> 2.3.0'
 gem 'pg', '~> 1.0'
 gem 'premailer-rails', '~> 1.11.1'
 gem 'pry-rails', '~> 0.3.6'
@@ -37,6 +39,7 @@ gem 'stripe', '~> 5.21'
 gem 'webpacker', '~> 4.0'
 gem 'sprockets', '~> 3.7.2'
 gem 'rollbar'
+gem 'activeadmin_addons'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

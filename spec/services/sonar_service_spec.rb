@@ -15,14 +15,16 @@ describe SonarService do
       Timecop.return
     end
 
-    let!(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
-    let!(:user) { create(:user) }
-    let!(:la_date) { la_time.to_date }
+    let(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+    let(:la_date) { la_time.to_date }
+    let(:time_24) { la_time.strftime(Session::TIME_FORMAT) }
+    let(:employee) { false }
+    let(:state) { :reserved }
 
-    let!(:time_24) { la_time.strftime(Session::TIME_FORMAT) }
+    let!(:user) { create(:user, is_referee: employee) }
     let!(:session) { create(:session, :daily, time: time_24) }
     let!(:user_session) do
-      create(:user_session, date: la_date.tomorrow, session: session, user: user)
+      create(:user_session, date: la_date.tomorrow, session: session, user: user, state: state)
     end
 
     subject { SonarService.message_received(user, text) }
@@ -39,7 +41,7 @@ describe SonarService do
         )
       end
 
-      it do
+      it 'updates user session state' do
         expect { subject }.to change { user_session.reload.state }.from('reserved').to('confirmed')
       end
 
@@ -60,6 +62,30 @@ describe SonarService do
           subject
         end
       end
+
+      context 'when the user session is already confirmed' do
+        let(:state) { :confirmed }
+
+        let(:expected_message) { I18n.t('notifier.sonar.no_reserved_session') }
+
+        it 'sends the no reserved session message' do
+          expect(SonarService).to receive(:send_message).with(user, expected_message).once
+
+          subject
+        end
+      end
+
+      context 'when the user session has been canceled' do
+        let(:state) { :canceled }
+
+        let(:expected_message) { I18n.t('notifier.sonar.no_session_booked') }
+
+        it 'sends the no session booked message' do
+          expect(SonarService).to receive(:send_message).with(user, expected_message).once
+
+          subject
+        end
+      end
     end
 
     context 'when the message is negative' do
@@ -71,7 +97,7 @@ describe SonarService do
         )
       end
 
-      it do
+      it 'updates user session state' do
         expect { subject }.to change { user_session.reload.state }.from('reserved').to('canceled')
       end
 

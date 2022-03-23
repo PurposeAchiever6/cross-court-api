@@ -1,0 +1,9 @@
+input[disabled="disabled"],
+input[disabled] {
+  background-color: #f4f4f4;
+  border: 0px solid #f4f4f4 !important;
+}
+
+select {
+  min-width: 6rem;
+}
