@@ -137,3 +137,7 @@ en:
     promo_codes:
       created: "%{type} created successfully"
       destroyed: "%{type} deleted successfully"
+  active_admin:
+    resources:
+      gallery_photo:
+        new_model: "New Gallery Photos"
