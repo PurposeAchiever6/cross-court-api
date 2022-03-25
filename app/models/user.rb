@@ -114,6 +114,7 @@ class User < ApplicationRecord
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
   scope :no_credits, -> { where(credits: 0, subscription_credits: 0) }
+  scope :sorted_by_full_name, -> { order('LOWER(first_name) ASC, LOWER(last_name) ASC') }
 
   before_validation :init_uid
   after_create :create_referral_code
