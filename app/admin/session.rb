@@ -167,9 +167,7 @@ ActiveAdmin.register Session do
       end
 
       panel 'Create User Session Manually' do
-        users_for_select = User.order('LOWER(last_name)', 'LOWER(first_name)').map do |user|
-          ["#{user.last_name}, #{user.first_name}", user.id]
-        end
+        users_for_select = User.sorted_by_full_name.map { |user| [user.full_name, user.id] }
 
         render partial: 'create_user_session', locals: {
           date: date,
