@@ -1,5 +1,5 @@
 ActiveAdmin.register_page 'Scheduler' do
-  menu priority: 1, label: 'Scheduler'
+  menu label: 'Scheduler', priority: 1
 
   content do
     location = Location.find_by(id: params[:location]) || Location.first

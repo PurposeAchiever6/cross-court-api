@@ -1,4 +1,6 @@
 ActiveAdmin.register Session do
+  menu label: 'Sessions', parent: 'Sessions'
+
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :duration_minutes,
                 session_exceptions_attributes: %i[id date _destroy]

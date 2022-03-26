@@ -1,4 +1,6 @@
 ActiveAdmin.register User do
+  menu label: 'Users', parent: 'Users'
+
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
                 :drop_in_expiration_date, :credits, :private_access, :birthday

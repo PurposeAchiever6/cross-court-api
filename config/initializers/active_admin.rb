@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = 'App'
+  config.site_title = 'Crosscourt'
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -157,7 +157,7 @@ ActiveAdmin.setup do |config|
 
   # == Setting a Favicon
   #
-  # config.favicon = 'favicon.ico'
+  config.favicon = 'cc-favicon.ico'
 
   # == Meta Tags
   #
@@ -223,9 +223,16 @@ ActiveAdmin.setup do |config|
     admin.build_menu :default do |menu|
       menu.add label: 'Dashboard',
                url: "#{ENV['FRONTENT_URL']}/dashboard",
-               html_options: { target: :blank }
+               html_options: { target: :blank },
+               priority: 2
+      menu.add label: 'Sessions',
+               priority: 5
+      menu.add label: 'Products',
+               priority: 6
+      menu.add label: 'Users',
+               priority: 7
       menu.add label: 'Feedbacks',
-               priority: 13
+               priority: 8
     end
   end
 

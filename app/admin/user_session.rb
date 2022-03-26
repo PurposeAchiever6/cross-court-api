@@ -1,4 +1,6 @@
 ActiveAdmin.register UserSession do
+  menu label: 'User Sessions', parent: 'Sessions'
+
   actions :index, :destroy
   includes :user, session: :location
 

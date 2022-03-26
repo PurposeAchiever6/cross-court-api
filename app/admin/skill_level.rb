@@ -1,4 +1,6 @@
 ActiveAdmin.register SkillLevel do
+  menu label: 'Skill Levels', parent: 'Sessions'
+
   permit_params :name, :description, :max, :min
 
   form do |f|
