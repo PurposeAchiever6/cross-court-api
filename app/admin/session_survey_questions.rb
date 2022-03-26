@@ -1,5 +1,5 @@
 ActiveAdmin.register SessionSurveyQuestion do
-  menu label: 'Questions', parent: 'Session Survey'
+  menu label: 'Session Survey Questions', parent: 'Feedbacks'
   permit_params :question, :is_enabled, :is_mandatory, :type
 
   form do |f|

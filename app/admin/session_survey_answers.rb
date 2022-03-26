@@ -1,6 +1,7 @@
 ActiveAdmin.register SessionSurveyAnswer do
-  menu label: 'Answers', parent: 'Session Survey'
+  menu label: 'Session Survey Answers', parent: 'Feedbacks'
   actions :index, :show, :destroy
+  includes :user, :session_survey_question
 
   index do
     selectable_column

@@ -46,11 +46,18 @@ class SlackService
   end
 
   def subscription_canceled(subscription)
-    notify_subscription('notifier.slack.session_canceled', subscription)
+    notify_subscription('notifier.slack.subscription_canceled', subscription)
   end
 
   def subscription_reactivated(subscription)
-    notify_subscription('notifier.slack.session_reactivated', subscription)
+    notify_subscription('notifier.slack.subscription_reactivated', subscription)
+  end
+
+  def subscription_feedback(subscription_feedback)
+    notify_subscription_feedback(
+      'notifier.slack.subscription_feedback_created',
+      subscription_feedback
+    )
   end
 
   def charge_error(description, error_message)
@@ -92,6 +99,17 @@ class SlackService
         name: user.full_name,
         phone: user.phone_number,
         subscription_name: subscription.name
+      ),
+      channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
+    )
+  end
+
+  def notify_subscription_feedback(i18n_message, subscription_feedback)
+    notify(
+      I18n.t(
+        i18n_message,
+        name: user.full_name,
+        subscription_feedback_url: subscription_feedback.url
       ),
       channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
     )

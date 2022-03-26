@@ -224,6 +224,8 @@ ActiveAdmin.setup do |config|
       menu.add label: 'Dashboard',
                url: "#{ENV['FRONTENT_URL']}/dashboard",
                html_options: { target: :blank }
+      menu.add label: 'Feedbacks',
+               priority: 13
     end
   end
 
