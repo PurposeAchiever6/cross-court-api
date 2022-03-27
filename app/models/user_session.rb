@@ -18,6 +18,7 @@
 #  jersey_rental_payment_intent_id :string
 #  assigned_team                   :string
 #  no_show_up_fee_charged          :boolean          default(FALSE)
+#  reminder_sent_at                :datetime
 #
 # Indexes
 #

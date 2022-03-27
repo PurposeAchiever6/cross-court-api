@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_26_175904) do
+ActiveRecord::Schema.define(version: 2022_03_27_222413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -308,6 +308,7 @@ ActiveRecord::Schema.define(version: 2022_03_26_175904) do
     t.string "jersey_rental_payment_intent_id"
     t.string "assigned_team"
     t.boolean "no_show_up_fee_charged", default: false
+    t.datetime "reminder_sent_at"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end

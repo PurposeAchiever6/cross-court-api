@@ -20,9 +20,7 @@ module ActiveCampaign
       SESSION_CANCELLED_OUT_OF_TIME = 'Session Cancelled Out Of Time'.freeze
       SESSION_CHECK_IN = 'Session Check In'.freeze
       SESSION_CONFIRMATION = 'Session Confirmation'.freeze
-      SESSION_REMINDER_24_HOURS = 'Session Reminder 24 Hours'.freeze
       SESSION_REMINDER_6_HOURS = 'Session Reminder 6 Hours'.freeze
-      SESSION_REMINDER_8_HOURS = 'Session Reminder 8 Hours'.freeze
       STARTED_CHECKOUT = 'Started Checkout'.freeze
       STAY_IN_THE_LOOP = 'Stay In The Loop'.freeze
       TIME_TO_RE_UP = 'Time To Re Up'.freeze

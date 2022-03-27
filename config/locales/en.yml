@@ -96,36 +96,20 @@ en:
         There was an *error* when charging the user %{name} on *%{description}*.
         Error: %{error_message}
     sonar:
-      invite_friend_msg: "Share this link to sweat with a friend: %{link}"
-      session_confirmed: >
-        You’re locked in for %{when}’s %{time} session at CC%{location}! %{invite_friend}
+      invite_friend: "Share this link to sweat with a friend: %{link}"
       session_auto_confirmed: >
-        Your %{time} session at CC%{location} was confirmed because the cancellation window has
-        passed. Respond 'N' to cancel. %{invite_friend}
-      employee_session_confirmed: >
-        You’re locked in! Please remember to arrive at least 15 minutes early in your CC gear.
-      session_canceled: >
-        Thank you for letting us know! Credit loss or cancelation fee may be applied. You can book
-        another session here: %{schedule_url}
-      unreadable_text: "We couldn’t process your response"
-      no_session_booked: "You don’t have any session booked yet"
-      no_employee_session: "You don't any session booked or unconfirmed yet"
-      no_reserved_session: "All your sessions are already confirmed. Let's go!"
-      sem_tomorrow_reminder: >
-        Hey %{name}! You’re scheduled to Manage tomorrow’s %{time} session at CC%{location}.
-        Please respond ‘Y’ so we know you’re good to go. Thank you!
-      referee_tomorrow_reminder: >
-        Hey %{name}! You’re scheduled to Officiate tomorrow’s %{time} session at CC%{location}.
-        Please respond ‘Y’ so we know you’re good to go. Thank you!
-      today_reminder: >
         Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. Please
-        respond ‘Y’ to confirm or ‘N’ to cancel. Thank you!
-      sem_today_reminder: >
-        Hey %{name}! As a reminder you’re scheduled to Manage today’s %{time} session at
-        CC%{location}. Respond ‘Y’ so we know you’re going to be there"
-      referee_today_reminder: >
-        Hey %{name}! As a reminder you’re scheduled to Officiate today’s %{time} session at
-        CC%{location}. Respond ‘Y’ so we know you’re going to be there
+        note the cancellation window has passed so no refunds beyond this point. If you need
+        to cancel, you're able to at %{frontend_url}. %{invite_friend}
+      unreadable_text: "We couldn’t process your response"
+      no_more_sonar_confirmation: "Session confirmation is not longer needed. Thanks!"
+      no_more_sonar_cancellation: "If you need to cancel, please do it through %{fronted_url}. Thanks!"
+      no_session_booked: "You don’t have any session booked yet"
+      no_reserved_session: "All your sessions are already confirmed. Let's go!"
+      today_reminder: >
+        Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. Please
+        note the cancellation window closes %{cancellation_period_hours} hrs before your session
+        starts. If you need to cancel, you're able to at %{frontend_url}. %{invite_friend}
       survey_reminder: >
         Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate
         your feedback. %{survey_link}

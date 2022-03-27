@@ -24,12 +24,10 @@ module SonarService
 
   def message_received(user, message)
     case
-    when positive_message?(message) && user.employee?
-      handle_employee_confirmation(user)
     when positive_message?(message)
       handle_user_confirmation(user)
     when negative_message?(message)
-      handle_user_cancelation(user)
+      handle_user_cancellation(user)
     else
       send_message(user, I18n.t('notifier.sonar.unreadable_text'))
     end
@@ -53,67 +51,20 @@ module SonarService
     user_session = future_user_sessions.reserved.ordered_by_date.first
 
     if user_session
-      UserSessionConfirmed.new(user_session).save!
-      send_message(user, confirmation_msg(user, user_session))
+      send_message(user, I18n.t('notifier.sonar.no_more_sonar_confirmation'))
     else
       send_message(user, I18n.t('notifier.sonar.no_reserved_session'))
     end
   end
 
-  def handle_user_cancelation(user)
+  def handle_user_cancellation(user)
     user_session = user.user_sessions.future.not_canceled.ordered_by_date.first
 
     if user_session
-      CanceledUserSession.new(user_session).save!
-      send_message(user, cancellation_msg)
+      send_message(user, I18n.t('notifier.sonar.no_more_sonar_cancellation'))
     else
       send_message(user, I18n.t('notifier.sonar.no_session_booked'))
     end
-  end
-
-  def handle_employee_confirmation(user)
-    user_session = user.user_sessions.future.reserved.ordered_by_date.first
-
-    if user_session
-      UserSessionConfirmed.new(user_session).save!
-      send_message(user, confirmation_msg(user, user_session))
-      return
-    end
-
-    employee_session = EmployeeSessionConfirmed.new(user).save!
-
-    if employee_session
-      send_message(user, confirmation_msg(user, employee_session))
-    else
-      send_message(user, I18n.t('notifier.sonar.no_employee_session'))
-    end
-  end
-
-  def invite_friend(user_session)
-    return '' if user_session.session.full?(user_session.date)
-
-    I18n.t('notifier.sonar.invite_friend_msg', link: user_session.invite_link)
-  end
-
-  def confirmation_msg(user, user_session)
-    return I18n.t('notifier.sonar.employee_session_confirmed') if user.employee?
-
-    today = Time.current.in_time_zone(user_session.time_zone).to_date
-    location = user_session.location
-
-    I18n.t(
-      'notifier.sonar.session_confirmed',
-      when: user_session.date == today ? 'today' : 'tomorrow',
-      time: user_session.time.strftime(Session::TIME_FORMAT),
-      location: "#{location.name} (#{location.address})",
-      invite_friend: invite_friend(user_session)
-    )
-  end
-
-  def cancellation_msg
-    front_end_url = ENV['FRONTENT_URL']
-
-    I18n.t('notifier.sonar.session_canceled', schedule_url: "#{front_end_url}/locations")
   end
 
   def logger
