@@ -1,4 +1,6 @@
 ActiveAdmin.register GalleryPhoto do
+  menu label: 'Gallery', priority: 4
+
   actions :all, except: :edit
 
   before_filter :skip_sidebar!, only: :index

@@ -1,4 +1,6 @@
 ActiveAdmin.register Legal do
+  menu label: 'Legal', priority: 3
+
   permit_params :title, :text
 
   form do |f|

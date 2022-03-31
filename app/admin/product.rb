@@ -1,4 +1,6 @@
 ActiveAdmin.register Product do
+  menu label: 'Products', parent: 'Products'
+
   permit_params :name, :credits, :price, :price_for_members, :order_number, :image, :label,
                 :product_type
 

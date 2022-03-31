@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_09_230756) do
+ActiveRecord::Schema.define(version: 2022_03_27_222413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -241,6 +241,12 @@ ActiveRecord::Schema.define(version: 2022_03_09_230756) do
     t.string "description"
   end
 
+  create_table "subscription_feedbacks", force: :cascade do |t|
+    t.text "feedback"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_subscription_feedbacks_on_user_id"
+  end
+
   create_table "subscriptions", force: :cascade do |t|
     t.string "stripe_id"
     t.string "stripe_item_id"
@@ -302,6 +308,7 @@ ActiveRecord::Schema.define(version: 2022_03_09_230756) do
     t.string "jersey_rental_payment_intent_id"
     t.string "assigned_team"
     t.boolean "no_show_up_fee_charged", default: false
+    t.datetime "reminder_sent_at"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
@@ -342,8 +349,8 @@ ActiveRecord::Schema.define(version: 2022_03_09_230756) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.integer "active_campaign_id"
     t.boolean "private_access", default: false
+    t.integer "active_campaign_id"
     t.date "birthday"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"

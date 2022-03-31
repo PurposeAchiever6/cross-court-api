@@ -1,4 +1,6 @@
 ActiveAdmin.register PromoCode do
+  menu label: 'Promo Codes', parent: 'Products'
+
   config.batch_actions = false
   permit_params :type, :code, :discount, :expiration_date, :duration,
                 :duration_in_months, :max_redemptions, :max_redemptions_by_user, product_ids: []

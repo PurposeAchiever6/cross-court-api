@@ -11,7 +11,10 @@ class UserSessionAutoConfirmed
     unless user_session.in_cancellation_time?
       user_session.state = :confirmed
 
-      SonarService.send_message(user, message)
+      unless user_session.reminder_sent_at
+        SonarService.send_message(user, message)
+        user_session.reminder_sent_at = Time.zone.now
+      end
 
       ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
@@ -21,6 +24,7 @@ class UserSessionAutoConfirmed
 
       SlackService.new(user, date, time, location).session_auto_confirmed
     end
+
     user_session.save!
   end
 
@@ -29,7 +33,7 @@ class UserSessionAutoConfirmed
   def invite_friend
     return '' if session.full?(date)
 
-    I18n.t('notifier.sonar.invite_friend_msg', link: invite_link)
+    I18n.t('notifier.sonar.invite_friend', link: invite_link)
   end
 
   def message
@@ -40,6 +44,7 @@ class UserSessionAutoConfirmed
            name: name,
            time: time,
            location: location.name,
+           frontend_url: ENV['FRONTENT_URL'],
            invite_friend: invite_friend)
   end
 end

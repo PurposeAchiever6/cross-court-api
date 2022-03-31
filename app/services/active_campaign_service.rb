@@ -218,8 +218,6 @@ class ActiveCampaignService
         ]
       when ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
            ::ActiveCampaign::Deal::Event::SESSION_REMINDER_6_HOURS,
-           ::ActiveCampaign::Deal::Event::SESSION_REMINDER_8_HOURS,
-           ::ActiveCampaign::Deal::Event::SESSION_REMINDER_24_HOURS,
            ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
            ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_IN_TIME,
            ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,

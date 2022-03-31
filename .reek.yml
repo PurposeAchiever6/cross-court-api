@@ -25,15 +25,10 @@ detectors:
     enabled: true
     exclude:
       [
-        "SemSessionRemindersJob#perform",
-        "RefereeSessionRemindersJob#perform",
         "UserSessionRemindersJob#perform",
-        "SonarService#message_received",
-        "SonarService#handle_employee_confirmation",
         "EmployeeSessionsQuery#sorted_future_sessions",
         "Subscription#assign_stripe_attrs",
         "CreditsJob#perform",
-        "SonarService#confirmation_msg",
         "Api::V1::StripeController#webhook",
         "SonarService#add_update_customer",
         "AddAttachment#call",

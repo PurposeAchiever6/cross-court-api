@@ -1,4 +1,6 @@
 ActiveAdmin.register Location do
+  menu label: 'Locations', parent: 'Sessions'
+
   permit_params :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, :description,
                 images: []
 

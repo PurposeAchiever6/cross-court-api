@@ -28,12 +28,6 @@ describe UserSessionRemindersJob do
       let(:time_8)         { (la_time + 8.hours).strftime(Session::TIME_FORMAT) }
       let(:s2)             { create(:session, :daily, time: time_8) }
       let!(:user_session2) { create(:user_session, date: la_date, session: s2, user: user) }
-      let(:message_8_hours) do
-        I18n.t('notifier.sonar.today_reminder',
-               name: user.first_name,
-               time: time_8,
-               location: user_session2.location.name)
-      end
 
       # In 6 hours
       let(:time_6)         { (la_time + 6.hours).strftime(Session::TIME_FORMAT) }
@@ -43,11 +37,14 @@ describe UserSessionRemindersJob do
         I18n.t('notifier.sonar.today_reminder',
                name: user.first_name,
                time: time_6,
-               location: user_session3.location.name)
+               location: user_session3.location.name,
+               cancellation_period_hours: Session::CANCELLATION_PERIOD.to_i / 3600,
+               frontend_url: ENV['FRONTENT_URL'],
+               invite_friend: I18n.t('notifier.sonar.invite_friend',
+                                     link: user_session3.invite_link))
       end
 
       it 'calls the SonarService with the correct parameters' do
-        expect(SonarService).to receive(:send_message).with(user, message_8_hours).once
         expect(SonarService).to receive(:send_message).with(user, message_6_hours).once
 
         described_class.perform_now

@@ -63,6 +63,9 @@ Rails.application.routes.draw do
             post :reactivate
             post :payment_method, action: :change_payment_method
           end
+          collection do
+            post :feedback
+          end
         end
         namespace :active_campaign do
           resources :deals, only: %i[create]

@@ -2,34 +2,37 @@ class UserSessionRemindersJob < ApplicationJob
   queue_as :default
 
   def perform
-    active_campaign_service = ActiveCampaignService.new
+    cancellation_period_hours = Session::CANCELLATION_PERIOD.to_i / 3600
 
-    # 8 hour reminder
-    SessionReminderQuery.new(UserSession.all.reserved).in(8).find_each do |user_session|
+    SessionReminderQuery.new(UserSession.reserved)
+                        .in(cancellation_period_hours + 1)
+                        .includes(:user, session: :location)
+                        .find_each do |user_session|
       user = user_session.user
-      active_campaign_service.create_deal(
-        ::ActiveCampaign::Deal::Event::SESSION_REMINDER_8_HOURS,
-        user,
-        user_session_id: user_session.id
-      )
-      SonarService.send_message(user, I18n.t('notifier.sonar.today_reminder',
-                                             name: user.first_name,
-                                             time: user_session.time.strftime(Session::TIME_FORMAT),
-                                             location: user_session.location.name))
-    end
 
-    # 6 hour reminder
-    SessionReminderQuery.new(UserSession.all.reserved).in(6).find_each do |user_session|
-      user = user_session.user
-      active_campaign_service.create_deal(
+      ActiveCampaignService.new.create_deal(
         ::ActiveCampaign::Deal::Event::SESSION_REMINDER_6_HOURS,
         user,
         user_session_id: user_session.id
       )
+
       SonarService.send_message(user, I18n.t('notifier.sonar.today_reminder',
                                              name: user.first_name,
                                              time: user_session.time.strftime(Session::TIME_FORMAT),
-                                             location: user_session.location.name))
+                                             location: user_session.location.name,
+                                             cancellation_period_hours: cancellation_period_hours,
+                                             frontend_url: ENV['FRONTENT_URL'],
+                                             invite_friend: invite_friend(user_session)))
+
+      user_session.update!(reminder_sent_at: Time.zone.now)
     end
+  end
+
+  private
+
+  def invite_friend(user_session)
+    return '' if user_session.session.full?(user_session.date)
+
+    I18n.t('notifier.sonar.invite_friend', link: user_session.invite_link)
   end
 end

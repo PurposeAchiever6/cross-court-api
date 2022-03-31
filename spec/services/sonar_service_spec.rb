@@ -31,19 +31,7 @@ describe SonarService do
 
     context 'when the message is positive' do
       let(:text) { %w[yes y].sample }
-      let(:expected_message) do
-        I18n.t(
-          'notifier.sonar.session_confirmed',
-          when: 'tomorrow',
-          time: user_session.time.strftime(Session::TIME_FORMAT),
-          location: "#{user_session.location.name} (#{user_session.location.address})",
-          invite_friend: I18n.t('notifier.sonar.invite_friend_msg', link: user_session.invite_link)
-        )
-      end
-
-      it 'updates user session state' do
-        expect { subject }.to change { user_session.reload.state }.from('reserved').to('confirmed')
-      end
+      let(:expected_message) { I18n.t('notifier.sonar.no_more_sonar_confirmation') }
 
       it 'sends the confirmation message' do
         expect(SonarService).to receive(:send_message).with(user, expected_message).once
@@ -90,18 +78,9 @@ describe SonarService do
 
     context 'when the message is negative' do
       let(:text) { %w[no n].sample }
-      let(:expected_message) do
-        I18n.t(
-          'notifier.sonar.session_canceled',
-          schedule_url: "#{ENV['FRONTENT_URL']}/locations"
-        )
-      end
+      let(:expected_message) { I18n.t('notifier.sonar.no_more_sonar_cancellation') }
 
-      it 'updates user session state' do
-        expect { subject }.to change { user_session.reload.state }.from('reserved').to('canceled')
-      end
-
-      it 'sends the cancelation message' do
+      it 'sends the cancellation message' do
         expect(SonarService).to receive(:send_message).with(user, expected_message).once
 
         subject
@@ -124,7 +103,7 @@ describe SonarService do
       let(:text) { 'anything' }
       let(:expected_message) { I18n.t('notifier.sonar.unreadable_text') }
 
-      it 'sends the cancelation message' do
+      it 'sends the cancellation message' do
         expect(SonarService).to receive(:send_message).with(user, expected_message).once
 
         subject
