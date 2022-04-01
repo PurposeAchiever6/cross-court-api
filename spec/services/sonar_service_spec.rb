@@ -54,7 +54,7 @@ describe SonarService do
       context 'when the user session is already confirmed' do
         let(:state) { :confirmed }
 
-        let(:expected_message) { I18n.t('notifier.sonar.no_reserved_session') }
+        let(:expected_message) { I18n.t('notifier.sonar.no_more_sonar_confirmation') }
 
         it 'sends the no reserved session message' do
           expect(SonarService).to receive(:send_message).with(user, expected_message).once
@@ -78,7 +78,9 @@ describe SonarService do
 
     context 'when the message is negative' do
       let(:text) { %w[no n].sample }
-      let(:expected_message) { I18n.t('notifier.sonar.no_more_sonar_cancellation') }
+      let(:expected_message) do
+        I18n.t('notifier.sonar.no_more_sonar_cancellation', frontend_url: ENV['FRONTENT_URL'])
+      end
 
       it 'sends the cancellation message' do
         expect(SonarService).to receive(:send_message).with(user, expected_message).once
