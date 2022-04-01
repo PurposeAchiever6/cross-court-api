@@ -100,16 +100,15 @@ en:
       session_auto_confirmed: >
         Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. Please
         note the cancellation window has passed so no refunds beyond this point. If you need
-        to cancel, you're able to at %{frontend_url}. %{invite_friend}
+        to cancel, you're able to at %{frontend_url} %{invite_friend}
       unreadable_text: "We couldn’t process your response"
       no_more_sonar_confirmation: "Session confirmation is not longer needed. Thanks!"
-      no_more_sonar_cancellation: "If you need to cancel, please do it through %{fronted_url}. Thanks!"
+      no_more_sonar_cancellation: "If you need to cancel, please do it through %{frontend_url} Thanks!"
       no_session_booked: "You don’t have any session booked yet"
-      no_reserved_session: "All your sessions are already confirmed. Let's go!"
       today_reminder: >
         Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. Please
         note the cancellation window closes %{cancellation_period_hours} hrs before your session
-        starts. If you need to cancel, you're able to at %{frontend_url}. %{invite_friend}
+        starts. If you need to cancel, you're able to at %{frontend_url} %{invite_friend}
       survey_reminder: >
         Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate
         your feedback. %{survey_link}

@@ -42,28 +42,19 @@ module SonarService
   end
 
   def handle_user_confirmation(user)
-    future_user_sessions = user.user_sessions.future
-
-    if future_user_sessions.not_canceled.empty?
+    if user.user_sessions.future.not_canceled.empty?
       send_message(user, I18n.t('notifier.sonar.no_session_booked'))
-    end
-
-    user_session = future_user_sessions.reserved.ordered_by_date.first
-
-    if user_session
-      send_message(user, I18n.t('notifier.sonar.no_more_sonar_confirmation'))
     else
-      send_message(user, I18n.t('notifier.sonar.no_reserved_session'))
+      send_message(user, I18n.t('notifier.sonar.no_more_sonar_confirmation'))
     end
   end
 
   def handle_user_cancellation(user)
-    user_session = user.user_sessions.future.not_canceled.ordered_by_date.first
-
-    if user_session
-      send_message(user, I18n.t('notifier.sonar.no_more_sonar_cancellation'))
-    else
+    if user.user_sessions.future.not_canceled.empty?
       send_message(user, I18n.t('notifier.sonar.no_session_booked'))
+    else
+      send_message(user, I18n.t('notifier.sonar.no_more_sonar_cancellation',
+                                frontend_url: ENV['FRONTENT_URL']))
     end
   end
 
