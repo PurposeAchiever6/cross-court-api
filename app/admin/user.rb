@@ -7,6 +7,30 @@ ActiveAdmin.register User do
 
   includes active_subscription: :product
 
+  filter :id
+  filter :email
+  filter :first_name
+  filter :last_name
+  filter :is_sem
+  filter :is_referee
+  filter :skill_rating
+  filter :private_access
+  filter :created_at
+
+  action_item :resend_confirmation_email, only: [:show] do
+    link_to 'Resend Confirmation Email',
+            resend_confirmation_email_admin_user_path(id: user.id),
+            method: :post,
+            data: { confirm: 'Are you sure you want to resend the confirmation email?' }
+  end
+
+  action_item :verify_email, only: [:show] do
+    link_to 'Verify Email',
+            verify_email_admin_user_path(id: user.id),
+            method: :post,
+            data: { confirm: "Are you sure you want to manually verify user's email?" }
+  end
+
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
     subscription_credits = resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits
@@ -70,16 +94,6 @@ ActiveAdmin.register User do
 
     actions
   end
-
-  filter :id
-  filter :email
-  filter :first_name
-  filter :last_name
-  filter :is_sem
-  filter :is_referee
-  filter :skill_rating
-  filter :private_access
-  filter :created_at
 
   show do |user|
     attributes_table do
@@ -156,6 +170,37 @@ ActiveAdmin.register User do
     redirect_to admin_user_path(user.id), notice: 'Purchase made successfully'
   rescue StandardError => e
     flash[:error] = e.message
+    redirect_to admin_user_path(id: params[:id])
+  end
+
+  member_action :resend_confirmation_email, method: :post do
+    user = User.find(params[:id])
+
+    if user.confirmed_at
+      flash[:error] = 'User has already confirmed his email'
+    else
+      user.send_confirmation_instructions
+      flash[:notice] = 'Confirmation email sent successfully'
+    end
+  rescue StandardError => e
+    flash[:error] = e.message
+  ensure
+    redirect_to admin_user_path(id: params[:id])
+  end
+
+  member_action :verify_email, method: :post do
+    user = User.find(params[:id])
+
+    if user.confirmed_at
+      flash[:error] = 'User has already confirmed his email'
+    else
+      Users::GiveFreeCredit.call(user: user)
+      user.update!(confirmed_at: Time.zone.now)
+      flash[:notice] = "User's email verified successfully"
+    end
+  rescue StandardError => e
+    flash[:error] = e.message
+  ensure
     redirect_to admin_user_path(id: params[:id])
   end
 end
