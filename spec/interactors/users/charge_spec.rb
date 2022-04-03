@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Users::Charge do
   describe '.call' do
     let(:user) { create(:user) }
-    let(:price) { rand(100) }
+    let(:price) { rand(1..100) }
     let(:description) { nil }
     let(:notify_error) { false }
     let(:payment_intent_id) { rand(1_000) }
