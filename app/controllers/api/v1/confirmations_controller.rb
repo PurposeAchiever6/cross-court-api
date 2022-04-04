@@ -12,12 +12,7 @@ module Api
           if signed_in?(resource_name)
             token = signed_in_resource.create_token
 
-            if give_free_credit?
-              signed_in_resource.free_session_expiration_date =
-                Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS
-              signed_in_resource.increment(:credits)
-              send_first_free_credit_added_event
-            end
+            Users::GiveFreeCredit.call(user: signed_in_resource)
 
             signed_in_resource.save!
             redirect_headers = build_redirect_headers(
@@ -40,23 +35,11 @@ module Api
 
       private
 
-      def send_first_free_credit_added_event
-        ::ActiveCampaign::CreateDealJob.perform_later(
-          ::ActiveCampaign::Deal::Event::FIRST_FREE_CREDIT_ADDED,
-          signed_in_resource.id
-        )
-      end
-
       def send_account_confirmation_event
         ::ActiveCampaign::CreateDealJob.perform_later(
           ::ActiveCampaign::Deal::Event::ACCOUNT_CONFIRMATION,
           signed_in_resource.id
         )
-      end
-
-      def give_free_credit?
-        signed_in_resource.free_session_not_claimed? &&
-          signed_in_resource.free_session_expiration_date.nil?
       end
     end
   end

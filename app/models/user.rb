@@ -121,6 +121,9 @@ class User < ApplicationRecord
   after_commit :update_external_records, on: [:update]
   after_destroy :delete_stripe_customer
 
+  delegate :current_period_start, :current_period_end, :status, :cancel_at_period_end,
+           to: :active_subscription, prefix: true
+
   def self.from_social_provider(provider, user_params)
     where(provider: provider, uid: user_params['id']).first_or_create! do |user|
       user.password = Devise.friendly_token[0, 20]

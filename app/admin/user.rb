@@ -7,6 +7,30 @@ ActiveAdmin.register User do
 
   includes active_subscription: :product
 
+  filter :id
+  filter :email
+  filter :first_name
+  filter :last_name
+  filter :is_sem
+  filter :is_referee
+  filter :skill_rating
+  filter :private_access
+  filter :created_at
+
+  action_item :resend_confirmation_email, only: [:show] do
+    link_to 'Resend Confirmation Email',
+            resend_confirmation_email_admin_user_path(id: user.id),
+            method: :post,
+            data: { confirm: 'Are you sure you want to resend the confirmation email?' }
+  end
+
+  action_item :verify_email, only: [:show] do
+    link_to 'Verify Email',
+            verify_email_admin_user_path(id: user.id),
+            method: :post,
+            data: { confirm: "Are you sure you want to manually verify user's email?" }
+  end
+
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
     subscription_credits = resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits
@@ -71,16 +95,6 @@ ActiveAdmin.register User do
     actions
   end
 
-  filter :id
-  filter :email
-  filter :first_name
-  filter :last_name
-  filter :is_sem
-  filter :is_referee
-  filter :skill_rating
-  filter :private_access
-  filter :created_at
-
   show do |user|
     attributes_table do
       row :id
@@ -121,6 +135,14 @@ ActiveAdmin.register User do
         water_purchase_price: ENV['WATER_PURCHASE_PRICE']
       }
     end
+
+    panel 'Membership' do
+      render partial: 'subscriptions', locals: {
+        user: user,
+        products: Product.recurring,
+        payment_methods: user.payment_methods
+      }
+    end
   end
 
   member_action :purchase, method: :post do
@@ -154,6 +176,90 @@ ActiveAdmin.register User do
     end
 
     redirect_to admin_user_path(user.id), notice: 'Purchase made successfully'
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to admin_user_path(id: params[:id])
+  end
+
+  member_action :resend_confirmation_email, method: :post do
+    user = User.find(params[:id])
+
+    if user.confirmed_at
+      flash[:error] = 'User has already confirmed his email'
+    else
+      user.send_confirmation_instructions
+      flash[:notice] = 'Confirmation email sent successfully'
+    end
+  rescue StandardError => e
+    flash[:error] = e.message
+  ensure
+    redirect_to admin_user_path(id: params[:id])
+  end
+
+  member_action :verify_email, method: :post do
+    user = User.find(params[:id])
+
+    if user.confirmed_at
+      flash[:error] = 'User has already confirmed his email'
+    else
+      Users::GiveFreeCredit.call(user: user)
+      user.update!(confirmed_at: Time.zone.now)
+      flash[:notice] = "User's email verified successfully"
+    end
+  rescue StandardError => e
+    flash[:error] = e.message
+  ensure
+    redirect_to admin_user_path(id: params[:id])
+  end
+
+  member_action :subscriptions, method: :post do
+    action_type = params[:action_type]&.to_sym
+
+    product = Product.recurring.find(params[:product_id])
+    user = User.find(params[:id])
+    payment_method = user.payment_methods.find(params[:payment_method_id])
+    promo_code = PromoCode.find_by(code: params[:promo_code])
+
+    if params[:promo_code].present? && promo_code.nil?
+      flash[:error] = 'Promo code not found'
+      return redirect_to admin_user_path(id: user.id)
+    end
+
+    case action_type
+    when :create
+      result = Subscriptions::PlaceSubscription.call(
+        product: product,
+        user: user,
+        payment_method: payment_method,
+        promo_code: promo_code
+      )
+    when :update
+      result = Subscriptions::UpdateSubscription.call(
+        user: user,
+        subscription: user.active_subscription,
+        product: product,
+        payment_method: payment_method,
+        promo_code: promo_code
+      )
+    when :cancel
+      result = Subscriptions::CancelSubscriptionAtPeriodEnd.call(
+        user: user,
+        subscription: user.active_subscription
+      )
+    when :reactivate
+      result = Subscriptions::SubscriptionReactivation.call(
+        user: user,
+        subscription: user.active_subscription
+      )
+    end
+
+    if result.failure?
+      flash[:error] = result.message
+    else
+      flash[:notice] = 'Membership saved correctly'
+    end
+
+    redirect_to admin_user_path(user.id)
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to admin_user_path(id: params[:id])

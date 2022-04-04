@@ -1,0 +1,98 @@
+<div>
+  <%= form_tag(subscriptions_admin_user_path, method: :post) do %>
+    <div class='flex flex-col items-start'>
+      <p class='mb-1'>
+        Current membership:
+        <span class="status_tag <%= user.active_subscription ? 'yes' : 'no' %>">
+          <%= user.membership %>
+        </span>
+      </p>
+      <% if user.active_subscription %>
+        <p class='mb-1'>
+          <%= "Billing period: #{user.active_subscription_current_period_start.to_date} - #{user.active_subscription_current_period_end.to_date}" %>
+        </p>
+        <p class='mb-1'>
+          <%= "Status: #{user.active_subscription_status.humanize}"%>
+        </p>
+        <p class='mb-2'>
+          Cancel at period end:
+          <span class="status_tag <%= user.active_subscription_cancel_at_period_end ? 'yes' : 'no' %>">
+            <%= "#{user.active_subscription_cancel_at_period_end ? 'YES' : 'NO'}"%>
+          <span>
+        </p>
+        <% if user.active_subscription_cancel_at_period_end %>
+          <%= button_tag 'Reactivate',
+                         type: :submit, name: :action_type, value: :reactivate, class: 'cursor-pointer',
+                         data: {
+                           disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to reactivate the membership?'
+                         } %>
+        <% else %>
+          <%= button_tag 'Cancel',
+                         type: :submit, name: :action_type, value: :cancel, class: 'cursor-pointer',
+                         data: {
+                           disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to cancel the membership? Subscription will be canceled at period end.'
+                         } %>
+        <% end %>
+      <% end %>
+    </div>
+    <% if payment_methods.empty? %>
+      <p>User doesn't have any payment method available</p>
+    <% else %>
+      <% if user.active_subscription.nil? %>
+        <div class='flex items-end'>
+          <div class='mr-4' style='width: 200px'>
+            Create membership
+          </div>
+          <div class='mr-4 flex flex-col'>
+            <%= label_tag :product_id, 'Product', class: 'mb-1' %>
+            <%= select_tag :product_id,
+                           options_for_select(products.all.collect { |prod| [prod.name, prod.id] }) %>
+          </div>
+          <div class='mr-4 flex flex-col'>
+            <%= label_tag :payment_method_id, 'Payment Method', class: 'mb-1' %>
+            <%= select_tag :payment_method_id,
+                           options_for_select(payment_methods.collect { |pm| ["**** #{pm.last_4}", pm.id] }) %>
+          </div>
+          <div class='mr-4 flex flex-col'>
+            <%= label_tag :payment_method_id, 'Promo Code', class: 'mb-1' %>
+            <%= text_field_tag :promo_code, nil, style: 'width: 100px' %>
+          </div>
+          <%= button_tag 'Create',
+                         type: :submit, name: :action_type, value: :create,
+                         data: {
+                           disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to create the membership?'
+                         } %>
+        </div>
+      <% else %>
+        <div class='flex items-end'>
+          <div class='mr-4' style='width: 200px'>
+            Update membership
+          </div>
+          <div class='mr-4 flex flex-col'>
+            <%= label_tag :product_id, 'Product', class: 'mb-1' %>
+            <%= select_tag :product_id,
+                           options_for_select(products.where.not(id: user.active_subscription.product_id).all.collect { |prod| [prod.name, prod.id] }) %>
+          </div>
+          <div class='mr-4 flex flex-col'>
+            <%= label_tag :payment_method_id, 'Payment Method', class: 'mb-1' %>
+            <%= select_tag :payment_method_id,
+                           options_for_select(payment_methods.collect { |pm| ["**** #{pm.last_4}", pm.id] }) %>
+          </div>
+          <div class='mr-4 flex flex-col'>
+            <%= label_tag :payment_method_id, 'Promo Code', class: 'mb-1' %>
+            <%= text_field_tag :promo_code, nil, style: 'width: 100px' %>
+          </div>
+          <%= button_tag 'Update',
+                         type: :submit, name: :action_type, value: :update,
+                         data: {
+                           disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to update the membership? This may generate additional charges to the user.'
+                         } %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
