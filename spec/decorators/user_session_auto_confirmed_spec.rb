@@ -37,11 +37,6 @@ describe UserSessionAutoConfirmed do
       subject
     end
 
-    it 'calls Slack service' do
-      expect_any_instance_of(SlackService).to receive(:session_auto_confirmed)
-      subject
-    end
-
     it 'enques ActiveCampaign::CreateDealJob' do
       expect { subject }.to have_enqueued_job(
         ::ActiveCampaign::CreateDealJob
@@ -69,11 +64,6 @@ describe UserSessionAutoConfirmed do
 
       it 'does not call Sonar service' do
         expect(SonarService).not_to receive(:send_message)
-        subject
-      end
-
-      it 'does not call Slack service' do
-        expect_any_instance_of(SlackService).not_to receive(:session_auto_confirmed)
         subject
       end
 

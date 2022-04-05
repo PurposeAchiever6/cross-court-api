@@ -166,11 +166,6 @@ describe UserSessions::Create do
         subject
       end
 
-      it 'calls Slack service' do
-        expect_any_instance_of(SlackService).to receive(:session_auto_confirmed)
-        subject
-      end
-
       it 'enques ActiveCampaign::CreateDealJob' do
         expect { subject }.to have_enqueued_job(
           ::ActiveCampaign::CreateDealJob
@@ -277,11 +272,6 @@ describe UserSessions::Create do
 
         it 'calls Slack service for session_waitlist_confirmed' do
           expect_any_instance_of(SlackService).to receive(:session_waitlist_confirmed)
-          subject
-        end
-
-        it 'does not call Slack service for session_auto_confirmed' do
-          expect_any_instance_of(SlackService).not_to receive(:session_auto_confirmed)
           subject
         end
       end
