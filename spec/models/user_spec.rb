@@ -88,7 +88,10 @@ describe User do
         subject
       }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactJob).on_queue('default')
     end
-    it { expect { subject }.to have_enqueued_job(CreateUpdateSonarCustomerJob).on_queue('default') }
+
+    it do
+      expect { subject }.to have_enqueued_job(::Sonar::CreateUpdateCustomerJob).on_queue('default')
+    end
   end
 
   describe '#first_not_free_session?' do

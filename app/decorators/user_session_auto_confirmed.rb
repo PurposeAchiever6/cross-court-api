@@ -21,8 +21,6 @@ class UserSessionAutoConfirmed
         user.id,
         user_session_id: user_session.id
       )
-
-      SlackService.new(user, date, time, location).session_auto_confirmed
     end
 
     user_session.save!
