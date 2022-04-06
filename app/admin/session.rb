@@ -266,6 +266,8 @@ ActiveAdmin.register Session do
       # Perform in 15 minutes in case front desk guy checked in wrong user by accident
       ::ActiveCampaign::CheckInUsersJob.set(wait: 15.minutes)
                                        .perform_later(checked_in_user_session_ids)
+      ::Sonar::FirstFreeSessionSmsJob.set(wait: 15.minutes)
+                                     .perform_later(checked_in_user_session_ids)
     end
 
     if warnings.present?

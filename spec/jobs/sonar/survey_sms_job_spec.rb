@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe SurveySmsJob do
+describe ::Sonar::SurveySmsJob do
   describe '.perform' do
     before do
       allow(SonarService).to receive(:send_message)

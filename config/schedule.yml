@@ -20,7 +20,7 @@ credits:
 
 send_survey_sms_to_players:
   cron: "0 * * * *"
-  class: "SurveySmsJob"
+  class: "Sonar::SurveySmsJob"
   queue: default
 
 notify_inactive_players:

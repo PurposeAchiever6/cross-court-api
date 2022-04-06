@@ -206,7 +206,7 @@ class User < ApplicationRecord
 
     return unless SonarService::CUSTOMER_ATTRS.any? { |a| saved_changes_keys.include?(a) }
 
-    CreateUpdateSonarCustomerJob.perform_later(id)
+    ::Sonar::CreateUpdateCustomerJob.perform_later(id)
   end
 
   def delete_stripe_customer
