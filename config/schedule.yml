@@ -27,3 +27,8 @@ notify_inactive_players:
   cron: "0 7 * * *"
   class: "InactiveUsersJob"
   queue: default
+
+canceled_subscriptions_reminders:
+  cron: "0 17 * * *"
+  class: "CanceledSubscriptionsRemindersJob"
+  queue: default

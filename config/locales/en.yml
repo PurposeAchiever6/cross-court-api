@@ -116,6 +116,9 @@ en:
       session_waitlist_confirmed: >
         Hey %{name}, you made it off the waitlist and are in for %{when}’s %{time} session
         at CC%{location}!
+      canceled_subscription_reminder: >
+        Hey %{name}, your %{product_name} membership is ending tomorrow! You still have time to
+        reactivate it at %{subscriptions_url}
   admin:
     products:
       created: "Product created successfully"
