@@ -51,6 +51,7 @@
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
 #  index_users_on_private_access                (private_access)
+#  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #

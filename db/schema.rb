@@ -148,7 +148,10 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.integer "max_redemptions"
     t.integer "max_redemptions_by_user"
     t.integer "times_used", default: 0
+    t.boolean "for_referral", default: false
+    t.bigint "user_id"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
+    t.index ["user_id"], name: "index_promo_codes_on_user_id"
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -360,6 +363,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.index ["is_referee"], name: "index_users_on_is_referee"
     t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["private_access"], name: "index_users_on_private_access"
+    t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

@@ -51,6 +51,7 @@
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
 #  index_users_on_private_access                (private_access)
+#  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
@@ -88,6 +89,11 @@ class User < ApplicationRecord
   has_one :default_payment_method,
           -> { where(default: true) },
           class_name: 'PaymentMethod',
+          inverse_of: :user
+
+  has_one :referral_promo_code,
+          class_name: 'PromoCode',
+          dependent: :nullify,
           inverse_of: :user
 
   has_many :user_sessions, dependent: :destroy
@@ -191,13 +197,47 @@ class User < ApplicationRecord
   end
 
   def create_referral_code
-    loop do
-      code = SecureRandom.hex(8)
-      next if User.where(referral_code: code).exists?
+    referral_code = generate_referral_code
+    update!(referral_code: referral_code)
 
-      update_column(:referral_code, code)
-      break
-    end
+    recurring_products = Product.recurring
+
+    return if recurring_products.blank?
+
+    promo_code_attrs = {
+      type: PercentageDiscount.to_s,
+      code: referral_code,
+      discount: 50,
+      for_referral: true,
+      duration: :repeating,
+      duration_in_months: 1,
+      max_redemptions_by_user: 1,
+      products: recurring_products,
+      user: self
+    }
+
+    coupon_id = StripeService.create_coupon(promo_code_attrs, recurring_products).id
+    promo_code_id = StripeService.create_promotion_code(coupon_id, promo_code_attrs).id
+
+    PromoCode.create!(
+      promo_code_attrs.merge(
+        stripe_coupon_id: coupon_id,
+        stripe_promo_code_id: promo_code_id
+      )
+    )
+  end
+
+  def generate_referral_code
+    position = User.where(
+      'lower(first_name) = ? AND lower(last_name) = ?',
+      first_name.downcase,
+      last_name.downcase
+    ).count
+
+    referral_code = "#{first_name}#{last_name}".gsub(/\s+/, '')
+    referral_code += (position - 1).to_s if position > 1
+
+    referral_code.upcase
   end
 
   def update_external_records

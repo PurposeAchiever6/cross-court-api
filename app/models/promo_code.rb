@@ -16,10 +16,13 @@
 #  max_redemptions         :integer
 #  max_redemptions_by_user :integer
 #  times_used              :integer          default(0)
+#  for_referral            :boolean          default(FALSE)
+#  user_id                 :integer
 #
 # Indexes
 #
-#  index_promo_codes_on_code  (code) UNIQUE
+#  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_user_id  (user_id)
 #
 
 class PromoCode < ApplicationRecord
@@ -49,6 +52,11 @@ class PromoCode < ApplicationRecord
     forever: 'forever',
     repeating: 'repeating'
   }
+
+  belongs_to :user, optional: true
+
+  scope :generals, -> { where(for_referral: false) }
+  scope :for_referrals, -> { where(for_referral: true) }
 
   def still_valid?(user, product)
     for_product?(product) && !expired? && !max_times_used? && !max_times_used_by_user?(user)

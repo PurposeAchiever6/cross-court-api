@@ -7,7 +7,8 @@ ActiveAdmin.register PromoCode do
 
   includes :products
 
-  collection = PromoCode::TYPES.map { |type| [type.underscore.humanize, type] }
+  scope 'Generals', :generals, default: true
+  scope 'Users Referrals', :for_referrals
 
   index do
     id_column
@@ -60,7 +61,10 @@ ActiveAdmin.register PromoCode do
               disabled: products_disabled,
               include_blank: false,
               hidden_fields: true
-      f.input :type, as: :select, collection: collection, input_html: { disabled: disabled }
+      f.input :type,
+              as: :select,
+              collection: PromoCode::TYPES.map { |type| [type.underscore.humanize, type] },
+              input_html: { disabled: disabled }
       f.input :code, input_html: { disabled: disabled }
       f.input :discount, input_html: { disabled: disabled }
       f.input :max_redemptions,
