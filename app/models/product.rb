@@ -15,6 +15,7 @@
 #  deleted_at        :datetime
 #  price_for_members :decimal(10, 2)
 #  stripe_product_id :string
+#  referral_cc_cash  :decimal(, )      default(0.0)
 #
 # Indexes
 #
@@ -36,7 +37,7 @@ class Product < ApplicationRecord
   has_many :products_promo_codes, dependent: :destroy
   has_many :promo_codes, through: :products_promo_codes
 
-  validates :credits, :order_number, presence: true
+  validates :name, :credits, :order_number, presence: true
 
   def unlimited?
     credits == UNLIMITED

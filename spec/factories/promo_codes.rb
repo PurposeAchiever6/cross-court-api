@@ -35,6 +35,8 @@ FactoryBot.define do
     max_redemptions         { nil }
     max_redemptions_by_user { nil }
     times_used              { 0 }
+    for_referral            { false }
+    user                    { nil }
     products                { [create(:product)] }
   end
 end

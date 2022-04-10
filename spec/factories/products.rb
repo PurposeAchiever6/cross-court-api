@@ -15,6 +15,7 @@
 #  deleted_at        :datetime
 #  price_for_members :decimal(10, 2)
 #  stripe_product_id :string
+#  referral_cc_cash  :decimal(, )      default(0.0)
 #
 # Indexes
 #
@@ -31,6 +32,7 @@ FactoryBot.define do
     credits      { Faker::Number.between(1, 10) }
     order_number { Faker::Number.number(1) }
     price        { Faker::Commerce.price }
+    referral_cc_cash { 0 }
   end
 
   trait :unlimited do

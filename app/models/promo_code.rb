@@ -59,7 +59,10 @@ class PromoCode < ApplicationRecord
   scope :for_referrals, -> { where(for_referral: true) }
 
   def still_valid?(user, product)
-    for_product?(product) && !expired? && !max_times_used? && !max_times_used_by_user?(user)
+    validate!(user, product)
+    true
+  rescue PromoCodeInvalidException
+    false
   end
 
   def invalid?(user, product)
@@ -86,5 +89,25 @@ class PromoCode < ApplicationRecord
 
   def for_product?(product)
     products.any? { |current_product| current_product == product }
+  end
+
+  def validate!(user, product)
+    raise PromoCodeInvalidException unless for_product?(product)
+
+    if expired? || max_times_used?
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.no_longer_valid')
+    end
+
+    if max_times_used_by_user?(user)
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.already_used')
+    end
+
+    if user == self.user
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.own_usage')
+    end
+
+    if for_referral && user.subscriptions.count.positive?
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.no_first_subscription')
+    end
   end
 end

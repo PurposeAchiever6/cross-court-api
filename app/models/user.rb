@@ -41,6 +41,7 @@
 #  private_access               :boolean          default(FALSE)
 #  active_campaign_id           :integer
 #  birthday                     :date
+#  cc_cash                      :decimal(, )      default(0.0)
 #
 # Indexes
 #

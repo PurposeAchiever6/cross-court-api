@@ -5,8 +5,8 @@ class PlacePurchase
            ChargeCard,
            CreatePurchase,
            IncrementUserCredits,
-           IncrementTimesUsedPromoCode,
-           CreateUserPromoCode,
+           PromoCodes::IncrementTimesUsed,
+           PromoCodes::CreateUserPromoCode,
            SetDropInExpirationDate,
            Events::PurchasePlaced
 end

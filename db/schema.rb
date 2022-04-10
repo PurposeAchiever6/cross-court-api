@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2022_04_16_180948) do
+=======
+ActiveRecord::Schema.define(version: 2022_04_09_224421) do
+>>>>>>> 321839a... [499] - Create CC cash for referral program
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,6 +127,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.datetime "deleted_at"
     t.decimal "price_for_members", precision: 10, scale: 2
     t.string "stripe_product_id"
+    t.decimal "referral_cc_cash", default: "0.0"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -356,6 +361,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.boolean "private_access", default: false
     t.integer "active_campaign_id"
     t.date "birthday"
+    t.decimal "cc_cash", default: "0.0"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

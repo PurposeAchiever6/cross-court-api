@@ -47,6 +47,7 @@ ActiveAdmin.register User do
               input_html: { value: subscription_credits, type: type }
       f.input :total_credits,
               input_html: { value: resource.total_credits, type: type, disabled: true }
+      f.input :cc_cash, label: 'CC Cash'
       f.input :drop_in_expiration_date,
               as: :datepicker,
               input_html: { autocomplete: :off }
@@ -84,6 +85,7 @@ ActiveAdmin.register User do
     column :phone_number
     column :membership
     column :total_credits
+    number_column 'CC Cash', :cc_cash, as: :currency
     column :skill_rating
     column :created_at
     column :zipcode
@@ -112,6 +114,8 @@ ActiveAdmin.register User do
       end
       row :total_credits
       row :drop_in_expiration_date
+      number_row 'CC Cash', :cc_cash, as: :currency
+      row :referral_code
       row :is_referee
       row :is_sem
       row :sign_in_count

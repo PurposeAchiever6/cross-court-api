@@ -50,6 +50,7 @@ Metrics/CyclomaticComplexity:
     - app/controllers/api/v1/stripe_controller.rb
     - app/services/active_campaign_service.rb
     - app/interactors/user_sessions/create.rb
+    - app/models/promo_code.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
@@ -109,8 +110,8 @@ Rails/SaveBang:
 
 Rails/SkipsModelValidations:
   Exclude:
-    - app/interactors/create_user_promo_code.rb
-    - app/interactors/increment_times_used_promo_code.rb
+    - app/interactors/promo_codes/create_user_promo_code.rb
+    - app/interactors/promo_codes/increment_times_used.rb
     - app/models/user.rb
 
 Rails/HasManyOrHasOneDependent:
@@ -142,6 +143,12 @@ Style/ReturnNil:
 Style/GuardClause:
   Exclude:
     - app/controllers/api/v1/confirmations_controller.rb
+    - app/interactors/promo_codes/create_user_promo_code.rb
+    - app/models/promo_code.rb
+
+Style/IfUnlessModifier:
+  Exclude:
+    - app/models/promo_code.rb
 
 Style/EmptyCaseCondition:
   Exclude:

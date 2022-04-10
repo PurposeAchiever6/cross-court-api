@@ -24,17 +24,9 @@ module Api
       def check_promo_code
         @promo_code = PromoCode.find_by(code: params[:promo_code])
 
-        if @promo_code.nil? || !@promo_code.for_product?(product)
-          raise PurchaseException, I18n.t('api.errors.promo_code.invalid')
-        end
+        raise PromoCodeInvalidException unless @promo_code
 
-        if @promo_code.expired? || @promo_code.max_times_used?
-          raise PurchaseException, I18n.t('api.errors.promo_code.no_longer_valid')
-        end
-
-        return unless @promo_code.max_times_used_by_user?(current_user)
-
-        raise PurchaseException, I18n.t('api.errors.promo_code.already_used')
+        @promo_code.validate!(current_user, product)
       end
     end
   end
