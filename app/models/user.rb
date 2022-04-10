@@ -208,7 +208,7 @@ class User < ApplicationRecord
     promo_code_attrs = {
       type: PercentageDiscount.to_s,
       code: referral_code,
-      discount: 50,
+      discount: ENV['REFERRAL_CODE_PERCENTAGE_DISCOUNT'],
       for_referral: true,
       duration: :repeating,
       duration_in_months: 1,
