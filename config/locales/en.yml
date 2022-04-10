@@ -42,6 +42,7 @@ en:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"
         is_not_canceled: "The subscription has not been canceled"
+        already_canceled: "The subscription is already canceled"
         incomplete_status: "Your card was declined. Please change payment method or contact support"
         has_same_product: "The subscription already has the selected product"
       payment_methods:
@@ -116,6 +117,9 @@ en:
       session_waitlist_confirmed: >
         Hey %{name}, you made it off the waitlist and are in for %{when}’s %{time} session
         at CC%{location}!
+      canceled_subscription_reminder: >
+        Hey %{name}, your %{product_name} membership is ending tomorrow! You still have time to
+        reactivate it at %{subscriptions_url}
   admin:
     products:
       created: "Product created successfully"

@@ -24,6 +24,14 @@ class StripeMocker
     )
   end
 
+  def cancel_subscription(stripe_subscription_id)
+    mock_request(
+      url_path: "/subscriptions/#{stripe_subscription_id}",
+      method: :delete,
+      response_body: subscription_response(stripe_subscription_id)
+    )
+  end
+
   private
 
   def mock_request(
@@ -53,6 +61,19 @@ class StripeMocker
       },
       customer: customer_id || 'cus_AJ6y81jMo1Na22',
       type: 'card'
+    }.to_json
+  end
+
+  def subscription_response(stripe_subscription_id)
+    {
+      id: stripe_subscription_id,
+      items: { data: [id: 'stripe-subscription-item-id'] },
+      status: 'canceled',
+      current_period_start: (Time.current - 2.weeks).to_i,
+      current_period_end: (Time.current + 2.weeks).to_i,
+      cancel_at: nil,
+      canceled_at: Time.current.to_i,
+      cancel_at_period_end: false
     }.to_json
   end
 end
