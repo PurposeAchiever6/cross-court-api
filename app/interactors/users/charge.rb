@@ -7,9 +7,23 @@ module Users
       price = context.price
       description = context.description
       notify_error = context.notify_error
+      use_cc_cash = context.use_cc_cash
 
       unless price.positive?
         context.fail!(message: I18n.t('api.errors.users.charges.price_not_positive'))
+      end
+
+      user_cc_cash = user.cc_cash
+
+      if use_cc_cash && user_cc_cash.positive?
+        if user_cc_cash >= price
+          user.update!(cc_cash: user_cc_cash - price)
+          context.paid_with_cc_cash = true
+          return
+        else
+          price -= user_cc_cash
+          user.update!(cc_cash: 0)
+        end
       end
 
       payment_method = user.default_payment_method

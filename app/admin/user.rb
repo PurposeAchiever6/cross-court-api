@@ -4,7 +4,7 @@ ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
                 :drop_in_expiration_date, :credits, :subscription_credits, :private_access,
-                :birthday
+                :birthday, :cc_cash
 
   includes active_subscription: :product
 
@@ -151,29 +151,36 @@ ActiveAdmin.register User do
   member_action :purchase, method: :post do
     user = User.find(params[:id])
     purchase = params[:purchase_type]&.to_sym
+    use_cc_cash = params[:use_cc_cash] == 'true'
 
     case purchase
     when :jersey
       result = Users::Charge.call(
         user: user,
         price: ENV['JERSEY_PURCHASE_PRICE'].to_f,
-        description: 'Jersey purchase'
+        description: 'Jersey purchase',
+        use_cc_cash: use_cc_cash
       )
     when :towel
       result = Users::Charge.call(
         user: user,
         price: ENV['TOWEL_PURCHASE_PRICE'].to_f,
-        description: 'Towel purchase'
+        description: 'Towel purchase',
+        use_cc_cash: use_cc_cash
       )
     when :water
       result = Users::Charge.call(
         user: user,
         price: ENV['WATER_PURCHASE_PRICE'].to_f,
-        description: 'Water bottle purchase'
+        description: 'Water bottle purchase',
+        use_cc_cash: use_cc_cash
       )
+    else
+      flash[:error] = 'Unknown purchase'
+      return redirect_to admin_user_path(id: user.id)
     end
 
-    if result&.failure?
+    if result.failure?
       flash[:error] = result.message
       return redirect_to admin_user_path(id: user.id)
     end

@@ -51,6 +51,7 @@ Metrics/CyclomaticComplexity:
     - app/services/active_campaign_service.rb
     - app/interactors/user_sessions/create.rb
     - app/models/promo_code.rb
+    - app/interactors/users/charge.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
@@ -63,6 +64,7 @@ Metrics/MethodLength:
     - app/jobs/credits_job.rb
     - app/interactors/user_sessions/create.rb
     - spec/support/mocks/stripe_mocker.rb
+    - app/interactors/users/charge.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

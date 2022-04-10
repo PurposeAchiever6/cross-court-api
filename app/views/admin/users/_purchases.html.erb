@@ -1,29 +1,45 @@
-<div>
-  <div class="flex items-center mb-3">
-    <div class="mr-4" style="width: 200px">
+<%= form_tag(purchase_admin_user_path(user.id), method: :post) do %>
+  <div class='mb-5'>
+    <%= user.full_name.titleize %>
+    has
+    <strong>
+      <%= "$#{user.cc_cash}" %>
+    </strong>
+    available from his referral credits
+  </div>
+
+  <div class='flex items-center mb-4'>
+    <%= check_box_tag :use_cc_cash, true, true, class: 'mr-1' %>
+    <%= label_tag :use_cc_cash, 'Spend available CC Cash for purchase' %>
+  </div>
+
+  <div class='flex items-center mb-3'>
+    <div class='mr-4' style='width: 200px'>
       Purchase a jersey for
       <strong><%= number_to_currency(jersey_purchase_price) %></strong>
     </div>
-    <%= button_to "Buy",
-                  purchase_admin_user_path(user.id, purchase_type: :jersey),
-                  data: { disable_with: "Loading..." } %>
+    <%= button_tag 'Buy',
+                   type: :submit, name: :purchase_type, value: :jersey,
+                   data: { disable_with: 'Loading...' } %>
   </div>
-  <div class="flex items-center mb-3">
-    <div class="mr-4" style="width: 200px">
+
+  <div class='flex items-center mb-3'>
+    <div class='mr-4' style='width: 200px'>
       Purchase a towel for
       <strong><%= number_to_currency(towel_purchase_price) %></strong>
     </div>
-    <%= button_to "Buy",
-                  purchase_admin_user_path(user.id, purchase_type: :towel),
-                  data: { disable_with: "Loading..." } %>
+    <%= button_tag 'Buy',
+                   type: :submit, name: :purchase_type, value: :towel,
+                   data: { disable_with: 'Loading...' } %>
   </div>
-  <div class="flex items-center">
-    <div class="mr-4" style="width: 200px">
+
+  <div class='flex items-center'>
+    <div class='mr-4' style='width: 200px'>
       Purchase a water bottle for
       <strong><%= number_to_currency(water_purchase_price) %></strong>
     </div>
-    <%= button_to "Buy",
-                  purchase_admin_user_path(user.id, purchase_type: :water),
-                  data: { disable_with: "Loading..." } %>
+    <%= button_tag 'Buy',
+                   type: :submit, name: :purchase_type, value: :water,
+                   data: { disable_with: 'Loading...' } %>
   </div>
-</div>
+<% end %>
