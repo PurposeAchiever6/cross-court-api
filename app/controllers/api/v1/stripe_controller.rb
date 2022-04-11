@@ -42,7 +42,7 @@ module Api
         when INVOICE_PAYMENT_SUCCEEDED
           subscription = StripeService.retrieve_subscription(object.subscription)
           update_database_subscription(subscription)
-          if object.billing_reason == SUBSCRIPTION_CYCLE
+          if active_subscription && object.billing_reason == SUBSCRIPTION_CYCLE
             Subscriptions::RenewUserSubscriptionCredits.call(
               user: user,
               subscription: active_subscription
