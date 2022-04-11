@@ -5,7 +5,7 @@ describe Users::Charge do
     let!(:user) { create(:user, cc_cash: user_cc_cash) }
     let!(:payment_method) { create(:payment_method, user: user, default: true) }
 
-    let(:price) { rand(1..100) }
+    let(:price) { rand(10..100) }
     let(:description) { nil }
     let(:notify_error) { false }
     let(:use_cc_cash) { false }
@@ -128,7 +128,7 @@ describe Users::Charge do
       end
 
       context 'when user cc cash is less than the price to charge' do
-        let(:user_cc_cash) { price - 10 }
+        let(:user_cc_cash) { price - 5 }
 
         it { expect(subject.charge_payment_intent_id).to eq(payment_intent_id) }
         it { expect(subject.paid_with_cc_cash).to eq(nil) }
