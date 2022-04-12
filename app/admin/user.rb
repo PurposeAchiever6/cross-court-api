@@ -3,7 +3,8 @@ ActiveAdmin.register User do
 
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
-                :drop_in_expiration_date, :credits, :private_access, :birthday
+                :drop_in_expiration_date, :credits, :subscription_credits, :private_access,
+                :birthday
 
   includes active_subscription: :product
 
@@ -43,9 +44,7 @@ ActiveAdmin.register User do
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
       f.input :subscription_credits,
-              input_html: { value: subscription_credits,
-                            type: type,
-                            disabled: true }
+              input_html: { value: subscription_credits, type: type }
       f.input :total_credits,
               input_html: { value: resource.total_credits, type: type, disabled: true }
       f.input :drop_in_expiration_date,
