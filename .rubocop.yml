@@ -91,7 +91,7 @@ Metrics/ParameterLists:
     - spec/support/mocks/stripe_mocker.rb
 
 Metrics/PerceivedComplexity:
-  Max: 12
+  Max: 14
 
 Rails:
   Enabled: true

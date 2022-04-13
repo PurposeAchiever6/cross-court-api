@@ -3,13 +3,14 @@ require 'rails_helper'
 describe Users::Charge do
   describe '.call' do
     let!(:user) { create(:user, cc_cash: user_cc_cash) }
-    let!(:payment_method) { create(:payment_method, user: user, default: true) }
+    let!(:default_payment_method) { create(:payment_method, user: user, default: true) }
 
     let(:price) { rand(10..100) }
     let(:description) { nil }
     let(:notify_error) { false }
     let(:use_cc_cash) { false }
     let(:user_cc_cash) { 0 }
+    let(:payment_method) { nil }
     let(:payment_intent_id) { rand(1_000) }
 
     before do
@@ -21,6 +22,7 @@ describe Users::Charge do
         user: user,
         price: price,
         description: description,
+        payment_method: payment_method,
         notify_error: notify_error,
         use_cc_cash: use_cc_cash
       )
@@ -31,7 +33,7 @@ describe Users::Charge do
     it 'calls Stripe service with correct args' do
       expect(StripeService).to receive(:charge).with(
         user,
-        payment_method.stripe_id,
+        default_payment_method.stripe_id,
         price,
         description
       )
@@ -47,7 +49,7 @@ describe Users::Charge do
     end
 
     context 'when user does not have any payment method' do
-      let!(:payment_method) { nil }
+      let!(:default_payment_method) { nil }
 
       it { expect(subject.success?).to eq(false) }
 
@@ -75,6 +77,23 @@ describe Users::Charge do
           expect_any_instance_of(Slack::Notifier).to receive(:ping)
           subject
         end
+      end
+    end
+
+    context 'when a payment method is passed as argument' do
+      let!(:payment_method) { create(:payment_method, user: user) }
+
+      it { expect(subject.charge_payment_intent_id).to eq(payment_intent_id) }
+
+      it 'calls Stripe service with correct args' do
+        expect(StripeService).to receive(:charge).with(
+          user,
+          payment_method.stripe_id,
+          price,
+          description
+        )
+
+        subject
       end
     end
 
@@ -137,12 +156,18 @@ describe Users::Charge do
         it 'calls Stripe service with correct args' do
           expect(StripeService).to receive(:charge).with(
             user,
-            payment_method.stripe_id,
+            default_payment_method.stripe_id,
             price - user_cc_cash,
             description
           )
 
           subject
+        end
+
+        context 'when stripe fails' do
+          before { allow(StripeService).to receive(:charge).and_raise(Stripe::StripeError) }
+
+          it { expect { subject }.not_to change { user.reload.cc_cash } }
         end
       end
 
@@ -156,7 +181,7 @@ describe Users::Charge do
         it 'calls Stripe service with correct args' do
           expect(StripeService).to receive(:charge).with(
             user,
-            payment_method.stripe_id,
+            default_payment_method.stripe_id,
             price,
             description
           )

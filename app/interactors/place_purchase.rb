@@ -2,7 +2,7 @@ class PlacePurchase
   include Interactor::Organizer
 
   organize MakeDiscount,
-           ChargeCard,
+           Users::Charge,
            CreatePurchase,
            IncrementUserCredits,
            PromoCodes::IncrementTimesUsed,

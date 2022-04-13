@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 describe 'POST api/v1/purchases' do
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, cc_cash: 150) }
   let!(:product) { create(:product, price: 100) }
   let(:payment_method) { create(:payment_method, user: user) }
   let(:payment_method_id) { payment_method.id }
-  let(:params) { { product_id: product.id, payment_method_id: payment_method_id } }
+  let(:use_cc_cash) { false }
+
+  let(:params) do
+    { product_id: product.id, payment_method_id: payment_method_id, use_cc_cash: use_cc_cash }
+  end
 
   subject do
     post api_v1_purchases_path, params: params, headers: auth_headers, as: :json
@@ -31,8 +35,20 @@ describe 'POST api/v1/purchases' do
       expect { subject }.to change { user.reload.credits }.from(0).to(product.credits)
     end
 
+    it 'does not use user CC cash' do
+      expect { subject }.not_to change { user.reload.cc_cash }
+    end
+
     it 'calls the Active Campaign service' do
       expect { subject }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default')
+    end
+
+    context 'when argument use_cc_cash is true' do
+      let(:use_cc_cash) { true }
+
+      it 'uses user CC cash' do
+        expect { subject }.to change { user.reload.cc_cash }.from(150).to(50)
+      end
     end
 
     context 'when a promo_code is applied' do

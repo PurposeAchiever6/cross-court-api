@@ -11,17 +11,19 @@ module Api
         result = PlacePurchase.call(
           product: product,
           user: current_user,
-          payment_method_id: payment_method_id,
+          payment_method: payment_method,
           promo_code: promo_code,
-          description: "#{product.name} purchase"
+          description: "#{product.name} purchase",
+          use_cc_cash: use_cc_cash
         )
+
         raise PurchaseException, result.message unless result.success?
       end
 
       def create_free_session_intent
         result = Users::ClaimFreeSession.call(
           user: current_user,
-          payment_method_id: payment_method_id
+          payment_method: payment_method
         )
 
         raise ClaimFreeSessionException, result.message unless result.success?
@@ -39,6 +41,14 @@ module Api
 
       def payment_method_id
         params.require(:payment_method_id)
+      end
+
+      def payment_method
+        current_user.payment_methods.find(payment_method_id)
+      end
+
+      def use_cc_cash
+        params[:use_cc_cash]
       end
 
       def validate_free_session
