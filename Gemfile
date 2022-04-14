@@ -73,6 +73,7 @@ group :test do
   gem 'faker', '~> 1.7.3'
   gem 'rspec-json_expectations', '~> 2.2'
   gem 'rspec-sidekiq', '~> 3.1.0'
+  gem 'mock_redis'
   gem 'shoulda-matchers', '~> 4.1', '>= 4.1.2'
   gem 'simplecov', '~> 0.13.0', require: false
   gem 'timecop', '~> 0.9.1'

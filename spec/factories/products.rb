@@ -35,5 +35,6 @@ FactoryBot.define do
 
   trait :unlimited do
     credits { Product::UNLIMITED }
+    product_type { 'recurring' }
   end
 end

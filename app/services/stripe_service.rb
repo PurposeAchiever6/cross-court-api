@@ -98,7 +98,13 @@ class StripeService
     Stripe::Subscription.create(subscription_params)
   end
 
-  def self.update_subscription(subscription, product, payment_method_stripe_id, promo_code = nil)
+  def self.update_subscription(
+    subscription,
+    product,
+    payment_method_stripe_id,
+    promo_code = nil,
+    proration_date = nil
+  )
     subscription_stripe_id = subscription.stripe_id
 
     subscription_params = {
@@ -109,6 +115,8 @@ class StripeService
       cancel_at_period_end: false,
       default_payment_method: payment_method_stripe_id
     }
+
+    subscription_params[:proration_date] = proration_date if proration_date
 
     if promo_code
       subscription_params.merge!(promotion_code: promo_code.stripe_promo_code_id)
@@ -198,5 +206,25 @@ class StripeService
 
   def self.update_promotion_code(promotion_code_id, promotion_code_params)
     Stripe::PromotionCode.update(promotion_code_id, promotion_code_params)
+  end
+
+  def self.upcoming_invoice(
+    customer_id,
+    subscription_id = nil,
+    items = nil,
+    proration_date = nil,
+    promo_code = nil
+  )
+
+    params = {
+      customer: customer_id,
+      subscription: subscription_id,
+      subscription_items: items,
+      subscription_proration_date: proration_date
+    }.compact
+
+    params[:coupon] = promo_code.stripe_coupon_id if promo_code
+
+    Stripe::Invoice.upcoming(params)
   end
 end
