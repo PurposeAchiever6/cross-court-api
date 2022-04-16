@@ -1,0 +1,5 @@
+{
+  id: referral.id,
+  referred_user_name: referral.user.full_name,
+  created_at: referral.created_at.iso8601
+}

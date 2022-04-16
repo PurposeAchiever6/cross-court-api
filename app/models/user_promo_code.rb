@@ -20,4 +20,6 @@ class UserPromoCode < ApplicationRecord
   belongs_to :promo_code
 
   validates :promo_code_id, uniqueness: { scope: :user_id }
+
+  scope :for_promo_code, ->(promo_code) { where(promo_code_id: promo_code) }
 end

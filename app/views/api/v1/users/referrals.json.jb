@@ -1,0 +1,3 @@
+{
+  referrals: render(partial: 'referral', collection: @referrals, as: :referral)
+}

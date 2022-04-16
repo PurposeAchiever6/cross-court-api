@@ -50,6 +50,7 @@ Rails.application.routes.draw do
           get :profile
           post :resend_confirmation_instructions
           put :update_skill_rating
+          get :referrals
         end
         namespace :sem do
           resources :sessions, only: :show
