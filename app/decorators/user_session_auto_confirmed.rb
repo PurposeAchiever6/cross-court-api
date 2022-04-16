@@ -37,8 +37,15 @@ class UserSessionAutoConfirmed
   def message
     name = user.first_name
     time = user_session.time.strftime(Session::TIME_FORMAT)
+    free_session = user_session.is_free_session
 
-    I18n.t('notifier.sonar.session_auto_confirmed',
+    i18n_message_key = if free_session
+                         'notifier.sonar.session_auto_confirmed_first_timers'
+                       else
+                         'notifier.sonar.session_auto_confirmed'
+                       end
+
+    I18n.t(i18n_message_key,
            name: name,
            time: time,
            location: location.name,

@@ -10,7 +10,8 @@ describe UserSessionAutoConfirmed do
         session: session,
         user: user,
         date: date,
-        reminder_sent_at: reminder_sent_at
+        reminder_sent_at: reminder_sent_at,
+        is_free_session: free_session
       )
     end
 
@@ -18,6 +19,16 @@ describe UserSessionAutoConfirmed do
     let(:session_time) { time_now + Session::CANCELLATION_PERIOD - 1.minute }
     let(:date) { time_now.to_date }
     let(:reminder_sent_at) { nil }
+    let(:free_session) { false }
+    let(:expected_sms_message) do
+      I18n.t('notifier.sonar.session_auto_confirmed',
+             name: user.first_name,
+             time: session.time.strftime(Session::TIME_FORMAT),
+             location: user_session.location.name,
+             frontend_url: ENV['FRONTENT_URL'],
+             invite_friend: I18n.t('notifier.sonar.invite_friend',
+                                   link: user_session.invite_link))
+    end
 
     subject { UserSessionAutoConfirmed.new(user_session).save! }
 
@@ -32,8 +43,8 @@ describe UserSessionAutoConfirmed do
       expect { subject }.to change { user_session.reload.reminder_sent_at }.from(nil).to(anything)
     end
 
-    it 'calls Sonar service' do
-      expect(SonarService).to receive(:send_message)
+    it 'calls Sonar service with expected args' do
+      expect(SonarService).to receive(:send_message).with(user, expected_sms_message)
       subject
     end
 
@@ -71,6 +82,24 @@ describe UserSessionAutoConfirmed do
         expect { subject }.not_to have_enqueued_job(
           ::ActiveCampaign::CreateDealJob
         )
+      end
+    end
+
+    context 'when is a free session' do
+      let(:free_session) { true }
+      let(:expected_sms_message) do
+        I18n.t('notifier.sonar.session_auto_confirmed_first_timers',
+               name: user.first_name,
+               time: session.time.strftime(Session::TIME_FORMAT),
+               location: user_session.location.name,
+               frontend_url: ENV['FRONTENT_URL'],
+               invite_friend: I18n.t('notifier.sonar.invite_friend',
+                                     link: user_session.invite_link))
+      end
+
+      it 'calls Sonar service with expected args' do
+        expect(SonarService).to receive(:send_message).with(user, expected_sms_message)
+        subject
       end
     end
   end

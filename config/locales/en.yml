@@ -96,19 +96,29 @@ en:
         Error: %{error_message}
     sonar:
       post_free_session_check_in: >
-        Hey %{name}!, If you loved your experience, then stop by the front desk on your way out to
+        Hey %{name}! If you loved your experience, then stop by the front desk on your way out to
         learn about a discount for your first month of membership!
       invite_friend: "Share this link to sweat with a friend: %{link}"
       session_auto_confirmed: >
         Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. Please
         note the cancellation window has passed so no refunds beyond this point. If you need
         to cancel, you're able to at %{frontend_url} %{invite_friend}
-      unreadable_text: "We couldn’t process your response"
+      session_auto_confirmed_first_timers: >
+        Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. For the best
+        first experience, please arrive at least 20 minutes prior to session start time. Also note
+        the cancellation window has passed so no refunds beyond this point. If you need
+        to cancel, you're able to at %{frontend_url} %{invite_friend}
+      unreadable_text: "Sorry, we couldn’t process your response"
       no_more_sonar_confirmation: "Session confirmation is not longer needed. Thanks!"
       no_more_sonar_cancellation: "If you need to cancel, please do it through %{frontend_url} Thanks!"
       no_session_booked: "You don’t have any session booked yet"
       today_reminder: >
         Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. Please
+        note the cancellation window closes %{cancellation_period_hours} hrs before your session
+        starts. If you need to cancel, you're able to at %{frontend_url} %{invite_friend}
+      today_reminder_first_timers: >
+        Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. For the
+        best first experience, please arrive at least 20 minutes prior to session start time. Also
         note the cancellation window closes %{cancellation_period_hours} hrs before your session
         starts. If you need to cancel, you're able to at %{frontend_url} %{invite_friend}
       survey_reminder: >

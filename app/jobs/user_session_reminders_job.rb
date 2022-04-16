@@ -9,6 +9,7 @@ class UserSessionRemindersJob < ApplicationJob
                         .includes(:user, session: :location)
                         .find_each do |user_session|
       user = user_session.user
+      free_session = user_session.is_free_session
 
       ActiveCampaignService.new.create_deal(
         ::ActiveCampaign::Deal::Event::SESSION_REMINDER_6_HOURS,
@@ -16,7 +17,13 @@ class UserSessionRemindersJob < ApplicationJob
         user_session_id: user_session.id
       )
 
-      SonarService.send_message(user, I18n.t('notifier.sonar.today_reminder',
+      i18n_message_key = if free_session
+                           'notifier.sonar.today_reminder_first_timers'
+                         else
+                           'notifier.sonar.today_reminder'
+                         end
+
+      SonarService.send_message(user, I18n.t(i18n_message_key,
                                              name: user.first_name,
                                              time: user_session.time.strftime(Session::TIME_FORMAT),
                                              location: user_session.location.name,
