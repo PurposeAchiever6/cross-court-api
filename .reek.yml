@@ -9,13 +9,8 @@ detectors:
     enabled: false
     exclude: []
   ControlParameter:
-    enabled: true
-    exclude:
-      [
-        "ActiveCampaignService#custom_deal_fields",
-        "Product#price",
-        "ActiveCampaignService#initialize",
-      ]
+    enabled: false
+    exclude: []
   DataClump:
     enabled: true
     exclude: ["SlackService"]

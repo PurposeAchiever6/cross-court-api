@@ -38,10 +38,6 @@ module Api
              session_event.calendar_events(from_date, to_date)
            end
         )
-        @user_sessions_count = UserSession.where(date: (from_date..to_date))
-                                          .group(:session_id, :date)
-                                          .not_canceled
-                                          .count
       end
 
       private

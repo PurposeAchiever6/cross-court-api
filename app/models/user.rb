@@ -71,7 +71,7 @@ class User < ApplicationRecord
        _prefix: :free_session
 
   has_one :last_checked_in_user_session,
-          -> { where(checked_in: true).order(date: :desc) },
+          -> { checked_in.order(date: :desc) },
           class_name: 'UserSession',
           inverse_of: :user
 
@@ -166,6 +166,10 @@ class User < ApplicationRecord
     end
 
     age
+  end
+
+  def first_timer?
+    last_checked_in_user_session.blank?
   end
 
   def first_not_free_session?

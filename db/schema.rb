@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_27_222413) do
+ActiveRecord::Schema.define(version: 2022_04_16_180948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 2022_03_27_222413) do
     t.boolean "is_open_club", default: false
     t.integer "duration_minutes", default: 60
     t.datetime "deleted_at"
+    t.integer "max_first_timers"
     t.index ["deleted_at"], name: "index_sessions_on_deleted_at"
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"

@@ -5,7 +5,14 @@ describe ReachUserOnWaitlistJob do
     let!(:user_1) { create(:user, credits: user_1_credits) }
     let!(:user_2) { create(:user, credits: user_2_credits) }
     let!(:location) { create(:location) }
-    let!(:session) { create(:session, time: session_time, location: location) }
+    let!(:session) do
+      create(
+        :session,
+        time: session_time,
+        location: location,
+        max_first_timers: max_first_timers
+      )
+    end
     let!(:user_sessions) do
       create_list(
         :user_session,
@@ -28,6 +35,7 @@ describe ReachUserOnWaitlistJob do
     let(:user_2_credits) { 1 }
     let(:number_of_user_sessions) { Session::MAX_CAPACITY - 1 }
     let(:date) { Time.zone.today + 2.days }
+    let(:max_first_timers) { nil }
     let(:job_arg_date) { date }
 
     before do
@@ -84,6 +92,22 @@ describe ReachUserOnWaitlistJob do
         it { is_expected.to eq(nil) }
         it { expect { subject }.not_to change { waitlist_item_1.reload.reached } }
         it { expect { subject }.not_to change { waitlist_item_2.reload.reached } }
+      end
+    end
+
+    context 'when there are no more first timers spots' do
+      let(:max_first_timers) { number_of_user_sessions }
+
+      it { is_expected.to eq(nil) }
+      it { expect { subject }.not_to change { waitlist_item_1.reload.reached } }
+      it { expect { subject }.not_to change { waitlist_item_2.reload.reached } }
+
+      context 'when there is a no first timer in the waitlist' do
+        let!(:user_2) { create(:user, :not_first_timer, credits: user_2_credits) }
+
+        it { is_expected.to eq(true) }
+        it { expect { subject }.not_to change { waitlist_item_1.reload.reached } }
+        it { expect { subject }.to change { waitlist_item_2.reload.reached }.from(false).to(true) }
       end
     end
 

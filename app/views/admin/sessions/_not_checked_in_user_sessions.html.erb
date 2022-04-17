@@ -31,7 +31,7 @@
             <%= link_to user_session.user_full_name, admin_user_path(user_session.user_id) %>
           </td>
           <td class='align-middle'>
-            <%= status_tag user_session.is_free_session %>
+            <%= status_tag user_session.is_free_session || user_session.user.first_timer? %>
           </td>
           <td class='align-middle'>
             <%= status_tag user.vaccinated %>

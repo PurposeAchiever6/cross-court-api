@@ -16,6 +16,7 @@
 #  is_open_club     :boolean          default(FALSE)
 #  duration_minutes :integer          default(60)
 #  deleted_at       :datetime
+#  max_first_timers :integer
 #
 # Indexes
 #
@@ -219,6 +220,163 @@ describe Session do
       end
 
       it { is_expected.to eq(session) }
+    end
+  end
+
+  describe '#full?' do
+    let!(:session) { create(:session, max_first_timers: max_first_timers) }
+    let!(:user_1) { create(:user, :not_first_timer) }
+    let!(:user_2) { create(:user, :not_first_timer) }
+    let!(:user_3) { create(:user, :not_first_timer) }
+    let!(:user_4) { create(:user, :not_first_timer) }
+    let!(:user_session_1) do
+      create(
+        :user_session,
+        user: user_1,
+        date: date,
+        session: session,
+        state: :reserved
+      )
+    end
+    let!(:user_session_2) do
+      create(
+        :user_session,
+        user: user_2,
+        date: date,
+        session: session,
+        state: :reserved
+      )
+    end
+    let!(:user_session_3) do
+      create(
+        :user_session,
+        user: user_3,
+        date: date,
+        session: session,
+        state: :confirmed
+      )
+    end
+    let!(:user_session_4) do
+      create(
+        :user_session,
+        date: date,
+        session: session,
+        state: :canceled
+      )
+    end
+
+    let(:user) { nil }
+    let(:date) { Date.current + 2.days }
+    let(:max_first_timers) { nil }
+
+    before { stub_const('Session::MAX_CAPACITY', 3) }
+
+    subject { session.full?(date, user) }
+
+    it { is_expected.to eq(true) }
+
+    context 'when there are spots available' do
+      before { user_session_2.destroy! }
+
+      it { is_expected.to eq(false) }
+
+      context 'when user is passed as argument' do
+        let!(:user) { create(:user) }
+
+        it { is_expected.to eq(false) }
+
+        context 'when max_first_timers is 1' do
+          let(:max_first_timers) { 1 }
+
+          it { is_expected.to eq(false) }
+
+          context 'when there is already a first timer reservation' do
+            let!(:user_1) { create(:user) }
+
+            it { is_expected.to eq(true) }
+          end
+        end
+      end
+    end
+  end
+
+  describe '#spots_left' do
+    let!(:session) { create(:session, max_first_timers: max_first_timers) }
+    let!(:user_1) { create(:user, :not_first_timer) }
+    let!(:user_2) { create(:user, :not_first_timer) }
+    let!(:user_3) { create(:user, :not_first_timer) }
+    let!(:user_4) { create(:user, :not_first_timer) }
+    let!(:user_session_1) do
+      create(
+        :user_session,
+        user: user_1,
+        date: date,
+        session: session,
+        state: :reserved
+      )
+    end
+    let!(:user_session_2) do
+      create(
+        :user_session,
+        user: user_2,
+        date: date,
+        session: session,
+        state: :reserved
+      )
+    end
+    let!(:user_session_3) do
+      create(
+        :user_session,
+        user: user_3,
+        date: date,
+        session: session,
+        state: :confirmed
+      )
+    end
+    let!(:user_session_4) do
+      create(
+        :user_session,
+        date: date,
+        session: session,
+        state: :canceled
+      )
+    end
+
+    let(:user) { nil }
+    let(:date) { Date.current + 2.days }
+    let(:max_first_timers) { nil }
+
+    before { stub_const('Session::MAX_CAPACITY', 3) }
+
+    subject { session.spots_left(date, user) }
+
+    it { is_expected.to eq(0) }
+
+    context 'when there are spots available' do
+      before do
+        user_session_1.destroy!
+        user_session_2.destroy!
+      end
+
+      it { is_expected.to eq(2) }
+
+      context 'when user is passed as argument' do
+        let!(:user) { create(:user) }
+
+        it { is_expected.to eq(2) }
+
+        context 'when max_first_timers is 1' do
+          let(:max_first_timers) { 1 }
+
+          it { is_expected.to eq(1) }
+
+          context 'when there is already a first timer reservation' do
+            let!(:user_3) { create(:user) }
+
+            it { is_expected.to eq(0) }
+          end
+        end
+      end
     end
   end
 end

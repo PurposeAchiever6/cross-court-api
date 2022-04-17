@@ -29,7 +29,7 @@ class UserSessionAutoConfirmed
   private
 
   def invite_friend
-    return '' if session.full?(date)
+    return '' if session.full?(date, user)
 
     I18n.t('notifier.sonar.invite_friend', link: invite_link)
   end

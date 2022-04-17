@@ -95,5 +95,11 @@ FactoryBot.define do
       subscription_credits { Product::UNLIMITED }
       active_subscription { create(:subscription, :with_unlimited_product) }
     end
+
+    trait :not_first_timer do
+      after :create do |user|
+        create(:user_session, user: user, checked_in: true)
+      end
+    end
   end
 end

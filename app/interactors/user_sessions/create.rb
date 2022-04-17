@@ -11,7 +11,7 @@ module UserSessions
       from_waitlist = context.from_waitlist || false
 
       raise SessionIsOpenClubException if session.open_club?
-      raise FullSessionException if session.full?(date)
+      raise FullSessionException if session.full?(date, user)
 
       user_session =
         ActiveRecord::Base.transaction do

@@ -49,6 +49,8 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
   end
 
   context 'when there is no session for the date' do
+    include_context 'disable bullet'
+
     let(:date) { session.start_time + 1.day }
 
     it { is_expected.to have_http_status(:bad_request) }
@@ -57,6 +59,8 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
   end
 
   context 'when user is already in the waitlist' do
+    include_context 'disable bullet'
+
     before { create(:user_session_waitlist, session: session, user: user, date: date) }
 
     it { is_expected.to have_http_status(:bad_request) }
