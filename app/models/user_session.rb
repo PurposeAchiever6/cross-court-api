@@ -100,7 +100,7 @@ class UserSession < ApplicationRecord
     options = { 'CN' => 'Crosscourt' }
     organizer_property = RiCal::PropertyValue::CalAddress.new(
       nil,
-      value: 'mailto:ccteam@cross-court.com',
+      value: "mailto:#{ENV['CC_TEAM_EMAIL']}",
       params: options
     )
 
