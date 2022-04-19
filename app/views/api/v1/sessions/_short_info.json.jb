@@ -1,4 +1,4 @@
-{
+json = {
   id: session.id,
   start_time: session.start_time.iso8601,
   past: session.past?,
@@ -8,14 +8,23 @@
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
   reserved: user_sessions.values_at([session.id, session.start_time]).compact.present?,
-  on_waitlist: user_sessions_waitlists.values_at([session.id, session.start_time]).compact.present?,
   full: user_sessions_count.values_at([session.id, session.start_time]).sum ==
-    Session::MAX_CAPACITY,
+        Session::MAX_CAPACITY,
   spots_left: Session::MAX_CAPACITY -
-    user_sessions_count.values_at([session.id, session.start_time]).sum,
+              user_sessions_count.values_at([session.id, session.start_time]).sum,
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
   skill_level: render(
     partial: 'api/v1/skill_levels/info',
     locals: { skill_level: session.skill_level }
   )
 }
+
+on_waitlist = user_sessions_waitlists.values_at([session.id, session.start_time]).compact.present?
+json[:on_waitlist] = on_waitlist
+
+if on_waitlist
+  json[:waitlist_placement] = session.waitlist(session.start_time).not_reached
+                                     .map(&:user_id).index(user_id) + 1
+end
+
+json

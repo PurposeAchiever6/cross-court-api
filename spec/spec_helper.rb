@@ -7,6 +7,7 @@ require 'helpers'
 require 'webmock/rspec'
 require 'shoulda/matchers'
 require 'sidekiq/testing'
+require 'mock_redis'
 
 Sidekiq::Testing.fake!
 
@@ -35,5 +36,7 @@ RSpec.configure do |config|
   config.before :each do
     allow(SonarService).to receive(:add_update_customer).and_return(1)
     ActionMailer::Base.deliveries.clear
+    redis_instance = MockRedis.new
+    Redis.stub(:new).and_return(redis_instance)
   end
 end

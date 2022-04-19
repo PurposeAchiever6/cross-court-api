@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'Crosscourt <ccteam@cross-court.com>'
+  default from: "Crosscourt <#{ENV['CC_TEAM_EMAIL']}>"
   layout 'mailer'
 end

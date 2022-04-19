@@ -29,6 +29,14 @@ module Api
         @subscription = result.subscription
       end
 
+      def preview_prorate
+        @invoice = Subscriptions::ProratePrice.call(
+          user: current_user,
+          new_product: product,
+          promo_code: promo_code
+        ).invoice
+      end
+
       def update
         result = Subscriptions::UpdateSubscription.call(
           user: current_user,

@@ -65,6 +65,7 @@ Rails.application.routes.draw do
           end
           collection do
             post :feedback
+            get :preview_prorate
           end
         end
         namespace :active_campaign do

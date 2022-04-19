@@ -1,0 +1,6 @@
+{
+  subtotal: invoice.subtotal.to_f / 100,
+  tax: invoice.tax,
+  tax_percent: invoice.tax_percent,
+  total: (invoice.total.positive? ? invoice.total.to_f : 0) / 100
+}

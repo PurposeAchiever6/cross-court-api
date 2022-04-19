@@ -28,5 +28,11 @@ describe Subscriptions::CreateFeedback do
       expect_any_instance_of(SlackService).to receive(:notify_subscription_feedback)
       subject
     end
+
+    it 'sends session booked email' do
+      expect { subject }.to have_enqueued_job(
+        ActionMailer::MailDeliveryJob
+      ).with('SubscriptionMailer', 'feedback', anything, anything)
+    end
   end
 end

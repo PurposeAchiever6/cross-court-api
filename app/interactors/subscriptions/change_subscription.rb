@@ -3,10 +3,14 @@ module Subscriptions
     include Interactor
 
     def call
+      user = context.user
       subscription = context.subscription
       product = context.product
       payment_method = context.payment_method
       promo_code = context.promo_code
+
+      redis = Redis.new(url: ENV['REDIS_HOST'])
+      proration_date = redis.get("#{user.id}-#{subscription.id}-proration_date")
 
       old_product = subscription.product
       old_promo_code = subscription.promo_code
@@ -17,7 +21,8 @@ module Subscriptions
         subscription,
         product,
         payment_method.stripe_id,
-        promo_code
+        promo_code,
+        proration_date
       )
 
       subscription = subscription.assign_stripe_attrs(stripe_subscription)

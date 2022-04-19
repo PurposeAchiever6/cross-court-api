@@ -16,6 +16,7 @@ describe Subscriptions::ChangeSubscription do
       )
     end
 
+    let(:proration_date) { nil }
     let(:promo_code) { nil }
     let(:stripe_response_status) { 'active' }
 
@@ -42,7 +43,8 @@ describe Subscriptions::ChangeSubscription do
         subscription: active_subscription,
         product: new_product,
         payment_method: new_payment_method,
-        promo_code: promo_code
+        promo_code: promo_code,
+        proration_date: proration_date
       )
     end
 
@@ -66,7 +68,14 @@ describe Subscriptions::ChangeSubscription do
     it 'calls the stripes create_subscription method with the correct params' do
       expect(StripeService).to receive(
         :update_subscription
-      ).with(active_subscription, new_product, new_payment_method.stripe_id, promo_code)
+      ).with(
+        active_subscription,
+        new_product,
+        new_payment_method.stripe_id,
+        promo_code,
+        proration_date
+      )
+
       subject
     end
 

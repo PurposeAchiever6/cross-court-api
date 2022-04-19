@@ -39,7 +39,7 @@ describe ::Sonar::FirstFreeSessionSmsJob do
     it 'calls Sonar service' do
       expect(SonarService).to receive(:send_message).once.with(
         user_1,
-        "Hey #{user_1.first_name}!, If you loved your experience, then stop by the front desk on " \
+        "Hey #{user_1.first_name}! If you loved your experience, then stop by the front desk on " \
         "your way out to learn about a discount for your first month of membership!\n"
       )
       subject

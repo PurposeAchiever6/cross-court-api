@@ -32,16 +32,38 @@ class StripeMocker
     )
   end
 
+  def upcoming_invoice(
+    customer_id,
+    subscription_id = nil,
+    items = nil,
+    proration_date = nil,
+    _promo_code = nil
+  )
+    mock_request(
+      url_path: '/invoices/upcoming',
+      method: :get,
+      response_body: invoice_response(customer_id, subscription_id),
+      query: {
+        subscription_items: items,
+        customer: customer_id,
+        subscription: subscription_id,
+        subscription_proration_date: proration_date
+      }
+    )
+  end
+
   private
 
   def mock_request(
     url_path:,
     method:,
     request_body: nil,
+    query: nil,
     response_body: {}.to_json,
     status: 200
   )
     WebMock.stub_request(method, "#{base_url}#{url_path}").with(
+      query: query,
       body: request_body
     ).to_return(
       status: status,
@@ -74,6 +96,42 @@ class StripeMocker
       cancel_at: nil,
       canceled_at: Time.current.to_i,
       cancel_at_period_end: false
+    }.to_json
+  end
+
+  def invoice_response(customer_id, subscription_id)
+    {
+      currency: 'usd',
+      customer: customer_id || 'cus_AJ6y81jMo1Na22',
+      lines: {
+        object: 'list',
+        data: [
+          {
+            id: 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr',
+            object: 'line_item',
+            amount: 1239,
+            currency: 'usd',
+            description: 'Invoice Item',
+            invoice_item: 'ii_1Kooo9EbKIwsJiGZCMMpX356',
+            price: {
+              id: 'price_1KmnWrEbKIwsJiGZoVZMWIIJ',
+              object: 'price',
+              active: true,
+              billing_scheme: 'per_unit',
+              created: 1_649_546_237,
+              currency: 'usd',
+              product: 'prod_LTl2QHNJinvoVV'
+            }
+          }
+        ]
+      },
+      period_end: 1_650_027_809,
+      period_start: 1_650_027_809,
+      subscription: subscription_id,
+      subtotal: 1239,
+      tax: nil,
+      tax_percent: nil,
+      total: 1239
     }.to_json
   end
 end
