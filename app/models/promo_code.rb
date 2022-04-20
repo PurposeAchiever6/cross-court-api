@@ -16,10 +16,13 @@
 #  max_redemptions         :integer
 #  max_redemptions_by_user :integer
 #  times_used              :integer          default(0)
+#  for_referral            :boolean          default(FALSE)
+#  user_id                 :integer
 #
 # Indexes
 #
-#  index_promo_codes_on_code  (code) UNIQUE
+#  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_user_id  (user_id)
 #
 
 class PromoCode < ApplicationRecord
@@ -50,8 +53,16 @@ class PromoCode < ApplicationRecord
     repeating: 'repeating'
   }
 
+  belongs_to :user, optional: true
+
+  scope :generals, -> { where(for_referral: false) }
+  scope :for_referrals, -> { where(for_referral: true) }
+
   def still_valid?(user, product)
-    for_product?(product) && !expired? && !max_times_used? && !max_times_used_by_user?(user)
+    validate!(user, product)
+    true
+  rescue PromoCodeInvalidException
+    false
   end
 
   def invalid?(user, product)
@@ -78,5 +89,25 @@ class PromoCode < ApplicationRecord
 
   def for_product?(product)
     products.any? { |current_product| current_product == product }
+  end
+
+  def validate!(user, product)
+    raise PromoCodeInvalidException unless for_product?(product)
+
+    if expired? || max_times_used?
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.no_longer_valid')
+    end
+
+    if max_times_used_by_user?(user)
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.already_used')
+    end
+
+    if user == self.user
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.own_usage')
+    end
+
+    if for_referral && user.subscriptions.count.positive?
+      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.no_first_subscription')
+    end
   end
 end

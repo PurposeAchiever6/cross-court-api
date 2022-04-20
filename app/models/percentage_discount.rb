@@ -16,10 +16,13 @@
 #  max_redemptions         :integer
 #  max_redemptions_by_user :integer
 #  times_used              :integer          default(0)
+#  for_referral            :boolean          default(FALSE)
+#  user_id                 :integer
 #
 # Indexes
 #
-#  index_promo_codes_on_code  (code) UNIQUE
+#  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_user_id  (user_id)
 #
 
 class PercentageDiscount < PromoCode

@@ -123,6 +123,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.datetime "deleted_at"
     t.decimal "price_for_members", precision: 10, scale: 2
     t.string "stripe_product_id"
+    t.decimal "referral_cc_cash", default: "0.0"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -148,7 +149,10 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.integer "max_redemptions"
     t.integer "max_redemptions_by_user"
     t.integer "times_used", default: 0
+    t.boolean "for_referral", default: false
+    t.bigint "user_id"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
+    t.index ["user_id"], name: "index_promo_codes_on_user_id"
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -353,6 +357,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.boolean "private_access", default: false
     t.integer "active_campaign_id"
     t.date "birthday"
+    t.decimal "cc_cash", default: "0.0"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -360,6 +365,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.index ["is_referee"], name: "index_users_on_is_referee"
     t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["private_access"], name: "index_users_on_private_access"
+    t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

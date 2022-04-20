@@ -7,11 +7,11 @@ describe PlacePurchase do
 
   before do
     allow_any_instance_of(MakeDiscount).to receive(:call)
-    allow_any_instance_of(ChargeCard).to receive(:call)
+    allow_any_instance_of(Users::Charge).to receive(:call)
     allow_any_instance_of(CreatePurchase).to receive(:call)
     allow_any_instance_of(IncrementUserCredits).to receive(:call)
     allow_any_instance_of(Events::PurchasePlaced).to receive(:call)
-    allow_any_instance_of(CreateUserPromoCode).to receive(:call)
+    allow_any_instance_of(PromoCodes::CreateUserPromoCode).to receive(:call)
     allow_any_instance_of(SetDropInExpirationDate).to receive(:call)
   end
 
@@ -20,8 +20,8 @@ describe PlacePurchase do
     subject
   end
 
-  it 'calls the ChargeCard interactor' do
-    expect_any_instance_of(ChargeCard).to receive(:call)
+  it 'calls the Users::Charge interactor' do
+    expect_any_instance_of(Users::Charge).to receive(:call)
     subject
   end
 
@@ -40,8 +40,8 @@ describe PlacePurchase do
     subject
   end
 
-  it 'calls the CreateUserPromoCode interactor' do
-    expect_any_instance_of(CreateUserPromoCode).to receive(:call)
+  it 'calls the PromoCodes::CreateUserPromoCode interactor' do
+    expect_any_instance_of(PromoCodes::CreateUserPromoCode).to receive(:call)
     subject
   end
 

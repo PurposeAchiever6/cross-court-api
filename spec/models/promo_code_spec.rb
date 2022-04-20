@@ -16,10 +16,13 @@
 #  max_redemptions         :integer
 #  max_redemptions_by_user :integer
 #  times_used              :integer          default(0)
+#  for_referral            :boolean          default(FALSE)
+#  user_id                 :integer
 #
 # Indexes
 #
-#  index_promo_codes_on_code  (code) UNIQUE
+#  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_user_id  (user_id)
 #
 
 require 'rails_helper'
@@ -32,6 +35,8 @@ describe UserPromoCode do
   let(:max_redemptions) { nil }
   let(:max_redemptions_by_user) { nil }
   let(:times_used) { 0 }
+  let(:for_referral) { false }
+  let(:promo_code_user) { nil }
 
   let(:promo_code) do
     create(
@@ -40,7 +45,9 @@ describe UserPromoCode do
       expiration_date: expiration_date,
       max_redemptions: max_redemptions,
       max_redemptions_by_user: max_redemptions_by_user,
-      times_used: times_used
+      times_used: times_used,
+      for_referral: for_referral,
+      user: promo_code_user
     )
   end
 
@@ -88,6 +95,25 @@ describe UserPromoCode do
         subject { promo_code.still_valid?(another_user, product) }
 
         it { is_expected.to eq(true) }
+      end
+    end
+
+    context 'when promo code is for referral' do
+      let!(:promo_code_user) { create(:user) }
+      let(:for_referral) { true }
+
+      it { is_expected.to eq(true) }
+
+      context 'when owner of the promo code is the current user' do
+        let(:promo_code_user) { user }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'when user is not a new member of crosscourt' do
+        let!(:subscription) { create(:subscription, user: user) }
+
+        it { is_expected.to eq(false) }
       end
     end
   end

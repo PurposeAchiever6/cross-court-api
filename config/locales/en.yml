@@ -38,6 +38,8 @@ en:
         invalid: "Invalid promo code"
         no_longer_valid: "Promo code is no longer valid"
         already_used: "Promo code already used"
+        own_usage: "Can not use your own code"
+        no_first_subscription: "Promo code only valid for new members"
       subscriptions:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"

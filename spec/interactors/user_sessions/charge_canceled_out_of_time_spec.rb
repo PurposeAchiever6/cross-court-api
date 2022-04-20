@@ -29,6 +29,11 @@ describe UserSessions::ChargeCanceledOutOfTime do
     it { expect(subject.amount_charged).to eq(0) }
     it { expect(subject.charge_payment_intent_id).to eq(nil) }
 
+    it 'does not call Users::Charge' do
+      expect(Users::Charge).not_to receive(:call)
+      subject
+    end
+
     context 'when user session is free' do
       let(:is_free_session) { true }
 
@@ -40,10 +45,33 @@ describe UserSessions::ChargeCanceledOutOfTime do
           user: user,
           price: free_session_price_to_charge.to_f,
           description: 'Session canceled out of time fee',
-          notify_error: true
+          notify_error: true,
+          use_cc_cash: true
         ).once
 
         subject rescue nil
+      end
+
+      context 'when the fee is zero' do
+        let(:free_session_price_to_charge) { '0' }
+
+        it { expect(subject.charge_payment_intent_id).to eq(nil) }
+
+        it 'does not call Users::Charge' do
+          expect(Users::Charge).not_to receive(:call)
+          subject
+        end
+      end
+
+      context 'when user session is not out of time for cancellation' do
+        let(:session_time) { los_angeles_time + Session::CANCELLATION_PERIOD + 5.minutes }
+
+        it { expect(subject.charge_payment_intent_id).to eq(nil) }
+
+        it 'does not call Users::Charge' do
+          expect(Users::Charge).not_to receive(:call)
+          subject
+        end
       end
     end
 
@@ -58,17 +86,34 @@ describe UserSessions::ChargeCanceledOutOfTime do
           user: user,
           price: unlimited_credits_price_to_charge.to_f,
           description: 'Session canceled out of time fee',
-          notify_error: true
+          notify_error: true,
+          use_cc_cash: true
         ).once
 
         subject rescue nil
       end
-    end
 
-    context 'when user session is not out of time for cancellation' do
-      let(:session_time) { los_angeles_time + Session::CANCELLATION_PERIOD + 1.minute }
+      context 'when the fee is zero' do
+        let(:unlimited_credits_price_to_charge) { '0' }
 
-      it { expect(subject.charge_payment_intent_id).to eq(nil) }
+        it { expect(subject.charge_payment_intent_id).to eq(nil) }
+
+        it 'does not call Users::Charge' do
+          expect(Users::Charge).not_to receive(:call)
+          subject
+        end
+      end
+
+      context 'when user session is not out of time for cancellation' do
+        let(:session_time) { los_angeles_time + Session::CANCELLATION_PERIOD + 5.minutes }
+
+        it { expect(subject.charge_payment_intent_id).to eq(nil) }
+
+        it 'does not call Users::Charge' do
+          expect(Users::Charge).not_to receive(:call)
+          subject
+        end
+      end
     end
   end
 end
