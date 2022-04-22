@@ -133,6 +133,7 @@ describe User do
 
   describe '#first_not_free_session?' do
     let(:user) { create(:user) }
+
     subject { user.first_not_free_session? }
 
     context 'when it only has only one free user_session' do
@@ -159,6 +160,28 @@ describe User do
       end
 
       it { is_expected.to eq(true) }
+    end
+  end
+
+  describe '#generate_referral_code' do
+    let(:user) { build(:user, first_name: first_name, last_name: last_name) }
+    let(:first_name) { 'Elon' }
+    let(:last_name) { 'Musk' }
+
+    subject { user.send(:generate_referral_code) }
+
+    it { is_expected.to eq('ELONMUSK') }
+
+    context 'when already exists a user with the same full name' do
+      let!(:other_user) { create(:user, first_name: first_name, last_name: last_name) }
+
+      it { is_expected.to eq('ELONMUSK1') }
+
+      context 'when already exists multiple users with the same full name' do
+        let!(:other_users) { create_list(:user, 5, first_name: first_name, last_name: last_name) }
+
+        it { is_expected.to eq('ELONMUSK6') }
+      end
     end
   end
 end

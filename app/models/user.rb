@@ -229,16 +229,19 @@ class User < ApplicationRecord
   end
 
   def generate_referral_code
-    position = User.where(
-      'lower(first_name) = ? AND lower(last_name) = ?',
-      first_name.downcase,
-      last_name.downcase
-    ).count
+    position = 0
 
-    referral_code = "#{first_name}#{last_name}".gsub(/\s+/, '')
-    referral_code += (position - 1).to_s if position > 1
+    base_referral_code = "#{first_name}#{last_name}".gsub(/\s+/, '').upcase
+    referral_code = base_referral_code
 
-    referral_code.upcase
+    loop do
+      break unless User.find_by(referral_code: referral_code)
+
+      referral_code = "#{base_referral_code}#{position + 1}"
+      position += 1
+    end
+
+    referral_code
   end
 
   def update_external_records
