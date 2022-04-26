@@ -9,13 +9,8 @@ detectors:
     enabled: false
     exclude: []
   ControlParameter:
-    enabled: true
-    exclude:
-      [
-        "ActiveCampaignService#custom_deal_fields",
-        "Product#price",
-        "ActiveCampaignService#initialize",
-      ]
+    enabled: false
+    exclude: []
   DataClump:
     enabled: true
     exclude: ["SlackService"]
@@ -36,7 +31,7 @@ detectors:
         "User#update_external_records",
       ]
     max_calls: 1
-    allow_calls: []
+    allow_calls: ["render :new"]
   FeatureEnvy:
     enabled: false
   InstanceVariableAssumption:

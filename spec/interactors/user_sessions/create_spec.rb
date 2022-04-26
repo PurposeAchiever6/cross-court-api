@@ -2,7 +2,15 @@ require 'rails_helper'
 
 describe UserSessions::Create do
   describe '.call' do
-    let!(:session) { create(:session, :daily, time: session_time, is_open_club: is_open_club) }
+    let!(:session) do
+      create(
+        :session,
+        :daily,
+        time: session_time,
+        is_open_club: is_open_club,
+        max_first_timers: max_first_timers
+      )
+    end
     let!(:user) do
       create(
         :user,
@@ -12,6 +20,7 @@ describe UserSessions::Create do
       )
     end
 
+    let(:max_first_timers) { nil }
     let(:is_open_club) { false }
     let(:credits) { 1 }
     let(:subscription_credits) { 0 }
@@ -93,6 +102,15 @@ describe UserSessions::Create do
         it { expect { subject rescue nil }.not_to change(UserSession, :count) }
         it { expect { subject }.to raise_error(FullSessionException, 'Session is full') }
       end
+    end
+
+    context 'when there are no more spots for first timers' do
+      let!(:some_user) { create(:user) }
+      let!(:user_session) { create(:user_session, session: session, date: date, user: some_user) }
+      let(:max_first_timers) { 1 }
+
+      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+      it { expect { subject }.to raise_error(FullSessionException, 'Session is full') }
     end
 
     context 'when session is open club' do

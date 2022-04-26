@@ -24,7 +24,8 @@ module UserSessions
         user: user,
         price: price_to_charge,
         description: 'Session canceled out of time fee',
-        notify_error: true
+        notify_error: true,
+        use_cc_cash: true
       )
 
       context.fail!(message: result.message) if result.failure?

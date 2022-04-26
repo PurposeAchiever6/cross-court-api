@@ -19,6 +19,7 @@ module Api
       rescue_from WrongParameterException,                     with: :render_custom_exception
       rescue_from FullSessionException,                        with: :render_custom_exception
       rescue_from PurchaseException,                           with: :render_custom_exception
+      rescue_from PromoCodeInvalidException,                   with: :render_custom_exception
       rescue_from SubscriptionException,                       with: :render_custom_exception
       rescue_from ClaimFreeSessionException,                   with: :render_custom_exception
       rescue_from UserNotInWaitlistException,                  with: :render_custom_exception

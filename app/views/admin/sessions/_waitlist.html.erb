@@ -10,6 +10,7 @@
       <th>User</th>
       <th>Joined Waitlist At</th>
       <th>Active Subscription</th>
+      <th>First Timer</th>
     </tr>
     <% waitlist.each_with_index do |waitlist_item, index| %>
       <% user = waitlist_item.user %>
@@ -29,6 +30,9 @@
         </td>
         <td class='align-middle'>
           <%= status_tag !!user.active_subscription %>
+        </td>
+        <td class='align-middle'>
+          <%= status_tag user.first_timer? %>
         </td>
       </tr>
     <% end %>

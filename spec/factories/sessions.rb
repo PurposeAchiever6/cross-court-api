@@ -16,6 +16,7 @@
 #  is_open_club     :boolean          default(FALSE)
 #  duration_minutes :integer          default(60)
 #  deleted_at       :datetime
+#  max_first_timers :integer
 #
 # Indexes
 #
@@ -35,6 +36,7 @@ FactoryBot.define do
     is_private { false }
     duration_minutes { 60 }
     is_open_club { false }
+    max_first_timers { nil }
 
     trait :daily do
       recurring { IceCube::Rule.daily }

@@ -30,6 +30,10 @@ module Api
         head :no_content
       end
 
+      def referrals
+        @referrals = Users::GetReferrals.call(user: current_user).list
+      end
+
       private
 
       def user

@@ -41,6 +41,7 @@
 #  private_access               :boolean          default(FALSE)
 #  active_campaign_id           :integer
 #  birthday                     :date
+#  cc_cash                      :decimal(, )      default(0.0)
 #
 # Indexes
 #
@@ -51,6 +52,7 @@
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
 #  index_users_on_private_access                (private_access)
+#  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
@@ -60,42 +62,78 @@ require 'rails_helper'
 describe User do
   describe 'validations' do
     subject { build :user }
+
     it { is_expected.to validate_uniqueness_of(:uid).scoped_to(:provider) }
+    it { is_expected.to validate_uniqueness_of(:email).case_insensitive.scoped_to(:provider) }
     it { is_expected.to validate_numericality_of(:credits).is_greater_than_or_equal_to(0) }
+    it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_presence_of(:free_session_state) }
+    it { is_expected.to validate_presence_of(:zipcode) }
+    it { is_expected.to validate_presence_of(:birthday) }
+
     it 'defines free session states' do
       is_expected.to define_enum_for(
         :free_session_state
       ).with_values(%i[not_claimed claimed used expired]).with_prefix(:free_session)
     end
-    it { is_expected.to validate_presence_of(:zipcode) }
-    it { is_expected.to validate_presence_of(:birthday) }
+  end
 
-    context 'when was created with regular login' do
-      subject { build :user }
-      it { is_expected.to validate_uniqueness_of(:email).case_insensitive.scoped_to(:provider) }
-      it { is_expected.to validate_presence_of(:email) }
+  describe '#create' do
+    let(:first_name) { 'John' }
+    let(:last_name) { 'Travolta' }
+    let(:user_params) { { first_name: first_name, last_name: last_name } }
+
+    subject { create(:user, user_params) }
+
+    it { expect(subject.referral_code).to eq('JOHNTRAVOLTA') }
+
+    it { expect { subject.referral_code }.not_to change(PromoCode, :count) }
+
+    context 'when already exists a user with same full name' do
+      before { create(:user, user_params) }
+
+      it { expect(subject.referral_code).to eq('JOHNTRAVOLTA1') }
+
+      context 'when exists another user with same full name' do
+        before { create(:user, user_params) }
+
+        it { expect(subject.referral_code).to eq('JOHNTRAVOLTA2') }
+      end
+    end
+
+    context 'when exists at least one recurring product in the system' do
+      let!(:product) { create(:product, product_type: :recurring) }
+
+      it { expect { subject.referral_code }.to change(PromoCode, :count).by(1) }
     end
   end
 
-  context 'when updating any sonar or active campaign attribute' do
+  describe '#update' do
     let(:user) { create(:user) }
+    let(:update_params) { {} }
 
-    subject { user.update(first_name: 'Other') }
+    subject { user.update(update_params) }
 
-    it do
-      expect {
-        subject
-      }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactJob).on_queue('default')
-    end
+    context 'when updating any sonar or active campaign attribute' do
+      let(:update_params) { { first_name: 'Other' } }
 
-    it do
-      expect { subject }.to have_enqueued_job(::Sonar::CreateUpdateCustomerJob).on_queue('default')
+      it 'enques ActiveCampaign CreateUpdateContactJob' do
+        expect {
+          subject
+        }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactJob).on_queue('default')
+      end
+
+      it 'enques Sonar CreateUpdateCustomerJob' do
+        expect {
+          subject
+        }.to have_enqueued_job(::Sonar::CreateUpdateCustomerJob).on_queue('default')
+      end
     end
   end
 
   describe '#first_not_free_session?' do
     let(:user) { create(:user) }
+
     subject { user.first_not_free_session? }
 
     context 'when it only has only one free user_session' do
@@ -122,6 +160,28 @@ describe User do
       end
 
       it { is_expected.to eq(true) }
+    end
+  end
+
+  describe '#generate_referral_code' do
+    let(:user) { build(:user, first_name: first_name, last_name: last_name) }
+    let(:first_name) { 'Elon' }
+    let(:last_name) { 'Musk' }
+
+    subject { user.send(:generate_referral_code) }
+
+    it { is_expected.to eq('ELONMUSK') }
+
+    context 'when already exists a user with the same full name' do
+      let!(:other_user) { create(:user, first_name: first_name, last_name: last_name) }
+
+      it { is_expected.to eq('ELONMUSK1') }
+
+      context 'when already exists multiple users with the same full name' do
+        let!(:other_users) { create_list(:user, 5, first_name: first_name, last_name: last_name) }
+
+        it { is_expected.to eq('ELONMUSK6') }
+      end
     end
   end
 end

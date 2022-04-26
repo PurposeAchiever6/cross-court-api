@@ -34,7 +34,9 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before :each do
-    allow(SonarService).to receive(:add_update_customer).and_return(1)
+    allow(SonarService).to receive(:add_update_customer)
+    allow(Stripe::Coupon).to receive(:create).and_return(double(id: 'coupon-id'))
+    allow(Stripe::PromotionCode).to receive(:create).and_return(double(id: 'promo-id'))
     ActionMailer::Base.deliveries.clear
     redis_instance = MockRedis.new
     Redis.stub(:new).and_return(redis_instance)

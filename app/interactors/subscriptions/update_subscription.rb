@@ -5,8 +5,8 @@ module Subscriptions
     organize Subscriptions::ChangeSubscription,
              CreatePurchase,
              Subscriptions::UpdateUserSubscriptionCredits,
-             IncrementTimesUsedPromoCode,
-             CreateUserPromoCode,
+             PromoCodes::IncrementTimesUsed,
+             PromoCodes::CreateUserPromoCode,
              Events::PurchasePlaced
   end
 end

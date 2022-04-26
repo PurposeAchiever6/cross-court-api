@@ -10,14 +10,21 @@ describe ChargeNotShowUpPlayersJob do
       allow(StripeService).to receive(:charge).and_return(double(id: rand(1_000)))
     end
 
-    let(:la_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
-    let!(:la_date) { la_time.to_date }
+    let(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+    let(:la_date) { la_time.to_date }
+    let(:unlimited_user_cc_cash) { 0 }
+
     let!(:session) { create(:session) }
-    let(:subscription_credits) { 0 }
-    let!(:user) { create(:user, credits: 0, subscription_credits: 0) }
-    let!(:user_2) { create(:user, credits: 0, subscription_credits: Product::UNLIMITED) }
-    let!(:payment_method) { create(:payment_method, user: user, default: true) }
-    let!(:payment_method_2) { create(:payment_method, user: user_2, default: true) }
+
+    let!(:user) { create(:user) }
+    let!(:unlimited_user) do
+      create(:user, subscription_credits: Product::UNLIMITED, cc_cash: unlimited_user_cc_cash)
+    end
+
+    let!(:user_payment_method) { create(:payment_method, user: user, default: true) }
+    let!(:unlimited_user_payment_method) do
+      create(:payment_method, user: unlimited_user, default: true)
+    end
 
     let!(:user_session_1) do
       create(
@@ -34,7 +41,7 @@ describe ChargeNotShowUpPlayersJob do
     let!(:user_session_2) do
       create(
         :user_session,
-        user: user_2,
+        user: unlimited_user,
         session: session,
         checked_in: false,
         date: la_date.yesterday,
@@ -45,7 +52,7 @@ describe ChargeNotShowUpPlayersJob do
     let!(:user_session_3) do
       create(
         :user_session,
-        user: user_2,
+        user: unlimited_user,
         session: session,
         checked_in: true,
         date: la_date.tomorrow,
@@ -72,10 +79,13 @@ describe ChargeNotShowUpPlayersJob do
     context 'when is free session' do
       it { expect { subject }.to change { user_session_1.reload.no_show_up_fee_charged }.to(true) }
 
-      it do
-        expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).once
+      it 'calls ActiveCampaign service' do
         expect(StripeService).to receive(:confirm_intent).once
+        subject
+      end
 
+      it 'calls Stripe service' do
+        expect(StripeService).to receive(:confirm_intent).once
         subject
       end
     end
@@ -83,15 +93,43 @@ describe ChargeNotShowUpPlayersJob do
     context 'when user has unlimited credits' do
       it { expect { subject }.to change { user_session_2.reload.no_show_up_fee_charged }.to(true) }
 
-      it do
+      it 'calls Stripe service with correct params' do
         expect(StripeService).to receive(:charge).with(
-          user_2,
-          payment_method_2.stripe_id,
+          unlimited_user,
+          unlimited_user_payment_method.stripe_id,
           ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
           'Unlimited membership no show fee'
         )
 
         subject
+      end
+
+      context 'when user has cc cash' do
+        let(:unlimited_user_cc_cash) { 50 }
+
+        before { ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'] = '10' }
+
+        it 'does not call Stripe Service' do
+          expect(StripeService).not_to receive(:charge)
+          subject
+        end
+
+        context 'when user does not have enough cc cash to paid the totally of the fee' do
+          let(:unlimited_user_cc_cash) { 4.5 }
+
+          it { expect { subject }.to change { unlimited_user.reload.cc_cash }.to(0) }
+
+          it 'calls Stripe service with correct params' do
+            expect(StripeService).to receive(:charge).with(
+              unlimited_user,
+              unlimited_user_payment_method.stripe_id,
+              5.5,
+              'Unlimited membership no show fee'
+            )
+
+            subject
+          end
+        end
       end
     end
   end

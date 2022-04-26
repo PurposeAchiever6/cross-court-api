@@ -2,7 +2,7 @@ ActiveAdmin.register Product do
   menu label: 'Products', parent: 'Products'
 
   permit_params :name, :credits, :price, :price_for_members, :order_number, :image, :label,
-                :product_type
+                :referral_cc_cash, :product_type
 
   filter :name
   filter :product_type
@@ -20,6 +20,7 @@ ActiveAdmin.register Product do
     end
     number_column :price, as: :currency
     number_column :price_for_members, as: :currency
+    number_column 'Referral CC Cash', :referral_cc_cash, as: :currency
     column :label
     column :order_number
     column :product_type
@@ -55,6 +56,7 @@ ActiveAdmin.register Product do
       f.li checkbox
       f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
+      f.input :referral_cc_cash, label: 'Referral CC cash'
       f.input :label
       f.input :order_number
       f.input :image, as: :file
@@ -71,6 +73,7 @@ ActiveAdmin.register Product do
       end
       number_row :price, as: :currency
       number_row :price_for_members, as: :currency if resource.one_time?
+      number_row :referral_cc_cash, as: :currency
       row :label
       row :order_number
       row :memberships_count do |product|
@@ -86,14 +89,25 @@ ActiveAdmin.register Product do
     def create
       product_params = permitted_params[:product]
 
-      stripe_product_id = StripeService.create_product(product_params).id
-      stripe_price_id = StripeService.create_price(
-        product_params.merge!(stripe_product_id: stripe_product_id)
-      ).id
+      @resource = Product.new(product_params)
 
-      Product.create!(product_params.merge(stripe_price_id: stripe_price_id))
+      if @resource.valid?
+        stripe_product_id = StripeService.create_product(product_params).id
+        stripe_price_id = StripeService.create_price(
+          product_params.merge(stripe_product_id: stripe_product_id)
+        ).id
 
-      redirect_to admin_products_path, notice: I18n.t('admin.products.created')
+        @resource.stripe_product_id = stripe_product_id
+        @resource.stripe_price_id = stripe_price_id
+        @resource.save!
+
+        redirect_to admin_products_path, notice: I18n.t('admin.products.created')
+      else
+        render :new
+      end
+    rescue StandardError => e
+      flash[:error] = e.message
+      render :new
     end
 
     def destroy

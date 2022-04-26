@@ -2,7 +2,7 @@ ActiveAdmin.register Session do
   menu label: 'Sessions', parent: 'Sessions'
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
-                :is_private, :is_open_club, :coming_soon, :duration_minutes,
+                :is_private, :is_open_club, :coming_soon, :duration_minutes, :max_first_timers,
                 session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
@@ -35,6 +35,7 @@ ActiveAdmin.register Session do
               input_html: { autocomplete: :off }
       f.input :time
       f.input :duration_minutes
+      f.input :max_first_timers
       li do
         f.label 'Schedule'
         f.select_recurring :recurring, nil,
@@ -63,6 +64,9 @@ ActiveAdmin.register Session do
     column :duration do |session|
       "#{session.duration_minutes} mins"
     end
+    column :max_first_timers do |session|
+      session.max_first_timers || 'No restriction'
+    end
     column :active, &:active?
     toggle_bool_column :is_private
     toggle_bool_column :is_open_club
@@ -88,6 +92,9 @@ ActiveAdmin.register Session do
       end
       row :duration do |session|
         "#{session.duration_minutes} mins"
+      end
+      row :max_first_timers do |session|
+        session.max_first_timers || 'No restriction'
       end
       row :recurring, &:recurring_text
       row :location_name
@@ -132,8 +139,9 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .checked_in
-                                .includes(user: { active_subscription: :product,
-                                                  image_attachment: :blob })
+                                .includes(user: [:last_checked_in_user_session,
+                                                 { active_subscription: :product,
+                                                   image_attachment: :blob }])
                                 .order(assigned_team: :desc, updated_at: :asc)
 
         render partial: 'checked_in_user_sessions', locals: {
@@ -149,8 +157,9 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .not_checked_in
-                                .includes(user: { active_subscription: :product,
-                                                  image_attachment: :blob })
+                                .includes(user: [:last_checked_in_user_session,
+                                                 { active_subscription: :product,
+                                                   image_attachment: :blob }])
                                 .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
 
         render partial: 'not_checked_in_user_sessions', locals: {
@@ -163,7 +172,9 @@ ActiveAdmin.register Session do
       panel 'Waitlist' do
         waitlist = resource.waitlist(date)
                            .not_reached
-                           .includes(user: [:active_subscription, { image_attachment: :blob }])
+                           .includes(user: [:last_checked_in_user_session,
+                                            :active_subscription,
+                                            { image_attachment: :blob }])
 
         render partial: 'waitlist', locals: { waitlist: waitlist, time_zone: session.time_zone }
       end

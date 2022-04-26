@@ -16,6 +16,7 @@
 #  is_open_club     :boolean          default(FALSE)
 #  duration_minutes :integer          default(60)
 #  deleted_at       :datetime
+#  max_first_timers :integer
 #
 # Indexes
 #
@@ -111,6 +112,7 @@ class Session < ApplicationRecord
           duration_minutes: duration_minutes,
           location_id: location_id,
           location: location,
+          max_first_timers: max_first_timers,
           skill_level_id: skill_level_id,
           skill_level: skill_level,
           is_private: is_private,
@@ -133,12 +135,42 @@ class Session < ApplicationRecord
     user_sessions.not_canceled.by_date(date).count
   end
 
-  def full?(date)
-    reservations_count(date) >= MAX_CAPACITY
+  def not_canceled_reservations(date)
+    user_sessions.not_canceled.by_date(date)
   end
 
-  def spots_left(date)
-    MAX_CAPACITY - reservations_count(date)
+  def first_timer_reservations(date, user_sessions = nil)
+    reservations = user_sessions || not_canceled_reservations(date)
+
+    ActiveRecord::Associations::Preloader.new.preload(
+      reservations,
+      user: :last_checked_in_user_session
+    )
+
+    reservations.select { |reservation| reservation.user.first_timer? }
+  end
+
+  def full?(date, user = nil)
+    reservations = not_canceled_reservations(date)
+    max_capacity = reservations.length >= MAX_CAPACITY
+
+    return true if max_capacity
+    return false unless max_first_timers && user&.first_timer?
+
+    first_timer_reservations = first_timer_reservations(date, reservations)
+    first_timer_reservations.length >= max_first_timers
+  end
+
+  def spots_left(date, user = nil)
+    reservations = not_canceled_reservations(date)
+    total_spots_left = MAX_CAPACITY - reservations.length
+
+    return 0 unless total_spots_left.positive?
+    return total_spots_left unless max_first_timers && user&.first_timer?
+
+    first_timer_reservations = first_timer_reservations(date, reservations)
+    first_timers_spots_left = max_first_timers - first_timer_reservations.length
+    first_timers_spots_left.positive? ? first_timers_spots_left : 0
   end
 
   def waitlist(date)

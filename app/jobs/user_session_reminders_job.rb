@@ -29,7 +29,7 @@ class UserSessionRemindersJob < ApplicationJob
                                              location: user_session.location.name,
                                              cancellation_period_hours: cancellation_period_hours,
                                              frontend_url: ENV['FRONTENT_URL'],
-                                             invite_friend: invite_friend(user_session)))
+                                             invite_friend: invite_friend(user_session, user)))
 
       user_session.update!(reminder_sent_at: Time.zone.now)
     end
@@ -37,8 +37,8 @@ class UserSessionRemindersJob < ApplicationJob
 
   private
 
-  def invite_friend(user_session)
-    return '' if user_session.session.full?(user_session.date)
+  def invite_friend(user_session, user)
+    return '' if user_session.session.full?(user_session.date, user)
 
     I18n.t('notifier.sonar.invite_friend', link: user_session.invite_link)
   end

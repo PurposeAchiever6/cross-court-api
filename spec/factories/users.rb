@@ -41,6 +41,7 @@
 #  private_access               :boolean          default(FALSE)
 #  active_campaign_id           :integer
 #  birthday                     :date
+#  cc_cash                      :decimal(, )      default(0.0)
 #
 # Indexes
 #
@@ -51,6 +52,7 @@
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
 #  index_users_on_private_access                (private_access)
+#  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
@@ -70,6 +72,7 @@ FactoryBot.define do
     birthday                     { Time.zone.today - 20.years }
     skill_rating                 { rand(1..5) }
     stripe_id                    { 'cus_AJ6y81jMo1Na22' }
+    cc_cash                      { 0 }
 
     trait :confirmed do
       confirmed_at { Time.current }
@@ -94,6 +97,12 @@ FactoryBot.define do
     trait :with_unlimited_subscription do
       subscription_credits { Product::UNLIMITED }
       active_subscription { create(:subscription, :with_unlimited_product) }
+    end
+
+    trait :not_first_timer do
+      after :create do |user|
+        create(:user_session, user: user, checked_in: true)
+      end
     end
   end
 end

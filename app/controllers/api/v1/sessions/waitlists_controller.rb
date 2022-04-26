@@ -3,8 +3,9 @@ module Api
     module Sessions
       class WaitlistsController < Api::V1::ApiUserController
         def create
-          @session = Session.find(params[:session_id])
           @date = date
+          @session = Session.includes(location: { images_attachments: :blob })
+                            .find(params[:session_id])
 
           Waitlists::AddUser.call(
             session: @session,

@@ -165,8 +165,8 @@ class StripeService
   end
 
   def self.create_coupon(promo_code_attrs, products)
-    duration = promo_code_attrs['duration']
-    duration_in_months = promo_code_attrs['duration_in_months'].presence
+    duration = promo_code_attrs[:duration]
+    duration_in_months = promo_code_attrs[:duration_in_months].presence
 
     coupon_attrs = {
       duration: duration,

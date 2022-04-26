@@ -18,7 +18,8 @@ class ChargeNotShowUpPlayersJob < ApplicationJob
           user: user,
           price: ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
           description: 'Unlimited membership no show fee',
-          notify_error: true
+          notify_error: true,
+          use_cc_cash: true
         )
       end
 
