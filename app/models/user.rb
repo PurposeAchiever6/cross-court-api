@@ -231,7 +231,7 @@ class User < ApplicationRecord
   def generate_referral_code
     position = 0
 
-    base_referral_code = "#{first_name}#{last_name}".gsub(/\s+/, '').upcase
+    base_referral_code = "#{first_name}#{last_name}".gsub(/[^a-zA-Z0-9]/, '').upcase
     referral_code = base_referral_code
 
     loop do
