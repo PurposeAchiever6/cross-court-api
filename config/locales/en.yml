@@ -71,6 +71,7 @@ en:
       here: "here"
       welcome: "Hi %{name}"
       booked: "You're in!"
+      third_session_notice: "Third session notice"
       add_to_calendar: "add-to-calendar.ics"
       new:
         subject: "Session confirmation"

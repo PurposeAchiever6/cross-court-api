@@ -366,8 +366,8 @@ ActiveRecord::Schema.define(version: 2022_04_28_233542) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.boolean "private_access", default: false
     t.integer "active_campaign_id"
+    t.boolean "private_access", default: false
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
