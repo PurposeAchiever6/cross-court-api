@@ -35,6 +35,12 @@ describe PromoCodes::CreateUserPromoCode do
       expect(UserPromoCode.last.times_used).to eq(1)
     end
 
+    it 'does not enques ActiveCampaign::CreateDealJob' do
+      expect { subject }.not_to have_enqueued_job(
+        ::ActiveCampaign::CreateDealJob
+      )
+    end
+
     context 'when the user had already used that promo code' do
       let!(:user_promo_code) { create(:user_promo_code, user: user, promo_code: promo_code) }
 
@@ -52,6 +58,17 @@ describe PromoCodes::CreateUserPromoCode do
         expect {
           subject
         }.to change { promo_code_user.reload.cc_cash }.from(0).to(referral_cc_cash)
+      end
+
+      it 'enques ActiveCampaign::CreateDealJob' do
+        expect { subject }.to have_enqueued_job(
+          ::ActiveCampaign::CreateDealJob
+        ).with(
+          ::ActiveCampaign::Deal::Event::PROMO_CODE_REFERRAL_SUCCESS,
+          promo_code_user.id,
+          referred_id: user.id,
+          cc_cash_awarded: referral_cc_cash
+        )
       end
 
       context 'when promo code user already has some cc cash' do

@@ -284,6 +284,19 @@ class ActiveCampaignService
             fieldValue: referred.full_name
           }
         ]
+      when ::ActiveCampaign::Deal::Event::PROMO_CODE_REFERRAL_SUCCESS
+        referred = User.find(args[:referred_id])
+
+        [
+          {
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::REFERRED_FULL_NAME],
+            fieldValue: referred.full_name.titleize
+          },
+          {
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::CC_CASH_AWARDED],
+            fieldValue: format('%.2f', args[:cc_cash_awarded])
+          }
+        ]
       when ::ActiveCampaign::Deal::Event::STARTED_CHECKOUT
         args.map do |arg|
           {

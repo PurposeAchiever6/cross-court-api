@@ -5,6 +5,7 @@ module ActiveCampaign
       APPLY_DISCOUNT = 'Apply Discount'.freeze
       CANCELLATION_PERIOD = 'Cancellation Period'.freeze
       CANCELLED_MEMBERSHIP_NAME = 'Cancelled Membership Name'.freeze
+      CC_CASH_AWARDED = 'CC Cash Awarded'.freeze
       CHECKOUT_URL = 'Checkout Url'.freeze
       CONFIRMATION_URL = 'Confirmation Url'.freeze
       CONTACT_URL = 'Contact Url'.freeze
