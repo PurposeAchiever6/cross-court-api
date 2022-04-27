@@ -193,4 +193,17 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       expect(json[:error]).to eq I18n.t('api.errors.user_session.not_enough_credits')
     end
   end
+
+  context 'when user has a paused subscription' do
+    before { create(:subscription, user: user, status: :paused) }
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "doesn't create the user_session" do
+      expect { subject }.not_to change(UserSession, :count)
+    end
+  end
 end

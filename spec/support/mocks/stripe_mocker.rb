@@ -28,7 +28,30 @@ class StripeMocker
     mock_request(
       url_path: "/subscriptions/#{stripe_subscription_id}",
       method: :delete,
-      response_body: subscription_response(stripe_subscription_id)
+      response_body: subscription_response(id: stripe_subscription_id, status: 'canceled')
+    )
+  end
+
+  def pause_subscription(stripe_subscription_id, resumes_at = nil)
+    mock_request(
+      url_path: "/subscriptions/#{stripe_subscription_id}",
+      request_body: {
+        pause_collection: {
+          behavior: 'mark_uncollectible',
+          resumes_at: resumes_at
+        }
+      },
+      method: :post,
+      response_body: subscription_response(id: stripe_subscription_id, pause_collection: true)
+    )
+  end
+
+  def unpause_subscription(stripe_subscription_id)
+    mock_request(
+      url_path: "/subscriptions/#{stripe_subscription_id}",
+      request_body: { pause_collection: '' },
+      method: :post,
+      response_body: subscription_response(id: stripe_subscription_id)
     )
   end
 
@@ -86,16 +109,17 @@ class StripeMocker
     }.to_json
   end
 
-  def subscription_response(stripe_subscription_id)
+  def subscription_response(id:, pause_collection: nil, status: 'active')
     {
-      id: stripe_subscription_id,
+      id: id,
       items: { data: [id: 'stripe-subscription-item-id'] },
-      status: 'canceled',
+      status: status,
       current_period_start: (Time.current - 2.weeks).to_i,
       current_period_end: (Time.current + 2.weeks).to_i,
       cancel_at: nil,
       canceled_at: Time.current.to_i,
-      cancel_at_period_end: false
+      cancel_at_period_end: false,
+      pause_collection: pause_collection
     }.to_json
   end
 

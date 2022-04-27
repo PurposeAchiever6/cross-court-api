@@ -76,6 +76,21 @@ module Api
         head :no_content
       end
 
+      def pause
+        result = Subscriptions::PauseSubscription.call(
+          subscription: subscription,
+          months: params[:months]
+        )
+
+        @subscription = result.subscription
+      end
+
+      def unpause
+        result = Subscriptions::UnpauseSubscription.call(subscription: subscription)
+
+        @subscription = result.subscription
+      end
+
       private
 
       def product

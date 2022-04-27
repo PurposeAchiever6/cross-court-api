@@ -43,10 +43,13 @@ en:
       subscriptions:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"
+        is_not_paused: "The subscription is not paused"
+        no_more_pauses: "The subscription can't be paused anymore"
         is_not_canceled: "The subscription has not been canceled"
         already_canceled: "The subscription is already canceled"
         incomplete_status: "Your card was declined. Please change payment method or contact support"
         has_same_product: "The subscription already has the selected product"
+        invalid_pause_months: "Invalid months input for pauing the subscription"
       payment_methods:
         has_active_subscription: "The payment method has an active membership"
       users:

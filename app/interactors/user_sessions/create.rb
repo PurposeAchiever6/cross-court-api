@@ -12,6 +12,7 @@ module UserSessions
 
       raise SessionIsOpenClubException if session.open_club?
       raise FullSessionException if session.full?(date, user)
+      raise SubscriptionIsNotActiveException if user.active_subscription&.paused?
 
       user_session =
         ActiveRecord::Base.transaction do

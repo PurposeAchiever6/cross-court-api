@@ -39,6 +39,7 @@ Metrics/ClassLength:
   Max: 200
   Exclude:
     - app/services/active_campaign_service.rb
+    - app/services/stripe_service.rb
 
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:

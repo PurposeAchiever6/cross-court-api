@@ -294,5 +294,16 @@ describe UserSessions::Create do
         end
       end
     end
+
+    context 'when user has a paused subscription' do
+      before { create(:subscription, user: user, status: :paused) }
+
+      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+      it do
+        expect {
+          subject
+        }.to raise_error(SubscriptionIsNotActiveException, 'The subscription is not active')
+      end
+    end
   end
 end

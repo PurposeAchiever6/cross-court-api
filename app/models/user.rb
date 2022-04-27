@@ -83,7 +83,7 @@ class User < ApplicationRecord
           inverse_of: :user
 
   has_one :active_subscription,
-          -> { active.recent },
+          -> { where(status: %i[active paused]).recent },
           class_name: 'Subscription',
           inverse_of: :user
 

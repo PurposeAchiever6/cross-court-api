@@ -134,6 +134,23 @@ class StripeService
     )
   end
 
+  def self.pause_subscription(subscription, resumes_at)
+    Stripe::Subscription.update(
+      subscription.stripe_id,
+      pause_collection: {
+        behavior: 'mark_uncollectible',
+        resumes_at: resumes_at
+      }
+    )
+  end
+
+  def self.unpause_subscription(subscription)
+    Stripe::Subscription.update(
+      subscription.stripe_id,
+      pause_collection: ''
+    )
+  end
+
   def self.retrieve_subscription(stripe_subscription_id)
     Stripe::Subscription.retrieve(stripe_subscription_id)
   end
