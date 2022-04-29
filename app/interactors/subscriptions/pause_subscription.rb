@@ -16,18 +16,21 @@ module Subscriptions
       wait_until = subscription.current_period_end - 1.day
       resumes_at = wait_until + months.months
 
-      ::Subscriptions::PauseJob.set(
-        wait_until: wait_until
-      ).perform_later(
-        subscription_id,
-        resumes_at.to_i
-      )
-
-      SubscriptionPause.create!(
+      subscription_pause = SubscriptionPause.create!(
         paused_from: wait_until,
         paused_until: resumes_at,
         subscription_id: subscription_id
       )
+
+      job_id = ::Subscriptions::PauseJob.set(
+        wait_until: wait_until
+      ).perform_later(
+        subscription_id,
+        resumes_at.to_i,
+        subscription_pause.id
+      ).provider_job_id
+
+      subscription_pause.update!(job_id: job_id)
     end
   end
 end

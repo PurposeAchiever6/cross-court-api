@@ -85,8 +85,8 @@ module Api
         @subscription = result.subscription
       end
 
-      def unpause
-        result = Subscriptions::UnpauseSubscription.call(subscription: subscription)
+      def cancel_pause
+        result = Subscriptions::CancelSubscriptionPause.call(subscription: subscription)
 
         @subscription = result.subscription
       end

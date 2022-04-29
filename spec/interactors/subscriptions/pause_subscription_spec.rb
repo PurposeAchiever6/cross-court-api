@@ -20,7 +20,8 @@ describe Subscriptions::PauseSubscription do
         ::Subscriptions::PauseJob
       ).with(
         subscription.id,
-        resumes_at
+        resumes_at,
+        anything
       )
     end
 
@@ -46,8 +47,8 @@ describe Subscriptions::PauseSubscription do
 
     context 'when no more pauses are available' do
       before do
-        ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'] = '2'
-        create_list(:subscription_pause, 2, subscription: subscription)
+        ENV['SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
+        create_list(:subscription_pause, 2, subscription: subscription, status: :finished)
       end
 
       it { expect { subject }.to raise_error(MaximumNumberOfPausesReachedException) }

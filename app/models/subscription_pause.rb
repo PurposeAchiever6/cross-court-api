@@ -6,10 +6,11 @@
 #  paused_from     :datetime         not null
 #  paused_until    :datetime         not null
 #  subscription_id :integer
-#  unpaused        :boolean          default(FALSE)
-#  unpaused_at     :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  job_id          :string
+#  status          :integer          default("upcoming")
+#  canceled_at     :datetime
 #
 # Indexes
 #
@@ -19,6 +20,7 @@
 class SubscriptionPause < ApplicationRecord
   belongs_to :subscription
 
-  scope :unpaused, -> { where(unpaused: false) }
+  enum status: { upcoming: 0, actual: 1, finished: 2, canceled: 3 }
+
   scope :this_year, -> { where(created_at: Time.zone.today.all_year) }
 end

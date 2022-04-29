@@ -5,9 +5,10 @@
   current_period_end: subscription&.current_period_end&.iso8601,
   canceled: subscription.cancel_at_period_end,
   paused: subscription.paused?,
-  paused_from: subscription.last_unpaused_subscription_pause&.paused_from&.iso8601,
-  paused_until: subscription.last_unpaused_subscription_pause&.paused_until&.iso8601,
+  paused_from: subscription.upcoming_subscription_pause&.paused_from&.iso8601,
+  paused_until: subscription.upcoming_subscription_pause&.paused_until&.iso8601,
   can_pause: subscription.can_pause?,
+  will_pause: subscription.will_pause?,
   canceled_at: subscription&.canceled_at&.iso8601,
   product: render(
     partial: 'api/v1/products/info',

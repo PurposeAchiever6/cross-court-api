@@ -34,7 +34,8 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
       ::Subscriptions::PauseJob
     ).with(
       subscription.id,
-      resumes_at.to_i
+      resumes_at.to_i,
+      anything
     )
   end
 
@@ -67,8 +68,8 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
 
   context 'when no more pauses are available' do
     before do
-      ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'] = '2'
-      create_list(:subscription_pause, 2, subscription: subscription)
+      ENV['SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
+      create_list(:subscription_pause, 3, subscription: subscription, status: :finished)
     end
 
     it 'returns bad request' do

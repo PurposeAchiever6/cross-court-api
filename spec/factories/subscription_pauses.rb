@@ -6,10 +6,11 @@
 #  paused_from     :datetime         not null
 #  paused_until    :datetime         not null
 #  subscription_id :integer
-#  unpaused        :boolean          default(FALSE)
-#  unpaused_at     :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  job_id          :string
+#  status          :integer          default("upcoming")
+#  canceled_at     :datetime
 #
 # Indexes
 #
@@ -21,7 +22,6 @@ FactoryBot.define do
     subscription
     paused_from { Time.current }
     paused_until { Time.current + 1.month }
-    unpaused { false }
-    unpaused_at { nil }
+    status { :upcoming }
   end
 end

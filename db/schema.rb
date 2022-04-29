@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_24_223654) do
+ActiveRecord::Schema.define(version: 2022_04_28_233542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -256,10 +256,11 @@ ActiveRecord::Schema.define(version: 2022_04_24_223654) do
     t.datetime "paused_from", null: false
     t.datetime "paused_until", null: false
     t.bigint "subscription_id"
-    t.boolean "unpaused", default: false
-    t.datetime "unpaused_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "job_id"
+    t.integer "status", default: 0
+    t.datetime "canceled_at"
     t.index ["subscription_id"], name: "index_subscription_pauses_on_subscription_id"
   end
 
