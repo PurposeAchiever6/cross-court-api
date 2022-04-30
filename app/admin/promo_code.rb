@@ -3,7 +3,8 @@ ActiveAdmin.register PromoCode do
 
   config.batch_actions = false
   permit_params :type, :code, :discount, :expiration_date, :duration,
-                :duration_in_months, :max_redemptions, :max_redemptions_by_user, product_ids: []
+                :duration_in_months, :max_redemptions, :max_redemptions_by_user,
+                :user_max_checked_in_sessions, product_ids: []
 
   includes :products
 
@@ -22,9 +23,10 @@ ActiveAdmin.register PromoCode do
     column :type do |promo_code|
       promo_code.type.underscore.humanize
     end
+    column :times_used
     column :max_redemptions
     column :max_redemptions_by_user
-    column :times_used
+    column :user_max_checked_in_sessions
 
     actions
   end
@@ -42,9 +44,10 @@ ActiveAdmin.register PromoCode do
       end
       row :duration
       row :duration_in_months
+      row :times_used
       row :max_redemptions
       row :max_redemptions_by_user
-      row :times_used
+      row :user_max_checked_in_sessions
       row :stripe_coupon_id
       row :stripe_promo_code_id
     end
@@ -73,6 +76,10 @@ ActiveAdmin.register PromoCode do
       f.input :max_redemptions_by_user,
               hint: 'Number of times the code can be used per user before it’s no longer ' \
                     'valid. If no set, the same user can use it the times he wants.'
+      f.input :user_max_checked_in_sessions,
+              hint: 'Number of sessions attended by user before it’s not valid. If no set, ' \
+                    'means no restriction. I.e, if set to 0 it means the ' \
+                    'promo code is only valid for users who have not played any session.'
       f.input :expiration_date,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },

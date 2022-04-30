@@ -40,6 +40,7 @@ en:
         already_used: "Promo code already used"
         own_usage: "Can not use your own code"
         no_first_subscription: "Promo code only valid for new members"
+        not_valid_for_user: "Promo code is not valid for your user"
       subscriptions:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"

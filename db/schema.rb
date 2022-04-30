@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_28_233542) do
+ActiveRecord::Schema.define(version: 2022_04_30_202111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(version: 2022_04_28_233542) do
     t.integer "times_used", default: 0
     t.boolean "for_referral", default: false
     t.bigint "user_id"
+    t.integer "user_max_checked_in_sessions"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
   end
@@ -366,8 +367,8 @@ ActiveRecord::Schema.define(version: 2022_04_28_233542) do
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
     t.boolean "vaccinated", default: false
-    t.integer "active_campaign_id"
     t.boolean "private_access", default: false
+    t.integer "active_campaign_id"
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
