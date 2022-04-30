@@ -111,12 +111,11 @@ class User < ApplicationRecord
   validates :uid, uniqueness: { scope: :provider }
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :free_session_state, presence: true
-  validates :zipcode, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
+  validates :zipcode, length: { maximum: 5 }, numericality: { only_integer: true }, allow_nil: true
   validates :phone_number, uniqueness: true
   validates :skill_rating,
             numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 7 },
             allow_nil: true
-  validates :birthday, presence: true, on: :create
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }

@@ -68,8 +68,6 @@ describe User do
     it { is_expected.to validate_numericality_of(:credits).is_greater_than_or_equal_to(0) }
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_presence_of(:free_session_state) }
-    it { is_expected.to validate_presence_of(:zipcode) }
-    it { is_expected.to validate_presence_of(:birthday) }
 
     it 'defines free session states' do
       is_expected.to define_enum_for(
