@@ -89,10 +89,11 @@ en:
       session_canceled_in_time: "%{name} *canceled in time* the reservation for %{date} at %{time} on %{location}"
       session_canceled_out_of_time: "%{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}"
       inactive_user: >
-        %{name} (phone: %{phone}) has played his last session 1 month ago and doesn't have any
-        remaining credits.
+        %{name} (phone: %{phone}) has played his *last session 1 month ago* and doesn't have an
+        active membership or a future session reserved.
       inactive_first_timer_user: >
-        %{name} (phone: %{phone}) has played his FIRST FREE SESSION 14 days ago and didn't rebook.
+        %{name} (phone: %{phone}) has played his *first free session %{last_session_days_ago} day(s) ago*
+        and didn't rebook or bought a membership.
       subscription_canceled: >
         %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
       subscription_reactivated: >

@@ -61,6 +61,30 @@ describe InactiveUsersJob do
       end
     end
 
+    context 'when user last checked in session was 1 day ago' do
+      let(:date_ago_last_session) { 1.day }
+
+      it 'calls service with the correct parameters' do
+        expect_any_instance_of(SlackService).not_to receive(:notify)
+
+        subject
+      end
+
+      context 'when it was a free session' do
+        let(:free_session) { true }
+
+        it 'calls service with the correct parameters' do
+          expect_any_instance_of(SlackService).to receive(:notify).with(
+            I18n.t('notifier.slack.inactive_first_timer_user',
+                   name: user.full_name, phone: user.phone_number, last_session_days_ago: 1),
+            channel: ENV['SLACK_CHANNEL_CHURN']
+          ).once
+
+          subject
+        end
+      end
+    end
+
     context 'when user last checked in session was 14 days ago' do
       let(:date_ago_last_session) { 14.days }
 
@@ -76,7 +100,7 @@ describe InactiveUsersJob do
         it 'calls service with the correct parameters' do
           expect_any_instance_of(SlackService).to receive(:notify).with(
             I18n.t('notifier.slack.inactive_first_timer_user',
-                   name: user.full_name, phone: user.phone_number),
+                   name: user.full_name, phone: user.phone_number, last_session_days_ago: 14),
             channel: ENV['SLACK_CHANNEL_CHURN']
           ).once
 
