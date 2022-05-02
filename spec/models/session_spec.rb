@@ -17,6 +17,7 @@
 #  duration_minutes :integer          default(60)
 #  deleted_at       :datetime
 #  max_first_timers :integer
+#  women_only       :boolean          default(FALSE)
 #
 # Indexes
 #
