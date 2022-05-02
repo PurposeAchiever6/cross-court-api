@@ -40,13 +40,17 @@ en:
         already_used: "Promo code already used"
         own_usage: "Can not use your own code"
         no_first_subscription: "Promo code only valid for new members"
+        not_valid_for_user: "Promo code is not valid for your user"
       subscriptions:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"
+        is_not_paused: "The subscription is not paused"
+        no_more_pauses: "The subscription can't be paused anymore"
         is_not_canceled: "The subscription has not been canceled"
         already_canceled: "The subscription is already canceled"
         incomplete_status: "Your card was declined. Please change payment method or contact support"
         has_same_product: "The subscription already has the selected product"
+        invalid_pause_months: "Invalid months input for pauing the subscription"
       payment_methods:
         has_active_subscription: "The payment method has an active membership"
       users:
@@ -68,6 +72,7 @@ en:
       here: "here"
       welcome: "Hi %{name}"
       booked: "You're in!"
+      third_session_notice: "Third session notice"
       add_to_calendar: "add-to-calendar.ics"
       new:
         subject: "Session confirmation"
@@ -84,10 +89,11 @@ en:
       session_canceled_in_time: "%{name} *canceled in time* the reservation for %{date} at %{time} on %{location}"
       session_canceled_out_of_time: "%{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}"
       inactive_user: >
-        %{name} (phone: %{phone}) has played his last session 1 month ago and doesn't have any
-        remaining credits.
+        %{name} (phone: %{phone}) has played his *last session 1 month ago* and doesn't have an
+        active membership or a future session reserved.
       inactive_first_timer_user: >
-        %{name} (phone: %{phone}) has played his FIRST FREE SESSION 14 days ago and didn't rebook.
+        %{name} (phone: %{phone}) has played his *first free session %{last_session_days_ago} day(s) ago*
+        and didn't rebook or bought a membership.
       subscription_canceled: >
         %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
       subscription_reactivated: >

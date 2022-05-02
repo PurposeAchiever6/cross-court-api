@@ -19,6 +19,7 @@ module ActiveCampaign
 
         send_time_to_re_up(user)
         send_drop_in_re_up(user, user_session)
+        send_third_session_notice(user)
       end
     end
 
@@ -40,6 +41,14 @@ module ActiveCampaign
                     user.first_not_free_session?
 
       active_campaign_service.create_deal(::ActiveCampaign::Deal::Event::DROP_IN_RE_UP, user)
+    end
+
+    def send_third_session_notice(user)
+      checked_in_sessions = user.user_sessions.checked_in.count
+
+      return unless checked_in_sessions == 3
+
+      SessionMailer.with(user_id: user.id).third_session_notice.deliver_later
     end
   end
 end

@@ -37,8 +37,8 @@ class SlackService
     notify_inactive('notifier.slack.inactive_user')
   end
 
-  def inactive_first_timer_user
-    notify_inactive('notifier.slack.inactive_first_timer_user')
+  def inactive_first_timer_user(options = {})
+    notify_inactive('notifier.slack.inactive_first_timer_user', options)
   end
 
   def subscription_canceled(subscription)
@@ -62,27 +62,27 @@ class SlackService
 
   private
 
-  def notify_booking(i18n_message, extra_params = {})
+  def notify_booking(i18n_message)
     notify(
       I18n.t(
         i18n_message,
-        {
-          name: user.full_name,
-          date: date.strftime(Session::DATE_FORMAT),
-          time: time.strftime(Session::TIME_FORMAT),
-          location: location.name
-        }.merge(extra_params)
+        name: user.full_name,
+        date: date.strftime(Session::DATE_FORMAT),
+        time: time.strftime(Session::TIME_FORMAT),
+        location: location.name
       ),
       channel: ENV['SLACK_CHANNEL_BOOKING']
     )
   end
 
-  def notify_inactive(i18n_message)
+  def notify_inactive(i18n_message, options = {})
     notify(
       I18n.t(
         i18n_message,
-        name: user.full_name,
-        phone: user.phone_number
+        {
+          name: user.full_name,
+          phone: user.phone_number
+        }.merge(options)
       ),
       channel: ENV['SLACK_CHANNEL_CHURN']
     )

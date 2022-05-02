@@ -2,22 +2,23 @@
 #
 # Table name: promo_codes
 #
-#  id                      :integer          not null, primary key
-#  discount                :integer          default(0), not null
-#  code                    :string           not null
-#  type                    :string           not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  expiration_date         :date
-#  stripe_promo_code_id    :string
-#  stripe_coupon_id        :string
-#  duration                :string
-#  duration_in_months      :integer
-#  max_redemptions         :integer
-#  max_redemptions_by_user :integer
-#  times_used              :integer          default(0)
-#  for_referral            :boolean          default(FALSE)
-#  user_id                 :integer
+#  id                           :integer          not null, primary key
+#  discount                     :integer          default(0), not null
+#  code                         :string           not null
+#  type                         :string           not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  expiration_date              :date
+#  stripe_promo_code_id         :string
+#  stripe_coupon_id             :string
+#  duration                     :string
+#  duration_in_months           :integer
+#  max_redemptions              :integer
+#  max_redemptions_by_user      :integer
+#  times_used                   :integer          default(0)
+#  for_referral                 :boolean          default(FALSE)
+#  user_id                      :integer
+#  user_max_checked_in_sessions :integer
 #
 # Indexes
 #
@@ -34,6 +35,7 @@ describe UserPromoCode do
   let(:expiration_date) { nil }
   let(:max_redemptions) { nil }
   let(:max_redemptions_by_user) { nil }
+  let(:user_max_checked_in_sessions) { nil }
   let(:times_used) { 0 }
   let(:for_referral) { false }
   let(:promo_code_user) { nil }
@@ -45,6 +47,7 @@ describe UserPromoCode do
       expiration_date: expiration_date,
       max_redemptions: max_redemptions,
       max_redemptions_by_user: max_redemptions_by_user,
+      user_max_checked_in_sessions: user_max_checked_in_sessions,
       times_used: times_used,
       for_referral: for_referral,
       user: promo_code_user
@@ -112,6 +115,18 @@ describe UserPromoCode do
 
       context 'when user is not a new member of crosscourt' do
         let!(:subscription) { create(:subscription, user: user) }
+
+        it { is_expected.to eq(false) }
+      end
+    end
+
+    context 'when promo code has a restriction on user checked in sessions' do
+      let(:user_max_checked_in_sessions) { 0 }
+
+      it { is_expected.to eq(true) }
+
+      context 'when user has already attended to a session' do
+        let!(:user_session) { create(:user_session, user: user, checked_in: true) }
 
         it { is_expected.to eq(false) }
       end

@@ -20,7 +20,8 @@ describe 'DELETE api/v1/subscriptions/:id' do
       current_period_end: subscription.current_period_end,
       cancel_at: subscription.cancel_at,
       canceled_at: Time.current.to_i,
-      cancel_at_period_end: true
+      cancel_at_period_end: true,
+      pause_collection: nil
     }
   end
 

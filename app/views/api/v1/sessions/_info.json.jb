@@ -6,6 +6,7 @@ json = {
   is_private: session.is_private,
   coming_soon: session.coming_soon,
   is_open_club: session.is_open_club,
+  women_only: session.women_only,
   full: full,
   past: session.past?(date),
   spots_left: spots_left,

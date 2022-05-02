@@ -33,6 +33,12 @@ class Subscription < ApplicationRecord
   belongs_to :product, -> { with_deleted }, inverse_of: :subscriptions
   belongs_to :promo_code, optional: true
   belongs_to :payment_method, optional: true
+  has_many :subscription_pauses, dependent: :destroy
+
+  has_one :upcoming_subscription_pause,
+          -> { upcoming.order(created_at: :desc) },
+          class_name: 'SubscriptionPause',
+          inverse_of: :subscription
 
   delegate :credits, :name, :unlimited?, to: :product, prefix: false
 
@@ -40,7 +46,8 @@ class Subscription < ApplicationRecord
     trialing: 'trialing',
     active: 'active',
     past_due: 'past_due',
-    canceled: 'canceled'
+    canceled: 'canceled',
+    paused: 'paused'
   }
 
   validates :stripe_id, presence: true
@@ -53,10 +60,12 @@ class Subscription < ApplicationRecord
     canceled_at =
       stripe_subscription.canceled_at ? Time.zone.at(stripe_subscription.canceled_at) : nil
 
+    pause_collection = stripe_subscription.pause_collection
+
     assign_attributes(
       stripe_id: stripe_subscription.id,
       stripe_item_id: stripe_subscription.items.data.first.id,
-      status: stripe_subscription.status,
+      status: pause_collection.nil? ? stripe_subscription.status : 'paused',
       current_period_start: Time.zone.at(stripe_subscription.current_period_start),
       current_period_end: Time.zone.at(stripe_subscription.current_period_end),
       cancel_at: stripe_subscription.cancel_at ? Time.zone.at(stripe_subscription.cancel_at) : nil,
@@ -64,6 +73,18 @@ class Subscription < ApplicationRecord
       cancel_at_period_end: stripe_subscription.cancel_at_period_end
     )
 
+    if subscription_pauses.actual.any? && pause_collection.nil?
+      subscription_pauses.actual.last.update(status: :finished)
+    end
+
     self
+  end
+
+  def can_pause?
+    subscription_pauses.finished.this_year.count < ENV['SUBSCRIPTION_PAUSES_PER_YEAR'].to_i
+  end
+
+  def will_pause?
+    subscription_pauses.upcoming.any?
   end
 end

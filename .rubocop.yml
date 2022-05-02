@@ -39,6 +39,7 @@ Metrics/ClassLength:
   Max: 200
   Exclude:
     - app/services/active_campaign_service.rb
+    - app/services/stripe_service.rb
 
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:
@@ -65,6 +66,7 @@ Metrics/MethodLength:
     - app/interactors/user_sessions/create.rb
     - spec/support/mocks/stripe_mocker.rb
     - app/interactors/users/charge.rb
+    - app/jobs/inactive_users_job.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

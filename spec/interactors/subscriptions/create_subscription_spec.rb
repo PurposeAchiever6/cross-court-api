@@ -17,7 +17,8 @@ describe Subscriptions::CreateSubscription do
         current_period_end: (Time.current + 1.month).to_i,
         cancel_at: nil,
         canceled_at: nil,
-        cancel_at_period_end: false
+        cancel_at_period_end: false,
+        pause_collection: nil
       }
     end
 

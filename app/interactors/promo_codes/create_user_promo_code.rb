@@ -15,7 +15,15 @@ module PromoCodes
       product_referral_cc_cash = product.referral_cc_cash
 
       if promo_code.for_referral && product_referral_cc_cash.positive?
-        promo_code.user.increment!(:cc_cash, product_referral_cc_cash)
+        referral_user = promo_code.user
+        referral_user.increment!(:cc_cash, product_referral_cc_cash)
+
+        ActiveCampaign::CreateDealJob.perform_later(
+          ActiveCampaign::Deal::Event::PROMO_CODE_REFERRAL_SUCCESS,
+          referral_user.id,
+          referred_id: user.id,
+          cc_cash_awarded: product_referral_cc_cash
+        )
       end
     end
   end

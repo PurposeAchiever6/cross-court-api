@@ -16,7 +16,8 @@ describe 'POST api/v1/subscriptions/:id/reactivate' do
       current_period_end: subscription.current_period_end,
       cancel_at: subscription.cancel_at,
       canceled_at: Time.current.to_i,
-      cancel_at_period_end: false
+      cancel_at_period_end: false,
+      pause_collection: nil
     }
   end
 

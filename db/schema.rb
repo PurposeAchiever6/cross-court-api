@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_16_180948) do
+ActiveRecord::Schema.define(version: 2022_05_02_122847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.integer "times_used", default: 0
     t.boolean "for_referral", default: false
     t.bigint "user_id"
+    t.integer "user_max_checked_in_sessions"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
   end
@@ -234,6 +235,7 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.integer "duration_minutes", default: 60
     t.datetime "deleted_at"
     t.integer "max_first_timers"
+    t.boolean "women_only", default: false
     t.index ["deleted_at"], name: "index_sessions_on_deleted_at"
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
@@ -250,6 +252,18 @@ ActiveRecord::Schema.define(version: 2022_04_16_180948) do
     t.text "feedback"
     t.bigint "user_id"
     t.index ["user_id"], name: "index_subscription_feedbacks_on_user_id"
+  end
+
+  create_table "subscription_pauses", force: :cascade do |t|
+    t.datetime "paused_from", null: false
+    t.datetime "paused_until", null: false
+    t.bigint "subscription_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "job_id"
+    t.integer "status", default: 0
+    t.datetime "canceled_at"
+    t.index ["subscription_id"], name: "index_subscription_pauses_on_subscription_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|

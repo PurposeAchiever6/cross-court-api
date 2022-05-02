@@ -17,6 +17,7 @@
 #  duration_minutes :integer          default(60)
 #  deleted_at       :datetime
 #  max_first_timers :integer
+#  women_only       :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -117,7 +118,8 @@ class Session < ApplicationRecord
           skill_level: skill_level,
           is_private: is_private,
           is_open_club: is_open_club,
-          coming_soon: coming_soon
+          coming_soon: coming_soon,
+          women_only: women_only
         )
       end
     end

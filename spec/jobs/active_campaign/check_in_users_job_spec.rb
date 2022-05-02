@@ -29,6 +29,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
         is_free_session: is_free_session
       )
     end
+    let(:user_session_id) { user_session.id }
 
     let(:instance) { instance_double(ActiveCampaignService) }
     let(:double_class) { class_double(ActiveCampaignService).as_stubbed_const }
@@ -38,7 +39,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
       allow(instance).to receive(:create_deal)
     end
 
-    subject { described_class.perform_now(user_session.id) }
+    subject { described_class.perform_now(user_session_id) }
 
     context 'when time_to_re_up and drop_in_re_up conditions are not met' do
       context 'when is not free session' do
@@ -136,6 +137,38 @@ describe ::ActiveCampaign::CheckInUsersJob do
             ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN,
             user
           )
+
+          subject
+        end
+      end
+    end
+
+    context "when is the user's third session" do
+      let(:previous_user_session_count) { 2 }
+      let!(:previous_user_sessions) do
+        create_list(
+          :user_session,
+          previous_user_session_count,
+          user: user,
+          session: session,
+          checked_in: true,
+          date: la_date,
+          state: :confirmed,
+          is_free_session: is_free_session
+        )
+      end
+
+      it 'sends third session notice email' do
+        expect { subject }.to have_enqueued_job.on_queue('mailers')
+
+        subject
+      end
+
+      context 'when is the fourth session' do
+        let(:previous_user_session_count) { 3 }
+
+        it 'third session notice email is not sent' do
+          expect { subject }.not_to have_enqueued_job.on_queue('mailers')
 
           subject
         end

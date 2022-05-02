@@ -11,6 +11,7 @@ describe 'GET api/v1/promo_code' do
       expiration_date: expiration_date,
       max_redemptions: max_redemptions,
       max_redemptions_by_user: max_redemptions_by_user,
+      user_max_checked_in_sessions: user_max_checked_in_sessions,
       times_used: times_used,
       for_referral: for_referral,
       user: promo_code_user
@@ -22,6 +23,7 @@ describe 'GET api/v1/promo_code' do
   let(:expiration_date) { nil }
   let(:max_redemptions) { nil }
   let(:max_redemptions_by_user) { nil }
+  let(:user_max_checked_in_sessions) { nil }
   let(:times_used) { 0 }
   let(:for_referral) { false }
   let(:promo_code_user) { nil }
@@ -119,6 +121,24 @@ describe 'GET api/v1/promo_code' do
       it 'returns promo code no first subscription message' do
         subject
         expect(json[:error]).to eq(I18n.t('api.errors.promo_code.no_first_subscription'))
+      end
+    end
+  end
+
+  context 'when promo code has a restriction on user checked in sessions' do
+    let(:user_max_checked_in_sessions) { 0 }
+
+    it 'returns the price with the promo_code applied' do
+      subject
+      expect(json[:price].to_i).to eq(promo_code.apply_discount(price))
+    end
+
+    context 'when user has already attended to a session' do
+      let!(:user_session) { create(:user_session, user: user, checked_in: true) }
+
+      it 'returns promo code no first subscription message' do
+        subject
+        expect(json[:error]).to eq(I18n.t('api.errors.promo_code.not_valid_for_user'))
       end
     end
   end

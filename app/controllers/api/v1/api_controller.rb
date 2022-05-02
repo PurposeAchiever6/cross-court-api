@@ -28,6 +28,8 @@ module Api
       rescue_from SubscriptionIsNotActiveException,            with: :render_custom_exception
       rescue_from SubscriptionAlreadyCanceledException,        with: :render_custom_exception
       rescue_from SessionIsOpenClubException,                  with: :render_custom_exception
+      rescue_from SubscriptionInvalidPauseMonthsException,     with: :render_custom_exception
+      rescue_from MaximumNumberOfPausesReachedException,       with: :render_custom_exception
       rescue_from Stripe::StripeError,                         with: :render_custom_exception
 
       def status
