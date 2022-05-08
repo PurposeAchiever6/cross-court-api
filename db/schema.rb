@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_08_001835) do
+ActiveRecord::Schema.define(version: 2022_05_08_133917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -380,6 +380,7 @@ ActiveRecord::Schema.define(version: 2022_05_08_001835) do
     t.integer "active_campaign_id"
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
+    t.string "source"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -389,6 +390,7 @@ ActiveRecord::Schema.define(version: 2022_05_08_001835) do
     t.index ["private_access"], name: "index_users_on_private_access"
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["source"], name: "index_users_on_source"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
