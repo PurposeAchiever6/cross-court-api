@@ -5,7 +5,7 @@ module Api
         def create
           FirstTimerSurveys::Create.call(
             user: current_user,
-            how_do_you_hear_about_us: params[:how_do_you_hear_about_us]
+            how_did_you_hear_about_us: params[:how_did_you_hear_about_us]
           )
 
           head :ok

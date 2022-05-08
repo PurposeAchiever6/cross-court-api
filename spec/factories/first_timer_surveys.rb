@@ -2,11 +2,11 @@
 #
 # Table name: first_timer_surveys
 #
-#  id                       :integer          not null, primary key
-#  how_do_you_hear_about_us :string
-#  user_id                  :integer
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
+#  id                        :integer          not null, primary key
+#  user_id                   :integer
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  how_did_you_hear_about_us :string
 #
 # Indexes
 #
@@ -16,6 +16,6 @@
 FactoryBot.define do
   factory :first_timer_survey do
     user
-    how_do_you_hear_about_us { Faker::Lorem.word }
+    how_did_you_hear_about_us { Faker::Lorem.word }
   end
 end

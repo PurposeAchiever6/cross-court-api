@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe 'POST api/v1/surveys/first_timers' do
   let!(:user) { create(:user) }
-  let(:how_do_you_hear_about_us) { 'Search Engine' }
+  let(:how_did_you_hear_about_us) { 'Search Engine' }
 
-  let(:params) { { how_do_you_hear_about_us: how_do_you_hear_about_us } }
+  let(:params) { { how_did_you_hear_about_us: how_did_you_hear_about_us } }
   let(:request_headers) { auth_headers }
 
   subject do

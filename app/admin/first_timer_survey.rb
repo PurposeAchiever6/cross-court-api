@@ -7,7 +7,7 @@ ActiveAdmin.register FirstTimerSurvey do
     selectable_column
     id_column
     column :user
-    column :how_do_you_hear_about_us
+    column :how_did_you_hear_about_us
     column :created_at
     column :updated_at
 
@@ -17,7 +17,7 @@ ActiveAdmin.register FirstTimerSurvey do
   show do
     attributes_table do
       row :user
-      row :how_do_you_hear_about_us
+      row :how_did_you_hear_about_us
       row :created_at
       row :updated_at
     end
