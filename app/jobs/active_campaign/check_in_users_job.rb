@@ -5,21 +5,23 @@ module ActiveCampaign
     def perform(user_session_ids)
       active_campaign_service = ActiveCampaignService.new
 
-      UserSession.where(id: user_session_ids).checked_in.includes(:user).each do |user_session|
+      UserSession.where(id: user_session_ids)
+                 .checked_in
+                 .includes(user: :active_subscription)
+                 .each do |user_session|
         user = user_session.user
 
-        event =
-          if user_session.is_free_session
-            ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN
-          else
-            ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN
-          end
+        event = if user_session.is_free_session
+                  ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN
+                else
+                  ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN
+                end
 
         active_campaign_service.create_deal(event, user)
 
         send_time_to_re_up(user)
         send_drop_in_re_up(user, user_session)
-        send_third_session_notice(user)
+        send_checked_in_session_notice(user) if user.active_subscription
       end
     end
 
@@ -43,10 +45,10 @@ module ActiveCampaign
       active_campaign_service.create_deal(::ActiveCampaign::Deal::Event::DROP_IN_RE_UP, user)
     end
 
-    def send_third_session_notice(user)
+    def send_checked_in_session_notice(user)
       checked_in_sessions = user.user_sessions.checked_in.count
 
-      return unless checked_in_sessions == 3
+      return unless checked_in_sessions == 10
 
       SessionMailer.with(user_id: user.id).third_session_notice.deliver_later
     end

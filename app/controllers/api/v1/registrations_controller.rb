@@ -34,7 +34,7 @@ module Api
 
       def sign_up_params
         params.require(:user).permit(:email, :password, :password_confirmation, :first_name,
-                                     :last_name, :phone_number, :zipcode, :birthday)
+                                     :last_name, :phone_number, :zipcode, :birthday, :source)
       end
 
       def render_create_success

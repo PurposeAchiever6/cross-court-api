@@ -10,6 +10,7 @@
   can_pause: subscription.can_pause?,
   will_pause: subscription.will_pause?,
   canceled_at: subscription&.canceled_at&.iso8601,
+  pauses_per_year: ENV['SUBSCRIPTION_PAUSES_PER_YEAR'],
   product: render(
     partial: 'api/v1/products/info',
     locals: { product: subscription.product }

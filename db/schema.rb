@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_02_122847) do
+ActiveRecord::Schema.define(version: 2022_05_08_224113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,14 @@ ActiveRecord::Schema.define(version: 2022_05_02_122847) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "first_timer_surveys", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "how_did_you_hear_about_us"
+    t.index ["user_id"], name: "index_first_timer_surveys_on_user_id"
   end
 
   create_table "gallery_photos", force: :cascade do |t|
@@ -372,6 +380,7 @@ ActiveRecord::Schema.define(version: 2022_05_02_122847) do
     t.integer "active_campaign_id"
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
+    t.string "source"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -381,6 +390,7 @@ ActiveRecord::Schema.define(version: 2022_05_02_122847) do
     t.index ["private_access"], name: "index_users_on_private_access"
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["source"], name: "index_users_on_source"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 

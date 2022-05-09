@@ -75,6 +75,9 @@ Rails.application.routes.draw do
           resources :deals, only: %i[create]
           resources :contacts, only: %i[create]
         end
+        namespace :surveys do
+          resources :first_timers, only: %i[create]
+        end
       end
     end
   end

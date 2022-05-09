@@ -42,6 +42,7 @@
 #  active_campaign_id           :integer
 #  birthday                     :date
 #  cc_cash                      :decimal(, )      default(0.0)
+#  source                       :string
 #
 # Indexes
 #
@@ -54,6 +55,7 @@
 #  index_users_on_private_access                (private_access)
 #  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
+#  index_users_on_source                        (source)
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
 #
 
@@ -116,7 +118,6 @@ class User < ApplicationRecord
   validates :skill_rating,
             numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 7 },
             allow_nil: true
-  validates :birthday, presence: true, on: :create
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }

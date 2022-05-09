@@ -121,21 +121,6 @@ describe 'POST api/v1/users', type: :request do
       end
     end
 
-    context 'when birthday is not present' do
-      let(:birthday) { nil }
-      let(:new_user) { User.find_by(email: email) }
-
-      it 'does not create a user' do
-        subject
-        expect(new_user).to be_nil
-      end
-
-      it 'does not return a successful response' do
-        subject
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
-
     context 'when the communication with an external service fails' do
       before do
         allow_any_instance_of(

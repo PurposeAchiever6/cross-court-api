@@ -143,8 +143,8 @@ describe ::ActiveCampaign::CheckInUsersJob do
       end
     end
 
-    context "when is the user's third session" do
-      let(:previous_user_session_count) { 2 }
+    context 'when is the tenth session' do
+      let(:previous_user_session_count) { 9 }
       let!(:previous_user_sessions) do
         create_list(
           :user_session,
@@ -158,16 +158,26 @@ describe ::ActiveCampaign::CheckInUsersJob do
         )
       end
 
-      it 'sends third session notice email' do
+      it 'sends checked in session notice email' do
         expect { subject }.to have_enqueued_job.on_queue('mailers')
 
         subject
       end
 
-      context 'when is the fourth session' do
-        let(:previous_user_session_count) { 3 }
+      context 'when user is not a member' do
+        let(:active_subscription) { nil }
 
-        it 'third session notice email is not sent' do
+        it 'does not send the checked in session notice email' do
+          expect { subject }.not_to have_enqueued_job.on_queue('mailers')
+
+          subject
+        end
+      end
+
+      context 'when is the eleventh session' do
+        let(:previous_user_session_count) { 10 }
+
+        it 'does not send the checked in session notice email' do
           expect { subject }.not_to have_enqueued_job.on_queue('mailers')
 
           subject
