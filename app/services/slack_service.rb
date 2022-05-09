@@ -56,6 +56,14 @@ class SlackService
     )
   end
 
+  def subscription_paused_for_next_period(subscription, options)
+    notify_subscription('notifier.slack.subscription_paused_for_next_period', subscription, options)
+  end
+
+  def subscription_paused(subscription)
+    notify_subscription('notifier.slack.subscription_paused', subscription)
+  end
+
   def charge_error(description, error_message)
     notify_charge_error('notifier.slack.charge_error', description, error_message)
   end
@@ -88,13 +96,15 @@ class SlackService
     )
   end
 
-  def notify_subscription(i18n_message, subscription)
+  def notify_subscription(i18n_message, subscription, options = {})
     notify(
       I18n.t(
         i18n_message,
-        name: user.full_name,
-        phone: user.phone_number,
-        subscription_name: subscription.name
+        {
+          name: user.full_name,
+          phone: user.phone_number,
+          subscription_name: subscription.name
+        }.merge(options)
       ),
       channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
     )

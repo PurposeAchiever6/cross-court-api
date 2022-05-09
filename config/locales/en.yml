@@ -101,6 +101,11 @@ en:
       subscription_feedback_created: >
         %{name} has shared his *feedback* about memberships!
         Here is the link: %{subscription_feedback_url}
+      subscription_paused: >
+        %{name} current subscription (%{subscription_name}) has been *paused*.
+      subscription_paused_for_next_period: >
+        %{name} has *paused* his current subscription (%{subscription_name}) for %{months} month(s).
+        Pause will start at %{pause_start_on_datetime}.
       charge_error: >
         There was an *error* when charging the user %{name} on *%{description}*.
         Error: %{error_message}

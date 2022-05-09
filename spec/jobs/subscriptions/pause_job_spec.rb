@@ -10,6 +10,7 @@ describe ::Subscriptions::PauseJob do
     before do
       Timecop.freeze(Time.current)
       StripeMocker.new.pause_subscription(subscription.stripe_id, resumes_at)
+      allow_any_instance_of(Slack::Notifier).to receive(:ping)
     end
 
     after { Timecop.return }
@@ -26,6 +27,11 @@ describe ::Subscriptions::PauseJob do
       expect { subject }.to change {
         subscription_pause.reload.status
       }.from('upcoming').to('actual')
+    end
+
+    it 'sends a Slack message' do
+      expect_any_instance_of(Slack::Notifier).to receive(:ping)
+      subject
     end
 
     context 'when the subscription is not active' do
