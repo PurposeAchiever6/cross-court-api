@@ -13,7 +13,10 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
         params: params, headers: auth_headers, as: :json
   end
 
-  before { StripeMocker.new.pause_subscription(subscription.stripe_id) }
+  before do
+    StripeMocker.new.pause_subscription(subscription.stripe_id)
+    allow_any_instance_of(Slack::Notifier).to receive(:ping)
+  end
 
   it 'returns success' do
     subject

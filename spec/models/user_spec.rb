@@ -37,7 +37,6 @@
 #  subscription_credits         :integer          default(0), not null
 #  skill_rating                 :decimal(2, 1)
 #  drop_in_expiration_date      :date
-#  vaccinated                   :boolean          default(FALSE)
 #  private_access               :boolean          default(FALSE)
 #  active_campaign_id           :integer
 #  birthday                     :date

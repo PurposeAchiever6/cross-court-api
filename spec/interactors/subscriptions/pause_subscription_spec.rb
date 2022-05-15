@@ -7,11 +7,13 @@ describe Subscriptions::PauseSubscription do
     let(:months) { %w[1 2].sample }
     let(:resumes_at) { (subscription.current_period_end - 1.day + months.to_i.months).to_i }
 
-    before { Timecop.freeze(Time.current) }
+    before do
+      Timecop.freeze(Time.current)
+      StripeMocker.new.pause_subscription(subscription.stripe_id, resumes_at)
+      allow_any_instance_of(Slack::Notifier).to receive(:ping)
+    end
 
     after { Timecop.return }
-
-    before { StripeMocker.new.pause_subscription(subscription.stripe_id, resumes_at) }
 
     subject { described_class.call(subscription: subscription, months: months) }
 
@@ -27,6 +29,11 @@ describe Subscriptions::PauseSubscription do
 
     it 'creates a subscription pause' do
       expect { subject }.to change { SubscriptionPause.count }.by(1)
+    end
+
+    it 'sends a Slack message' do
+      expect_any_instance_of(Slack::Notifier).to receive(:ping)
+      subject
     end
 
     context 'when the subscription is already paused' do

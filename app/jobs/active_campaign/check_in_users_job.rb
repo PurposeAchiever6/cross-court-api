@@ -46,11 +46,14 @@ module ActiveCampaign
     end
 
     def send_checked_in_session_notice(user)
+      number_of_sessions = 10
       checked_in_sessions = user.user_sessions.checked_in.count
 
-      return unless checked_in_sessions == 10
+      return unless checked_in_sessions == number_of_sessions
 
-      SessionMailer.with(user_id: user.id).third_session_notice.deliver_later
+      SessionMailer.with(user_id: user.id, number_of_sessions: number_of_sessions)
+                   .checked_in_session_notice
+                   .deliver_later
     end
   end
 end

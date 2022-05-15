@@ -2,7 +2,7 @@ ActiveAdmin.register User do
   menu label: 'Users', parent: 'Users'
 
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
-                :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating, :vaccinated,
+                :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits, :private_access,
                 :birthday, :cc_cash, :source
 
@@ -64,7 +64,6 @@ ActiveAdmin.register User do
       f.input :skill_rating
       f.input :source
       f.input :private_access
-      f.input :vaccinated, label: 'Proof of vaccination?'
 
       if f.object.new_record?
         f.input :password
@@ -93,7 +92,6 @@ ActiveAdmin.register User do
     column :zipcode
     column :source
     column :private_access
-    column :vaccinated
     column :email_confirmed, &:confirmed?
 
     actions
@@ -128,7 +126,6 @@ ActiveAdmin.register User do
       row :skill_rating
       row :source
       row :private_access
-      row :vaccinated
       row :email_confirmed, &:confirmed?
       row :created_at
       row :updated_at

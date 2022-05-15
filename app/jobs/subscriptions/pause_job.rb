@@ -11,6 +11,8 @@ module Subscriptions
 
       SubscriptionPause.find(subscription_pause_id).update!(status: :actual)
       subscription.assign_stripe_attrs(stripe_subscription).save!
+
+      SlackService.new(subscription.user).subscription_paused(subscription)
     end
   end
 end

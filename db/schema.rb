@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_08_224113) do
+ActiveRecord::Schema.define(version: 2022_05_12_014855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -375,7 +375,6 @@ ActiveRecord::Schema.define(version: 2022_05_08_224113) do
     t.integer "subscription_credits", default: 0, null: false
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
-    t.boolean "vaccinated", default: false
     t.boolean "private_access", default: false
     t.integer "active_campaign_id"
     t.date "birthday"

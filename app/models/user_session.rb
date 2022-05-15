@@ -44,7 +44,7 @@ class UserSession < ApplicationRecord
   validate :user_valid_age
 
   delegate :time, :time_zone, :location, :location_name, :location_description, to: :session
-  delegate :phone_number, :email, :full_name, :vaccinated,
+  delegate :phone_number, :email, :full_name,
            to: :user,
            prefix: true
 
