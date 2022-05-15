@@ -1,5 +1,5 @@
 <body style='padding: 20px;'>
-  <h1>A new user has hit his third session!</h1>
+  <h1>A new user has hit his <%= @number_of_sessions %> session!</h1>
   <p>Name: <%= @user.full_name.titleize %></p>
   <p>Email: <%= @user.email %></p>
   <p>Phone Number: <%= @user.phone_number %></p>
