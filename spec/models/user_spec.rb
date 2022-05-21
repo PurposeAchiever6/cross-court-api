@@ -74,7 +74,7 @@ describe User do
     it 'defines free session states' do
       is_expected.to define_enum_for(
         :free_session_state
-      ).with_values(%i[not_claimed claimed used expired]).with_prefix(:free_session)
+      ).with_values(%i[not_claimed claimed used expired not_apply]).with_prefix(:free_session)
     end
   end
 

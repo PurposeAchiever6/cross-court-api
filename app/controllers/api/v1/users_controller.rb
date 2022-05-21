@@ -21,7 +21,7 @@ module Api
 
       def update_skill_rating
         user_to_update = current_user || user
-        user_to_update.update!(skill_rating_params)
+        user_to_update&.update!(skill_rating_params)
         head :ok
       end
 
