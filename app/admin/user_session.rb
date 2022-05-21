@@ -11,6 +11,8 @@ ActiveAdmin.register UserSession do
       user_session.time.strftime(Session::TIME_FORMAT)
     end
     tag_column :state
+    column :first_session
+    column :free_session, &:is_free_session
     column :checked_in
     column :user_name do |user_session|
       user_session.user.full_name

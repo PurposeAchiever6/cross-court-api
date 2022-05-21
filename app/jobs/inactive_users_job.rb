@@ -17,15 +17,15 @@ class InactiveUsersJob < ApplicationJob
       next if user.active_subscription
 
       today_date = Time.zone.today
-      last_session_was_free_session = last_session.is_free_session
+      last_session_was_first_session = last_session.first_session
 
       case last_session.date
       when today_date - 1.day
-        if last_session_was_free_session
+        if last_session_was_first_session
           SlackService.new(user).inactive_first_timer_user(last_session_days_ago: 1)
         end
       when today_date - 14.days
-        if last_session_was_free_session
+        if last_session_was_first_session
           SlackService.new(user).inactive_first_timer_user(last_session_days_ago: 14)
           active_campaign_service.create_deal(
             ::ActiveCampaign::Deal::Event::FREE_LOADERS,

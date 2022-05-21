@@ -183,8 +183,8 @@ class User < ApplicationRecord
     last_checked_in_user_session.blank?
   end
 
-  def first_not_free_session?
-    user_sessions.checked_in.not_free_sessions.count == 1
+  def first_not_first_session?
+    user_sessions.checked_in.not_first_sessions.count == 1
   end
 
   def membership

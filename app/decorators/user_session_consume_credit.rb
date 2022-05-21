@@ -14,9 +14,12 @@ class UserSessionConsumeCredit
     end
 
     if user.free_session_claimed?
+      user_session.first_session = true
       user_session.is_free_session = true
       user_session.free_session_payment_intent = user.free_session_payment_intent
       user.free_session_state = :used
+    elsif user.user_sessions.not_canceled.count == 1
+      user_session.first_session = true
     end
 
     unless @not_charge_user_credit

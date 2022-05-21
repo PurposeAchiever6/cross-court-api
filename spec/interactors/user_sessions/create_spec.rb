@@ -43,6 +43,7 @@ describe UserSessions::Create do
     it { expect { subject }.not_to change { user.reload.free_session_state } }
 
     it { expect(subject.user_session.id).to eq(created_user_session.id) }
+    it { expect(subject.user_session.first_session).to eq(true) }
     it { expect(subject.user_session.is_free_session).to eq(false) }
     it { expect(subject.user_session.state).to eq('reserved') }
 
@@ -168,7 +169,16 @@ describe UserSessions::Create do
 
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.to change { user.reload.free_session_state }.to('used') }
+      it { expect(subject.user_session.first_session).to eq(true) }
       it { expect(subject.user_session.is_free_session).to eq(true) }
+    end
+
+    context 'when is not user first session' do
+      let!(:user_session) { create(:user_session, user: user, first_session: true) }
+
+      it { expect(subject.user_session.first_session).to eq(false) }
+      it { expect(subject.user_session.is_free_session).to eq(false) }
+      it { expect(subject.user_session.state).to eq('reserved') }
     end
 
     context 'when reservation is inside window cancellation' do

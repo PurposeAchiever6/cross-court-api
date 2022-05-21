@@ -30,7 +30,7 @@ describe UserSessionRemindersJob do
       let!(:user_session2) { create(:user_session, date: la_date, session: s2, user: user) }
 
       # In 6 hours
-      let(:free_session)   { false }
+      let(:first_session)  { false }
       let(:time_6)         { (la_time + 6.hours).strftime(Session::TIME_FORMAT) }
       let(:s3)             { create(:session, :daily, time: time_6) }
       let!(:user_session3) do
@@ -39,7 +39,7 @@ describe UserSessionRemindersJob do
           date: la_date,
           session: s3,
           user: user,
-          is_free_session: free_session
+          first_session: first_session
         )
       end
       let(:message_6_hours) do
@@ -59,8 +59,8 @@ describe UserSessionRemindersJob do
         described_class.perform_now
       end
 
-      context 'when is a free session' do
-        let(:free_session) { true }
+      context 'when is the first session' do
+        let(:first_session) { true }
         let(:expected_message) do
           I18n.t('notifier.sonar.today_reminder_first_timers',
                  name: user.first_name,

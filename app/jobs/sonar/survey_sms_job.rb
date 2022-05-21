@@ -3,7 +3,7 @@ module Sonar
     queue_as :default
 
     def perform
-      UserSessionsQuery.new.free_sessions_last_hour_checked_in.find_each do |user_session|
+      UserSessionsQuery.new.first_sessions_last_hour_checked_in.find_each do |user_session|
         user = user_session.user
         SonarService.send_message(
           user,

@@ -5,7 +5,7 @@
     </a>
 
     <div style='margin: 30px 0px 0px 0px; text-align: center'>
-      <% if @user_session.is_free_session %>
+      <% if @user_session.first_session %>
         <img style='width: 350px; display: block; margin: 20px;' src='https://content.app-us1.com/OvYpm/2021/12/24/86fe132b-fb2d-4e69-bf23-0597e564c4b5.png'>
         <img style='width: 200px;' src='https://content.app-us1.com/OvYpm/2021/12/23/15498133-5296-442f-b31a-5738834f3dcf.png'>
       <% else %>
@@ -15,7 +15,7 @@
 
     <div class="location-info">
       <p>Hey <%= @user.first_name.capitalize %>!</p>
-      <% if @user_session.is_free_session %>
+      <% if @user_session.first_session %>
         <p>Your first session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is officialy booked.</p>
         <p>To prepare for your first session, please take a look at the following items to make sure you're ready to go!</p>
       <% else %>
@@ -48,7 +48,7 @@
         </td>
       </tr>
 
-      <% if @user_session.is_free_session %>
+      <% if @user_session.first_session %>
         <tr>
           <td class='info-table-image-container'>
             <img alt='COVID Compliance' style='width: 60px;' src='https://content.app-us1.com/OvYpm/2021/12/24/1a0f62f4-f840-4077-a19c-d1b8df8d47b2.png'>

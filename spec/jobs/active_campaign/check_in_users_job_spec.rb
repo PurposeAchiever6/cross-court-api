@@ -8,7 +8,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
 
     let(:subscription_credits) { rand(1..5) }
     let(:active_subscription) { create(:subscription) }
-    let(:is_free_session) { false }
+    let(:first_session) { false }
 
     let!(:user) do
       create(
@@ -26,7 +26,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
         checked_in: true,
         date: la_date,
         state: :confirmed,
-        is_free_session: is_free_session
+        first_session: first_session
       )
     end
     let(:user_session_id) { user_session.id }
@@ -49,7 +49,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
             user
           )
           expect(instance).not_to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN,
+            ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN,
             user
           )
           expect(instance).not_to receive(:create_deal).with(
@@ -65,12 +65,12 @@ describe ::ActiveCampaign::CheckInUsersJob do
         end
       end
 
-      context 'when is free session' do
-        let(:is_free_session) { true }
+      context 'when is first session' do
+        let(:first_session) { true }
 
         it do
           expect(instance).to receive(:create_deal).once.with(
-            ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN,
+            ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN,
             user
           )
           expect(instance).not_to receive(:create_deal).with(
@@ -105,7 +105,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
             user
           )
           expect(instance).not_to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN,
+            ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN,
             user
           )
           expect(instance).not_to receive(:create_deal).with(
@@ -134,7 +134,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
             user
           )
           expect(instance).not_to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN,
+            ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN,
             user
           )
 
@@ -153,8 +153,7 @@ describe ::ActiveCampaign::CheckInUsersJob do
           session: session,
           checked_in: true,
           date: la_date,
-          state: :confirmed,
-          is_free_session: is_free_session
+          state: :confirmed
         )
       end
 
