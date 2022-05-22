@@ -1,8 +1,6 @@
 module Api
   module V1
     class ApiSemController < ApiController
-      include DeviseTokenAuth::Concerns::SetUserByToken
-
       before_action :authenticate_user!, :authorize_employee!
 
       private
