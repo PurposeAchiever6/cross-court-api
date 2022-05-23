@@ -2,9 +2,11 @@ require 'rails_helper'
 
 describe ::Subscriptions::PauseJob do
   describe '#perform' do
+    let!(:user) { create(:user, subscription_credits: rand(1..5)) }
+    let!(:subscription) { create(:subscription, user: user, status: subscription_status) }
+    let!(:subscription_pause) { create(:subscription_pause, subscription: subscription) }
+
     let(:subscription_status) { 'active' }
-    let(:subscription) { create(:subscription, status: subscription_status) }
-    let(:subscription_pause) { create(:subscription_pause, subscription: subscription) }
     let(:resumes_at) { (Time.current + 1.month).to_i }
 
     before do
@@ -27,6 +29,12 @@ describe ::Subscriptions::PauseJob do
       expect { subject }.to change {
         subscription_pause.reload.status
       }.from('upcoming').to('actual')
+    end
+
+    it 'updates user subscription credits' do
+      expect { subject }.to change {
+        user.reload.subscription_credits
+      }.to(0)
     end
 
     it 'sends a Slack message' do

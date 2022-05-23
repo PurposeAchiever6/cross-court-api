@@ -4,6 +4,7 @@ module Subscriptions
 
     def perform(subscription_id, resumes_at, subscription_pause_id)
       subscription = Subscription.find(subscription_id)
+      user = subscription.user
 
       return unless subscription.active?
 
@@ -12,7 +13,9 @@ module Subscriptions
       SubscriptionPause.find(subscription_pause_id).update!(status: :actual)
       subscription.assign_stripe_attrs(stripe_subscription).save!
 
-      SlackService.new(subscription.user).subscription_paused(subscription)
+      user.update!(subscription_credits: 0)
+
+      SlackService.new(user).subscription_paused(subscription)
     end
   end
 end
