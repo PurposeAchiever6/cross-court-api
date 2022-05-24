@@ -70,7 +70,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable
 
-  enum free_session_state: { not_claimed: 0, claimed: 1, used: 2, expired: 3 },
+  enum free_session_state: { not_claimed: 0,
+                             claimed: 1,
+                             used: 2,
+                             expired: 3,
+                             not_apply: 4 },
        _prefix: :free_session
 
   has_one :last_checked_in_user_session,
@@ -179,12 +183,28 @@ class User < ApplicationRecord
     last_checked_in_user_session.blank?
   end
 
-  def first_not_free_session?
-    user_sessions.checked_in.not_free_sessions.count == 1
+  def first_not_first_session?
+    user_sessions.checked_in.not_first_sessions.count == 1
   end
 
   def membership
     active_subscription ? active_subscription.product.name : 'Not a member'
+  end
+
+  def received_free_session?
+    !free_session_not_apply?
+  end
+
+  def give_free_session?
+    Location.near(zipcode, :free_session_miles_radius).any?
+  rescue SocketError, Timeout::Error, Geocoder::OverQueryLimitError, Geocoder::RequestDenied,
+         Geocoder::InvalidRequest, Geocoder::InvalidApiKey, Geocoder::ServiceUnavailable => e
+    Rollbar.error(e)
+    true
+  end
+
+  def reserve_any_session?
+    user_sessions.count != 0
   end
 
   private

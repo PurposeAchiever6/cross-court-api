@@ -110,7 +110,7 @@ en:
         There was an *error* when charging the user %{name} on *%{description}*.
         Error: %{error_message}
     sonar:
-      post_free_session_check_in: >
+      post_first_session_check_in: >
         Hey %{name}! If you loved your experience, then stop by the front desk on your way out to
         learn about a discount for your first month of membership!
       invite_friend: "Share this link to sweat with a friend: %{link}"

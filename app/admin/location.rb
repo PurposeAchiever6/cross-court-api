@@ -2,7 +2,7 @@ ActiveAdmin.register Location do
   menu label: 'Locations', parent: 'Sessions'
 
   permit_params :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, :description,
-                images: []
+                :free_session_miles_radius, images: []
 
   form do |f|
     f.inputs 'Location Details' do
@@ -15,6 +15,7 @@ ActiveAdmin.register Location do
       f.input :state, as: :select, collection: Location::STATES
       f.input :lat, as: :hidden
       f.input :lng, as: :hidden
+      f.input :free_session_miles_radius
       f.input :description
       f.latlng api_key_env: 'GOOGLE_API_KEY',
                default_lat: ENV['DEFAULT_LATITUDE'],
@@ -32,17 +33,7 @@ ActiveAdmin.register Location do
     column :time_zone
     column :address
     column :state
-    column :images do |location|
-      if location.images.attached?
-        div class: 'flex' do
-          location.images.includes(:blob).each do |location_img|
-            div class: 'mr-2' do
-              image_tag location_img, class: 'max-w-200'
-            end
-          end
-        end
-      end
-    end
+    column :free_session_miles_radius
 
     actions
   end
@@ -57,6 +48,7 @@ ActiveAdmin.register Location do
       row :address
       row :state
       row :description
+      row :free_session_miles_radius
       row :images do |location|
         if location.images.attached?
           div class: 'flex' do

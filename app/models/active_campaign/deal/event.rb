@@ -9,7 +9,7 @@ module ActiveCampaign
       DROP_IN_SESSION_EXPIRE_SOON = 'Drop in Session Expire Soon'.freeze
       FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze
       FREE_LOADERS = 'Free Loaders'.freeze
-      FREE_SESSION_CHECK_IN = 'Free Session Check In'.freeze
+      FIRST_SESSION_CHECK_IN = 'Free Session Check In'.freeze
       FREE_SESSION_NO_SHOW = 'Free Session No Show'.freeze
       NEW_MEMBER = 'New Member'.freeze
       PROMO_CODE_REFERRAL_SUCCESS = 'Promo Code Referral Success'.freeze

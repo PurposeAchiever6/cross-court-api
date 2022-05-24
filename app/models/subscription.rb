@@ -40,6 +40,11 @@ class Subscription < ApplicationRecord
           class_name: 'SubscriptionPause',
           inverse_of: :subscription
 
+  has_one :upcoming_or_actual_subscription_pause,
+          -> { upcoming_or_actual.order(created_at: :desc) },
+          class_name: 'SubscriptionPause',
+          inverse_of: :subscription
+
   delegate :credits, :name, :unlimited?, to: :product, prefix: false
 
   enum status: {

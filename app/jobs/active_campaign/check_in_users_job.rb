@@ -11,8 +11,8 @@ module ActiveCampaign
                  .each do |user_session|
         user = user_session.user
 
-        event = if user_session.is_free_session
-                  ::ActiveCampaign::Deal::Event::FREE_SESSION_CHECK_IN
+        event = if user_session.first_session
+                  ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN
                 else
                   ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN
                 end
@@ -38,9 +38,9 @@ module ActiveCampaign
     end
 
     def send_drop_in_re_up(user, user_session)
-      return unless !user_session.is_free_session &&
-                    user.active_subscription.blank? &&
-                    user.first_not_free_session?
+      return unless !user_session.first_session &&
+                    !user.active_subscription &&
+                    user.first_not_first_session?
 
       active_campaign_service.create_deal(::ActiveCampaign::Deal::Event::DROP_IN_RE_UP, user)
     end

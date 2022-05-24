@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ::Sonar::FirstFreeSessionSmsJob do
+describe ::Sonar::FirstSessionSmsJob do
   describe '#perform' do
     let(:la_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
     let!(:la_date) { la_time.to_date }
@@ -13,7 +13,7 @@ describe ::Sonar::FirstFreeSessionSmsJob do
         checked_in: true,
         date: la_date,
         state: :confirmed,
-        is_free_session: true
+        first_session: true
       )
     end
     let!(:user_1) { user_session_1.user }
@@ -25,7 +25,7 @@ describe ::Sonar::FirstFreeSessionSmsJob do
         checked_in: true,
         date: la_date,
         state: :confirmed,
-        is_free_session: false
+        first_session: false
       )
     end
     let!(:user_2) { user_session_2.user }

@@ -29,6 +29,7 @@ detectors:
         "AddAttachment#call",
         "ActiveCampaignService#custom_deal_fields",
         "User#update_external_records",
+        "UserSessionConsumeCredit#save!",
       ]
     max_calls: 1
     allow_calls: ["render :new"]
@@ -41,10 +42,7 @@ detectors:
     exclude: []
   LongParameterList:
     enabled: true
-    exclude: [
-      StripeService#self.upcoming_invoice,
-      StripeService#self.update_subscription
-    ]
+    exclude: [StripeService#self.upcoming_invoice, StripeService#self.update_subscription]
     max_params: 4
     overrides:
       initialize:

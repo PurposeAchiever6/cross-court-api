@@ -5,6 +5,7 @@
   in_cancellation_time: user_session.in_cancellation_time?,
   in_confirmation_time: user_session.in_confirmation_time?,
   checked_in: user_session.checked_in,
+  is_first_session: user_session.first_session,
   is_free_session: user_session.is_free_session,
   assigned_team: user_session.assigned_team,
   user: render(partial: 'api/v1/users/short_info', locals: { user: user_session.user })

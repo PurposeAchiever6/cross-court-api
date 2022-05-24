@@ -37,8 +37,8 @@ describe UserSessionsQuery do
     end
   end
 
-  describe '.free_sessions_last_hour_checked_in' do
-    subject { user_sessions_query.free_sessions_last_hour_checked_in }
+  describe '.first_sessions_last_hour_checked_in' do
+    subject { user_sessions_query.first_sessions_last_hour_checked_in }
 
     context 'when there are no user_sessions' do
       it { is_expected.to be_empty }
@@ -52,7 +52,7 @@ describe UserSessionsQuery do
         create(
           :user_session,
           session: session_1,
-          is_free_session: true,
+          first_session: true,
           checked_in: true,
           date: los_angeles_date
         )
@@ -61,7 +61,7 @@ describe UserSessionsQuery do
         create(
           :user_session,
           session: session_1,
-          is_free_session: false,
+          first_session: false,
           checked_in: true,
           date: los_angeles_date
         )
@@ -70,7 +70,7 @@ describe UserSessionsQuery do
         create(
           :user_session,
           session: session_2,
-          is_free_session: true,
+          first_session: true,
           checked_in: true,
           date: los_angeles_date
         )
@@ -79,7 +79,7 @@ describe UserSessionsQuery do
         create(
           :user_session,
           session: session_1,
-          is_free_session: true,
+          first_session: true,
           checked_in: true,
           date: los_angeles_date + 1.day
         )
@@ -88,7 +88,7 @@ describe UserSessionsQuery do
         create(
           :user_session,
           session: session_1,
-          is_free_session: true,
+          first_session: true,
           checked_in: false,
           date: los_angeles_date
         )

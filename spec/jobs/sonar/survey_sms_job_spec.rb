@@ -23,7 +23,7 @@ describe ::Sonar::SurveySmsJob do
         :user_session,
         session: session,
         checked_in: true,
-        is_free_session: true,
+        first_session: true,
         date: los_angeles_date
       )
     end
@@ -32,7 +32,7 @@ describe ::Sonar::SurveySmsJob do
         :user_session,
         session: session,
         checked_in: true,
-        is_free_session: true,
+        first_session: true,
         date: los_angeles_date
       )
     end
@@ -41,7 +41,7 @@ describe ::Sonar::SurveySmsJob do
         :user_session,
         session: session,
         checked_in: true,
-        is_free_session: true,
+        first_session: true,
         date: los_angeles_date + 1.day
       )
     end
@@ -50,7 +50,7 @@ describe ::Sonar::SurveySmsJob do
         :user_session,
         session: session,
         checked_in: false,
-        is_free_session: true,
+        first_session: true,
         date: los_angeles_date
       )
     end

@@ -23,4 +23,5 @@ class SubscriptionPause < ApplicationRecord
   enum status: { upcoming: 0, actual: 1, finished: 2, canceled: 3 }
 
   scope :this_year, -> { where(created_at: Time.zone.today.all_year) }
+  scope :upcoming_or_actual, -> { where(status: %i[upcoming actual]) }
 end

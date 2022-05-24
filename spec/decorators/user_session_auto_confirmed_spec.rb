@@ -11,7 +11,7 @@ describe UserSessionAutoConfirmed do
         user: user,
         date: date,
         reminder_sent_at: reminder_sent_at,
-        is_free_session: free_session
+        first_session: first_session
       )
     end
 
@@ -19,7 +19,7 @@ describe UserSessionAutoConfirmed do
     let(:session_time) { time_now + Session::CANCELLATION_PERIOD - 1.minute }
     let(:date) { time_now.to_date }
     let(:reminder_sent_at) { nil }
-    let(:free_session) { false }
+    let(:first_session) { false }
     let(:expected_sms_message) do
       I18n.t('notifier.sonar.session_auto_confirmed',
              name: user.first_name,
@@ -85,8 +85,8 @@ describe UserSessionAutoConfirmed do
       end
     end
 
-    context 'when is a free session' do
-      let(:free_session) { true }
+    context 'when is the first session' do
+      let(:first_session) { true }
       let(:expected_sms_message) do
         I18n.t('notifier.sonar.session_auto_confirmed_first_timers',
                name: user.first_name,

@@ -13,8 +13,8 @@ class UserSessionsQuery
                                   time_format: Session::QUERY_TIME_FORMAT)
   end
 
-  def free_sessions_last_hour_checked_in
-    relation.free_sessions
+  def first_sessions_last_hour_checked_in
+    relation.first_sessions
             .checked_in
             .where('date = (current_timestamp at time zone locations.time_zone)::date')
             .where('to_char((current_timestamp at time zone locations.time_zone) -

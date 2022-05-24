@@ -21,7 +21,7 @@ describe InactiveUsersJob do
         session: session,
         checked_in: true,
         date: Time.zone.today - date_ago_last_session,
-        is_free_session: free_session
+        first_session: first_session
       )
     end
     let!(:user_session_3) do
@@ -37,7 +37,7 @@ describe InactiveUsersJob do
 
     let(:user_credits) { 0 }
     let(:date_ago_last_session) { [1.month, 14.days, 7.days].sample }
-    let(:free_session) { false }
+    let(:first_session) { false }
 
     before do
       ActiveCampaignMocker.new(
@@ -70,8 +70,8 @@ describe InactiveUsersJob do
         subject
       end
 
-      context 'when it was a free session' do
-        let(:free_session) { true }
+      context 'when it was his first session' do
+        let(:first_session) { true }
 
         it 'calls service with the correct parameters' do
           expect_any_instance_of(SlackService).to receive(:notify).with(
@@ -94,8 +94,8 @@ describe InactiveUsersJob do
         subject
       end
 
-      context 'when it was a free session' do
-        let(:free_session) { true }
+      context 'when it was his first session' do
+        let(:first_session) { true }
 
         it 'calls service with the correct parameters' do
           expect_any_instance_of(SlackService).to receive(:notify).with(

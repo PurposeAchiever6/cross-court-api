@@ -19,6 +19,7 @@
 #  assigned_team                   :string
 #  no_show_up_fee_charged          :boolean          default(FALSE)
 #  reminder_sent_at                :datetime
+#  first_session                   :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -32,6 +33,7 @@ FactoryBot.define do
     session
     date { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')).to_date }
     state { 'reserved' }
+    first_session { false }
     is_free_session { false }
     checked_in { false }
     no_show_up_fee_charged { false }

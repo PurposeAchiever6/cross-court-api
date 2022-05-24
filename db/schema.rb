@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_12_014855) do
+ActiveRecord::Schema.define(version: 2022_05_22_153123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 2022_05_12_014855) do
     t.datetime "deleted_at"
     t.string "state", default: "CA"
     t.text "description", default: ""
+    t.decimal "free_session_miles_radius"
     t.index ["deleted_at"], name: "index_locations_on_deleted_at"
   end
 
@@ -132,6 +133,7 @@ ActiveRecord::Schema.define(version: 2022_05_12_014855) do
     t.decimal "price_for_members", precision: 10, scale: 2
     t.string "stripe_product_id"
     t.decimal "referral_cc_cash", default: "0.0"
+    t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -336,6 +338,7 @@ ActiveRecord::Schema.define(version: 2022_05_12_014855) do
     t.string "assigned_team"
     t.boolean "no_show_up_fee_charged", default: false
     t.datetime "reminder_sent_at"
+    t.boolean "first_session", default: false
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
