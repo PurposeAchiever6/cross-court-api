@@ -246,6 +246,7 @@ ActiveRecord::Schema.define(version: 2022_06_04_145829) do
     t.datetime "deleted_at"
     t.integer "max_first_timers"
     t.boolean "women_only", default: false
+    t.boolean "all_skill_levels_allowed", default: true
     t.index ["deleted_at"], name: "index_sessions_on_deleted_at"
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"

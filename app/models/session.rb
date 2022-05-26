@@ -2,22 +2,23 @@
 #
 # Table name: sessions
 #
-#  id               :integer          not null, primary key
-#  start_time       :date             not null
-#  recurring        :text
-#  time             :time             not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  location_id      :integer          not null
-#  end_time         :date
-#  skill_level_id   :integer
-#  is_private       :boolean          default(FALSE)
-#  coming_soon      :boolean          default(FALSE)
-#  is_open_club     :boolean          default(FALSE)
-#  duration_minutes :integer          default(60)
-#  deleted_at       :datetime
-#  max_first_timers :integer
-#  women_only       :boolean          default(FALSE)
+#  id                       :integer          not null, primary key
+#  start_time               :date             not null
+#  recurring                :text
+#  time                     :time             not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  location_id              :integer          not null
+#  end_time                 :date
+#  skill_level_id           :integer
+#  is_private               :boolean          default(FALSE)
+#  coming_soon              :boolean          default(FALSE)
+#  is_open_club             :boolean          default(FALSE)
+#  duration_minutes         :integer          default(60)
+#  deleted_at               :datetime
+#  max_first_timers         :integer
+#  women_only               :boolean          default(FALSE)
+#  all_skill_levels_allowed :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -120,7 +121,8 @@ class Session < ApplicationRecord
           is_private: is_private,
           is_open_club: is_open_club,
           coming_soon: coming_soon,
-          women_only: women_only
+          women_only: women_only,
+          all_skill_levels_allowed: all_skill_levels_allowed
         )
       end
     end
@@ -216,6 +218,13 @@ class Session < ApplicationRecord
 
   def single_occurrence?
     !recurring?
+  end
+
+  def at_session_level?(user)
+    return true if all_skill_levels_allowed
+
+    user_skill_rating = user.skill_rating
+    user_skill_rating >= skill_level.min && user_skill_rating <= skill_level.max
   end
 
   private
