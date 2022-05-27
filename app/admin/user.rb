@@ -127,6 +127,16 @@ ActiveAdmin.register User do
       row :source
       row :private_access
       row :email_confirmed, &:confirmed?
+      row 'User Sessions' do
+        link_to 'link to user sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
+      end
+      row 'Stripe Customer' do
+        link_to 'link to stripe',
+                "https://dashboard.stripe.com/#{'test/' unless Rails.env.production?}customers" \
+                "/#{user.stripe_id}",
+                target: '_blank',
+                rel: 'noopener'
+      end
       row :created_at
       row :updated_at
     end
