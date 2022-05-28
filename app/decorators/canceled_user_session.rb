@@ -47,6 +47,6 @@ class CanceledUserSession
       )
     end
 
-    ReachUserOnWaitlistJob.perform_later(session.id, date)
+    Sessions::ReachUserOnWaitlistJob.perform_later(session.id, date)
   end
 end

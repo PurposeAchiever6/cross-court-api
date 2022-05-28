@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ReachUserOnWaitlistJob do
+describe Sessions::ReachUserOnWaitlistJob do
   describe '#perform' do
     let!(:user_1) { create(:user, credits: user_1_credits) }
     let!(:user_2) { create(:user, credits: user_2_credits) }
@@ -43,7 +43,7 @@ describe ReachUserOnWaitlistJob do
       allow_any_instance_of(SlackService).to receive(:session_waitlist_confirmed)
     end
 
-    subject { ReachUserOnWaitlistJob.perform_now(session.id, job_arg_date) }
+    subject { Sessions::ReachUserOnWaitlistJob.perform_now(session.id, job_arg_date) }
 
     it { is_expected.to eq(true) }
     it { expect { subject }.to change { waitlist_item_1.reload.reached }.from(false).to(true) }

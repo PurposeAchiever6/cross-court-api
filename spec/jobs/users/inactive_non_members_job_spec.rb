@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe InactiveUsersJob do
+describe Users::InactiveNonMembersJob do
   describe '.perform' do
     let!(:session) { create(:session) }
     let!(:user) { create(:user, credits: user_credits) }

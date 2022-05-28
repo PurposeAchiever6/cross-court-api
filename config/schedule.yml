@@ -1,34 +1,34 @@
 user_session_reminders:
-  cron: "0 * * * *"
-  class: "UserSessionRemindersJob"
+  cron: "0 * * * *" # Every hour at minute 0
+  class: "UserSessions::RemindersJob"
   queue: default
 
 charge_no_show_up_players:
-  cron: "0 2 * * *"
-  class: "ChargeNotShowUpPlayersJob"
+  cron: "0 12 * * *" # 5 AM LA
+  class: "UserSessions::ChargeNotShowUpJob"
   queue: default
 
 confirm_unconfirmed_sessions:
-  cron: "10 * * * *"
-  class: "ConfirmUnconfirmedSessionsJob"
+  cron: "10 * * * *" # Every hour at minute 10
+  class: "UserSessions::ConfirmUnconfirmedJob"
   queue: default
 
 credits:
-  cron: "0 5 * * *"
-  class: "CreditsJob"
+  cron: "0 11 * * *" # 4 AM LA
+  class: "Users::CreditsExpirationJob"
   queue: default
 
 send_survey_sms_to_players:
-  cron: "0 * * * *"
+  cron: "0 * * * *" # Every hour at minute 0
   class: "Sonar::SurveySmsJob"
   queue: default
 
 notify_inactive_players:
-  cron: "0 17 * * *"
-  class: "InactiveUsersJob"
+  cron: "0 16 * * *" # 9 AM LA
+  class: "Users::InactiveNonMembers"
   queue: default
 
 canceled_subscriptions_reminders:
-  cron: "0 17 * * *"
-  class: "CanceledSubscriptionsRemindersJob"
+  cron: "0 17 * * *" # 10 AM LA
+  class: "Subscriptions::CanceledRemindersJob"
   queue: default

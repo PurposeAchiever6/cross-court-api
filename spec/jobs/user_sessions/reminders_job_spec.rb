@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UserSessionRemindersJob do
+describe UserSessions::RemindersJob do
   describe '.perform' do
     before do
       ActiveCampaignMocker.new.mock

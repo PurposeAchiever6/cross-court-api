@@ -20,10 +20,10 @@ detectors:
     enabled: true
     exclude:
       [
-        "UserSessionRemindersJob#perform",
+        "UserSessions::RemindersJob#perform",
         "EmployeeSessionsQuery#sorted_future_sessions",
         "Subscription#assign_stripe_attrs",
-        "CreditsJob#perform",
+        "Users::CreditsExpirationJob#perform",
         "Api::V1::StripeController#webhook",
         "SonarService#add_update_customer",
         "AddAttachment#call",

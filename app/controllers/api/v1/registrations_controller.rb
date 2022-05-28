@@ -22,7 +22,7 @@ module Api
             StripeService.create_user(resource)
             SonarService.add_update_customer(resource)
 
-            ResendVerificationEmailJob.set(wait: 24.hours).perform_later(user_id)
+            Users::ResendVerificationEmailJob.set(wait: 24.hours).perform_later(user_id)
           end
         end
       rescue StandardError => e
