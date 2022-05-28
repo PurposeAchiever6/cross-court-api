@@ -1,0 +1,181 @@
+require 'rails_helper'
+
+describe Users::InactiveMembersJob do
+  describe '.perform' do
+    let!(:session) { create(:session) }
+    let!(:user) { create(:user) }
+    let!(:product) { create(:product, credits: rand(4..8)) }
+
+    let!(:active_subscription) do
+      create(
+        :subscription,
+        user: user,
+        product: product,
+        current_period_end: active_subscription_current_period_end
+      )
+    end
+
+    let!(:last_checked_in_user_session) do
+      create(
+        :user_session,
+        user: user,
+        session: session,
+        checked_in: true,
+        date: Time.zone.today - date_ago_last_session
+      )
+    end
+
+    let(:active_subscription_current_period_end) { 2.weeks.from_now }
+    let(:date_ago_last_session) { 1.week }
+    let(:user_subscription_credits) { product.credits / 2 }
+
+    let(:credits_left_reminder_msg) do
+      I18n.t(
+        'notifier.sonar.subscription_credits_left_reminder',
+        name: user.first_name,
+        credits_left: user_subscription_credits,
+        end_date: active_subscription_current_period_end.strftime('%e of %B'),
+        schedule_url: "#{ENV['FRONTENT_URL']}/locations"
+      )
+    end
+
+    let(:book_reminder_msg) do
+      I18n.t(
+        'notifier.sonar.active_subscription_book_reminder',
+        name: user.first_name,
+        schedule_url: "#{ENV['FRONTENT_URL']}/locations"
+      )
+    end
+
+    before do
+      user.update!(subscription_credits: user_subscription_credits)
+      allow(SendSonar).to receive(:message_customer)
+    end
+
+    subject { described_class.perform_now }
+
+    it 'sends credits left reminder message' do
+      expect(SonarService).to receive(:send_message).with(user, credits_left_reminder_msg).once
+      subject
+    end
+
+    context 'when user is not a member' do
+      before { active_subscription.destroy }
+
+      it 'does not send credits left reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, credits_left_reminder_msg)
+        subject
+      end
+
+      it 'does not send book reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+        subject
+      end
+    end
+
+    context 'when user has a future session reserved' do
+      let!(:first_future_user_session) do
+        create(
+          :user_session,
+          user: user,
+          session: session,
+          checked_in: false,
+          date: Time.zone.today + rand(1..10).days
+        )
+      end
+
+      it 'does not send credits left reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, credits_left_reminder_msg)
+        subject
+      end
+
+      it 'does not send book reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+        subject
+      end
+    end
+
+    context 'when user has never played a session' do
+      before { last_checked_in_user_session.destroy }
+
+      it 'does not send credits left reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, credits_left_reminder_msg)
+        subject
+      end
+
+      it 'does not send book reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+        subject
+      end
+    end
+
+    context 'when active subscription is unlimited' do
+      let!(:product) { create(:product, :unlimited) }
+
+      it 'does not send credits left reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, credits_left_reminder_msg)
+        subject
+      end
+
+      it 'sends book reminder message' do
+        expect(SonarService).to receive(:send_message).with(user, book_reminder_msg).once
+        subject
+      end
+
+      context 'when user last checked in session was not one week ago' do
+        let(:date_ago_last_session) { 1.week + [-1.day, 1.day].sample }
+
+        it 'does not send book reminder message' do
+          expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+          subject
+        end
+      end
+    end
+
+    context 'when user has used his subscription credits' do
+      let(:user_subscription_credits) { (product.credits / 2) - 1 }
+
+      it 'does not send credits left reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, credits_left_reminder_msg)
+        subject
+      end
+
+      it 'sends book reminder message' do
+        expect(SonarService).to receive(:send_message).with(user, book_reminder_msg).once
+        subject
+      end
+
+      context 'when user last checked in session was not one week ago' do
+        let(:date_ago_last_session) { 1.week + [-1.day, 1.day].sample }
+
+        it 'does not send book reminder message' do
+          expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+          subject
+        end
+      end
+    end
+
+    context 'when subscription perdiod end is not in two weeks' do
+      let(:active_subscription_current_period_end) { 2.weeks.from_now + [-1.day, 1.day].sample }
+
+      it 'does not send credits left reminder message' do
+        expect(SonarService).not_to receive(:send_message).with(user, credits_left_reminder_msg)
+        subject
+      end
+
+      it 'sends book reminder message' do
+        expect(SonarService).to receive(:send_message).with(user, book_reminder_msg).once
+        subject
+      end
+
+      context 'when user last checked in session was not one week ago' do
+        let(:date_ago_last_session) { 1.week + [-1.day, 1.day].sample }
+
+        it 'does not send book reminder message' do
+          expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+          subject
+        end
+      end
+    end
+  end
+end

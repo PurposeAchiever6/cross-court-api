@@ -30,6 +30,7 @@ detectors:
         "ActiveCampaignService#custom_deal_fields",
         "User#update_external_records",
         "UserSessionConsumeCredit#save!",
+        "Users::InactiveMembersJob#perform",
       ]
     max_calls: 1
     allow_calls: ["render :new"]

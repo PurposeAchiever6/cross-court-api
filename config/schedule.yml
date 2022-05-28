@@ -25,7 +25,12 @@ send_survey_sms_to_players:
 
 notify_inactive_players:
   cron: "0 16 * * *" # 9 AM LA
-  class: "Users::InactiveNonMembers"
+  class: "Users::InactiveNonMembersJob"
+  queue: default
+
+send_members_reminders:
+  cron: "0 21 * * *" # 2 PM LA
+  class: "Users::InactiveMembersJob"
   queue: default
 
 canceled_subscriptions_reminders:

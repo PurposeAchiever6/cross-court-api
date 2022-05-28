@@ -145,6 +145,13 @@ en:
       canceled_subscription_reminder: >
         Hey %{name}, your %{product_name} membership is ending tomorrow! You still have time to
         reactivate it at %{subscriptions_url}
+      subscription_credits_left_reminder: >
+        Hey %{name}, It's the ccteam. You still have %{credits_left} session credit(s)
+        left in your account from your current membership to use before the %{end_date}.
+        Let's get it! %{schedule_url}
+      active_subscription_book_reminder: >
+        Hey %{name}. It's the ccteam. It's been a week since your last session.
+        Ready to book? %{schedule_url}
   admin:
     products:
       created: "Product created successfully"
