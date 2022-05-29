@@ -1,0 +1,27 @@
+<%= form_tag(purchase_admin_user_path(user.id), method: :post) do %>
+  <div class='mb-5'>
+    <%= user.full_name.titleize %>
+    has
+    <strong>
+      <%= "$#{user.cc_cash}" %>
+    </strong>
+    available from his referral credits
+  </div>
+
+  <div class='flex items-center mb-4'>
+    <%= check_box_tag :use_cc_cash, true, true, class: 'mr-1' %>
+    <%= label_tag :use_cc_cash, 'Spend available CC Cash for purchase' %>
+  </div>
+
+  <% store_items.each do |store_item| %>
+    <div class='flex items-center mb-3'>
+      <div class='mr-4' style='width: 200px'>
+        Purchase a <%= store_item.name.downcase %> for
+        <strong><%= number_to_currency(store_item.price) %></strong>
+      </div>
+      <%= button_tag 'Buy',
+                     type: :submit, name: :store_item_id, value: store_item.id,
+                     data: { disable_with: 'Loading...' } %>
+    </div>
+  <% end %>
+<% end %>
