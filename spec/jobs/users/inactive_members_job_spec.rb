@@ -130,6 +130,15 @@ describe Users::InactiveMembersJob do
           subject
         end
       end
+
+      context 'when user has zero credits' do
+        let(:user_subscription_credits) { 0 }
+
+        it 'does not send book reminder message' do
+          expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+          subject
+        end
+      end
     end
 
     context 'when user has used his subscription credits' do
@@ -153,6 +162,15 @@ describe Users::InactiveMembersJob do
           subject
         end
       end
+
+      context 'when user has zero credits' do
+        let(:user_subscription_credits) { 0 }
+
+        it 'does not send book reminder message' do
+          expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+          subject
+        end
+      end
     end
 
     context 'when subscription perdiod end is not in two weeks' do
@@ -170,6 +188,15 @@ describe Users::InactiveMembersJob do
 
       context 'when user last checked in session was not one week ago' do
         let(:date_ago_last_session) { 1.week + [-1.day, 1.day].sample }
+
+        it 'does not send book reminder message' do
+          expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)
+          subject
+        end
+      end
+
+      context 'when user has zero credits' do
+        let(:user_subscription_credits) { 0 }
 
         it 'does not send book reminder message' do
           expect(SonarService).not_to receive(:send_message).with(user, book_reminder_msg)

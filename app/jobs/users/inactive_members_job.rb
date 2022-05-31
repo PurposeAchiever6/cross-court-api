@@ -39,7 +39,7 @@ module Users
     end
 
     def send_book_reminder?(user)
-      1.week.ago.to_date == user.last_checked_in_user_session.date
+      1.week.ago.to_date == user.last_checked_in_user_session.date && user.credits?
     end
   end
 end
