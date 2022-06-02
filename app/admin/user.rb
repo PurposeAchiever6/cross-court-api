@@ -127,17 +127,23 @@ ActiveAdmin.register User do
       row :source
       row :private_access
       row :email_confirmed, &:confirmed?
+      row 'User Sessions' do
+        link_to 'link to user sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
+      end
+      row 'Stripe Customer' do
+        link_to 'link to stripe',
+                "https://dashboard.stripe.com/#{'test/' unless Rails.env.production?}customers" \
+                "/#{user.stripe_id}",
+                target: '_blank',
+                rel: 'noopener'
+      end
       row :created_at
       row :updated_at
     end
 
-    panel 'Purchase Actions' do
-      render partial: 'purchases', locals: {
-        user: user,
-        jersey_purchase_price: ENV['JERSEY_PURCHASE_PRICE'],
-        towel_purchase_price: ENV['TOWEL_PURCHASE_PRICE'],
-        water_purchase_price: ENV['WATER_PURCHASE_PRICE']
-      }
+    panel 'Store Items Purchase' do
+      render partial: 'store_items_purchase',
+             locals: { user: user, store_items: StoreItem.sorted }
     end
 
     panel 'Membership' do
@@ -151,42 +157,22 @@ ActiveAdmin.register User do
 
   member_action :purchase, method: :post do
     user = User.find(params[:id])
-    purchase = params[:purchase_type]&.to_sym
+    store_item = StoreItem.find(params[:store_item_id])
     use_cc_cash = params[:use_cc_cash] == 'true'
 
-    case purchase
-    when :jersey
-      result = Users::Charge.call(
-        user: user,
-        price: ENV['JERSEY_PURCHASE_PRICE'].to_f,
-        description: 'Jersey purchase',
-        use_cc_cash: use_cc_cash
-      )
-    when :towel
-      result = Users::Charge.call(
-        user: user,
-        price: ENV['TOWEL_PURCHASE_PRICE'].to_f,
-        description: 'Towel purchase',
-        use_cc_cash: use_cc_cash
-      )
-    when :water
-      result = Users::Charge.call(
-        user: user,
-        price: ENV['WATER_PURCHASE_PRICE'].to_f,
-        description: 'Water bottle purchase',
-        use_cc_cash: use_cc_cash
-      )
+    result = Users::Charge.call(
+      user: user,
+      price: store_item.price,
+      description: store_item.description,
+      use_cc_cash: use_cc_cash
+    )
+
+    if result.success?
+      redirect_to admin_user_path(user.id), notice: 'Purchase made successfully'
     else
-      flash[:error] = 'Unknown purchase'
-      return redirect_to admin_user_path(id: user.id)
-    end
-
-    if result.failure?
       flash[:error] = result.message
-      return redirect_to admin_user_path(id: user.id)
+      redirect_to admin_user_path(id: user.id)
     end
-
-    redirect_to admin_user_path(user.id), notice: 'Purchase made successfully'
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to admin_user_path(id: params[:id])

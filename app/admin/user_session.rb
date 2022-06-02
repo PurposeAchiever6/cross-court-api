@@ -4,6 +4,12 @@ ActiveAdmin.register UserSession do
   actions :index, :destroy
   includes :user, session: :location
 
+  filter :user, collection: User.sorted_by_full_name.map { |user| [user.full_name, user.id] }
+  filter :state, as: :select, collection: UserSession.states
+  filter :first_session
+  filter :is_free_session
+  filter :checked_in
+
   index do
     selectable_column
     column :date
@@ -14,17 +20,11 @@ ActiveAdmin.register UserSession do
     column :first_session
     column :free_session, &:is_free_session
     column :checked_in
-    column :user_name do |user_session|
-      user_session.user.full_name
-    end
+    column :user
     column :location do |user_session|
       user_session.location.name
     end
 
     actions
   end
-
-  filter :user, collection: proc {
-    User.order(:first_name, :last_name).all.map { |user| [user.full_name, user.id] }
-  }
 end

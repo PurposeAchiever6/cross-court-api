@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CanceledSubscriptionsRemindersJob do
+describe Subscriptions::CanceledRemindersJob do
   describe '#perform' do
     let!(:subscription_1) do
       create(
@@ -35,7 +35,7 @@ describe CanceledSubscriptionsRemindersJob do
       )
     end
 
-    subject { CanceledSubscriptionsRemindersJob.perform_now }
+    subject { Subscriptions::CanceledRemindersJob.perform_now }
 
     it 'calls Sonar service' do
       expect(SonarService).to receive(:send_message).once.with(subscription_1.user, anything)

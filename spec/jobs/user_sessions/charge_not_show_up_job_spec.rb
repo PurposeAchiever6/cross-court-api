@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ChargeNotShowUpPlayersJob do
+describe UserSessions::ChargeNotShowUpJob do
   describe '#perform' do
     before do
       ActiveCampaignMocker.new(

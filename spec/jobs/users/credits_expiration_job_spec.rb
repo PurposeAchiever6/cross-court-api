@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CreditsJob do
+describe Users::CreditsExpirationJob do
   describe '#perform' do
     let!(:user_1) do
       create(:user,

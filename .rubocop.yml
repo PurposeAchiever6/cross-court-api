@@ -20,7 +20,7 @@ Lint/AmbiguousBlockAssociation:
 
 Lint/HandleExceptions:
   Exclude:
-    - app/jobs/charge_not_show_up_players_job.rb
+    - app/jobs/user_sessions/charge_not_show_up_job.rb
 
 Metrics/BlockLength:
   CountComments: false # count full line comments?
@@ -45,8 +45,8 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 8
   Exclude:
-    - app/jobs/user_session_reminders_job.rb
-    - app/jobs/inactive_users_job.rb
+    - app/jobs/user_sessions/reminders_job.rb
+    - app/jobs/users/inactive_non_members_job.rb
     - app/decorators/employee_session_confirmed.rb
     - app/controllers/api/v1/stripe_controller.rb
     - app/services/active_campaign_service.rb
@@ -62,11 +62,11 @@ Metrics/MethodLength:
     - app/services/active_campaign_service.rb
     - app/controllers/api/v1/stripe_controller.rb
     - app/decorators/canceled_user_session.rb
-    - app/jobs/credits_job.rb
+    - app/jobs/users/credits_expiration_job.rb
     - app/interactors/user_sessions/create.rb
     - spec/support/mocks/stripe_mocker.rb
     - app/interactors/users/charge.rb
-    - app/jobs/inactive_users_job.rb
+    - app/jobs/users/inactive_non_members_job.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

@@ -55,7 +55,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     end
 
     it 'calls waitlist job' do
-      expect { subject }.to have_enqueued_job(ReachUserOnWaitlistJob).with(
+      expect { subject }.to have_enqueued_job(Sessions::ReachUserOnWaitlistJob).with(
         session.id,
         user_session.date
       ).on_queue('default')
@@ -95,7 +95,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     end
 
     it 'calls waitlist job' do
-      expect { subject }.to have_enqueued_job(ReachUserOnWaitlistJob).with(
+      expect { subject }.to have_enqueued_job(Sessions::ReachUserOnWaitlistJob).with(
         session.id,
         user_session.date
       ).on_queue('default')

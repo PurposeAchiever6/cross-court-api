@@ -20,16 +20,17 @@ detectors:
     enabled: true
     exclude:
       [
-        "UserSessionRemindersJob#perform",
+        "UserSessions::RemindersJob#perform",
         "EmployeeSessionsQuery#sorted_future_sessions",
         "Subscription#assign_stripe_attrs",
-        "CreditsJob#perform",
+        "Users::CreditsExpirationJob#perform",
         "Api::V1::StripeController#webhook",
         "SonarService#add_update_customer",
         "AddAttachment#call",
         "ActiveCampaignService#custom_deal_fields",
         "User#update_external_records",
         "UserSessionConsumeCredit#save!",
+        "Users::InactiveMembersJob#perform",
       ]
     max_calls: 1
     allow_calls: ["render :new"]

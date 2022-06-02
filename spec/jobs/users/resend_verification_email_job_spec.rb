@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ResendVerificationEmailJob do
+describe Users::ResendVerificationEmailJob do
   describe '#perform' do
     before do
       ActiveCampaignMocker.new.mock
