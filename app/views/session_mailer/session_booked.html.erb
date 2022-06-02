@@ -1,112 +1,103 @@
-<body style='padding: 20px;'>
-  <div style='margin:0 auto; width: max-content;'>
+<body class='session-booked__body'>
+  <div style='margin:0 auto;'>
     <a href=<%= ENV['FRONTENT_URL'] %>>
-      <img style='width: 200px; margin: 0 auto;' src='https://content.app-us1.com/OvYpm/2021/12/13/4db103c5-71d0-44d3-9e61-7ed632316355.png'>
+      <img class='session-booked__header-image' src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'>
     </a>
 
-    <div style='margin: 30px 0px 0px 0px; text-align: center'>
-      <% if @user_session.first_session %>
-        <img style='width: 350px; display: block; margin: 20px;' src='https://content.app-us1.com/OvYpm/2021/12/24/86fe132b-fb2d-4e69-bf23-0597e564c4b5.png'>
-        <img style='width: 200px;' src='https://content.app-us1.com/OvYpm/2021/12/23/15498133-5296-442f-b31a-5738834f3dcf.png'>
-      <% else %>
-        <img style='width: 350px;' src='https://content.app-us1.com/OvYpm/2021/12/24/c9235f44-a258-49f4-aa7e-736f344b7270.png'>
-      <% end %>
-    </div>
-
-    <div class="location-info">
-      <p>Hey <%= @user.first_name.capitalize %>!</p>
-      <% if @user_session.first_session %>
-        <p>Your first session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is officialy booked.</p>
-        <p>To prepare for your first session, please take a look at the following items to make sure you're ready to go!</p>
-      <% else %>
-        <p>Your session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is officialy booked.</p>
-        <p>Just in case you forgot,  we've put together some helpful reminders below.</p>
-      <% end %>
-    </div>
-
-    <table class='content-info'>
-      <tr>
-        <td class='info-table-image-container'>
-          <img alt='What To Bring' style='width: 60px;' src='https://content.app-us1.com/OvYpm/2021/12/24/bd550368-764a-4628-a70d-6b4e4903441a.png'>
-        </td>
-        <td>
-          <p class='info-table-title'>WHAT TO BRING</p>
-          <p style="margin:2px;"><strong class='font-black'>Required:</strong> Athletic gear, basketball shoes, mask for common areas, and proof of vaccination</p>
-          <p style="margin:2px;"><strong class='font-black'>Optional:</strong> Towel and water</p>
-          <p style="margin:2px;"><strong class='font-black'>Do not bring:</strong> Basketball, colored beverages, food, headwear and guests</p>
-        </td>
-      </tr>
-
-      <tr>
-        <td class='info-table-image-container'>
-          <img alt='What We Provide' style='width: 50px;' src='https://content.app-us1.com/OvYpm/2021/12/24/a0c48ee6-fb90-4e6e-8690-3d0efe9b4b24.png'>
-        </td>
-        <td>
-          <p class='info-table-title'>WHAT WE PROVIDE</p>
-          <p style="margin:2px;">Parking, jersey, lockers, restrooms, water filler, and good vibes</p>
-          <p style="margin:2px;"><strong class='font-black'>Available for purchase:</strong> Water bottle, towels, jersey</p>
-        </td>
-      </tr>
-
-      <% if @user_session.first_session %>
+    <div class='session-booked__title-section'>
+      <table>
         <tr>
-          <td class='info-table-image-container'>
-            <img alt='COVID Compliance' style='width: 60px;' src='https://content.app-us1.com/OvYpm/2021/12/24/1a0f62f4-f840-4077-a19c-d1b8df8d47b2.png'>
+          <td style='width: 50%' class='session-booked__title-image'>
+            <img style='width: 90%; object-fit: cover;' src='https://content.app-us1.com/OvYpm/2022/06/02/1f334e1a-ab19-477a-88d1-c3744ca3c703.png'>
           </td>
-          <td>
-            <p class='info-table-title'>COVID COMPLIANCE</p>
-            <p style="margin:2px;">
-              Due to recent city wide mandates as of November 8th 2021, our club requires all players to show proof of vaccination upon their first visit.
-              Those exempt from the mandate have the option to provide proof of a negative COVID-19 test conducted within 72 hours of a booked session.
-              We will note in our system that your vaccination status has been verified, which allows us to avoid having to ask you for proof each time you show up to sweat
-            </p>
+          <td style='width: 50%; vertical-align: middle;'>
+            <% if @user_session.first_session %>
+              <img style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/06/02/7a570f53-6b93-47d1-8c93-9a487571b002.png'>
+            <% else %>
+              <img style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/05/31/6fbc411b-7982-44cd-9173-20e8a6714e8f.png'>
+            <% end %>
+
+            <p>Hey <%= @user.first_name.capitalize %>,</p>
+            <% if @user_session.first_session %>
+              <p>Your first session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is booked.</p>
+              <p style='color: #9999FF'>By joining the ccteam through one of our memberships, you're gaining access to community bonded by the power of team sport.</p>
+              <p style='margin: 0'>Please arrive 20 minutes early so we can give you a tour of the club and get you situated.</p>
+            <% else %>
+              <p>Your session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is booked.</p>
+              <p>Just in case you forgot,  we've put together some helpful reminders below.</p>
+            <% end %>
           </td>
         </tr>
-      <% end %>
+      </table>
+    </div>
 
+    <div style='text-align: center; margin-bottom: 10px; margin-top: 5px;'>
+      <img style='width: 35px;' src='https://content.app-us1.com/OvYpm/2022/06/02/2cd3b3a4-89ca-49e6-bf99-fd2fcf3ef4dd.png'>
+    </div>
+    <div style='margin-left: 100px;' class='session-booked__divider'></div>
 
-      <tr>
-        <td class='info-table-image-container'>
-          <img alt='Where To Park' style='width: 60px;' src='https://content.app-us1.com/OvYpm/2021/12/24/3c4a8161-48f4-4bc2-935f-8ae29937e4a2.png'>
-        </td>
-        <td>
-          <p class='info-table-title'>WHERE TO PARK</p>
-          <p style="margin: 2px 0 10px 0;">There is a gated parking lot attached to the club. Please pull all the forward to avoid blocking driveway</p>
-          <img alt='Where To Park' style='width: 300px;' src='https://content.app-us1.com/OvYpm/2022/01/23/fce03001-fa34-428a-bc70-72e2dbc3054c.png'>
-        </td>
-      </tr>
+    <img alt='What to bring' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/152b956f-0066-4c29-adf6-4dcac5148e4f.png'>
 
-      <tr>
-        <td class='info-table-image-container'>
-          <img alt='What to Expect' style='width: 60px; margin: 20px 0 0 0;' src='https://content.app-us1.com/OvYpm/2021/12/24/bb962d94-94f3-4802-89ee-d36a804bdc91.png'>
-        </td>
-        <td>
-          <p class='info-table-title'>WHAT TO EXPECT</p>
-          <p style="margin: 2px 0 10px 0;">Check out our Rules and Format <a href=<%= "#{ENV['FRONTENT_URL']}/rules" %>>here</a> and our How It Works video below</p>
-          <a href=<%= "#{ENV['FRONTENT_URL']}/how-it-works" %>>
-            <img alt='What to Expect' style='width: 320px;' src='https://content.app-us1.com/OvYpm/2022/01/17/e342c9f6-ea60-491a-b7a3-8159c23513ed.png'>
-          </a>
-        </td>
-      </tr>
+    <div class='session-booked__section'>
+      <p class='session-booked__item'>Required</p>
+      <p class='session-booked__item-description'>Athletic gear, basketball shoes</p>
+      <p class='session-booked__item'>Optional</p>
+      <p class='session-booked__item-description'>Towel & water</p>
+      <p class='session-booked__item'>Do not bring</p>
+      <p class='session-booked__item-description'>Basketball, colored beverages, food, headwear and guests</p>
+    </div>
 
-      <tr>
-        <td class='info-table-image-container'>
-          <img alt='Additional Notes' style='width: 50px;' src='https://content.app-us1.com/OvYpm/2021/12/24/d0c75f7f-e091-46f9-8350-4605c39ad7d9.png'>
-        </td>
-        <td>
-          <p class='info-table-title'>ADDITIONAL NOTES</p>
-          <ul style='padding-left: 15px;'>
-            <li><p class='info-table-item-text'>Please show up at least 10 minutes early. First 10 players to check in start the first game</p></li>
-            <li><p class='info-table-item-text'>Keep an eye out for a text message leading up to your session that will ask you to confirm your reservation</p></li>
-            <li><p class='info-table-item-text'>You have up until 5 hours before your session to cancel</p></li>
-            <li><p class='info-table-item-text'>Feel free to review our FAQ page or reach out using our website if you have any questions</p></li>
-          </ul>
-        </td>
-      </tr>
-    </table>
+    <div class='session-booked__divider' style='margin-top: 100px;'></div>
+
+    <div style='text-align: center;'>
+      <img alt='What we provide' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/910d1174-b567-46ef-8b08-a6d3019458a9.png'>
+    </div>
+
+    <div class='session-booked__section'>
+      <p class='session-booked__item' style='margin-bottom: 10px;'>Parking, jersey, lockers, restrooms, water filler, and good vibes!</p>
+      <p class='session-booked__item'>Available for purchase</p>
+      <p class='session-booked__item-description'>Water bottle, towels, jersey</p>
+    </div>
+
+    <div style='margin-right: 100px; margin-top: 100px;' class='session-booked__divider'></div>
+
+    <div style='text-align: right;'>
+      <img alt='Where to park' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/b0a8aae1-286e-4d23-a14d-fd81fc13918b.png'>
+    </div>
+
+    <div class='session-booked__section'>
+      <p class='session-booked__item'>There is a gated parking lot attached to the club. Please pull up all they way forward to avoid blocking the driveway</p>
+      <p class='session-booked__item' style='margin-top: 100px;'>Additional note</p>
+      <p class='session-booked__item-description'>5 hour session cancelling window</p>
+    </div>
+
+    <div class='session-booked__read-faq'>
+      <p style='margin: 0;'>“Feel free to check out our <a href="<%= ENV['FRONTENT_URL'] %>/faq">FAQ</a> for session format”</p>
+    </div>
+
+    <div class='session-booked__divider'></div>
+
+    <div style='text-align: center;'>
+      <img alt='Where to park' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/c59ba6b4-1f2a-4c00-98dc-7ac09995161f.png'>
+    </div>
+
+    <a href=<%= "#{ENV['FRONTENT_URL']}/how-it-works" %>>
+      <img alt='What to Expect' style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/06/03/8a03aedb-6cbe-4f30-ae5c-fff8a22a95e3.png'>
+    </a>
+
+    <div style='text-align: center; margin-bottom: 10px; margin-top: 100px;'>
+      <img style='width: 35px;' src='https://content.app-us1.com/OvYpm/2022/06/02/2cd3b3a4-89ca-49e6-bf99-fd2fcf3ef4dd.png'>
+    </div>
+    <div style='margin-left: 100px;' class='session-booked__divider'></div>
+
+    <div style='text-align: center;'>
+      <img alt='Where to park' class='session-booked__title' style='width: 80%;' src='https://content.app-us1.com/OvYpm/2022/06/02/0f6650c0-342c-4379-9bf7-359597fc2eee.png'>
+    </div>
+
+    <img style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/06/03/e07ebd52-08e2-42dd-a5b1-7d9873f00ae2.png'>
 
     <div style='margin: 30px 0px 0px 0px; text-align: center'>
-      <img alt="Let's Get It" style='width: 200px;' src='https://content.app-us1.com/OvYpm/2021/12/23/4e870ab4-f20a-4b39-9044-6002b0f56726.png'>
+      <img alt="Let's Get It" style='width: 200px;' src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'>
     </div>
   </div>
 </body>
