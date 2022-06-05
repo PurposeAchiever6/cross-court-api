@@ -1,15 +1,17 @@
 require 'rails_helper'
 
-describe Waitlists::AddUser do
+describe Sessions::Vote do
   describe '.call' do
     let!(:user) { create(:user) }
     let!(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
-    let!(:session) { create(:session, start_time: la_time.tomorrow) }
+    let!(:session) { create(:session, start_time: la_time.tomorrow, coming_soon: coming_soon) }
+
     let(:date) { session.start_time }
+    let(:coming_soon) { true }
 
-    subject { Waitlists::AddUser.call(session: session, user: user, date: date) }
+    subject { Sessions::Vote.call(session: session, user: user, date: date) }
 
-    it { expect { subject }.to change(UserSessionWaitlist, :count).by(1) }
+    it { expect { subject }.to change(UserSessionVote, :count).by(1) }
 
     context 'when there is no session for the date' do
       let(:date) { session.start_time + 1.day }
@@ -23,10 +25,16 @@ describe Waitlists::AddUser do
       it { expect { subject }.to raise_error(SessionInvalidDateException) }
     end
 
-    context 'when user is already in the waitlist' do
-      before { create(:user_session_waitlist, session: session, user: user, date: date) }
+    context 'when user has already voted for that session and date' do
+      before { create(:user_session_vote, session: session, user: user, date: date) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid) }
+    end
+
+    context 'when session is not coming soon' do
+      let(:coming_soon) { false }
+
+      it { expect { subject }.to raise_error(SessionNotComingSoonException) }
     end
   end
 end

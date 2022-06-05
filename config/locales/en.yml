@@ -63,6 +63,9 @@ en:
         full: "Session is full"
         is_open_club: "Can not reserve session for open club"
         invalid_date: "The date is not valid for the requested session"
+        not_coming_soon: "The session should be a coming soon session"
+        votes:
+          user_did_not_vote: "The user did not vote for this session"
       waitlists:
         user_not_in_waitlist: "The user is not in the waitlist"
   mailer:

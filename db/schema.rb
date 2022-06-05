@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_29_145753) do
+ActiveRecord::Schema.define(version: 2022_06_04_145829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -315,6 +315,17 @@ ActiveRecord::Schema.define(version: 2022_05_29_145753) do
     t.integer "times_used", default: 0
     t.index ["promo_code_id"], name: "index_user_promo_codes_on_promo_code_id"
     t.index ["user_id"], name: "index_user_promo_codes_on_user_id"
+  end
+
+  create_table "user_session_votes", force: :cascade do |t|
+    t.date "date"
+    t.bigint "user_id"
+    t.bigint "session_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["date", "session_id", "user_id"], name: "index_user_session_votes_on_date_and_session_id_and_user_id", unique: true
+    t.index ["session_id"], name: "index_user_session_votes_on_session_id"
+    t.index ["user_id"], name: "index_user_session_votes_on_user_id"
   end
 
   create_table "user_session_waitlists", force: :cascade do |t|

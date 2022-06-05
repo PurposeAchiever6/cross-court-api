@@ -106,6 +106,17 @@ ActiveAdmin.register Session do
       row :is_open_club
       row :coming_soon
       row :women_only
+      row :votes do |session|
+        votes_by_date = session.user_session_votes
+                               .group(:date)
+                               .order(:date)
+                               .count
+                               .map do |date, votes|
+          content_tag(:div, "#{date}: #{votes}")
+        end
+
+        safe_join(votes_by_date)
+      end
       row :created_at
       row :updated_at
     end

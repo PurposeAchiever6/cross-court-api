@@ -35,6 +35,7 @@ Rails.application.routes.draw do
           scope module: :sessions do
             resources :user_sessions, only: %i[create index]
             resource :waitlists, only: %i[create destroy]
+            resource :votes, only: %i[create destroy]
           end
         end
         resources :products, only: :index

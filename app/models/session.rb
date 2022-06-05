@@ -49,6 +49,7 @@ class Session < ApplicationRecord
   has_many :referee_sessions
   has_many :sem_sessions
   has_many :user_session_waitlists
+  has_many :user_session_votes
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
 
@@ -177,6 +178,12 @@ class Session < ApplicationRecord
 
   def waitlist(date)
     user_session_waitlists.by_date(date).sorted
+  end
+
+  def votes(date)
+    return 0 unless coming_soon
+
+    user_session_votes.by_date(date).count
   end
 
   def invalid_date?(date)
