@@ -66,6 +66,7 @@ Rails.application.routes.draw do
             post :payment_method, action: :change_payment_method
             put :pause
             put :cancel_pause
+            put :unpause
           end
           collection do
             post :feedback

@@ -39,6 +39,6 @@ RSpec.configure do |config|
     allow(Stripe::PromotionCode).to receive(:create).and_return(double(id: 'promo-id'))
     ActionMailer::Base.deliveries.clear
     redis_instance = MockRedis.new
-    Redis.stub(:new).and_return(redis_instance)
+    allow(Redis).to receive(:new).and_return(redis_instance)
   end
 end

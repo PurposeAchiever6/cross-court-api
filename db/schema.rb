@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_04_145829) do
+ActiveRecord::Schema.define(version: 2022_06_05_014204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -282,6 +282,7 @@ ActiveRecord::Schema.define(version: 2022_06_04_145829) do
     t.string "job_id"
     t.integer "status", default: 0
     t.datetime "canceled_at"
+    t.datetime "unpaused_at"
     t.index ["subscription_id"], name: "index_subscription_pauses_on_subscription_id"
   end
 

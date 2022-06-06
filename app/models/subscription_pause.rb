@@ -11,6 +11,7 @@
 #  job_id          :string
 #  status          :integer          default("upcoming")
 #  canceled_at     :datetime
+#  unpaused_at     :datetime
 #
 # Indexes
 #
@@ -20,7 +21,7 @@
 class SubscriptionPause < ApplicationRecord
   belongs_to :subscription
 
-  enum status: { upcoming: 0, actual: 1, finished: 2, canceled: 3 }
+  enum status: { upcoming: 0, actual: 1, finished: 2, canceled: 3, unpaused: 4 }
 
   scope :this_year, -> { where(created_at: Time.zone.today.all_year) }
   scope :upcoming_or_actual, -> { where(status: %i[upcoming actual]) }
