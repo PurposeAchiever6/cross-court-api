@@ -2,22 +2,23 @@
 #
 # Table name: sessions
 #
-#  id               :integer          not null, primary key
-#  start_time       :date             not null
-#  recurring        :text
-#  time             :time             not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  location_id      :integer          not null
-#  end_time         :date
-#  skill_level_id   :integer
-#  is_private       :boolean          default(FALSE)
-#  coming_soon      :boolean          default(FALSE)
-#  is_open_club     :boolean          default(FALSE)
-#  duration_minutes :integer          default(60)
-#  deleted_at       :datetime
-#  max_first_timers :integer
-#  women_only       :boolean          default(FALSE)
+#  id                       :integer          not null, primary key
+#  start_time               :date             not null
+#  recurring                :text
+#  time                     :time             not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  location_id              :integer          not null
+#  end_time                 :date
+#  skill_level_id           :integer
+#  is_private               :boolean          default(FALSE)
+#  coming_soon              :boolean          default(FALSE)
+#  is_open_club             :boolean          default(FALSE)
+#  duration_minutes         :integer          default(60)
+#  deleted_at               :datetime
+#  max_first_timers         :integer
+#  women_only               :boolean          default(FALSE)
+#  all_skill_levels_allowed :boolean          default(TRUE)
 #
 # Indexes
 #

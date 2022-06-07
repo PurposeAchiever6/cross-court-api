@@ -7,6 +7,7 @@ json = {
   coming_soon: session.coming_soon,
   is_open_club: session.is_open_club,
   women_only: session.women_only,
+  all_skill_levels_allowed: session.all_skill_levels_allowed,
   full: full,
   past: session.past?(date),
   spots_left: spots_left,

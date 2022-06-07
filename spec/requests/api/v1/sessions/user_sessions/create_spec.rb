@@ -2,9 +2,13 @@ require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let!(:user) { create(:user, credits: 1) }
-  let!(:session) { create(:session, :daily, is_open_club: is_open_club) } # Weekly today
+  let!(:session) do # Weekly today
+    create(:session, :daily,
+           is_open_club: is_open_club, all_skill_levels_allowed: all_skill_levels_allowed)
+  end
   let(:date) { 1.day.from_now }
   let(:is_open_club) { false }
+  let(:all_skill_levels_allowed) { true }
   let(:params) { { date: date.strftime(Session::DATE_FORMAT) } }
 
   before do
@@ -141,6 +145,37 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
     it "doesn't create the user_session" do
       expect { subject }.not_to change(UserSession, :count)
+    end
+  end
+
+  context 'when the session is not for all skill levels' do
+    let(:all_skill_levels_allowed) { false }
+
+    before do
+      session.skill_level.update!(min: 5, max: 7)
+      user.update!(skill_rating: 3)
+    end
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns correct error message' do
+      subject
+      expect(json[:error]).to eq("Can not reserve this session if it's outside user's skill level")
+    end
+
+    it "doesn't create the user_session" do
+      expect { subject }.not_to change(UserSession, :count)
+    end
+
+    context 'when the user is advanced' do
+      before { user.update(skill_rating: 5) }
+
+      it 'enrolls the user to the session' do
+        expect { subject }.to change { user.reload.sessions.count }.from(0).to(1)
+      end
     end
   end
 

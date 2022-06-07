@@ -6,6 +6,7 @@ json = {
   coming_soon: session.coming_soon,
   is_open_club: session.is_open_club,
   women_only: session.women_only,
+  all_skill_levels_allowed: session.all_skill_levels_allowed,
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
   votes: session.votes(session.start_time),

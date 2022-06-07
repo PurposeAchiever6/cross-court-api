@@ -29,6 +29,7 @@ module Api
       rescue_from SessionNotComingSoonException,               with: :render_custom_exception
       rescue_from SubscriptionHasSameProductException,         with: :render_custom_exception
       rescue_from PaymentMethodHasActiveSubscriptionException, with: :render_custom_exception
+      rescue_from SessionIsOutOfSkillLevelException,           with: :render_custom_exception
       rescue_from SubscriptionIsNotActiveException,            with: :render_custom_exception
       rescue_from SubscriptionAlreadyCanceledException,        with: :render_custom_exception
       rescue_from SessionIsOpenClubException,                  with: :render_custom_exception
