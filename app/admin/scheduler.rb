@@ -19,5 +19,20 @@ ActiveAdmin.register_page 'Scheduler' do
         selected_location: location.id
       }
     end
+    div do
+      text_node 'References:'
+      br
+      text_node 'EM - Referee or SEM not assigned'
+      br
+      text_node 'OC - Open Club'
+      br
+      text_node 'CS - Coming Soon'
+      br
+      text_node 'P - Private session'
+      br
+      text_node 'WO - Women Only'
+      br
+      text_node 'AS - All skill levels allowed'
+    end
   end
 end

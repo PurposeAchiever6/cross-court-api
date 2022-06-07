@@ -4,11 +4,19 @@ class SessionDecorator < Draper::Decorator
   def title(date)
     text = time.utc.strftime(Session::TIME_FORMAT)
 
-    text += if referee(date).present? && sem(date).present?
-              " - #{reservations_count(date)}/#{Session::MAX_CAPACITY}"
-            else
-              ' (EM)'
-            end
+    return text += ' - (OC)' if open_club?
+
+    return text += ' - (CS)' if coming_soon?
+
+    text += " - #{reservations_count(date)}/#{Session::MAX_CAPACITY}"
+
+    text += ' (P)' if is_private?
+
+    text += ' (WO)' if women_only?
+
+    text += ' (AS)' if all_skill_levels_allowed
+
+    text += ' (EM)' if referee(date).blank? || sem(date).blank?
 
     text
   end
