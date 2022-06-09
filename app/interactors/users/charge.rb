@@ -3,16 +3,21 @@ module Users
     include Interactor
 
     def call
-      user = context.user
       price = context.price
+
+      context.fail!(message: I18n.t('api.errors.users.charges.price_not_present')) if price.blank?
+
+      return if price.zero?
+
+      if price.negative?
+        context.fail!(message: I18n.t('api.errors.users.charges.price_not_positive'))
+      end
+
+      user = context.user
       description = context.description
       payment_method = context.payment_method || user.default_payment_method
       notify_error = context.notify_error || false
       use_cc_cash = context.use_cc_cash || false
-
-      unless price.positive?
-        context.fail!(message: I18n.t('api.errors.users.charges.price_not_positive'))
-      end
 
       unless payment_method
         message = I18n.t('api.errors.users.charges.missing_payment_method')
