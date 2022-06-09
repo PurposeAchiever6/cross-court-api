@@ -147,7 +147,8 @@ class StripeService
   def self.unpause_subscription(subscription)
     Stripe::Subscription.update(
       subscription.stripe_id,
-      pause_collection: ''
+      pause_collection: '',
+      billing_cycle_anchor: 'now'
     )
   end
 

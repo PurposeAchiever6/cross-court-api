@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_29_145753) do
+ActiveRecord::Schema.define(version: 2022_06_05_014204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -246,6 +246,7 @@ ActiveRecord::Schema.define(version: 2022_05_29_145753) do
     t.datetime "deleted_at"
     t.integer "max_first_timers"
     t.boolean "women_only", default: false
+    t.boolean "all_skill_levels_allowed", default: true
     t.index ["deleted_at"], name: "index_sessions_on_deleted_at"
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
@@ -281,6 +282,7 @@ ActiveRecord::Schema.define(version: 2022_05_29_145753) do
     t.string "job_id"
     t.integer "status", default: 0
     t.datetime "canceled_at"
+    t.datetime "unpaused_at"
     t.index ["subscription_id"], name: "index_subscription_pauses_on_subscription_id"
   end
 
@@ -315,6 +317,17 @@ ActiveRecord::Schema.define(version: 2022_05_29_145753) do
     t.integer "times_used", default: 0
     t.index ["promo_code_id"], name: "index_user_promo_codes_on_promo_code_id"
     t.index ["user_id"], name: "index_user_promo_codes_on_user_id"
+  end
+
+  create_table "user_session_votes", force: :cascade do |t|
+    t.date "date"
+    t.bigint "user_id"
+    t.bigint "session_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["date", "session_id", "user_id"], name: "index_user_session_votes_on_date_and_session_id_and_user_id", unique: true
+    t.index ["session_id"], name: "index_user_session_votes_on_session_id"
+    t.index ["user_id"], name: "index_user_session_votes_on_user_id"
   end
 
   create_table "user_session_waitlists", force: :cascade do |t|

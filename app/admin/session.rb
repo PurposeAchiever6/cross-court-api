@@ -3,7 +3,8 @@ ActiveAdmin.register Session do
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :duration_minutes,
-                :max_first_timers, session_exceptions_attributes: %i[id date _destroy]
+                :max_first_timers, :all_skill_levels_allowed,
+                session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
 
@@ -25,6 +26,7 @@ ActiveAdmin.register Session do
       f.input :skill_level
       f.input :is_private
       f.input :is_open_club
+      f.input :all_skill_levels_allowed
       f.input :coming_soon
       f.input :women_only
       f.input :start_time,
@@ -106,6 +108,18 @@ ActiveAdmin.register Session do
       row :is_open_club
       row :coming_soon
       row :women_only
+      row :all_skill_levels_allowed
+      row :votes do |session|
+        votes_by_date = session.user_session_votes
+                               .group(:date)
+                               .order(:date)
+                               .count
+                               .map do |date, votes|
+          content_tag(:div, "#{date}: #{votes}")
+        end
+
+        safe_join(votes_by_date)
+      end
       row :created_at
       row :updated_at
     end

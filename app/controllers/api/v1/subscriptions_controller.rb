@@ -91,6 +91,12 @@ module Api
         @subscription = result.subscription
       end
 
+      def unpause
+        result = Subscriptions::UnpauseSubscription.call(subscription: subscription)
+
+        @subscription = result.subscription
+      end
+
       private
 
       def product

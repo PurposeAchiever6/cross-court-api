@@ -1,5 +1,5 @@
-module Waitlists
-  class AddUser
+module Sessions
+  class Vote
     include Interactor
 
     def call
@@ -8,8 +8,9 @@ module Waitlists
       date = context.date
 
       raise SessionInvalidDateException if session.invalid_date?(date)
+      raise SessionNotComingSoonException unless session.coming_soon
 
-      UserSessionWaitlist.create!(session: session, user: user, date: date)
+      UserSessionVote.create!(session: session, user: user, date: date)
     end
   end
 end

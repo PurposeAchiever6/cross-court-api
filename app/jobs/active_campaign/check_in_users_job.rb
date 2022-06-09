@@ -46,14 +46,18 @@ module ActiveCampaign
     end
 
     def send_checked_in_session_notice(user)
-      number_of_sessions = 10
       checked_in_sessions = user.user_sessions.checked_in.count
 
-      return unless checked_in_sessions == number_of_sessions
+      return unless number_of_sessions_to_notify.include?(checked_in_sessions)
 
-      SessionMailer.with(user_id: user.id, number_of_sessions: number_of_sessions)
+      SessionMailer.with(user_id: user.id, number_of_sessions: checked_in_sessions)
                    .checked_in_session_notice
                    .deliver_later
+    end
+
+    def number_of_sessions_to_notify
+      @number_of_sessions_to_notify ||= ENV.fetch('NUMBER_OF_SESSIONS_TO_NOTIFY', '')
+                                           .split(',').map(&:to_i)
     end
   end
 end

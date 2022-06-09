@@ -11,6 +11,7 @@
 #  job_id          :string
 #  status          :integer          default("upcoming")
 #  canceled_at     :datetime
+#  unpaused_at     :datetime
 #
 # Indexes
 #

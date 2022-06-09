@@ -144,6 +144,8 @@ describe ::ActiveCampaign::CheckInUsersJob do
     end
 
     context 'when is the tenth session' do
+      before { ENV['NUMBER_OF_SESSIONS_TO_NOTIFY'] = '20, 50' }
+
       let(:previous_user_session_count) { 9 }
       let!(:previous_user_sessions) do
         create_list(
@@ -157,10 +159,20 @@ describe ::ActiveCampaign::CheckInUsersJob do
         )
       end
 
-      it 'sends checked in session notice email' do
-        expect { subject }.to have_enqueued_job.on_queue('mailers')
+      it 'does not send checked in session notice email' do
+        expect { subject }.not_to have_enqueued_job.on_queue('mailers')
 
         subject
+      end
+
+      context 'when the environment include notifying at the tenth session' do
+        before { ENV['NUMBER_OF_SESSIONS_TO_NOTIFY'] = '10, 20, 50' }
+
+        it 'sends checked in session notice email' do
+          expect { subject }.to have_enqueued_job.on_queue('mailers')
+
+          subject
+        end
       end
 
       context 'when user is not a member' do

@@ -44,8 +44,21 @@ describe Users::Charge do
     context 'when user price is zero' do
       let(:price) { 0 }
 
+      it { expect(subject.success?).to eq(true) }
+    end
+
+    context 'when price is not present' do
+      let(:price) { nil }
+
       it { expect(subject.success?).to eq(false) }
-      it { expect(subject.message).to eq('Price should be greater than 0') }
+      it { expect(subject.message).to eq('Price not present') }
+    end
+
+    context 'when user price is negative' do
+      let(:price) { -1 }
+
+      it { expect(subject.success?).to eq(false) }
+      it { expect(subject.message).to eq('Price should be greater or equal than 0') }
     end
 
     context 'when user does not have any payment method' do

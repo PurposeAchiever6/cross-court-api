@@ -8,7 +8,8 @@ describe UserSessions::Create do
         :daily,
         time: session_time,
         is_open_club: is_open_club,
-        max_first_timers: max_first_timers
+        max_first_timers: max_first_timers,
+        all_skill_levels_allowed: all_skill_levels_allowed
       )
     end
     let!(:user) do
@@ -21,6 +22,7 @@ describe UserSessions::Create do
     end
 
     let(:max_first_timers) { nil }
+    let(:all_skill_levels_allowed) { true }
     let(:is_open_club) { false }
     let(:credits) { 1 }
     let(:subscription_credits) { 0 }
@@ -119,6 +121,24 @@ describe UserSessions::Create do
 
       it { expect { subject rescue nil }.not_to change(UserSession, :count) }
       it { expect { subject }.to raise_error(SessionIsOpenClubException) }
+    end
+
+    context 'when the session is not for all skill levels' do
+      let(:all_skill_levels_allowed) { false }
+
+      before do
+        session.skill_level.update!(min: 5, max: 7)
+        user.update!(skill_rating: 3)
+      end
+
+      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+      it { expect { subject }.to raise_error(SessionIsOutOfSkillLevelException) }
+
+      context 'when the user is advanced' do
+        before { user.update(skill_rating: 5) }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
     end
 
     context 'when invalid date' do

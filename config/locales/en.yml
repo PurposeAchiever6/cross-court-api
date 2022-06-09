@@ -57,12 +57,17 @@ en:
         registration:
           communication: Communication error when creating the user. Try again later
         charges:
-          price_not_positive: "Price should be greater than 0"
+          price_not_positive: "Price should be greater or equal than 0"
+          price_not_present: "Price not present"
           missing_payment_method: "The user does not have a saved credit card to be charged"
       sessions:
         full: "Session is full"
         is_open_club: "Can not reserve session for open club"
+        is_out_of_skill_level: "Can not reserve this session if it's outside user's skill level"
         invalid_date: "The date is not valid for the requested session"
+        not_coming_soon: "The session should be a coming soon session"
+        votes:
+          user_did_not_vote: "The user did not vote for this session"
       waitlists:
         user_not_in_waitlist: "The user is not in the waitlist"
   mailer:

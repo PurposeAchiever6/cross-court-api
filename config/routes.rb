@@ -35,6 +35,7 @@ Rails.application.routes.draw do
           scope module: :sessions do
             resources :user_sessions, only: %i[create index]
             resource :waitlists, only: %i[create destroy]
+            resource :votes, only: %i[create destroy]
           end
         end
         resources :products, only: :index
@@ -65,6 +66,7 @@ Rails.application.routes.draw do
             post :payment_method, action: :change_payment_method
             put :pause
             put :cancel_pause
+            put :unpause
           end
           collection do
             post :feedback

@@ -24,12 +24,17 @@ module Api
       rescue_from SubscriptionException,                       with: :render_custom_exception
       rescue_from ClaimFreeSessionException,                   with: :render_custom_exception
       rescue_from UserNotInWaitlistException,                  with: :render_custom_exception
+      rescue_from UserDidNotVoteSessionException,              with: :render_custom_exception
+      rescue_from SessionInvalidDateException,                 with: :render_custom_exception
+      rescue_from SessionNotComingSoonException,               with: :render_custom_exception
       rescue_from SubscriptionHasSameProductException,         with: :render_custom_exception
       rescue_from PaymentMethodHasActiveSubscriptionException, with: :render_custom_exception
+      rescue_from SessionIsOutOfSkillLevelException,           with: :render_custom_exception
       rescue_from SubscriptionIsNotActiveException,            with: :render_custom_exception
       rescue_from SubscriptionAlreadyCanceledException,        with: :render_custom_exception
       rescue_from SessionIsOpenClubException,                  with: :render_custom_exception
       rescue_from SubscriptionInvalidPauseMonthsException,     with: :render_custom_exception
+      rescue_from SubscriptionIsNotPausedException,            with: :render_custom_exception
       rescue_from MaximumNumberOfPausesReachedException,       with: :render_custom_exception
       rescue_from Stripe::StripeError,                         with: :render_custom_exception
 

@@ -49,7 +49,10 @@ class StripeMocker
   def unpause_subscription(stripe_subscription_id)
     mock_request(
       url_path: "/subscriptions/#{stripe_subscription_id}",
-      request_body: { pause_collection: '' },
+      request_body: {
+        pause_collection: '',
+        billing_cycle_anchor: 'now'
+      },
       method: :post,
       response_body: subscription_response(id: stripe_subscription_id)
     )

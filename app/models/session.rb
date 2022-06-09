@@ -2,22 +2,23 @@
 #
 # Table name: sessions
 #
-#  id               :integer          not null, primary key
-#  start_time       :date             not null
-#  recurring        :text
-#  time             :time             not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  location_id      :integer          not null
-#  end_time         :date
-#  skill_level_id   :integer
-#  is_private       :boolean          default(FALSE)
-#  coming_soon      :boolean          default(FALSE)
-#  is_open_club     :boolean          default(FALSE)
-#  duration_minutes :integer          default(60)
-#  deleted_at       :datetime
-#  max_first_timers :integer
-#  women_only       :boolean          default(FALSE)
+#  id                       :integer          not null, primary key
+#  start_time               :date             not null
+#  recurring                :text
+#  time                     :time             not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  location_id              :integer          not null
+#  end_time                 :date
+#  skill_level_id           :integer
+#  is_private               :boolean          default(FALSE)
+#  coming_soon              :boolean          default(FALSE)
+#  is_open_club             :boolean          default(FALSE)
+#  duration_minutes         :integer          default(60)
+#  deleted_at               :datetime
+#  max_first_timers         :integer
+#  women_only               :boolean          default(FALSE)
+#  all_skill_levels_allowed :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -49,6 +50,7 @@ class Session < ApplicationRecord
   has_many :referee_sessions
   has_many :sem_sessions
   has_many :user_session_waitlists
+  has_many :user_session_votes
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
 
@@ -119,7 +121,8 @@ class Session < ApplicationRecord
           is_private: is_private,
           is_open_club: is_open_club,
           coming_soon: coming_soon,
-          women_only: women_only
+          women_only: women_only,
+          all_skill_levels_allowed: all_skill_levels_allowed
         )
       end
     end
@@ -179,6 +182,12 @@ class Session < ApplicationRecord
     user_session_waitlists.by_date(date).sorted
   end
 
+  def votes(date)
+    return 0 unless coming_soon
+
+    user_session_votes.by_date(date).count
+  end
+
   def invalid_date?(date)
     no_session_for_date = if single_occurrence?
                             start_time != date
@@ -209,6 +218,13 @@ class Session < ApplicationRecord
 
   def single_occurrence?
     !recurring?
+  end
+
+  def at_session_level?(user)
+    return true if all_skill_levels_allowed
+
+    user_skill_rating = user.skill_rating
+    user_skill_rating >= skill_level.min && user_skill_rating <= skill_level.max
   end
 
   private
