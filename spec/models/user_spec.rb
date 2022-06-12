@@ -105,6 +105,27 @@ describe User do
       let!(:product) { create(:product, product_type: :recurring) }
 
       it { expect { subject.referral_code }.to change(PromoCode, :count).by(1) }
+
+      context 'when a failure occurs and needs to rollback' do
+        before do
+          allow(Stripe::Customer).to receive(:delete)
+          allow(Stripe::Coupon).to receive(:delete)
+        end
+
+        subject do
+          ActiveRecord::Base.transaction do
+            create(:user, user_params)
+            raise 'error'
+          end
+        end
+
+        it { expect { subject.referral_code rescue nil }.not_to change(PromoCode, :count) }
+
+        it 'calls Stripe for deleting coupon' do
+          expect(Stripe::Coupon).to receive(:delete)
+          subject rescue nil
+        end
+      end
     end
   end
 
@@ -128,6 +149,34 @@ describe User do
           subject
         }.to have_enqueued_job(::Sonar::CreateUpdateCustomerJob).on_queue('default')
       end
+    end
+  end
+
+  describe '#destroy' do
+    let(:stripe_coupon_id) { 'stripe-coupon-id' }
+    let(:stripe_customer_id) { 'stripe-customer-id' }
+    let!(:user) { create(:user, stripe_id: stripe_customer_id) }
+    let!(:promo_code) do
+      create(:promo_code, for_referral: true, user: user, stripe_coupon_id: stripe_coupon_id)
+    end
+
+    before do
+      StripeMocker.new.delete_customer(stripe_customer_id)
+      StripeMocker.new.delete_coupon(stripe_coupon_id)
+    end
+
+    subject { user.destroy }
+
+    it { expect { subject }.to change(PromoCode, :count).by(-1) }
+
+    it 'calls Stripe for deleting customer' do
+      expect(Stripe::Customer).to receive(:delete).with(stripe_customer_id)
+      subject
+    end
+
+    it 'calls Stripe for deleting coupon' do
+      expect(Stripe::Coupon).to receive(:delete).with(stripe_coupon_id)
+      subject
     end
   end
 
