@@ -17,6 +17,7 @@ describe 'PUT api/v1/subscriptions/:id' do
       stub_request(:post, %r{stripe.com/v1/subscriptions/stripe-subscription-id})
         .to_return(status: 200, body: File.new('spec/fixtures/subscription_succeeded.json'))
       ActiveCampaignMocker.new.mock
+      allow_any_instance_of(Slack::Notifier).to receive(:ping)
     end
 
     it 'returns success' do
@@ -42,6 +43,11 @@ describe 'PUT api/v1/subscriptions/:id' do
 
     it 'calls the Active Campaign service' do
       expect { subject }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default')
+    end
+
+    it 'calls Slack Service' do
+      expect_any_instance_of(SlackService).to receive(:subscription_updated)
+      subject
     end
   end
 
@@ -90,6 +96,11 @@ describe 'PUT api/v1/subscriptions/:id' do
 
     it "doesn't call the Active Campaign service" do
       expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
+      subject
+    end
+
+    it 'does not call Slack Service' do
+      expect_any_instance_of(SlackService).not_to receive(:subscription_updated)
       subject
     end
   end

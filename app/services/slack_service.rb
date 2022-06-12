@@ -45,6 +45,14 @@ class SlackService
     notify_subscription('notifier.slack.subscription_canceled', subscription)
   end
 
+  def subscription_updated(subscription, old_product)
+    notify_subscription(
+      'notifier.slack.subscription_updated',
+      subscription,
+      old_subscription_name: old_product.name
+    )
+  end
+
   def subscription_reactivated(subscription)
     notify_subscription('notifier.slack.subscription_reactivated', subscription)
   end
@@ -62,6 +70,14 @@ class SlackService
 
   def subscription_paused(subscription)
     notify_subscription('notifier.slack.subscription_paused', subscription)
+  end
+
+  def subscription_unpaused(subscription)
+    notify_subscription('notifier.slack.subscription_unpaused', subscription)
+  end
+
+  def subscription_pause_canceled(subscription)
+    notify_subscription('notifier.slack.subscription_pause_canceled', subscription)
   end
 
   def charge_error(description, error_message)
