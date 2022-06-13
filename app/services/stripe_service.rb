@@ -148,7 +148,8 @@ class StripeService
     Stripe::Subscription.update(
       subscription.stripe_id,
       pause_collection: '',
-      billing_cycle_anchor: 'now'
+      billing_cycle_anchor: 'now',
+      proration_behavior: 'none'
     )
   end
 
