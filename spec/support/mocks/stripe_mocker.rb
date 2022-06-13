@@ -51,7 +51,8 @@ class StripeMocker
       url_path: "/subscriptions/#{stripe_subscription_id}",
       request_body: {
         pause_collection: '',
-        billing_cycle_anchor: 'now'
+        billing_cycle_anchor: 'now',
+        proration_behavior: 'none'
       },
       method: :post,
       response_body: subscription_response(id: stripe_subscription_id)
