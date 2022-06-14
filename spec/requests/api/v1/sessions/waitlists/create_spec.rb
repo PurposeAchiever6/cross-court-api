@@ -2,9 +2,18 @@ require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/waitlists' do
   let!(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
-  let!(:user) { create(:user) }
-  let!(:session) { create(:session, start_time: la_time.tomorrow) }
+  let!(:user) { create(:user, skill_rating: user_skill_rating) }
+  let!(:session) do
+    create(
+      :session,
+      start_time: la_time.tomorrow,
+      all_skill_levels_allowed: all_skill_levels_allowed
+    )
+  end
+
   let(:date) { session.start_time }
+  let(:user_skill_rating) { 1 }
+  let(:all_skill_levels_allowed) { true }
 
   let(:params) { { date: date.strftime('%d/%m/%Y') } }
   let(:request_headers) { auth_headers }
@@ -66,5 +75,30 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
     it { is_expected.to have_http_status(:bad_request) }
     it { expect(response_body[:errors][:date]).to eq(['has already been taken']) }
     it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
+  end
+
+  context 'when the session is not for all skill levels' do
+    include_context 'disable bullet'
+
+    let(:all_skill_levels_allowed) { false }
+
+    before { session.skill_level.update!(min: 4, max: 5) }
+
+    it { is_expected.to have_http_status(:bad_request) }
+
+    it 'returns the correct error message' do
+      expect(
+        response_body[:error]
+      ).to eq("Can not reserve this session if it's outside user's skill level")
+    end
+
+    it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
+
+    context 'when the user is inside the session skill level' do
+      let(:user_skill_rating) { 4 }
+
+      it { is_expected.to be_successful }
+      it { expect { subject }.to change(UserSessionWaitlist, :count).by(1) }
+    end
   end
 end
