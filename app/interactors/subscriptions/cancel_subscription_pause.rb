@@ -12,6 +12,8 @@ module Subscriptions
         status: :canceled,
         canceled_at: Time.zone.now
       )
+
+      SlackService.new(subscription.user).subscription_pause_canceled(subscription)
     end
   end
 end

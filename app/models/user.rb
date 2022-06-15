@@ -99,7 +99,7 @@ class User < ApplicationRecord
 
   has_one :referral_promo_code,
           class_name: 'PromoCode',
-          dependent: :nullify,
+          dependent: :destroy,
           inverse_of: :user
 
   has_many :user_sessions, dependent: :destroy
@@ -130,8 +130,12 @@ class User < ApplicationRecord
 
   before_validation :init_uid
   after_create :create_referral_code
-  after_commit :update_external_records, on: [:update]
-  after_destroy :delete_stripe_customer
+  after_commit :update_external_records, on: :update
+  after_rollback :delete_stripe_customer,
+                 :delete_stripe_promo_code,
+                 on: :create
+  after_destroy :delete_stripe_customer,
+                :delete_stripe_promo_code
 
   delegate :current_period_start, :current_period_end, :status, :cancel_at_period_end,
            to: :active_subscription, prefix: true
@@ -234,14 +238,13 @@ class User < ApplicationRecord
       duration: :repeating,
       duration_in_months: 1,
       max_redemptions_by_user: 1,
-      products: recurring_products,
-      user: self
+      products: recurring_products
     }
 
     coupon_id = StripeService.create_coupon(promo_code_attrs, recurring_products).id
     promo_code_id = StripeService.create_promotion_code(coupon_id, promo_code_attrs).id
 
-    PromoCode.create!(
+    create_referral_promo_code!(
       promo_code_attrs.merge(
         stripe_coupon_id: coupon_id,
         stripe_promo_code_id: promo_code_id
@@ -279,6 +282,10 @@ class User < ApplicationRecord
   end
 
   def delete_stripe_customer
-    StripeService.delete_user(self)
+    StripeService.delete_user(stripe_id) if stripe_id
+  end
+
+  def delete_stripe_promo_code
+    StripeService.delete_coupon(referral_promo_code.stripe_coupon_id) if referral_promo_code
   end
 end

@@ -7,6 +7,7 @@ module Subscriptions
              Subscriptions::UpdateUserSubscriptionCredits,
              PromoCodes::IncrementTimesUsed,
              PromoCodes::CreateUserPromoCode,
+             Subscriptions::SendSubscriptionUpdatedSlackNotification,
              Events::PurchasePlaced
   end
 end

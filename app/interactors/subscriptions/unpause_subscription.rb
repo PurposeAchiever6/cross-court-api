@@ -16,6 +16,8 @@ module Subscriptions
       )
 
       user.update!(subscription_credits: subscription.credits)
+
+      SlackService.new(user).subscription_unpaused(subscription)
     end
   end
 end

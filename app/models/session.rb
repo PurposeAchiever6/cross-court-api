@@ -221,9 +221,10 @@ class Session < ApplicationRecord
   end
 
   def at_session_level?(user)
-    return true if all_skill_levels_allowed
-
     user_skill_rating = user.skill_rating
+
+    return true if all_skill_levels_allowed || !user_skill_rating
+
     user_skill_rating >= skill_level.min && user_skill_rating <= skill_level.max
   end
 

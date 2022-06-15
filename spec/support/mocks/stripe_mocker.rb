@@ -79,6 +79,14 @@ class StripeMocker
     )
   end
 
+  def delete_customer(customer_id)
+    mock_request(url_path: "/customers/#{customer_id}", method: :delete)
+  end
+
+  def delete_coupon(coupon_id)
+    mock_request(url_path: "/coupons/#{coupon_id}", method: :delete)
+  end
+
   private
 
   def mock_request(

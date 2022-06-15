@@ -101,6 +101,9 @@ en:
         and didn't rebook or bought a membership.
       subscription_canceled: >
         %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
+      subscription_updated: >
+        %{name} (phone: %{phone}) has *updated* his current subscription from %{old_subscription_name}
+        to %{subscription_name}.
       subscription_reactivated: >
         %{name} (phone: %{phone}) has *reactivated* his subscription (%{subscription_name}).
       subscription_feedback_created: >
@@ -111,6 +114,10 @@ en:
       subscription_paused_for_next_period: >
         %{name} has *paused* his current subscription (%{subscription_name}) for %{months} month(s).
         Pause will start at %{pause_start_on_datetime}.
+      subscription_pause_canceled: >
+        %{name} has *canceled his scheduled pause* for his current subscription (%{subscription_name}).
+      subscription_unpaused: >
+        %{name} has *unpaused* his current subscription (%{subscription_name}).
       charge_error: >
         There was an *error* when charging the user %{name} on *%{description}*.
         Error: %{error_message}
