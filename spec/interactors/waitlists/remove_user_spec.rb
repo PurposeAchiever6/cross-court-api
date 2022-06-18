@@ -10,12 +10,12 @@ describe Waitlists::RemoveUser do
         session: session,
         user: user,
         date: session.start_time,
-        reached: reached
+        state: state
       )
     end
 
     let(:date) { session.start_time }
-    let(:reached) { false }
+    let(:state) { :pending }
 
     subject { Waitlists::RemoveUser.call(session: session, user: user, date: date) }
 
@@ -35,8 +35,8 @@ describe Waitlists::RemoveUser do
       it { expect { subject rescue nil }.not_to change(UserSessionWaitlist, :count) }
     end
 
-    context 'if the user has already been reached' do
-      let(:reached) { true }
+    context 'if the user has already made it off the waitlist' do
+      let(:state) { :success }
 
       it { expect { subject }.to raise_error(UserNotInWaitlistException) }
       it { expect { subject rescue nil }.not_to change(UserSessionWaitlist, :count) }

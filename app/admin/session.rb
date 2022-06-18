@@ -189,7 +189,7 @@ ActiveAdmin.register Session do
 
       panel 'Waitlist' do
         waitlist = resource.waitlist(date)
-                           .not_reached
+                           .not_success
                            .includes(user: [:last_checked_in_user_session,
                                             :active_subscription,
                                             { image_attachment: :blob }])

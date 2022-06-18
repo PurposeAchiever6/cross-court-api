@@ -4,11 +4,11 @@
 #
 #  id         :integer          not null, primary key
 #  date       :date
-#  reached    :boolean          default(FALSE)
 #  user_id    :integer
 #  session_id :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  state      :integer
 #
 # Indexes
 #
@@ -41,7 +41,7 @@ describe UserSessionWaitlist do
         :user_session_waitlist,
         session: session,
         user: user_1,
-        reached: reached_1,
+        state: state_1,
         created_at: created_at_1
       )
     end
@@ -50,15 +50,15 @@ describe UserSessionWaitlist do
         :user_session_waitlist,
         session: session,
         user: user_2,
-        reached: reached_2,
+        state: state_2,
         created_at: created_at_2
       )
     end
 
     let(:created_at_1) { Time.zone.today - 2.days }
     let(:created_at_2) { created_at_1 + 5.minutes }
-    let(:reached_1) { false }
-    let(:reached_2) { false }
+    let(:state_1) { :pending }
+    let(:state_2) { :pending }
 
     subject { UserSessionWaitlist.sorted }
 
@@ -70,8 +70,8 @@ describe UserSessionWaitlist do
       it { is_expected.to eq([waitlist_item_2, waitlist_item_1]) }
     end
 
-    context 'when waitlist_item_2 has already been reached' do
-      let(:reached_2) { true }
+    context 'when waitlist_item_2 has already made it off the waitlist' do
+      let(:state_2) { 'success' }
 
       it { is_expected.to eq([waitlist_item_2, waitlist_item_1]) }
     end
@@ -88,13 +88,13 @@ describe UserSessionWaitlist do
             :user_session_waitlist,
             session: session,
             user: user_3,
-            reached: reached_3,
+            state: state_3,
             created_at: created_at_3
           )
         end
 
         let(:created_at_3) { created_at_2 - 2.minutes }
-        let(:reached_3) { false }
+        let(:state_3) { :pending }
 
         it { is_expected.to eq([waitlist_item_3, waitlist_item_2, waitlist_item_1]) }
       end

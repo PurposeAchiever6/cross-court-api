@@ -12,7 +12,7 @@ module Sessions
 
       return if current_time > session_time - UserSessionWaitlist::MINUTES_TOLERANCE
 
-      waitlist_item = session.waitlist(date).not_reached.includes(:user).find do |current|
+      waitlist_item = session.waitlist(date).pending.includes(:user).find do |current|
         current_user = current.user
         current_user.credits? && !session.full?(date, current_user)
       end
@@ -26,7 +26,7 @@ module Sessions
         from_waitlist: true
       )
 
-      waitlist_item.update!(reached: true)
+      waitlist_item.update!(state: :success)
     end
   end
 end
