@@ -63,7 +63,7 @@ detectors:
     exclude: []
   NestedIterators:
     enabled: true
-    exclude: []
+    exclude: ["Sessions::TimeoutWaitlistsJob#perform"]
     max_allowed_nesting: 2
     ignore_iterators: []
   NilCheck:

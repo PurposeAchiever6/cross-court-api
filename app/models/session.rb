@@ -81,6 +81,18 @@ class Session < ApplicationRecord
     location_id.blank? ? all : where(location_id: location_id)
   end)
 
+  scope :in_next_minutes, (lambda do |minutes|
+    # rubocop:disable Layout/LineLength
+    joins(:location).where(
+      'to_char(time, :time_format) ' \
+      'BETWEEN to_char(current_timestamp at time zone locations.time_zone, :time_format) AND ' \
+      "to_char((current_timestamp + interval ':minutes minutes') at time zone locations.time_zone, :time_format)",
+      minutes: minutes,
+      time_format: 'HH24MI'
+    )
+    # rubocop:enable Layout/LineLength
+  end)
+
   def recurring=(value)
     super(RecurringSelect.dirty_hash_to_rule(value)&.to_hash)
   end

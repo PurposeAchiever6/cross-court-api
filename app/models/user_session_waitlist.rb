@@ -8,7 +8,7 @@
 #  session_id :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  state      :integer
+#  state      :integer          default("pending")
 #
 # Indexes
 #

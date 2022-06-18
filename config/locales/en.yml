@@ -154,6 +154,9 @@ en:
       session_waitlist_confirmed: >
         Hey %{name}, you made it off the waitlist and are in for %{when}’s %{time} session
         at CC%{location}!
+      session_waitlist_timeout: >
+        Hey %{name}, unfortunately we couldn't get you off the waitlist for today's %{time} session.
+        Your credit is still in your account. Want to schedule different session? %{schedule_url}
       canceled_subscription_reminder: >
         Hey %{name}, your %{product_name} membership is ending tomorrow! You still have time to
         reactivate it at %{subscriptions_url}
