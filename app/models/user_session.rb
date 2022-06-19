@@ -127,6 +127,19 @@ class UserSession < ApplicationRecord
     "#{front_end_url}/session/#{session.id}/#{formatted_date}"
   end
 
+  def date_when_format
+    today = Time.current.in_time_zone(time_zone).to_date
+
+    case date
+    when today
+      'today'
+    when today + 1.day
+      'tomorrow'
+    else
+      date.strftime(Session::DAY_MONTH_NAME_FORMAT)
+    end
+  end
+
   private
 
   def user_valid_age

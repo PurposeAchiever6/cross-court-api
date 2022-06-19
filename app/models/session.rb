@@ -149,7 +149,7 @@ class Session < ApplicationRecord
   end
 
   def reservations_count(date)
-    user_sessions.not_canceled.by_date(date).count
+    not_canceled_reservations(date).count
   end
 
   def not_canceled_reservations(date)
