@@ -19,6 +19,7 @@ ActiveAdmin.register_page 'Scheduler' do
         selected_location: location.id
       }
     end
+
     div do
       text_node 'References:'
       br

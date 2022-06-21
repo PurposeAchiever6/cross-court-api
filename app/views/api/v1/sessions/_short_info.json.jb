@@ -23,7 +23,7 @@ json = {
 }
 
 if json[:on_waitlist]
-  waitlist_index = session.waitlist(session.start_time).not_reached.map(&:user_id).index(user_id)
+  waitlist_index = session.waitlist(session.start_time).pending.map(&:user_id).index(user_id)
   json[:waitlist_placement] = waitlist_index + 1
 end
 

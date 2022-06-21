@@ -4,9 +4,9 @@
 #
 #  id         :integer          not null, primary key
 #  date       :date
-#  reached    :boolean          default(FALSE)
 #  user_id    :integer
 #  session_id :integer
+#  state      :integer
 #
 # Indexes
 #
@@ -20,6 +20,6 @@ FactoryBot.define do
     user
     session
     date { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')).to_date }
-    reached { false }
+    state { :pending }
   end
 end

@@ -4,11 +4,11 @@
 #
 #  id         :integer          not null, primary key
 #  date       :date
-#  reached    :boolean          default(FALSE)
 #  user_id    :integer
 #  session_id :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  state      :integer          default("pending")
 #
 # Indexes
 #
@@ -20,17 +20,22 @@
 class UserSessionWaitlist < ApplicationRecord
   MINUTES_TOLERANCE = ENV['WAITLIST_MINUTES_TOLERANCE'].to_i.minutes.freeze
 
+  enum state: {
+    success: 0,
+    pending: 1,
+    timeout: 2
+  }
+
   belongs_to :user
   belongs_to :session
 
   validates :date, presence: true, uniqueness: { scope: %i[session_id user_id] }
 
   scope :by_date, ->(date) { where(date: date) }
-  scope :not_reached, -> { where(reached: false) }
   scope :by_user, ->(user_id) { where(user_id: user_id) }
 
   def self.sorted
     joins(:user).left_outer_joins(user: :active_subscription)
-                .order(reached: :desc, 'subscriptions.status': :asc, created_at: :asc)
+                .order(state: :asc, 'subscriptions.status': :asc, created_at: :asc)
   end
 end

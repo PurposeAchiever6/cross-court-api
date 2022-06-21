@@ -9,12 +9,12 @@ describe 'DELETE api/v1/sessions/:session_id/waitlists' do
       session: session,
       user: user,
       date: session.start_time,
-      reached: reached
+      state: state
     )
   end
 
   let(:date) { session.start_time }
-  let(:reached) { false }
+  let(:state) { :pending }
 
   let(:params) { { date: date.strftime('%d/%m/%Y') } }
   let(:request_headers) { auth_headers }
@@ -74,8 +74,8 @@ describe 'DELETE api/v1/sessions/:session_id/waitlists' do
     it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
   end
 
-  context 'if the user has already been reached' do
-    let(:reached) { true }
+  context 'if the user has already made it off the waitlist' do
+    let(:state) { :success }
 
     it { is_expected.to have_http_status(:bad_request) }
     it { expect(response_body[:error]).to eq('The user is not in the waitlist') }

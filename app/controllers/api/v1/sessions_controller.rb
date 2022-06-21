@@ -14,15 +14,17 @@ module Api
                                         .not_canceled
                                         .first
 
-        @on_waitlist = selected_session.waitlist(date).not_reached.by_user(current_user).exists?
+        @on_waitlist = selected_session.waitlist(date).pending.by_user(current_user).exists?
       end
 
       def index
         @user_sessions = UserSession.future.not_canceled.by_user(current_user)
                                     .group(:session_id, :date).count
 
-        @user_sessions_waitlists = UserSessionWaitlist.not_reached.by_user(current_user)
-                                                      .group(:session_id, :date).count
+        @user_sessions_waitlists = UserSessionWaitlist.pending
+                                                      .by_user(current_user)
+                                                      .group(:session_id, :date)
+                                                      .count
 
         @user_sessions_votes = UserSessionVote.by_user(current_user)
                                               .group(:session_id, :date).count

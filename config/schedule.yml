@@ -37,3 +37,8 @@ canceled_subscriptions_reminders:
   cron: "0 17 * * *" # 10 AM LA
   class: "Subscriptions::CanceledRemindersJob"
   queue: default
+
+timeout_waitlists_sessions:
+  cron: "*/15 * * * *" # At every 15th minute
+  class: "Sessions::TimeoutWaitlistsJob"
+  queue: default
