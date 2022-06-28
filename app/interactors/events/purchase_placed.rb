@@ -6,7 +6,7 @@ module Events
       ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::PURCHASE_PLACED,
         context.user.id,
-        purchase_id: context.purchase.id
+        payment_id: context.payment.id
       )
     end
   end

@@ -224,6 +224,10 @@ class StripeService
     Stripe::PromotionCode.update(promotion_code_id, promotion_code_params)
   end
 
+  def self.retrieve_invoice(invoice_stripe_id)
+    Stripe::Invoice.retrieve(invoice_stripe_id)
+  end
+
   def self.upcoming_invoice(
     customer_id,
     subscription_id = nil,
@@ -242,5 +246,9 @@ class StripeService
     params[:coupon] = promo_code.stripe_coupon_id if promo_code
 
     Stripe::Invoice.upcoming(params)
+  end
+
+  def self.retrieve_charge(stripe_charge_id)
+    Stripe::Charge.retrieve(stripe_charge_id)
   end
 end

@@ -30,6 +30,7 @@ Metrics/BlockLength:
     - spec/**/*
     - app/admin/**/*
     - app/models/concerns/employee_session.rb
+    - app/interactors/users/charge.rb
 
 Metrics/BlockNesting:
   Max: 4
@@ -91,6 +92,7 @@ Metrics/ParameterLists:
   CountKeywordArgs: true
   Exclude:
     - spec/support/mocks/stripe_mocker.rb
+    - app/interactors/users/charge.rb
 
 Metrics/PerceivedComplexity:
   Max: 20

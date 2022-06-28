@@ -33,7 +33,17 @@ module Api
 
         case type
         when INVOICE_PAYMENT_FAILED
-          subscription = user.subscriptions.find_by!(stripe_id: object.subscription)
+          subscription = user.subscriptions.find_by(stripe_id: object.subscription)
+          stripe_charge_id = object.charge
+
+          stripe_charge = StripeService.retrieve_charge(stripe_charge_id) if stripe_charge_id
+          create_payment(
+            subscription: subscription,
+            stripe_invoice: object,
+            status: :error,
+            error_message: stripe_charge&.failure_message
+          )
+
           unless object.next_payment_attempt
             # next_payment_attempt will be nil on the latest attempt
             # in that case we can safely cancel the user subscription
@@ -41,11 +51,17 @@ module Api
           end
         when INVOICE_PAYMENT_SUCCEEDED
           subscription = StripeService.retrieve_subscription(object.subscription)
+
           update_database_subscription(subscription)
           if active_subscription && object.billing_reason == SUBSCRIPTION_CYCLE
             Subscriptions::RenewUserSubscriptionCredits.call(
               user: user,
               subscription: active_subscription
+            )
+            create_payment(
+              subscription: subscription,
+              stripe_invoice: object,
+              status: :success
             )
           end
         when CUSTOMER_SUBSCRIPTION_DELETED
@@ -69,6 +85,22 @@ module Api
           subscription.promo_code = nil
         end
         subscription.save!
+      end
+
+      def create_payment(subscription:, stripe_invoice:, status:, error_message: nil)
+        discount_amount = stripe_invoice.total_discount_amounts.map(&:amount).reduce(:+) || 0
+
+        Payments::Create.call(
+          product: subscription.product,
+          user: subscription.user,
+          amount: stripe_invoice.total / 100.00,
+          description: "#{subscription.name} (renewal)",
+          payment_method: subscription.payment_method,
+          payment_intent_id: stripe_invoice.payment_intent,
+          status: status,
+          discount: discount_amount / 100.00,
+          error_message: error_message
+        )
       end
     end
   end

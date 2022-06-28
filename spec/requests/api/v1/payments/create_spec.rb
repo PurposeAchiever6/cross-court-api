@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'POST api/v1/purchases' do
+describe 'POST api/v1/payments' do
   let!(:user) { create(:user, cc_cash: 150) }
   let!(:product) { create(:product, price: 100) }
   let(:payment_method) { create(:payment_method, user: user) }
@@ -12,7 +12,7 @@ describe 'POST api/v1/purchases' do
   end
 
   subject do
-    post api_v1_purchases_path, params: params, headers: auth_headers, as: :json
+    post api_v1_payments_path, params: params, headers: auth_headers, as: :json
   end
 
   context 'when the transaction succeeds' do
@@ -27,8 +27,8 @@ describe 'POST api/v1/purchases' do
       expect(response).to be_successful
     end
 
-    it 'creates the purchase' do
-      expect { subject }.to change(Purchase, :count).by(1)
+    it 'creates the payment' do
+      expect { subject }.to change(Payment, :count).by(1)
     end
 
     it "increments user's credits" do
@@ -110,10 +110,6 @@ describe 'POST api/v1/purchases' do
     before do
       stub_request(:post, %r{stripe.com/v1/payment_intents}).to_return(status: 400, body: '{}')
       ActiveCampaignMocker.new.mock
-    end
-
-    it "doesn't create the purchase" do
-      expect { subject }.not_to change(Purchase, :count)
     end
 
     it "doesn't increment user's credits" do

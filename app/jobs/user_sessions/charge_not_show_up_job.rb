@@ -17,10 +17,11 @@ module UserSessions
         elsif user.unlimited_credits?
           Users::Charge.call(
             user: user,
-            price: ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
+            amount: ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
             description: 'Unlimited membership no show fee',
             notify_error: true,
-            use_cc_cash: true
+            use_cc_cash: true,
+            create_payment_on_failure: true
           )
         end
 

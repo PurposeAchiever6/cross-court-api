@@ -32,7 +32,7 @@ class Product < ApplicationRecord
   enum product_type: { one_time: 0, recurring: 1 }
 
   has_one_attached :image
-  has_many :purchases, dependent: :nullify
+  has_many :payments, dependent: :nullify
 
   has_many :subscriptions
   has_many :products_promo_codes, dependent: :destroy

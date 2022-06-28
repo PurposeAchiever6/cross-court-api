@@ -3,7 +3,6 @@ class PlacePurchase
 
   organize MakeDiscount,
            Users::Charge,
-           CreatePurchase,
            IncrementUserCredits,
            PromoCodes::IncrementTimesUsed,
            PromoCodes::CreateUserPromoCode,

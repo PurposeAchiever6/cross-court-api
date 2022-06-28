@@ -180,19 +180,19 @@ Represents a usage of the Promo code by the user. Users can only use a promo cod
 - **id** (Number: unique)
 - **user_id** (Text: `'SpecificAmountDiscount' or 'PercentageDiscount'`)
 
-### Purchase
+### Payment
 
-Represents an actual purchase made by a User.
+Represents an actual payment made by a User.
 
 #### Attributes
 
 - **id** (Number: unique)
-- **product_id** (Number: id of the product. Could be `null` if the product is deleted after the purchase)
-- **user_id** (Number: id of the user that made the purchase)
-- **price** (Number: The price of the purchase)
+- **product_id** (Number: id of the product. Could be `null` if the product is deleted after the payment)
+- **user_id** (Number: id of the user that made the payment)
+- **price** (Number: The price of the payment)
 - **name** (Text: name of the product)
-- **created_at** (DateTime: when the purchase was made)
-- **discount** (Number: discount in dollars applied to the purchase)
+- **created_at** (DateTime: when the payment was made)
+- **discount** (Number: discount in dollars applied to the payment)
 
 ### Legal
 

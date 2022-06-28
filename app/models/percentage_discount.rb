@@ -28,10 +28,10 @@
 
 class PercentageDiscount < PromoCode
   def apply_discount(amount)
-    (amount * (100 - discount) / 100).round(2)
+    (amount * (100 - discount) / 100.00).round(2)
   end
 
   def discount_amount(price)
-    (price * discount / 100).round(2)
+    (price * discount / 100.00).round(2)
   end
 end

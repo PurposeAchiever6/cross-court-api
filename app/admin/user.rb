@@ -162,7 +162,7 @@ ActiveAdmin.register User do
 
     result = Users::Charge.call(
       user: user,
-      price: store_item.price,
+      amount: store_item.price,
       description: store_item.description,
       use_cc_cash: use_cc_cash
     )

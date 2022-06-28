@@ -69,13 +69,27 @@ class StripeMocker
     mock_request(
       url_path: '/invoices/upcoming',
       method: :get,
-      response_body: invoice_response(customer_id, subscription_id),
+      response_body: invoice_response(
+        customer_id: customer_id,
+        subscription_id: subscription_id
+      ),
       query: {
         subscription_items: items,
         customer: customer_id,
         subscription: subscription_id,
         subscription_proration_date: proration_date
       }
+    )
+  end
+
+  def retrieve_invoice(customer_id, stripe_invoice_id = 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr')
+    mock_request(
+      url_path: "/invoices/#{stripe_invoice_id}",
+      method: :get,
+      response_body: invoice_response(
+        customer_id: customer_id,
+        stripe_invoice_id: stripe_invoice_id
+      )
     )
   end
 
@@ -124,6 +138,7 @@ class StripeMocker
   def subscription_response(id:, pause_collection: nil, status: 'active')
     {
       id: id,
+      latest_invoice: 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr',
       items: { data: [id: 'stripe-subscription-item-id'] },
       status: status,
       current_period_start: (Time.current - 2.weeks).to_i,
@@ -135,15 +150,16 @@ class StripeMocker
     }.to_json
   end
 
-  def invoice_response(customer_id, subscription_id)
+  def invoice_response(params)
     {
       currency: 'usd',
-      customer: customer_id || 'cus_AJ6y81jMo1Na22',
+      customer: params[:customer_id] || 'cus_AJ6y81jMo1Na22',
+      payment_intent: 'pi_1Kooo9EbKIwsJiGZCM',
       lines: {
         object: 'list',
         data: [
           {
-            id: 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr',
+            id: params[:stripe_invoice_id] || 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr',
             object: 'line_item',
             amount: 1239,
             currency: 'usd',
@@ -163,11 +179,14 @@ class StripeMocker
       },
       period_end: 1_650_027_809,
       period_start: 1_650_027_809,
-      subscription: subscription_id,
+      subscription: params[:subscription_id] || 'sub_IwsJiGZ9Ip7Ef',
       subtotal: 1239,
       tax: nil,
       tax_percent: nil,
-      total: 1239
+      total: 1239,
+      total_discount_amounts: [{
+        amount: 123
+      }]
     }.to_json
   end
 end

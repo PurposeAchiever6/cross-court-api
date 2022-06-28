@@ -14,6 +14,7 @@ describe 'POST api/v1/subscriptions' do
     before do
       stub_request(:post, %r{stripe.com/v1/subscriptions})
         .to_return(status: 200, body: File.new('spec/fixtures/subscription_succeeded.json'))
+      StripeMocker.new.retrieve_invoice(user.stripe_id, 'in_1Fin1BEbKIwsJiGZiMSDSLzw')
       ActiveCampaignMocker.new.mock
     end
 
@@ -26,8 +27,8 @@ describe 'POST api/v1/subscriptions' do
       expect { subject }.to change(Subscription, :count).by(1)
     end
 
-    it 'creates the purchase' do
-      expect { subject }.to change(Purchase, :count).by(1)
+    it 'creates the payment' do
+      expect { subject }.to change(Payment, :count).by(1)
     end
 
     it "increments user's subscription credits" do
@@ -38,6 +39,20 @@ describe 'POST api/v1/subscriptions' do
       expect {
         subject
       }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).exactly(:twice).on_queue('default')
+    end
+  end
+
+  context 'when user already has an active subscription' do
+    let!(:active_subscription) { create(:subscription, user: user, product: product) }
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns the expected error message' do
+      subject
+      expect(json[:error]).to eq('User already has an active subscription')
     end
   end
 

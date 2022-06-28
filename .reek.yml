@@ -43,7 +43,12 @@ detectors:
     exclude: []
   LongParameterList:
     enabled: true
-    exclude: [StripeService#self.upcoming_invoice, StripeService#self.update_subscription]
+    exclude:
+      [
+        "StripeService#self.upcoming_invoice",
+        "StripeService#self.update_subscription",
+        "Users::Charge#create_payment",
+      ]
     max_params: 4
     overrides:
       initialize:

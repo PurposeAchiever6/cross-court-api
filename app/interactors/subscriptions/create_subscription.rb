@@ -12,10 +12,6 @@ module Subscriptions
         context.fail!(message: I18n.t('api.errors.subscriptions.user_has_active'))
       end
 
-      if promo_code&.invalid?(user, product)
-        context.fail!(message: I18n.t('api.errors.promo_code.invalid'))
-      end
-
       stripe_subscription = StripeService.create_subscription(
         user,
         product,
@@ -36,6 +32,11 @@ module Subscriptions
 
       subscription.save!
 
+      payment_intent_id = StripeService.retrieve_invoice(
+        stripe_subscription.latest_invoice
+      ).payment_intent
+
+      context.payment_intent_id = payment_intent_id
       context.subscription = subscription
     rescue Stripe::StripeError => e
       context.fail!(message: e.message)

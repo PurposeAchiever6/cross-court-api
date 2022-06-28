@@ -119,6 +119,23 @@ ActiveRecord::Schema.define(version: 2022_06_18_175109) do
     t.index ["user_id"], name: "index_payment_methods_on_user_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "user_id"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "description", null: false
+    t.decimal "discount", precision: 10, scale: 2, default: "0.0"
+    t.string "last_4"
+    t.string "stripe_id"
+    t.integer "status", default: 0
+    t.string "error_message"
+    t.decimal "cc_cash", precision: 10, scale: 2, default: "0.0"
+    t.index ["product_id"], name: "index_payments_on_product_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.integer "credits", default: 0, null: false
     t.string "name", null: false
@@ -164,19 +181,6 @@ ActiveRecord::Schema.define(version: 2022_06_18_175109) do
     t.integer "user_max_checked_in_sessions"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
-  end
-
-  create_table "purchases", force: :cascade do |t|
-    t.bigint "product_id"
-    t.bigint "user_id"
-    t.decimal "price", precision: 10, scale: 2, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "credits", null: false
-    t.string "name", null: false
-    t.decimal "discount", precision: 10, scale: 2, default: "0.0", null: false
-    t.index ["product_id"], name: "index_purchases_on_product_id"
-    t.index ["user_id"], name: "index_purchases_on_user_id"
   end
 
   create_table "referee_sessions", force: :cascade do |t|

@@ -1,12 +1,13 @@
 module Api
   module V1
-    class PurchasesController < Api::V1::ApiUserController
+    class PaymentsController < Api::V1::ApiUserController
       before_action :validate_free_session, only: :create_free_session_intent
 
       def index
-        @purchases = current_user.purchases.order(id: :desc).decorate
+        @payments = current_user.payments.order(id: :desc)
       end
 
+      # TODO: move these two endpoints to a 'drop_ins' controller or something like that
       def create
         result = PlacePurchase.call(
           product: product,
@@ -17,7 +18,7 @@ module Api
           use_cc_cash: use_cc_cash
         )
 
-        raise PurchaseException, result.message unless result.success?
+        raise PaymentException, result.message unless result.success?
       end
 
       def create_free_session_intent

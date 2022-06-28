@@ -3,11 +3,9 @@ module Subscriptions
     include Interactor::Organizer
 
     organize Subscriptions::ChangeSubscription,
-             CreatePurchase,
              Subscriptions::UpdateUserSubscriptionCredits,
              PromoCodes::IncrementTimesUsed,
              PromoCodes::CreateUserPromoCode,
-             Subscriptions::SendSubscriptionUpdatedSlackNotification,
-             Events::PurchasePlaced
+             Subscriptions::SendSubscriptionUpdatedSlackNotification
   end
 end

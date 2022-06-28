@@ -288,7 +288,7 @@ ActiveAdmin.register Session do
           next
         end
 
-        jersey_rental_payment_intent_id = result.charge_payment_intent_id
+        jersey_rental_payment_intent_id = result.payment_intent_id
       end
 
       user_session.update!(
