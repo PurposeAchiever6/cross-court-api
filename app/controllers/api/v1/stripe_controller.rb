@@ -59,7 +59,7 @@ module Api
               subscription: active_subscription
             )
             create_payment(
-              subscription: subscription,
+              subscription: active_subscription,
               stripe_invoice: object,
               status: :success
             )
