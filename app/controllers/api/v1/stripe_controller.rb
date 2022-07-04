@@ -37,12 +37,14 @@ module Api
           stripe_charge_id = object.charge
 
           stripe_charge = StripeService.retrieve_charge(stripe_charge_id) if stripe_charge_id
-          create_payment(
-            subscription: subscription,
-            stripe_invoice: object,
-            status: :error,
-            error_message: stripe_charge&.failure_message
-          )
+          if object.billing_reason == SUBSCRIPTION_CYCLE
+            create_payment(
+              subscription: subscription,
+              stripe_invoice: object,
+              status: :error,
+              error_message: stripe_charge&.failure_message
+            )
+          end
 
           unless object.next_payment_attempt
             # next_payment_attempt will be nil on the latest attempt
