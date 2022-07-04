@@ -21,10 +21,7 @@ module Api
       end
 
       def cancel
-        ActiveRecord::Base.transaction do
-          canceled_user_session = CanceledUserSession.new(user_session)
-          canceled_user_session.save!
-        end
+        UserSessions::Cancel.call(user_session: user_session)
       end
 
       def confirm

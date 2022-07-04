@@ -30,16 +30,43 @@
 require 'rails_helper'
 
 describe UserSession do
-  subject { build :user_session }
-
   describe 'validations' do
+    subject { build :user_session }
+
     it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:date) }
     it { is_expected.to define_enum_for(:state).with_values(%i[reserved canceled confirmed]) }
   end
 
   describe 'associations' do
+    subject { build :user_session }
+
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:session) }
+  end
+
+  describe 'date_when_format' do
+    let!(:location) { create(:location) }
+    let!(:session) { create(:session, location: location) }
+    let!(:user_session) { create(:user_session, date: date, session: session) }
+
+    let(:time_zone) { location.time_zone }
+    let(:date) { Time.current.in_time_zone(location.time_zone).to_date }
+
+    subject { user_session.date_when_format }
+
+    it { is_expected.to eq('today') }
+
+    context 'when the date of the session is tomorrow' do
+      let(:date) { Time.current.in_time_zone(time_zone).to_date + 1.day }
+
+      it { is_expected.to eq('tomorrow') }
+    end
+
+    context 'when the date of the session is not today or tomorrow' do
+      let(:date) { Date.parse('2022-01-01') }
+
+      it { is_expected.to eq('Saturday January 1') }
+    end
   end
 end

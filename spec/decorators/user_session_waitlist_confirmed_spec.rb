@@ -20,7 +20,10 @@ describe UserSessionWaitlistConfirmed do
     it { expect { subject }.to change { user_session.reload.state }.to('confirmed') }
 
     it 'calls Sonar service with the user as argument' do
-      expect(SonarService).to receive(:send_message).with(user, anything).once
+      expect(SonarService).to receive(:send_message).with(
+        user,
+        /you made it off the waitlist/
+      ).once
 
       subject
     end

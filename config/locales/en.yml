@@ -57,8 +57,8 @@ en:
         registration:
           communication: Communication error when creating the user. Try again later
         charges:
-          price_not_positive: "Price should be greater or equal than 0"
-          price_not_present: "Price not present"
+          amount_not_positive: "Amount should be greater or equal than 0"
+          amount_not_present: "Amount not present"
           missing_payment_method: "The user does not have a saved credit card to be charged"
       sessions:
         full: "Session is full"
@@ -66,6 +66,7 @@ en:
         is_out_of_skill_level: "Can not reserve this session if it's outside user's skill level"
         invalid_date: "The date is not valid for the requested session"
         not_coming_soon: "The session should be a coming soon session"
+        has_already_been_played: "The session has already been played"
         votes:
           user_did_not_vote: "The user did not vote for this session"
       waitlists:
@@ -91,8 +92,13 @@ en:
       session_confirmed: "%{name} *confirmed* the reservation for %{date} at %{time} on %{location}"
       session_waitlist_confirmed: >
         Session *confirmed from waitlist* for user %{name} for %{date} at %{time} on %{location}
-      session_canceled_in_time: "%{name} *canceled in time* the reservation for %{date} at %{time} on %{location}"
-      session_canceled_out_of_time: "%{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}"
+      session_canceled: >
+        %{name} reservation *canceled*. Session for %{date} at %{time}
+        on %{location} *has been canceled* through admin.
+      session_canceled_in_time: >
+        %{name} *canceled in time* the reservation for %{date} at %{time} on %{location}
+      session_canceled_out_of_time: >
+        %{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}
       inactive_user: >
         %{name} (phone: %{phone}) has played his *last session 1 month ago* and doesn't have an
         active membership or a future session reserved.
@@ -161,12 +167,15 @@ en:
         Hey %{name}, your %{product_name} membership is ending tomorrow! You still have time to
         reactivate it at %{subscriptions_url}
       subscription_credits_left_reminder: >
-        Hey %{name}, It's the ccteam. You still have %{credits_left} session credit(s)
+        Hey %{name}. It's the ccteam. You still have %{credits_left} session credit(s)
         left in your account from your current membership to use before the %{end_date}.
         Let's get it! %{schedule_url}
       active_subscription_book_reminder: >
         Hey %{name}. It's the ccteam. It's been a week since your last session.
         Ready to book? %{schedule_url}
+      session_canceled: >
+        Hey %{name}. We are sorry, but %{when}’s %{time} session at CC%{location} has been canceled.
+        Don't worry, we refunded your credit. Want to schedule different session? %{schedule_url}
   admin:
     products:
       created: "Product created successfully"

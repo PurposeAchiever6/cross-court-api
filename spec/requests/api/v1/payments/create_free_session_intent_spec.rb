@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'PUT api/v1/purchases/create_free_session_intent' do
+describe 'PUT api/v1/payments/create_free_session_intent' do
   let(:user) { create(:user) }
   let(:payment_method) { create(:payment_method, user: user) }
   let(:params) { { payment_method_id: payment_method.id } }
@@ -12,7 +12,7 @@ describe 'PUT api/v1/purchases/create_free_session_intent' do
   end
 
   subject do
-    put create_free_session_intent_api_v1_purchases_path,
+    put create_free_session_intent_api_v1_payments_path,
         params: params, headers: auth_headers, as: :json
   end
 

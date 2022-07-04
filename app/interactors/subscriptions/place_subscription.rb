@@ -2,8 +2,9 @@ module Subscriptions
   class PlaceSubscription
     include Interactor::Organizer
 
-    organize Subscriptions::CreateSubscription,
-             CreatePurchase,
+    organize MakeDiscount,
+             Subscriptions::CreateSubscription,
+             Payments::Create,
              Subscriptions::UpdateUserSubscriptionCredits,
              PromoCodes::IncrementTimesUsed,
              PromoCodes::CreateUserPromoCode,

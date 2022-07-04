@@ -8,7 +8,9 @@ require 'spec_helper'
 require 'rspec/rails'
 require 'simplecov'
 
-SimpleCov.start
+SimpleCov.start do
+  add_filter '/spec'
+end
 
 ActiveRecord::Migration.maintain_test_schema!
 WebMock.disable_net_connect!(allow_localhost: true)

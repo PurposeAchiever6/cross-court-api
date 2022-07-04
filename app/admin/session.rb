@@ -20,6 +20,16 @@ ActiveAdmin.register Session do
   scope :all, default: true
   scope 'Deleted', :only_deleted
 
+  action_item :cancel, only: :show, priority: 0, if: -> { params[:date].present? } do
+    link_to 'Cancel Session',
+            cancel_admin_session_path(session.id, date: params[:date]),
+            method: :post,
+            data: { disable_with: 'Loading...',
+                    confirm: 'Are you sure you want to cancel this session? This will refund ' \
+                             'all signed up users their credits back, and notify them via SMS. ' \
+                             'It will also make the session unavailable for this date.' }
+  end
+
   form do |f|
     f.inputs 'Session Details' do
       f.input :location
@@ -278,7 +288,7 @@ ActiveAdmin.register Session do
           next
         end
 
-        jersey_rental_payment_intent_id = result.charge_payment_intent_id
+        jersey_rental_payment_intent_id = result.payment_intent_id
       end
 
       user_session.update!(
@@ -317,7 +327,7 @@ ActiveAdmin.register Session do
     session = Session.find(session_id)
     user = User.find(user_id)
 
-    if session.user_sessions.not_canceled.by_date(date).where(user_id: user_id).exists?
+    if session.not_canceled_reservations(date).where(user_id: user_id).exists?
       flash[:error] = 'The player is already in the session'
       return redirect_to admin_session_path(id: session_id, date: date)
     end
@@ -350,12 +360,27 @@ ActiveAdmin.register Session do
     date = params[:date]
     user_session = UserSession.find(params[:user_session_id])
 
-    CanceledUserSession.new(user_session).save!
+    UserSessions::Cancel.call(user_session: user_session)
 
     redirect_to admin_session_path(id: session_id, date: date),
-                notice: 'User session cancelled successfully'
+                notice: 'User session canceled successfully'
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to admin_session_path(id: session_id, date: date)
+  end
+
+  member_action :cancel, method: :post do
+    session = Session.find(params[:id])
+    date = Date.parse(params[:date])
+
+    Sessions::Cancel.call(
+      session: session,
+      date: date
+    )
+
+    redirect_to admin_scheduler_path, notice: 'Session canceled successfully'
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to admin_session_path(id: params[:id], date: params[:date])
   end
 end

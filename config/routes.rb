@@ -43,7 +43,7 @@ Rails.application.routes.draw do
           put :cancel
           put :confirm
         end
-        resources :purchases, only: %i[create index] do
+        resources :payments, only: %i[create index] do
           put :create_free_session_intent, on: :collection
         end
         resources :payment_methods, only: %i[create index destroy update]

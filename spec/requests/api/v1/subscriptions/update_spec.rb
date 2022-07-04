@@ -37,14 +37,6 @@ describe 'PUT api/v1/subscriptions/:id' do
       }.from(product.credits).to(new_product.credits)
     end
 
-    it 'creates the purchase' do
-      expect { subject }.to change(Purchase, :count).by(1)
-    end
-
-    it 'calls the Active Campaign service' do
-      expect { subject }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default')
-    end
-
     it 'calls Slack Service' do
       expect_any_instance_of(SlackService).to receive(:subscription_updated)
       subject

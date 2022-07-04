@@ -26,22 +26,10 @@ class UserSessionWaitlistConfirmed
   private
 
   def session_waitlist_confirmed_message
-    user_session_date = user_session.date
-    today = Time.current.in_time_zone(user_session.time_zone).to_date
-
-    session_when = case user_session_date
-                   when today
-                     'today'
-                   when today + 1.day
-                     'tomorrow'
-                   else
-                     user_session_date.strftime(Session::DAY_MONTH_NAME_FORMAT)
-                   end
-
     I18n.t(
       'notifier.sonar.session_waitlist_confirmed',
       name: user.first_name,
-      when: session_when,
+      when: user_session.date_when_format,
       time: user_session.time.strftime(Session::TIME_FORMAT),
       location: "#{location.name} (#{location.address})"
     )

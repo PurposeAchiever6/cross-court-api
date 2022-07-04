@@ -1,0 +1,11 @@
+{
+  id: payment.id,
+  description: payment.description,
+  amount: payment.amount,
+  date: payment.created_at.iso8601,
+  last_4: payment.last_4,
+  discount: payment.discount,
+  cc_cash: payment.cc_cash,
+  status: payment.status,
+  error_message: payment.error_message
+}

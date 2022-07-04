@@ -106,7 +106,7 @@ class User < ApplicationRecord
   has_many :sem_sessions, dependent: :destroy
   has_many :referee_sessions, dependent: :destroy
   has_many :sessions, through: :user_sessions
-  has_many :purchases, dependent: :nullify
+  has_many :payments, dependent: :nullify
   has_many :subscriptions, dependent: :destroy
   has_many :user_session_waitlists, dependent: :destroy
   has_many :payment_methods, dependent: :destroy

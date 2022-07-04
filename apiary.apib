@@ -348,9 +348,9 @@ This route is the destination URL for password reset confirmation
 
     + Attributes (Sem session response)
 
-## Purchases [/api/v1/purchases]
+## Payments [/api/v1/payments]
 
-### Get purchases [GET]
+### Get payments [GET]
 
 + Request (application/json)
 
@@ -362,10 +362,10 @@ This route is the destination URL for password reset confirmation
             expiry: 1489009792
             uid: test@test.com
 
-    + Attributes (array[Purchase])
+    + Attributes (array[Payment])
 
 
-### Create purchase [POST]
+### Create payment [POST]
 
 + Request (application/json)
 
@@ -379,7 +379,7 @@ This route is the destination URL for password reset confirmation
 + Response 204 (application/json)
 
 
-## Free session [/api/v1/purchases/claim_free_session]
+## Free session [/api/v1/payments/claim_free_session]
 
 ### Claim free session [PUT]
 
@@ -562,7 +562,7 @@ This route is the destination URL for password reset confirmation
 ## Locations array (object)
 + locations (array[Location])
 
-## Purchase (object)
+## Payment (object)
 + id (number)
 + price (number)
 + name (string)

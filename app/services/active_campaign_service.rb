@@ -180,15 +180,15 @@ class ActiveCampaignService
     fields =
       case event_name
       when ::ActiveCampaign::Deal::Event::PURCHASE_PLACED
-        purchase = Purchase.find(args[:purchase_id])
-        price = purchase.price
-        discount = purchase.discount
-        final_price = price - discount
+        payment = Payment.find(args[:payment_id])
+        amount = payment.amount
+        discount = payment.discount
+        final_price = amount - discount
 
         [
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_PRICE],
-            fieldValue: format('%.2f', price)
+            fieldValue: format('%.2f', amount)
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_DISCOUNT],
@@ -204,7 +204,7 @@ class ActiveCampaignService
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::PURCHASE_NAME],
-            fieldValue: purchase.product_name
+            fieldValue: payment.description
           }
         ]
       when ::ActiveCampaign::Deal::Event::CANCELLED_MEMBERSHIP

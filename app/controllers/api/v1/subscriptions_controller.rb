@@ -6,7 +6,8 @@ module Api
           product: product,
           user: current_user,
           payment_method: payment_method,
-          promo_code: promo_code
+          promo_code: promo_code,
+          description: product.name
         )
 
         raise SubscriptionException, result.message unless result.success?

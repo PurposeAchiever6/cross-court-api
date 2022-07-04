@@ -24,7 +24,9 @@ module Sessions
                      schedule_url: "#{ENV['FRONTENT_URL']}/locations")
             )
 
-            user_session_waitlist.update!(state: :timeout)
+            # We use update_column instead of update because a weird bug on rails. It tries to
+            # create a new session with the same id as the user_session_waitlist session relation
+            user_session_waitlist.update_column(:state, :timeout)
           end
         end
       end

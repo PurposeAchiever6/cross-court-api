@@ -30,6 +30,7 @@ Metrics/BlockLength:
     - spec/**/*
     - app/admin/**/*
     - app/models/concerns/employee_session.rb
+    - app/interactors/users/charge.rb
 
 Metrics/BlockNesting:
   Max: 4
@@ -91,6 +92,7 @@ Metrics/ParameterLists:
   CountKeywordArgs: true
   Exclude:
     - spec/support/mocks/stripe_mocker.rb
+    - app/interactors/users/charge.rb
 
 Metrics/PerceivedComplexity:
   Max: 20
@@ -117,6 +119,7 @@ Rails/SkipsModelValidations:
     - app/interactors/promo_codes/create_user_promo_code.rb
     - app/interactors/promo_codes/increment_times_used.rb
     - app/models/user.rb
+    - app/jobs/sessions/timeout_waitlists_job.rb
     - spec/models/product_spec.rb
 
 Rails/HasManyOrHasOneDependent:

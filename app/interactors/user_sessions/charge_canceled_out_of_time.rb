@@ -8,29 +8,30 @@ module UserSessions
 
       return if user_session.in_cancellation_time?
 
-      price_to_charge = 0
+      amount_to_charge = 0
 
       if user.unlimited_credits?
-        price_to_charge = ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'].to_f
+        amount_to_charge = ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'].to_f
       elsif user_session.is_free_session
-        price_to_charge = ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'].to_f
+        amount_to_charge = ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'].to_f
       end
 
-      context.amount_charged = price_to_charge
+      context.amount_charged = amount_to_charge
 
-      return unless price_to_charge.positive?
+      return unless amount_to_charge.positive?
 
       result = Users::Charge.call(
         user: user,
-        price: price_to_charge,
+        amount: amount_to_charge,
         description: 'Session canceled out of time fee',
         notify_error: true,
-        use_cc_cash: true
+        use_cc_cash: true,
+        create_payment_on_failure: true
       )
 
       context.fail!(message: result.message) if result.failure?
 
-      context.charge_payment_intent_id = result.charge_payment_intent_id
+      context.payment_intent_id = result.payment_intent_id
     end
   end
 end

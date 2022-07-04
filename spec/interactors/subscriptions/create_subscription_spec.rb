@@ -7,6 +7,7 @@ describe Subscriptions::CreateSubscription do
     let!(:product) { create(:product) }
     let(:promo_code) { nil }
     let(:stripe_response_status) { 'active' }
+    let(:stripe_invoice_id) { 'in_1Fin1BEbKIwsJiGZiMSDSLzw' }
 
     let(:stripe_response) do
       {
@@ -18,12 +19,14 @@ describe Subscriptions::CreateSubscription do
         cancel_at: nil,
         canceled_at: nil,
         cancel_at_period_end: false,
-        pause_collection: nil
+        pause_collection: nil,
+        latest_invoice: stripe_invoice_id
       }
     end
 
     before do
       allow(StripeService).to receive(:create_subscription).and_return(double(stripe_response))
+      StripeMocker.new.retrieve_invoice(user.stripe_id, stripe_invoice_id)
     end
 
     subject do
@@ -31,7 +34,8 @@ describe Subscriptions::CreateSubscription do
         user: user,
         product: product,
         payment_method: payment_method,
-        promo_code: promo_code
+        promo_code: promo_code,
+        amount: product.price
       )
     end
 
@@ -49,7 +53,7 @@ describe Subscriptions::CreateSubscription do
       subject
     end
 
-    context 'when user already has an active subscription attribute is updated' do
+    context 'when user already has an active subscription' do
       let!(:active_subscription) { create(:subscription, user: user, product: product) }
 
       it { expect(subject.success?).to eq(false) }

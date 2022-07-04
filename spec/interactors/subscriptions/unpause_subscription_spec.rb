@@ -8,10 +8,12 @@ describe Subscriptions::UnpauseSubscription do
       create(:subscription_pause, subscription: subscription, status: :finished)
     end
     let(:user) { subscription.user }
+    let(:stripe_invoice_id) { 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr' }
 
     before do
       allow_any_instance_of(Slack::Notifier).to receive(:ping)
       StripeMocker.new.unpause_subscription(subscription.stripe_id)
+      StripeMocker.new.retrieve_invoice(user.stripe_id, stripe_invoice_id)
       user.update!(subscription_credits: 0)
     end
 
@@ -33,6 +35,24 @@ describe Subscriptions::UnpauseSubscription do
       expect { subject }.to change {
         user.reload.subscription_credits
       }.from(0).to(subscription.product.credits)
+    end
+
+    it 'creates the payment' do
+      expect { subject }.to change(Payment, :count).by(1)
+    end
+
+    it 'creates a Payment with the expected data' do
+      subject
+      payment = Payment.last
+
+      expect(payment.amount.to_f).to eq(1239 / 100.00)
+      expect(payment.user).to eq(user)
+      expect(payment.description).to eq(subscription.name)
+      expect(payment.discount.to_f).to eq(123 / 100.00)
+      expect(payment.last_4).to eq(subscription.payment_method.last_4)
+      expect(payment.stripe_id).to eq('pi_1Kooo9EbKIwsJiGZCM')
+      expect(payment.status).to eq('success')
+      expect(payment.cc_cash).to eq(0)
     end
 
     it 'calls Slack Service' do

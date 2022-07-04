@@ -82,7 +82,7 @@ class Session < ApplicationRecord
   end)
 
   scope :in_next_minutes, (lambda do |minutes|
-    # rubocop:disable Layout/LineLength
+    # rubocop:disable Metrics/LineLength
     joins(:location).where(
       'to_char(time, :time_format) ' \
       'BETWEEN to_char(current_timestamp at time zone locations.time_zone, :time_format) AND ' \
@@ -90,7 +90,7 @@ class Session < ApplicationRecord
       minutes: minutes,
       time_format: 'HH24MI'
     )
-    # rubocop:enable Layout/LineLength
+    # rubocop:enable Metrics/LineLength
   end)
 
   def recurring=(value)
@@ -149,7 +149,7 @@ class Session < ApplicationRecord
   end
 
   def reservations_count(date)
-    user_sessions.not_canceled.by_date(date).count
+    not_canceled_reservations(date).count
   end
 
   def not_canceled_reservations(date)
