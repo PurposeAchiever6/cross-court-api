@@ -232,7 +232,8 @@ ActiveAdmin.register User do
         product: product,
         user: user,
         payment_method: payment_method,
-        promo_code: promo_code
+        promo_code: promo_code,
+        description: product.name
       )
     when :update
       result = Subscriptions::UpdateSubscription.call(
