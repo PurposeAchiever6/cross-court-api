@@ -45,7 +45,11 @@ ActiveAdmin.register User do
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
       f.input :subscription_credits,
-              input_html: { value: subscription_credits, type: type }
+              input_html: {
+                value: subscription_credits,
+                type: type,
+                disabled: resource.unlimited_credits?
+              }
       f.input :total_credits,
               input_html: { value: resource.total_credits, type: type, disabled: true }
       f.input :cc_cash, label: 'CC Cash'
@@ -228,7 +232,8 @@ ActiveAdmin.register User do
         product: product,
         user: user,
         payment_method: payment_method,
-        promo_code: promo_code
+        promo_code: promo_code,
+        description: product.name
       )
     when :update
       result = Subscriptions::UpdateSubscription.call(

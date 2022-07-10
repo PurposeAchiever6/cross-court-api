@@ -115,6 +115,7 @@ class User < ApplicationRecord
 
   validates :uid, uniqueness: { scope: :provider }
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :subscription_credits, presence: true, numericality: { only_integer: true }
   validates :free_session_state, presence: true
   validates :zipcode, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
   validates :phone_number, uniqueness: true
@@ -164,6 +165,8 @@ class User < ApplicationRecord
   end
 
   def total_credits
+    return '' if !credits || !subscription_credits
+
     unlimited_credits? ? 'Unlimited' : credits + subscription_credits
   end
 
