@@ -7,8 +7,6 @@ module Users
 
       context.fail!(message: I18n.t('api.errors.users.charges.amount_not_present')) if amount.blank?
 
-      return if amount.zero?
-
       if amount.negative?
         context.fail!(message: I18n.t('api.errors.users.charges.amount_not_positive'))
       end
@@ -51,8 +49,10 @@ module Users
           end
         end
 
-        payment_intent = StripeService.charge(user, payment_method.stripe_id, amount, description)
-        payment_intent_id = payment_intent.id
+        if amount.positive?
+          payment_intent = StripeService.charge(user, payment_method.stripe_id, amount, description)
+          payment_intent_id = payment_intent.id
+        end
 
         create_payment(
           user: user,
