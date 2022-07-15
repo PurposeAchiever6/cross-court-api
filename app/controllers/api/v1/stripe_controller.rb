@@ -52,9 +52,12 @@ module Api
             Subscriptions::CancelSubscription.call(user: user, subscription: subscription)
           end
         when INVOICE_PAYMENT_SUCCEEDED
-          subscription = StripeService.retrieve_subscription(object.subscription)
+          if object.subscription
+            # Some invoices are done manually and are unrelated to a subscription
+            subscription = StripeService.retrieve_subscription(object.subscription)
+            update_database_subscription(subscription)
+          end
 
-          update_database_subscription(subscription)
           if active_subscription && object.billing_reason == SUBSCRIPTION_CYCLE
             Subscriptions::RenewUserSubscriptionCredits.call(
               user: user,
