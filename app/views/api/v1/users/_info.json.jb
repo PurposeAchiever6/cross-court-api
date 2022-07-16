@@ -48,7 +48,8 @@ json = {
   active_subscription: user_active_subscription,
   last_checked_in_user_session: last_checked_in_user_session,
   image_url: nil,
-  default_payment_method: default_payment_method
+  default_payment_method: default_payment_method,
+  reserve_team: user.reserve_team
 }
 
 json[:image_url] = polymorphic_url(user.image) if user.image.attached?

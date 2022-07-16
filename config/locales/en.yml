@@ -67,6 +67,7 @@ en:
         invalid_date: "The date is not valid for the requested session"
         not_coming_soon: "The session should be a coming soon session"
         has_already_been_played: "The session has already been played"
+        reserve_team_not_allowed: "The Reserve Team is not allowed to reserve"
         votes:
           user_did_not_vote: "The user did not vote for this session"
       waitlists:
@@ -176,6 +177,9 @@ en:
       session_canceled: >
         Hey %{name}. We are sorry, but %{when}’s %{time} session at CC%{location} has been canceled.
         Don't worry, we refunded your credit. Want to schedule different session? %{schedule_url}
+      reserve_team: >
+        Crosscourt today's %{time} session at CC%{location} is available for reserve team booking.
+        Click %{link} to book.
   admin:
     products:
       created: "Product created successfully"

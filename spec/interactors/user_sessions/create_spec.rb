@@ -17,10 +17,12 @@ describe UserSessions::Create do
         :user,
         credits: credits,
         subscription_credits: subscription_credits,
-        free_session_state: free_session_state
+        free_session_state: free_session_state,
+        reserve_team: reserve_team
       )
     end
 
+    let(:reserve_team) { false }
     let(:max_first_timers) { nil }
     let(:all_skill_levels_allowed) { true }
     let(:is_open_club) { false }
@@ -333,6 +335,20 @@ describe UserSessions::Create do
         expect {
           subject
         }.to raise_error(SubscriptionIsNotActiveException, 'The subscription is not active')
+      end
+    end
+
+    context 'when the user is from the reserve team' do
+      before { ENV['RESERVE_TEAM_RESERVATIONS_LIMIT'] = '1' }
+
+      let(:reserve_team) { true }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+
+      context 'when the session is not allowed for reserve team members' do
+        let!(:user_session) { create(:user_session, session: session, date: date) }
+
+        it { expect { subject rescue nil }.not_to change(UserSession, :count) }
       end
     end
   end

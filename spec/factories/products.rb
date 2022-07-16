@@ -17,6 +17,7 @@
 #  stripe_product_id                      :string
 #  referral_cc_cash                       :decimal(, )      default(0.0)
 #  price_for_first_timers_no_free_session :decimal(10, 2)
+#  available_for                          :integer          default("everyone")
 #
 # Indexes
 #
@@ -29,11 +30,13 @@ FactoryBot.define do
     sequence :stripe_price_id do |n|
       "#{Faker::Lorem.unique}_#{n}"
     end
-    name         { Faker::Lorem.word }
-    credits      { Faker::Number.between(1, 10) }
+    name { Faker::Lorem.word }
+    credits { Faker::Number.between(1, 10) }
     order_number { Faker::Number.number(1) }
-    price        { Faker::Commerce.price }
+    price { Faker::Commerce.price }
     referral_cc_cash { 0 }
+    available_for { 'everyone' }
+    product_type { 'one_time' }
   end
 
   trait :unlimited do

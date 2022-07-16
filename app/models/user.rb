@@ -42,6 +42,7 @@
 #  birthday                     :date
 #  cc_cash                      :decimal(, )      default(0.0)
 #  source                       :string
+#  reserve_team                 :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -128,6 +129,7 @@ class User < ApplicationRecord
   scope :no_credits, -> { where(credits: 0, subscription_credits: 0) }
   scope :sorted_by_full_name, -> { order('LOWER(first_name) ASC, LOWER(last_name) ASC') }
   scope :members, -> { joins(:active_subscription) }
+  scope :reserve_team, -> { where(reserve_team: true) }
 
   before_validation :init_uid
   after_create :create_referral_code

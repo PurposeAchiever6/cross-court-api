@@ -42,6 +42,7 @@
 #  birthday                     :date
 #  cc_cash                      :decimal(, )      default(0.0)
 #  source                       :string
+#  reserve_team                 :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -70,6 +71,7 @@ FactoryBot.define do
     drop_in_expiration_date      { Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS }
     phone_number                 { Faker::PhoneNumber.cell_phone }
     private_access               { false }
+    reserve_team                 { false }
     birthday                     { Time.zone.today - 20.years }
     skill_rating                 { rand(1..5) }
     stripe_id                    { 'cus_AJ6y81jMo1Na22' }

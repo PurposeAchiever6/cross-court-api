@@ -14,6 +14,9 @@ module UserSessions
       raise FullSessionException if session.full?(date, user)
       raise SubscriptionIsNotActiveException if user.active_subscription&.paused?
       raise SessionIsOutOfSkillLevelException unless session.at_session_level?(user)
+      if user.reserve_team && !session.reserve_team_reservation_allowed?(date)
+        raise ReserveTeamNotAllowedException
+      end
 
       user_session =
         ActiveRecord::Base.transaction do

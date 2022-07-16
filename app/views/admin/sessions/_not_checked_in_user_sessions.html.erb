@@ -7,6 +7,7 @@
     <tr>
       <th>Image</th>
       <th>User</th>
+      <th>Reserve Team</th>
       <th>First Session</th>
       <th>Status</th>
       <th>Membership</th>
@@ -28,6 +29,9 @@
           </td>
           <td class='align-middle'>
             <%= link_to user_session.user_full_name, admin_user_path(user_session.user_id) %>
+          </td>
+          <td class='align-middle'>
+            <%= status_tag user_session.user.reserve_team? %>
           </td>
           <td class='align-middle'>
             <%= status_tag user_session.first_session || user_session.user.first_timer? %>
