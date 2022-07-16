@@ -9,6 +9,7 @@ module Api
       CUSTOMER_SUBSCRIPTION_UPDATED = 'customer.subscription.updated'.freeze
       CUSTOMER_SUBSCRIPTION_DELETED = 'customer.subscription.deleted'.freeze
       SUBSCRIPTION_CYCLE = 'subscription_cycle'.freeze
+      SUBSCRIPTION_UPDATE = 'subscription_update'.freeze
 
       def webhook
         payload = request.body.read
@@ -39,8 +40,10 @@ module Api
           stripe_charge_id = object.charge
 
           stripe_charge = StripeService.retrieve_charge(stripe_charge_id) if stripe_charge_id
+
           create_payment(
             subscription: subscription,
+            description_reason: :renewal,
             stripe_invoice: object,
             status: :error,
             error_message: stripe_charge&.failure_message
@@ -58,13 +61,24 @@ module Api
             update_database_subscription(subscription)
           end
 
+          if active_subscription && object.billing_reason == SUBSCRIPTION_UPDATE
+            create_payment(
+              subscription: active_subscription,
+              description_reason: :update,
+              stripe_invoice: object,
+              status: :success
+            )
+          end
+
           if active_subscription && object.billing_reason == SUBSCRIPTION_CYCLE
             Subscriptions::RenewUserSubscriptionCredits.call(
               user: user,
               subscription: active_subscription
             )
+
             create_payment(
               subscription: active_subscription,
+              description_reason: :renewal,
               stripe_invoice: object,
               status: :success
             )
@@ -92,7 +106,11 @@ module Api
         subscription.save!
       end
 
-      def create_payment(subscription:, stripe_invoice:, status:, error_message: nil)
+      def create_payment(subscription:,
+                         stripe_invoice:,
+                         status:,
+                         description_reason:,
+                         error_message: nil)
         discount_amount = stripe_invoice.total_discount_amounts.map(&:amount).reduce(:+) || 0
         payment_intent_id = stripe_invoice.payment_intent
 
@@ -101,8 +119,8 @@ module Api
         Payments::Create.call(
           product: subscription.product,
           user: subscription.user,
-          amount: stripe_invoice.total / 100.00,
-          description: "#{subscription.name} (renewal)",
+          amount: stripe_invoice.amount_due / 100.00,
+          description: "#{subscription.name} (#{description_reason})",
           payment_method: subscription.payment_method,
           payment_intent_id: payment_intent_id,
           status: status,

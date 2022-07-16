@@ -110,7 +110,10 @@ class StripeService
         { price: product.stripe_price_id }
       ],
       cancel_at_period_end: false,
-      default_payment_method: payment_method_stripe_id
+      default_payment_method: payment_method_stripe_id,
+      billing_cycle_anchor: 'now',
+      proration_behavior: 'always_invoice',
+      payment_behavior: 'error_if_incomplete'
     }
 
     subscription_params[:proration_date] = proration_date if proration_date
@@ -240,7 +243,8 @@ class StripeService
       customer: customer_id,
       subscription: subscription_id,
       subscription_items: items,
-      subscription_proration_date: proration_date
+      subscription_proration_date: proration_date,
+      subscription_billing_cycle_anchor: 'now'
     }.compact
 
     params[:coupon] = promo_code.stripe_coupon_id if promo_code

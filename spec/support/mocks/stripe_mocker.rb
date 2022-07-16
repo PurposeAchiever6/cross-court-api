@@ -77,7 +77,8 @@ class StripeMocker
         subscription_items: items,
         customer: customer_id,
         subscription: subscription_id,
-        subscription_proration_date: proration_date
+        subscription_proration_date: proration_date,
+        subscription_billing_cycle_anchor: 'now'
       }
     )
   end
@@ -152,6 +153,7 @@ class StripeMocker
 
   def invoice_response(params)
     {
+      amount_due: 1239,
       currency: 'usd',
       customer: params[:customer_id] || 'cus_AJ6y81jMo1Na22',
       payment_intent: 'pi_1Kooo9EbKIwsJiGZCM',
