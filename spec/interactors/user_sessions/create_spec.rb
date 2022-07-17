@@ -98,7 +98,7 @@ describe UserSessions::Create do
       let!(:user_sessions) do
         create_list(
           :user_session,
-          Session::MAX_CAPACITY - 1,
+          session.max_capacity - 1,
           session: session,
           date: date
         )

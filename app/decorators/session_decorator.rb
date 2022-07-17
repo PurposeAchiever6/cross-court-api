@@ -8,7 +8,7 @@ class SessionDecorator < Draper::Decorator
 
     return text += ' - (CS)' if coming_soon?
 
-    text += " - #{reservations_count(date)}/#{Session::MAX_CAPACITY}"
+    text += " - #{reservations_count(date)}/#{max_capacity}"
 
     text += ' (P)' if is_private?
 

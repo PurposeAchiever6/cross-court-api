@@ -19,6 +19,7 @@
 #  max_first_timers         :integer
 #  women_only               :boolean          default(FALSE)
 #  all_skill_levels_allowed :boolean          default(TRUE)
+#  max_capacity             :integer          default(15)
 #
 # Indexes
 #
@@ -35,7 +36,6 @@ class Session < ApplicationRecord
   TIME_FORMAT = '%l:%M %P'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
-  MAX_CAPACITY = ENV['MAX_CAPACITY'].to_i.freeze
 
   acts_as_paranoid
 
@@ -169,9 +169,9 @@ class Session < ApplicationRecord
 
   def full?(date, user = nil)
     reservations = not_canceled_reservations(date)
-    max_capacity = reservations.length >= MAX_CAPACITY
+    session_max_capacity = reservations.length >= max_capacity
 
-    return true if max_capacity
+    return true if session_max_capacity
     return false unless max_first_timers && user&.first_timer?
 
     first_timer_reservations = first_timer_reservations(date, reservations)
@@ -180,7 +180,7 @@ class Session < ApplicationRecord
 
   def spots_left(date, user = nil)
     reservations = not_canceled_reservations(date)
-    total_spots_left = MAX_CAPACITY - reservations.length
+    total_spots_left = max_capacity - reservations.length
 
     return 0 unless total_spots_left.positive?
     return total_spots_left unless max_first_timers && user&.first_timer?
@@ -246,6 +246,12 @@ class Session < ApplicationRecord
     return true if women_only || is_private
 
     reservations_count(date) < (ENV['RESERVE_TEAM_RESERVATIONS_LIMIT'] || '13').to_i
+  end
+
+  def max_capacity
+    return if open_club?
+
+    self[:max_capacity]
   end
 
   private

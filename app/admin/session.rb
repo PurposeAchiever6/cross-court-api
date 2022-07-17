@@ -3,7 +3,7 @@ ActiveAdmin.register Session do
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :duration_minutes,
-                :max_first_timers, :all_skill_levels_allowed,
+                :max_capacity, :max_first_timers, :all_skill_levels_allowed,
                 session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
@@ -49,6 +49,7 @@ ActiveAdmin.register Session do
               input_html: { autocomplete: :off }
       f.input :time
       f.input :duration_minutes
+      f.input :max_capacity
       f.input :max_first_timers
       li do
         f.label 'Schedule'
@@ -77,6 +78,9 @@ ActiveAdmin.register Session do
     column :end_time
     column :duration do |session|
       "#{session.duration_minutes} mins"
+    end
+    column :max_capacity do |session|
+      session.max_capacity || 'N/A'
     end
     column :max_first_timers do |session|
       session.max_first_timers || 'No restriction'
@@ -107,6 +111,9 @@ ActiveAdmin.register Session do
       end
       row :duration do |session|
         "#{session.duration_minutes} mins"
+      end
+      row :max_capacity do |session|
+        session.max_capacity || 'N/A'
       end
       row :max_first_timers do |session|
         session.max_first_timers || 'No restriction'

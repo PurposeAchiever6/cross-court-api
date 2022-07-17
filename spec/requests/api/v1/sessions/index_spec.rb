@@ -34,7 +34,7 @@ describe 'GET api/v1/sessions', type: :request do
 
     it 'returns the number of spots left' do
       subject
-      expect(json[:sessions][0][:spots_left]).to eq(Session::MAX_CAPACITY)
+      expect(json[:sessions][0][:spots_left]).to eq(session.max_capacity)
     end
 
     it 'returns that user is not on the waitlist' do

@@ -19,6 +19,7 @@
 #  max_first_timers         :integer
 #  women_only               :boolean          default(FALSE)
 #  all_skill_levels_allowed :boolean          default(TRUE)
+#  max_capacity             :integer          default(15)
 #
 # Indexes
 #
@@ -226,7 +227,7 @@ describe Session do
   end
 
   describe '#full?' do
-    let!(:session) { create(:session, max_first_timers: max_first_timers) }
+    let!(:session) { create(:session, max_capacity: 3, max_first_timers: max_first_timers) }
     let!(:user_1) { create(:user, :not_first_timer) }
     let!(:user_2) { create(:user, :not_first_timer) }
     let!(:user_3) { create(:user, :not_first_timer) }
@@ -270,8 +271,6 @@ describe Session do
     let(:user) { nil }
     let(:date) { Date.current + 2.days }
     let(:max_first_timers) { nil }
-
-    before { stub_const('Session::MAX_CAPACITY', 3) }
 
     subject { session.full?(date, user) }
 
@@ -303,7 +302,7 @@ describe Session do
   end
 
   describe '#spots_left' do
-    let!(:session) { create(:session, max_first_timers: max_first_timers) }
+    let!(:session) { create(:session, max_capacity: 3, max_first_timers: max_first_timers) }
     let!(:user_1) { create(:user, :not_first_timer) }
     let!(:user_2) { create(:user, :not_first_timer) }
     let!(:user_3) { create(:user, :not_first_timer) }
@@ -347,8 +346,6 @@ describe Session do
     let(:user) { nil }
     let(:date) { Date.current + 2.days }
     let(:max_first_timers) { nil }
-
-    before { stub_const('Session::MAX_CAPACITY', 3) }
 
     subject { session.spots_left(date, user) }
 
