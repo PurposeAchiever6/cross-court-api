@@ -8,6 +8,8 @@ module Subscriptions
       payment_method = context.payment_method
       promo_code = context.promo_code
 
+      reserve_team_validation(product, user)
+
       if user.active_subscription
         context.fail!(message: I18n.t('api.errors.subscriptions.user_has_active'))
       end
@@ -40,6 +42,16 @@ module Subscriptions
       context.subscription = subscription
     rescue Stripe::StripeError => e
       context.fail!(message: e.message)
+    end
+
+    def reserve_team_validation(product, user)
+      reserve_team_product = product.reserve_team?
+      reserve_team_user = user.reserve_team?
+
+      if (reserve_team_product && !reserve_team_user) ||
+         (!reserve_team_product && reserve_team_user)
+        raise ReserveTeamMismatchException
+      end
     end
   end
 end

@@ -51,6 +51,7 @@ en:
         incomplete_status: "Your card was declined. Please change payment method or contact support"
         has_same_product: "The subscription already has the selected product"
         invalid_pause_months: "Invalid months input for pauing the subscription"
+        reserve_team_mismatch_exception: "User is not part of the Reserve Team or Subscription is only available for Reserve Team members"
       payment_methods:
         has_active_subscription: "The payment method has an active membership"
       users:
