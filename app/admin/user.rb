@@ -3,8 +3,8 @@ ActiveAdmin.register User do
 
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
-                :drop_in_expiration_date, :credits, :subscription_credits, :private_access,
-                :birthday, :cc_cash, :source, :reserve_team, :instagram_username
+                :drop_in_expiration_date, :credits, :subscription_credits, :skill_session_credits,
+                :private_access, :birthday, :cc_cash, :source, :reserve_team, :instagram_username
 
   includes active_subscription: :product
 
@@ -37,6 +37,11 @@ ActiveAdmin.register User do
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
     subscription_credits = resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits
+    skill_session_credits = if resource.unlimited_skill_session_credits?
+                              'Unlimited'
+                            else
+                              resource.skill_session_credits
+                            end
 
     f.object.confirmed_at = Time.current
     f.inputs 'Details' do
@@ -52,8 +57,14 @@ ActiveAdmin.register User do
                 type: type,
                 disabled: resource.unlimited_credits?
               }
-      f.input :total_credits,
-              input_html: { value: resource.total_credits, type: type, disabled: true }
+      f.input :total_session_credits,
+              input_html: { value: resource.total_session_credits, type: type, disabled: true }
+      f.input :skill_session_credits,
+              input_html: {
+                value: skill_session_credits,
+                type: resource.unlimited_skill_session_credits? ? 'text' : 'number',
+                disabled: resource.unlimited_skill_session_credits?
+              }
       f.input :cc_cash, label: 'CC Cash'
       f.input :drop_in_expiration_date,
               as: :datepicker,
@@ -93,7 +104,7 @@ ActiveAdmin.register User do
     end
     column :phone_number
     column :membership
-    column :total_credits
+    column :total_session_credits
     number_column 'CC Cash', :cc_cash, as: :currency
     column :skill_rating
     column :zipcode
@@ -126,7 +137,10 @@ ActiveAdmin.register User do
       row :subscription_credits do
         user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
       end
-      row :total_credits
+      row :skill_session_credits do
+        user.unlimited_skill_session_credits? ? 'Unlimited' : user.skill_session_credits
+      end
+      row :total_session_credits
       row :drop_in_expiration_date
       number_row 'CC Cash', :cc_cash, as: :currency
       row :referral_code

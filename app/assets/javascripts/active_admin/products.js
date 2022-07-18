@@ -1,14 +1,28 @@
 $(document).ready(function () {
-  $("#product-unlimited")
+  $("#product-sessions-unlimited")
     .change(function () {
       if (this.checked) {
         $("#product_credits")[0].value = -1;
         $("#product_credits_input").hide();
       } else {
-        if ($("#product-unlimited").is(":enabled")) {
+        if ($("#product-sessions-unlimited").is(":enabled")) {
           $("#product_credits")[0].value = 0;
         }
         $("#product_credits_input").show();
+      }
+    })
+    .change();
+
+  $("#product-skill-sessions-unlimited")
+    .change(function () {
+      if (this.checked) {
+        $("#product_skill_session_credits")[0].value = -1;
+        $("#product_skill_session_credits_input").hide();
+      } else {
+        if ($("#product-skill-sessions-unlimited").is(":enabled")) {
+          $("#product_skill_session_credits")[0].value = 0;
+        }
+        $("#product_skill_session_credits_input").show();
       }
     })
     .change();

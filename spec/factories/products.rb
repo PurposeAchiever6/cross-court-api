@@ -18,6 +18,7 @@
 #  referral_cc_cash                       :decimal(, )      default(0.0)
 #  price_for_first_timers_no_free_session :decimal(10, 2)
 #  available_for                          :integer          default("everyone")
+#  skill_session_credits                  :integer          default(0)
 #
 # Indexes
 #
@@ -32,6 +33,7 @@ FactoryBot.define do
     end
     name { Faker::Lorem.word }
     credits { Faker::Number.between(1, 10) }
+    skill_session_credits { 0 }
     order_number { Faker::Number.number(1) }
     price { Faker::Commerce.price }
     referral_cc_cash { 0 }

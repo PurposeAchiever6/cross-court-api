@@ -20,6 +20,7 @@
 #  women_only               :boolean          default(FALSE)
 #  all_skill_levels_allowed :boolean          default(TRUE)
 #  max_capacity             :integer          default(15)
+#  skill_session            :boolean          default(FALSE)
 #
 # Indexes
 #

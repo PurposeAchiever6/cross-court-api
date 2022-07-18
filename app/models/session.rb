@@ -20,6 +20,7 @@
 #  women_only               :boolean          default(FALSE)
 #  all_skill_levels_allowed :boolean          default(TRUE)
 #  max_capacity             :integer          default(15)
+#  skill_session            :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -241,7 +242,7 @@ class Session < ApplicationRecord
   end
 
   def reserve_team_reservation_allowed?(date)
-    return false if is_open_club || past?(date)
+    return false if open_club? || past?(date)
 
     return true if women_only || is_private
 
