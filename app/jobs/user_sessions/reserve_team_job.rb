@@ -11,6 +11,7 @@ module UserSessions
       user_sessions = SessionReminderQuery.new(UserSession.not_canceled)
                                           .in(hours)
 
+      sample_user_session = user_sessions.first
       session_bookings = user_sessions.group(:session_id).count
 
       session_bookings.each do |session_id, bookings|
@@ -28,6 +29,7 @@ module UserSessions
               'notifier.sonar.reserve_team',
               time: session.time.strftime(Session::TIME_FORMAT),
               location: location.name,
+              when: sample_user_session.date_when_format,
               link: "#{ENV['FRONTENT_URL']}/locations"
             )
           )

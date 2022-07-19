@@ -15,6 +15,7 @@ describe UserSessions::ReserveTeamJob do
       let(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
       let!(:user) { create(:user, reserve_team: true) }
       let!(:la_date) { la_time.to_date }
+      let(:date_when) { nil }
 
       let(:session) { create(:session, :daily, time: time) }
 
@@ -23,6 +24,7 @@ describe UserSessions::ReserveTeamJob do
           'notifier.sonar.reserve_team',
           time: time,
           location: session.location.name,
+          when: date_when,
           link: "#{ENV['FRONTENT_URL']}/locations"
         )
       end
@@ -38,6 +40,7 @@ describe UserSessions::ReserveTeamJob do
             user: user
           )
         end
+        let(:date_when) { user_sessions.first.date_when_format }
 
         it 'calls the SonarService with the correct parameters' do
           expect(SonarService).to receive(:send_message).with(user, message).once
@@ -56,6 +59,7 @@ describe UserSessions::ReserveTeamJob do
             user: user
           )
         end
+        let(:date_when) { user_session.date_when_format }
 
         it 'calls the SonarService with the correct parameters' do
           expect(SonarService).to receive(:send_message).with(user, message).once
@@ -74,6 +78,7 @@ describe UserSessions::ReserveTeamJob do
             user: user
           )
         end
+        let(:date_when) { user_session.date_when_format }
 
         it 'calls the SonarService with the correct parameters' do
           expect(SonarService).not_to receive(:send_message)

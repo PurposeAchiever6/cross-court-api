@@ -179,8 +179,8 @@ en:
         Hey %{name}. We are sorry, but %{when}’s %{time} session at CC%{location} has been canceled.
         Don't worry, we refunded your credit. Want to schedule different session? %{schedule_url}
       reserve_team: >
-        Crosscourt today's %{time} session at CC%{location} is available for reserve team booking.
-        Click %{link} to book.
+        Crosscourt %{when}'s %{time} session at CC%{location} is now available for Reserve Team booking.
+        Tap %{link} to book!
   admin:
     products:
       created: "Product created successfully"
