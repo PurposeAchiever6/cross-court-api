@@ -4,7 +4,7 @@ ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits, :private_access,
-                :birthday, :cc_cash, :source, :reserve_team
+                :birthday, :cc_cash, :source, :reserve_team, :instagram_username
 
   includes active_subscription: :product
 
@@ -12,6 +12,7 @@ ActiveAdmin.register User do
   filter :email
   filter :first_name
   filter :last_name
+  filter :instagram_username
   filter :is_sem
   filter :is_referee
   filter :skill_rating
@@ -42,6 +43,7 @@ ActiveAdmin.register User do
       f.input :email
       f.input :first_name
       f.input :last_name
+      f.input :instagram_username
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
       f.input :subscription_credits,
@@ -84,6 +86,11 @@ ActiveAdmin.register User do
     id_column
     column :email
     column :full_name
+    column :instagram_username do |user|
+      if user.instagram_profile
+        link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
+      end
+    end
     column :phone_number
     column :membership
     column :total_credits
@@ -104,6 +111,11 @@ ActiveAdmin.register User do
       row :email
       row :first_name
       row :last_name
+      row :instagram_username do
+        if user.instagram_profile
+          link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
+        end
+      end
       row :birthday
       row :image do
         image_tag url_for(user.image), class: 'max-w-200' if user.image.attached?

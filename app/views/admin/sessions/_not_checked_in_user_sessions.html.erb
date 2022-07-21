@@ -7,6 +7,7 @@
     <tr>
       <th>Image</th>
       <th>User</th>
+      <th>Instagram</th>
       <th>Reserve Team</th>
       <th>First Session</th>
       <th>Status</th>
@@ -29,6 +30,13 @@
           </td>
           <td class='align-middle'>
             <%= link_to user_session.user_full_name, admin_user_path(user_session.user_id) %>
+          </td>
+          <td class='align-middle'>
+            <% if user.instagram_profile %>
+              <a href=<%= user.instagram_profile %> target='_blank' rel='noopener noreferrer'>
+                <%= user.instagram_username %>
+              </a>
+            <% end %>
           </td>
           <td class='align-middle'>
             <%= status_tag user_session.user.reserve_team? %>

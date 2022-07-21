@@ -134,6 +134,7 @@ class User < ApplicationRecord
   before_validation :init_uid
   after_create :create_referral_code
   after_commit :update_external_records, on: :update
+  before_save :normalize_instagram_username
   after_rollback :delete_stripe_customer,
                  :delete_stripe_promo_code,
                  on: :create
@@ -217,6 +218,12 @@ class User < ApplicationRecord
     user_sessions.count != 0
   end
 
+  def instagram_profile
+    return if instagram_username.blank?
+
+    "https://www.instagram.com/#{instagram_username[1..-1]}"
+  end
+
   private
 
   def uses_email?
@@ -292,5 +299,12 @@ class User < ApplicationRecord
 
   def delete_stripe_promo_code
     StripeService.delete_coupon(referral_promo_code.stripe_coupon_id) if referral_promo_code
+  end
+
+  def normalize_instagram_username
+    return if instagram_username.blank?
+
+    username = instagram_username.starts_with?('@') ? instagram_username : "@#{instagram_username}"
+    self.instagram_username = username.downcase
   end
 end
