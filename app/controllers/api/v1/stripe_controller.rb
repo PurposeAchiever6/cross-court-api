@@ -114,7 +114,8 @@ module Api
         discount_amount = stripe_invoice.total_discount_amounts.map(&:amount).reduce(:+) || 0
         payment_intent_id = stripe_invoice.payment_intent
 
-        return if Payment.find_by(stripe_id: payment_intent_id).present?
+        # payment_intent can be nil when invoice amount is zero
+        return if payment_intent_id && Payment.find_by(stripe_id: payment_intent_id).present?
 
         Payments::Create.call(
           product: subscription.product,
