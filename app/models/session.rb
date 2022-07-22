@@ -240,6 +240,14 @@ class Session < ApplicationRecord
     user_skill_rating >= skill_level.min && user_skill_rating <= skill_level.max
   end
 
+  def reserve_team_reservation_allowed?(date)
+    return false if is_open_club || past?(date)
+
+    return true if women_only || is_private
+
+    reservations_count(date) < (ENV['RESERVE_TEAM_RESERVATIONS_LIMIT'] || '13').to_i
+  end
+
   private
 
   def remove_orphan_sessions

@@ -46,7 +46,7 @@ class PromoCode < ApplicationRecord
   validates :duration_in_months, presence: true, if: -> { duration == 'repeating' }
   validates :discount,
             inclusion: { in: 1..100, message: 'needs to be between 1 and 100' },
-            if: -> { type == PercentageDiscount.to_s }
+            if: -> { percentage_discount? }
   validates :products, presence: true
 
   enum duration: {
@@ -58,6 +58,18 @@ class PromoCode < ApplicationRecord
 
   scope :generals, -> { where(for_referral: false) }
   scope :for_referrals, -> { where(for_referral: true) }
+
+  def to_s
+    "#{code} (#{discount}#{percentage_discount? ? '% off' : '$ off'})"
+  end
+
+  def percentage_discount?
+    type == PercentageDiscount.to_s
+  end
+
+  def amount_discount?
+    type == SpecificAmountDiscount.to_s
+  end
 
   def still_valid?(user, product)
     validate!(user, product)

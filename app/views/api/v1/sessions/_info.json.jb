@@ -9,6 +9,7 @@ json = {
   women_only: session.women_only,
   all_skill_levels_allowed: session.all_skill_levels_allowed,
   full: full,
+  reservations_count: session.reservations_count(date),
   past: session.past?(date),
   spots_left: spots_left,
   on_waitlist: on_waitlist,

@@ -4,7 +4,7 @@ ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits, :private_access,
-                :birthday, :cc_cash, :source
+                :birthday, :cc_cash, :source, :reserve_team, :instagram_username
 
   includes active_subscription: :product
 
@@ -12,6 +12,7 @@ ActiveAdmin.register User do
   filter :email
   filter :first_name
   filter :last_name
+  filter :instagram_username
   filter :is_sem
   filter :is_referee
   filter :skill_rating
@@ -42,6 +43,7 @@ ActiveAdmin.register User do
       f.input :email
       f.input :first_name
       f.input :last_name
+      f.input :instagram_username
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
       f.input :subscription_credits,
@@ -68,6 +70,7 @@ ActiveAdmin.register User do
       f.input :skill_rating
       f.input :source
       f.input :private_access
+      f.input :reserve_team
 
       if f.object.new_record?
         f.input :password
@@ -82,20 +85,21 @@ ActiveAdmin.register User do
     selectable_column
     id_column
     column :email
-    column :first_name
-    column :last_name
-    column :birthday
-    column :is_sem
-    column :is_referee
+    column :full_name
+    column :instagram_username do |user|
+      if user.instagram_profile
+        link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
+      end
+    end
     column :phone_number
     column :membership
     column :total_credits
     number_column 'CC Cash', :cc_cash, as: :currency
     column :skill_rating
-    column :created_at
     column :zipcode
     column :source
     column :private_access
+    column :reserve_team
     column :email_confirmed, &:confirmed?
 
     actions
@@ -107,6 +111,11 @@ ActiveAdmin.register User do
       row :email
       row :first_name
       row :last_name
+      row :instagram_username do
+        if user.instagram_profile
+          link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
+        end
+      end
       row :birthday
       row :image do
         image_tag url_for(user.image), class: 'max-w-200' if user.image.attached?
@@ -130,6 +139,7 @@ ActiveAdmin.register User do
       row :skill_rating
       row :source
       row :private_access
+      row :reserve_team
       row :email_confirmed, &:confirmed?
       row 'User Sessions' do
         link_to 'link to user sessions', admin_user_sessions_path(q: { user_id_eq: user.id })

@@ -2,7 +2,8 @@ ActiveAdmin.register Product do
   menu label: 'Products', parent: 'Products'
 
   permit_params :name, :credits, :price, :price_for_members, :order_number, :image, :label,
-                :referral_cc_cash, :product_type, :price_for_first_timers_no_free_session
+                :referral_cc_cash, :product_type, :price_for_first_timers_no_free_session,
+                :available_for
 
   filter :name
   filter :product_type
@@ -24,7 +25,12 @@ ActiveAdmin.register Product do
     number_column 'Referral CC Cash', :referral_cc_cash, as: :currency
     column :label
     column :order_number
-    column :product_type
+    column :product_type do |product|
+      product.product_type.humanize
+    end
+    column :available_for do |product|
+      product.available_for.humanize
+    end
     column :memberships_count do |product|
       product.recurring? ? product.memberships_count : 'N/A'
     end
@@ -52,6 +58,7 @@ ActiveAdmin.register Product do
 
     f.inputs 'Product details' do
       f.input :product_type, input_html: { disabled: persisted }
+      f.input :available_for, input_html: { disabled: persisted }
       f.input :name, input_html: { disabled: persisted }
       f.input :credits, input_html: { disabled: persisted }
       f.li checkbox
@@ -77,6 +84,12 @@ ActiveAdmin.register Product do
       number_row :price_for_members, as: :currency if resource.one_time?
       number_row :price_for_first_timers_no_free_session, as: :currency if resource.one_time?
       number_row :referral_cc_cash, as: :currency if resource.recurring?
+      row :product_type do |product|
+        product.product_type.humanize
+      end
+      row :available_for do |product|
+        product.available_for.humanize
+      end
       row :label
       row :order_number
       row :memberships_count do |product|

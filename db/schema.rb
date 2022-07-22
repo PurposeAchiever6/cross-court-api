@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_18_175109) do
+ActiveRecord::Schema.define(version: 2022_07_20_193137) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(version: 2022_06_18_175109) do
     t.string "stripe_product_id"
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
+    t.integer "available_for", default: 0
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -408,6 +409,8 @@ ActiveRecord::Schema.define(version: 2022_06_18_175109) do
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
+    t.boolean "reserve_team", default: false
+    t.string "instagram_username"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

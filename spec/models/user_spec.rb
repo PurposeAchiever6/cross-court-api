@@ -42,6 +42,7 @@
 #  birthday                     :date
 #  cc_cash                      :decimal(, )      default(0.0)
 #  source                       :string
+#  reserve_team                 :boolean          default(FALSE)
 #
 # Indexes
 #

@@ -17,6 +17,7 @@
 #  stripe_product_id                      :string
 #  referral_cc_cash                       :decimal(, )      default(0.0)
 #  price_for_first_timers_no_free_session :decimal(10, 2)
+#  available_for                          :integer          default("everyone")
 #
 # Indexes
 #

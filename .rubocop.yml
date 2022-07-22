@@ -68,6 +68,7 @@ Metrics/MethodLength:
     - spec/support/mocks/stripe_mocker.rb
     - app/interactors/users/charge.rb
     - app/jobs/users/inactive_non_members_job.rb
+    - app/interactors/subscriptions/create_subscription.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

@@ -17,6 +17,7 @@
 #  stripe_product_id                      :string
 #  referral_cc_cash                       :decimal(, )      default(0.0)
 #  price_for_first_timers_no_free_session :decimal(10, 2)
+#  available_for                          :integer          default("everyone")
 #
 # Indexes
 #
@@ -30,6 +31,7 @@ class Product < ApplicationRecord
   acts_as_paranoid
 
   enum product_type: { one_time: 0, recurring: 1 }
+  enum available_for: { everyone: 0, reserve_team: 1 }
 
   has_one_attached :image
   has_many :payments, dependent: :nullify
@@ -56,6 +58,10 @@ class Product < ApplicationRecord
     return price_for_members if apply_price_for_members?(user)
 
     super()
+  end
+
+  def self.for_user(user)
+    user&.reserve_team ? Product.reserve_team.or(Product.one_time) : Product.everyone
   end
 
   private

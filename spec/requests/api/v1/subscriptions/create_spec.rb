@@ -1,9 +1,13 @@
 require 'rails_helper'
 
 describe 'POST api/v1/subscriptions' do
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, reserve_team: reserve_team) }
+  let(:reserve_team) { false }
   let!(:payment_method) { create(:payment_method, user: user) }
-  let!(:product) { create(:product, price: 100, product_type: :recurring) }
+  let!(:product) do
+    create(:product, price: 100, product_type: :recurring, available_for: available_for)
+  end
+  let(:available_for) { :everyone }
   let(:params) { { product_id: product.id, payment_method_id: payment_method.id } }
 
   subject do
@@ -53,6 +57,40 @@ describe 'POST api/v1/subscriptions' do
     it 'returns the expected error message' do
       subject
       expect(json[:error]).to eq('User already has an active subscription')
+    end
+  end
+
+  context 'when the user is not Reserve Team and the subscription is' do
+    let!(:available_for) { :reserve_team }
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns the expected error message' do
+      subject
+      expect(json[:error]).to eq(
+        'User is not part of the Reserve Team or Subscription ' \
+        'is only available for Reserve Team members'
+      )
+    end
+  end
+
+  context 'when the user is Reserve Team and the subscription is not' do
+    let(:reserve_team) { true }
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns the expected error message' do
+      subject
+      expect(json[:error]).to eq(
+        'User is not part of the Reserve Team or Subscription ' \
+        'is only available for Reserve Team members'
+      )
     end
   end
 

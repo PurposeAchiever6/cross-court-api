@@ -48,6 +48,7 @@ detectors:
         "StripeService#self.upcoming_invoice",
         "StripeService#self.update_subscription",
         "Users::Charge#create_payment",
+        "Api::V1::StripeController#create_payment"
       ]
     max_params: 4
     overrides:

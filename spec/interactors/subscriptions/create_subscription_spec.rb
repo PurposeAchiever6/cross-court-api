@@ -2,12 +2,14 @@ require 'rails_helper'
 
 describe Subscriptions::CreateSubscription do
   describe '.call' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user, reserve_team: reserve_team) }
     let!(:payment_method) { create(:payment_method, user: user) }
-    let!(:product) { create(:product) }
+    let!(:product) { create(:product, available_for: available_for) }
     let(:promo_code) { nil }
     let(:stripe_response_status) { 'active' }
     let(:stripe_invoice_id) { 'in_1Fin1BEbKIwsJiGZiMSDSLzw' }
+    let(:reserve_team) { false }
+    let(:available_for) { :everyone }
 
     let(:stripe_response) do
       {
@@ -65,6 +67,20 @@ describe Subscriptions::CreateSubscription do
 
       it { expect(subject.success?).to eq(false) }
       it { expect { subject }.not_to change(Subscription, :count) }
+    end
+
+    context 'when the user is not Reserve Team and the subscription is' do
+      let(:available_for) { :reserve_team }
+
+      it { expect { subject }.to raise_error(ReserveTeamMismatchException) }
+      it { expect { subject rescue nil }.not_to change(Subscription, :count) }
+    end
+
+    context 'when the user is Reserve Team and the subscription is not' do
+      let(:reserve_team) { true }
+
+      it { expect { subject }.to raise_error(ReserveTeamMismatchException) }
+      it { expect { subject rescue nil }.not_to change(Subscription, :count) }
     end
   end
 end

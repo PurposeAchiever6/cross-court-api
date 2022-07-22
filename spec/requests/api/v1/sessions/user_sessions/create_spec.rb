@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
-  let!(:user) { create(:user, credits: 1) }
+  let!(:user) { create(:user, credits: 1, reserve_team: reserve_team) }
   let!(:session) do # Weekly today
     create(:session, :daily,
            is_open_club: is_open_club, all_skill_levels_allowed: all_skill_levels_allowed)
   end
+  let(:reserve_team) { false }
   let(:date) { 1.day.from_now }
   let(:is_open_club) { false }
   let(:all_skill_levels_allowed) { true }
@@ -239,6 +240,30 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
     it "doesn't create the user_session" do
       expect { subject }.not_to change(UserSession, :count)
+    end
+  end
+
+  context 'when the user is from the reserve team' do
+    let(:reserve_team) { true }
+    before { ENV['RESERVE_TEAM_RESERVATIONS_LIMIT'] = '1' }
+
+    it 'returns success' do
+      subject
+      expect(response).to be_successful
+    end
+
+    context 'when the session is not allowed for reserve team members' do
+      let!(:user_session) { create(:user_session, session: session, date: date) }
+
+      it 'returns bad request' do
+        subject
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'raises an error' do
+        subject
+        expect(json[:error]).to eq I18n.t('api.errors.sessions.reserve_team_not_allowed')
+      end
     end
   end
 end

@@ -36,6 +36,8 @@ module Api
       rescue_from SubscriptionInvalidPauseMonthsException,     with: :render_custom_exception
       rescue_from SubscriptionIsNotPausedException,            with: :render_custom_exception
       rescue_from MaximumNumberOfPausesReachedException,       with: :render_custom_exception
+      rescue_from ReserveTeamNotAllowedException,              with: :render_custom_exception
+      rescue_from ReserveTeamMismatchException,                with: :render_custom_exception
       rescue_from Stripe::StripeError,                         with: :render_custom_exception
 
       def status
