@@ -33,6 +33,8 @@ ActiveAdmin.register_page 'Scheduler' do
       br
       text_node 'WO - Women Only'
       br
+      text_node 'SS - Skill Session'
+      br
       text_node 'AS - All skill levels allowed'
     end
   end

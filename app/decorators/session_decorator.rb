@@ -14,6 +14,8 @@ class SessionDecorator < Draper::Decorator
 
     text += ' (WO)' if women_only?
 
+    text += ' (SS)' if skill_session?
+
     text += ' (AS)' if all_skill_levels_allowed
 
     text += ' (EM)' if referee(date).blank? || sem(date).blank?

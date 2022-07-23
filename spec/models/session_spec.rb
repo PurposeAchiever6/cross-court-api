@@ -228,11 +228,20 @@ describe Session do
   end
 
   describe '#full?' do
-    let!(:session) { create(:session, max_capacity: 3, max_first_timers: max_first_timers) }
+    let!(:session) do
+      create(
+        :session,
+        max_capacity: max_capacity,
+        max_first_timers: max_first_timers,
+        is_open_club: open_club
+      )
+    end
+
     let!(:user_1) { create(:user, :not_first_timer) }
     let!(:user_2) { create(:user, :not_first_timer) }
     let!(:user_3) { create(:user, :not_first_timer) }
     let!(:user_4) { create(:user, :not_first_timer) }
+
     let!(:user_session_1) do
       create(
         :user_session,
@@ -270,7 +279,9 @@ describe Session do
     end
 
     let(:user) { nil }
+    let(:open_club) { false }
     let(:date) { Date.current + 2.days }
+    let(:max_capacity) { 3 }
     let(:max_first_timers) { nil }
 
     subject { session.full?(date, user) }
@@ -300,14 +311,30 @@ describe Session do
         end
       end
     end
+
+    context 'when the session is open club' do
+      let(:open_club) { true }
+      let(:max_capacity) { nil }
+
+      it { is_expected.to eq(false) }
+    end
   end
 
   describe '#spots_left' do
-    let!(:session) { create(:session, max_capacity: 3, max_first_timers: max_first_timers) }
+    let!(:session) do
+      create(
+        :session,
+        max_capacity: max_capacity,
+        max_first_timers: max_first_timers,
+        is_open_club: open_club
+      )
+    end
+
     let!(:user_1) { create(:user, :not_first_timer) }
     let!(:user_2) { create(:user, :not_first_timer) }
     let!(:user_3) { create(:user, :not_first_timer) }
     let!(:user_4) { create(:user, :not_first_timer) }
+
     let!(:user_session_1) do
       create(
         :user_session,
@@ -345,7 +372,9 @@ describe Session do
     end
 
     let(:user) { nil }
+    let(:open_club) { false }
     let(:date) { Date.current + 2.days }
+    let(:max_capacity) { 3 }
     let(:max_first_timers) { nil }
 
     subject { session.spots_left(date, user) }
@@ -376,6 +405,13 @@ describe Session do
             it { is_expected.to eq(0) }
           end
         end
+      end
+
+      context 'when the session is open club' do
+        let(:open_club) { true }
+        let(:max_capacity) { nil }
+
+        it { is_expected.to eq(0) }
       end
     end
   end

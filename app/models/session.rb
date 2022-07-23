@@ -56,6 +56,7 @@ class Session < ApplicationRecord
   has_many :session_exceptions, dependent: :destroy
 
   validates :start_time, :time, :duration_minutes, presence: true
+  validates :max_capacity, presence: true, if: -> { !open_club? }
   validates :end_time,
             absence: { message: 'must be blank if session is not recurring' },
             if: -> { single_occurrence? }
@@ -121,22 +122,7 @@ class Session < ApplicationRecord
       [self]
     else
       schedule.occurrences_between(start_date, end_date).map do |date|
-        Session.new(
-          id: id,
-          start_time: date,
-          time: time,
-          duration_minutes: duration_minutes,
-          location_id: location_id,
-          location: location,
-          max_first_timers: max_first_timers,
-          skill_level_id: skill_level_id,
-          skill_level: skill_level,
-          is_private: is_private,
-          is_open_club: is_open_club,
-          coming_soon: coming_soon,
-          women_only: women_only,
-          all_skill_levels_allowed: all_skill_levels_allowed
-        )
+        Session.new(attributes.symbolize_keys.merge(start_time: date, location: location))
       end
     end
   end
@@ -169,6 +155,8 @@ class Session < ApplicationRecord
   end
 
   def full?(date, user = nil)
+    return false if open_club?
+
     reservations = not_canceled_reservations(date)
     session_max_capacity = reservations.length >= max_capacity
 
@@ -180,6 +168,8 @@ class Session < ApplicationRecord
   end
 
   def spots_left(date, user = nil)
+    return 0 if open_club?
+
     reservations = not_canceled_reservations(date)
     total_spots_left = max_capacity - reservations.length
 
