@@ -30,7 +30,28 @@ class UserSessionConsumeCredit
       end
     end
 
+    first_time_subscription_credits_used_sms(user)
+
     user.save!
     user_session.save!
+  end
+
+  private
+
+  def first_time_subscription_credits_used_sms(user)
+    if user.active_subscription &&
+       user.subscription_credits.zero? &&
+       !user.first_time_subscription_credits_used_at?
+
+      SonarService.send_message(
+        user,
+        I18n.t(
+          'notifier.sonar.first_time_subscription_credits_used',
+          name: user.first_name,
+          link: "#{ENV['FRONTENT_URL']}/memberships"
+        )
+      )
+      user.first_time_subscription_credits_used_at = Time.zone.now
+    end
   end
 end

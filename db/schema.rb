@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_20_193137) do
+ActiveRecord::Schema.define(version: 2022_07_23_141845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -411,6 +411,7 @@ ActiveRecord::Schema.define(version: 2022_07_20_193137) do
     t.string "source"
     t.boolean "reserve_team", default: false
     t.string "instagram_username"
+    t.datetime "first_time_subscription_credits_used_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

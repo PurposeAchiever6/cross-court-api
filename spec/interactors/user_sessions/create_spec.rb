@@ -18,10 +18,15 @@ describe UserSessions::Create do
         credits: credits,
         subscription_credits: subscription_credits,
         free_session_state: free_session_state,
-        reserve_team: reserve_team
+        reserve_team: reserve_team,
+        active_subscription: active_subscription,
+        first_time_subscription_credits_used_at: first_time_subscription_credits_used_at
       )
     end
+    let(:active_subscription) { create(:subscription, status: subscription_status) }
 
+    let(:subscription_status) { :active }
+    let(:first_time_subscription_credits_used_at) { Time.zone.today }
     let(:reserve_team) { false }
     let(:max_first_timers) { nil }
     let(:all_skill_levels_allowed) { true }
@@ -328,7 +333,7 @@ describe UserSessions::Create do
     end
 
     context 'when user has a paused subscription' do
-      before { create(:subscription, user: user, status: :paused) }
+      let(:subscription_status) { :paused }
 
       it { expect { subject rescue nil }.not_to change(UserSession, :count) }
       it do
@@ -349,6 +354,39 @@ describe UserSessions::Create do
         let!(:user_session) { create(:user_session, session: session, date: date) }
 
         it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+      end
+    end
+
+    context 'when the user consumed all the subscription credits' do
+      let(:subscription_credits) { 1 }
+      let(:credits) { 0 }
+
+      let(:message) do
+        I18n.t(
+          'notifier.sonar.first_time_subscription_credits_used',
+          name: user.first_name,
+          link: "#{ENV['FRONTENT_URL']}/memberships"
+        )
+      end
+
+      before { allow(SonarService).to receive(:send_message) }
+
+      context 'when is the first time' do
+        let(:first_time_subscription_credits_used_at) { nil }
+
+        it 'calls Sonar service' do
+          expect(SonarService).to receive(:send_message).with(user, message).once
+          subject
+        end
+      end
+
+      context 'when is not the first time' do
+        let(:first_time_subscription_credits_used_at) { Time.zone.yesterday }
+
+        it 'does not calls Sonar service' do
+          expect(SonarService).not_to receive(:send_message)
+          subject
+        end
       end
     end
   end
