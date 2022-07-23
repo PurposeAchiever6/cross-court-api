@@ -120,7 +120,9 @@ class User < ApplicationRecord
   validates :uid, uniqueness: { scope: :provider }
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :subscription_credits, presence: true, numericality: { only_integer: true }
-  validates :skill_session_credits, presence: true, numericality: { only_integer: true }
+  validates :subscription_skill_session_credits,
+            presence: true,
+            numericality: { only_integer: true }
   validates :free_session_state, presence: true
   validates :zipcode, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
   validates :phone_number, uniqueness: true
@@ -172,7 +174,7 @@ class User < ApplicationRecord
   end
 
   def unlimited_skill_session_credits?
-    skill_session_credits == Product::UNLIMITED
+    subscription_skill_session_credits == Product::UNLIMITED
   end
 
   def total_session_credits

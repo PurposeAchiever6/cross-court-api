@@ -45,6 +45,7 @@ FactoryBot.define do
     after :create do |subscription|
       user = subscription.user
       user.subscription_credits = subscription.product.credits
+      user.subscription_skill_session_credits = subscription.product.skill_session_credits
       user.save!
     end
   end

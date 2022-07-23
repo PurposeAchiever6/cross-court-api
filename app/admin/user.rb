@@ -3,8 +3,9 @@ ActiveAdmin.register User do
 
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
-                :drop_in_expiration_date, :credits, :subscription_credits, :skill_session_credits,
-                :private_access, :birthday, :cc_cash, :source, :reserve_team, :instagram_username
+                :drop_in_expiration_date, :credits, :subscription_credits,
+                :subscription_skill_session_credits, :private_access, :birthday, :cc_cash, :source,
+                :reserve_team, :instagram_username
 
   includes active_subscription: :product
 
@@ -37,11 +38,11 @@ ActiveAdmin.register User do
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
     subscription_credits = resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits
-    skill_session_credits = if resource.unlimited_skill_session_credits?
-                              'Unlimited'
-                            else
-                              resource.skill_session_credits
-                            end
+    subscription_skill_session_credits = if resource.unlimited_skill_session_credits?
+                                           'Unlimited'
+                                         else
+                                           resource.subscription_skill_session_credits
+                                         end
 
     f.object.confirmed_at = Time.current
     f.inputs 'Details' do
@@ -59,9 +60,9 @@ ActiveAdmin.register User do
               }
       f.input :total_session_credits,
               input_html: { value: resource.total_session_credits, type: type, disabled: true }
-      f.input :skill_session_credits,
+      f.input :subscription_skill_session_credits,
               input_html: {
-                value: skill_session_credits,
+                value: subscription_skill_session_credits,
                 type: resource.unlimited_skill_session_credits? ? 'text' : 'number',
                 disabled: resource.unlimited_skill_session_credits?
               }
@@ -137,8 +138,12 @@ ActiveAdmin.register User do
       row :subscription_credits do
         user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
       end
-      row :skill_session_credits do
-        user.unlimited_skill_session_credits? ? 'Unlimited' : user.skill_session_credits
+      row :subscription_skill_session_credits do
+        if user.unlimited_skill_session_credits?
+          'Unlimited'
+        else
+          user.subscription_skill_session_credits
+        end
       end
       row :total_session_credits
       row :drop_in_expiration_date

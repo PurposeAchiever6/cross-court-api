@@ -77,7 +77,7 @@ ActiveAdmin.register Product do
       f.input :credits, input_html: { disabled: persisted }
       f.li unlimited_sessions_checkbox
       f.input :skill_session_credits, input_html: { disabled: persisted }
-      f.li unlimited_skill_sessions_checkbox
+      f.li unlimited_skill_sessions_checkbox, id: 'product-skill-sessions-unlimited-container'
       f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
       f.input :price_for_first_timers_no_free_session

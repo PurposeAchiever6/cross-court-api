@@ -35,10 +35,14 @@ $(document).ready(function () {
         $("#product_price_for_members_input").hide();
         $("#product_price_for_first_timers_no_free_session_input").hide();
         $("#product_referral_cc_cash_input").show();
+        $("#product-skill-sessions-unlimited-container").show();
+        $("#product_skill_session_credits_input").show();
       } else {
         $("#product_price_for_members_input").show();
         $("#product_price_for_first_timers_no_free_session_input").show();
         $("#product_referral_cc_cash_input").hide();
+        $("#product-skill-sessions-unlimited-container").hide();
+        $("#product_skill_session_credits_input").hide();
       }
     })
     .change();

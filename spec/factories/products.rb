@@ -33,7 +33,7 @@ FactoryBot.define do
     end
     name { Faker::Lorem.word }
     credits { Faker::Number.between(1, 10) }
-    skill_session_credits { 0 }
+    skill_session_credits { Faker::Number.between(1, 10) }
     order_number { Faker::Number.number(1) }
     price { Faker::Commerce.price }
     referral_cc_cash { 0 }

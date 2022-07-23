@@ -45,7 +45,7 @@ class Subscription < ApplicationRecord
           class_name: 'SubscriptionPause',
           inverse_of: :subscription
 
-  delegate :credits, :name, :unlimited?, to: :product, prefix: false
+  delegate :credits, :skill_session_credits, :name, :unlimited?, to: :product, prefix: false
 
   enum status: {
     trialing: 'trialing',
