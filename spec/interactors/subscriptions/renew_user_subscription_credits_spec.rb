@@ -19,12 +19,12 @@ describe Subscriptions::RenewUserSubscriptionCredits do
     end
     let!(:subscription) { create(:subscription, user: user, product: product) }
 
-    let(:user_credits) { rand(1..10) }
-    let(:user_subscription_credits) { rand(1..10) }
-    let(:user_subscription_skill_session_credits) { rand(1..10) }
+    let(:user_credits) { rand(1..1000) }
+    let(:user_subscription_credits) { rand(1..1000) }
+    let(:user_subscription_skill_session_credits) { rand(1..1000) }
 
-    let(:product_credits) { rand(1..10) }
-    let(:product_skill_session_credits) { rand(1..10) }
+    let(:product_credits) { rand(1..1000) }
+    let(:product_skill_session_credits) { rand(1..1000) }
 
     before do
       user.update!(

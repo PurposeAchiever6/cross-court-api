@@ -8,6 +8,7 @@ describe UserSessions::Create do
         :daily,
         time: session_time,
         is_open_club: is_open_club,
+        skill_session: skill_session,
         max_first_timers: max_first_timers,
         all_skill_levels_allowed: all_skill_levels_allowed
       )
@@ -17,6 +18,7 @@ describe UserSessions::Create do
         :user,
         credits: credits,
         subscription_credits: subscription_credits,
+        subscription_skill_session_credits: subscription_skill_session_credits,
         free_session_state: free_session_state,
         reserve_team: reserve_team,
         active_subscription: active_subscription,
@@ -28,11 +30,13 @@ describe UserSessions::Create do
     let(:subscription_status) { :active }
     let(:first_time_subscription_credits_used_at) { Time.zone.today }
     let(:reserve_team) { false }
+    let(:skill_session) { false }
     let(:max_first_timers) { nil }
     let(:all_skill_levels_allowed) { true }
     let(:is_open_club) { false }
     let(:credits) { 1 }
     let(:subscription_credits) { 0 }
+    let(:subscription_skill_session_credits) { 2 }
     let(:free_session_state) { :used }
     let(:time_now) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
     let(:session_time) { time_now + Session::CANCELLATION_PERIOD + 1.minute }
@@ -386,6 +390,67 @@ describe UserSessions::Create do
         it 'does not calls Sonar service' do
           expect(SonarService).not_to receive(:send_message)
           subject
+        end
+      end
+    end
+
+    context 'when is a skill session' do
+      let(:skill_session) { true }
+      let(:credits) { 1 }
+      let(:subscription_credits) { 1 }
+      let(:subscription_skill_session_credits) { 1 }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.to change { user.reload.subscription_skill_session_credits }.by(-1) }
+
+      context 'when user has unlimited skill session credits' do
+        let(:subscription_skill_session_credits) { Product::UNLIMITED }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+        it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.subscription_credits } }
+        it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+      end
+
+      context 'when user does not have any subscription skill session credit' do
+        let(:subscription_skill_session_credits) { 0 }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+        it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
+        it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+
+        context 'when user does not have any subscription credit' do
+          let(:subscription_credits) { 0 }
+
+          it { expect { subject }.to change(UserSession, :count).by(1) }
+          it { expect { subject }.to change { user.reload.credits }.by(-1) }
+          it { expect { subject }.not_to change { user.reload.subscription_credits } }
+          it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+
+          context 'when user does not have any credit' do
+            let(:credits) { 0 }
+
+            it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+            it 'raises NotEnoughCreditsException' do
+              expect { subject }.to raise_error(
+                NotEnoughCreditsException,
+                'Not enough credits. Please buy more.'
+              )
+            end
+
+            it { expect { subject rescue nil }.not_to change { user.reload.credits } }
+            it { expect { subject rescue nil }.not_to change { user.reload.subscription_credits } }
+
+            it 'does not update user subscription_skill_session_credits' do
+              expect {
+                subject rescue nil
+              }.not_to change { user.reload.subscription_skill_session_credits }
+            end
+          end
         end
       end
     end

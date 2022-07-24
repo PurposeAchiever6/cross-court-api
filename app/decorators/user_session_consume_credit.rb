@@ -9,7 +9,7 @@ class UserSessionConsumeCredit
   end
 
   def save!
-    unless user.credits? || @not_charge_user_credit
+    unless user_has_credits?
       raise NotEnoughCreditsException, I18n.t('api.errors.user_session.not_enough_credits')
     end
 
@@ -23,10 +23,10 @@ class UserSessionConsumeCredit
     end
 
     unless @not_charge_user_credit
-      if user.credits.positive?
-        user.decrement(:credits)
+      if session.skill_session?
+        decrement_user_skill_session_credit
       else
-        user.decrement(:subscription_credits) unless user.unlimited_credits?
+        decrement_user_session_credit
       end
     end
 
@@ -38,10 +38,40 @@ class UserSessionConsumeCredit
 
   private
 
+  def user_has_credits?
+    return true if @not_charge_user_credit
+
+    return user.skill_session_credits? if session.skill_session?
+
+    user.credits?
+  end
+
+  def decrement_user_skill_session_credit
+    if user.subscription_skill_session_credits.zero?
+      if user.subscription_credits.zero?
+        user.decrement(:credits)
+      else
+        user.decrement(:subscription_credits) unless user.unlimited_credits?
+      end
+    else
+      unless user.unlimited_skill_session_credits?
+        user.decrement(:subscription_skill_session_credits)
+      end
+    end
+  end
+
+  def decrement_user_session_credit
+    if user.credits.positive?
+      user.decrement(:credits)
+    else
+      user.decrement(:subscription_credits) unless user.unlimited_credits?
+    end
+  end
+
   def first_time_subscription_credits_used_sms(user)
-    if user.active_subscription &&
-       user.subscription_credits.zero? &&
-       !user.first_time_subscription_credits_used_at?
+    if user.active_subscription \
+      && user.subscription_credits.zero? \
+        && !user.first_time_subscription_credits_used_at?
 
       SonarService.send_message(
         user,
@@ -51,6 +81,7 @@ class UserSessionConsumeCredit
           link: "#{ENV['FRONTENT_URL']}/memberships"
         )
       )
+
       user.first_time_subscription_credits_used_at = Time.zone.now
     end
   end

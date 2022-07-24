@@ -173,6 +173,10 @@ class User < ApplicationRecord
     subscription_credits == Product::UNLIMITED
   end
 
+  def skill_session_credits?
+    subscription_skill_session_credits.positive? || unlimited_skill_session_credits? || credits?
+  end
+
   def unlimited_skill_session_credits?
     subscription_skill_session_credits == Product::UNLIMITED
   end
