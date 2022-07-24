@@ -20,7 +20,11 @@ ActiveAdmin.register Product do
       product.unlimited? ? 'Unlimited' : product.credits
     end
     column :skill_session_credits do |product|
-      product.skill_session_unlimited? ? 'Unlimited' : product.skill_session_credits
+      if product.recurring?
+        product.skill_session_unlimited? ? 'Unlimited' : product.skill_session_credits
+      else
+        'N/A'
+      end
     end
     number_column :price, as: :currency
     number_column :price_for_members, as: :currency
@@ -96,8 +100,10 @@ ActiveAdmin.register Product do
       row :credits do |product|
         product.unlimited? ? 'Unlimited' : product.credits
       end
-      row :skill_session_credits do |product|
-        product.skill_session_unlimited? ? 'Unlimited' : product.skill_session_credits
+      if resource.recurring?
+        row :skill_session_credits do |product|
+          product.skill_session_unlimited? ? 'Unlimited' : product.skill_session_credits
+        end
       end
       number_row :price, as: :currency
       number_row :price_for_members, as: :currency if resource.one_time?
