@@ -181,6 +181,10 @@ en:
       reserve_team: >
         Crosscourt %{when}'s %{time} session at CC%{location} is now available for Reserve Team booking.
         Tap %{link} to book!
+      first_time_subscription_credits_used: >
+        Hey %{name}! All your membership credits have been used this month. In case you wanted to
+        purchase additional drop in sessions at a discount, go to our memberships page and toggle
+        over to 'A La Carte'. %{link}
   admin:
     products:
       created: "Product created successfully"
