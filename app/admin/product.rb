@@ -2,7 +2,7 @@ ActiveAdmin.register Product do
   menu label: 'Products', parent: 'Products'
 
   permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
-                :image, :label, :referral_cc_cash, :product_type,
+                :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
                 :price_for_first_timers_no_free_session, :available_for
 
   filter :name
@@ -25,6 +25,9 @@ ActiveAdmin.register Product do
       else
         'N/A'
       end
+    end
+    column :max_rollover_credits do |product|
+      product.unlimited? || product.one_time? ? 'N/A' : product.max_rollover_credits
     end
     number_column :price, as: :currency
     number_column :price_for_members, as: :currency
@@ -78,10 +81,14 @@ ActiveAdmin.register Product do
       f.input :product_type, input_html: { disabled: persisted }
       f.input :available_for, input_html: { disabled: persisted }
       f.input :name, input_html: { disabled: persisted }
+      f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits, input_html: { disabled: persisted }
-      f.li unlimited_sessions_checkbox
-      f.input :skill_session_credits, input_html: { disabled: persisted }
       f.li unlimited_skill_sessions_checkbox, id: 'product-skill-sessions-unlimited-container'
+      f.input :skill_session_credits, input_html: { disabled: persisted }
+      f.input :max_rollover_credits,
+              input_html: { disabled: resource.unlimited? },
+              hint: 'Max amount of rolled-over credits. If not set, ' \
+                    'all pack credits will be rolled over'
       f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
       f.input :price_for_first_timers_no_free_session
@@ -103,6 +110,9 @@ ActiveAdmin.register Product do
       if resource.recurring?
         row :skill_session_credits do |product|
           product.skill_session_unlimited? ? 'Unlimited' : product.skill_session_credits
+        end
+        row :max_rollover_credits do
+          product.unlimited? ? 'N/A' : product.max_rollover_credits
         end
       end
       number_row :price, as: :currency
