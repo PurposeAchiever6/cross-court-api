@@ -54,6 +54,8 @@ Metrics/CyclomaticComplexity:
     - app/interactors/user_sessions/create.rb
     - app/models/promo_code.rb
     - app/interactors/users/charge.rb
+    - app/interactors/subscriptions/update_user_subscription_credits.rb
+    - app/decorators/session_decorator.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?

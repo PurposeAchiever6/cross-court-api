@@ -43,6 +43,7 @@
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
 #

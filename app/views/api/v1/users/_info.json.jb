@@ -37,6 +37,8 @@ json = {
   subscription_credits: user.subscription_credits,
   total_credits: user.credits + user.subscription_credits,
   unlimited_credits: user.unlimited_credits?,
+  subscription_skill_session_credits: user.subscription_skill_session_credits,
+  unlimited_skill_session_credits: user.unlimited_skill_session_credits?,
   is_sem: user.is_sem,
   is_referee: user.is_referee,
   has_reserve_any_session: user.reserve_any_session?,

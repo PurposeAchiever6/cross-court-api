@@ -31,6 +31,7 @@ detectors:
         "User#update_external_records",
         "UserSessionConsumeCredit#save!",
         "Users::InactiveMembersJob#perform",
+        "Subscriptions::UpdateUserSubscriptionCredits#call",
       ]
     max_calls: 1
     allow_calls: ["render :new"]

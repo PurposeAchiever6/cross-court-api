@@ -43,6 +43,7 @@
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
 #
@@ -119,6 +120,9 @@ class User < ApplicationRecord
   validates :uid, uniqueness: { scope: :provider }
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :subscription_credits, presence: true, numericality: { only_integer: true }
+  validates :subscription_skill_session_credits,
+            presence: true,
+            numericality: { only_integer: true }
   validates :free_session_state, presence: true
   validates :zipcode, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
   validates :phone_number, uniqueness: true
@@ -169,7 +173,15 @@ class User < ApplicationRecord
     subscription_credits == Product::UNLIMITED
   end
 
-  def total_credits
+  def skill_session_credits?
+    subscription_skill_session_credits.positive? || unlimited_skill_session_credits? || credits?
+  end
+
+  def unlimited_skill_session_credits?
+    subscription_skill_session_credits == Product::UNLIMITED
+  end
+
+  def total_session_credits
     return '' if !credits || !subscription_credits
 
     unlimited_credits? ? 'Unlimited' : credits + subscription_credits

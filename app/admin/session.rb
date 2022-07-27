@@ -2,8 +2,8 @@ ActiveAdmin.register Session do
   menu label: 'Sessions', parent: 'Sessions'
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
-                :is_private, :is_open_club, :coming_soon, :women_only, :duration_minutes,
-                :max_first_timers, :all_skill_levels_allowed,
+                :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
+                :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
                 session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
@@ -16,6 +16,7 @@ ActiveAdmin.register Session do
   filter :is_open_club
   filter :coming_soon
   filter :women_only
+  filter :skill_session
 
   scope :all, default: true
   scope 'Deleted', :only_deleted
@@ -39,6 +40,7 @@ ActiveAdmin.register Session do
       f.input :all_skill_levels_allowed
       f.input :coming_soon
       f.input :women_only
+      f.input :skill_session
       f.input :start_time,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
@@ -49,6 +51,7 @@ ActiveAdmin.register Session do
               input_html: { autocomplete: :off }
       f.input :time
       f.input :duration_minutes
+      f.input :max_capacity
       f.input :max_first_timers
       li do
         f.label 'Schedule'
@@ -78,6 +81,9 @@ ActiveAdmin.register Session do
     column :duration do |session|
       "#{session.duration_minutes} mins"
     end
+    column :max_capacity do |session|
+      session.max_capacity || 'N/A'
+    end
     column :max_first_timers do |session|
       session.max_first_timers || 'No restriction'
     end
@@ -86,6 +92,7 @@ ActiveAdmin.register Session do
     toggle_bool_column :is_open_club
     toggle_bool_column :coming_soon
     toggle_bool_column :women_only
+    toggle_bool_column :skill_session
 
     actions unless params['scope'] == 'deleted'
   end
@@ -108,6 +115,9 @@ ActiveAdmin.register Session do
       row :duration do |session|
         "#{session.duration_minutes} mins"
       end
+      row :max_capacity do |session|
+        session.max_capacity || 'N/A'
+      end
       row :max_first_timers do |session|
         session.max_first_timers || 'No restriction'
       end
@@ -118,6 +128,7 @@ ActiveAdmin.register Session do
       row :is_open_club
       row :coming_soon
       row :women_only
+      row :skill_session
       row :all_skill_levels_allowed
       row :votes do |session|
         votes_by_date = session.user_session_votes
