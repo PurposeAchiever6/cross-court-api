@@ -19,11 +19,15 @@ json = {
   full: session.full?(session.start_time, current_user),
   spots_left: session.spots_left(session.start_time, current_user),
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
-  skill_level: render(
+  skill_level: nil
+}
+
+if session.skill_level
+  json[:skill_level] = render(
     partial: 'api/v1/skill_levels/info',
     locals: { skill_level: session.skill_level }
   )
-}
+end
 
 if json[:on_waitlist]
   waitlist_index = session.waitlist(session.start_time).pending.map(&:user_id).index(user_id)

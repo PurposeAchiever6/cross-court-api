@@ -45,7 +45,7 @@ class Session < ApplicationRecord
   serialize :recurring, Hash
 
   belongs_to :location, -> { with_deleted }, inverse_of: :sessions
-  belongs_to :skill_level
+  belongs_to :skill_level, optional: true
 
   has_many :user_sessions
   has_many :referee_sessions
@@ -55,6 +55,7 @@ class Session < ApplicationRecord
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
 
+  validates :skill_level, presence: true, unless: -> { skill_session? || open_club? }
   validates :start_time, :time, :duration_minutes, presence: true
   validates :max_capacity, presence: true, if: -> { !open_club? }
   validates :end_time,
@@ -63,7 +64,7 @@ class Session < ApplicationRecord
 
   delegate :name, :description, :time_zone, to: :location, prefix: true
   delegate :address, :time_zone, to: :location
-  delegate :name, to: :skill_level, prefix: true
+  delegate :name, to: :skill_level, prefix: true, allow_nil: true
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 
@@ -226,7 +227,7 @@ class Session < ApplicationRecord
   def at_session_level?(user)
     user_skill_rating = user.skill_rating
 
-    return true if all_skill_levels_allowed || !user_skill_rating
+    return true if !skill_level || !user_skill_rating || all_skill_levels_allowed
 
     user_skill_rating >= skill_level.min && user_skill_rating <= skill_level.max
   end

@@ -71,7 +71,9 @@ ActiveAdmin.register Session do
     selectable_column
     id_column
     column :location_name
-    column :skill_level_name
+    column :skill_level do |session|
+      session.skill_level_name || 'N/A'
+    end
     column :recurring, &:recurring_text
     column :time do |session|
       session.time.strftime(Session::TIME_FORMAT)
@@ -123,7 +125,9 @@ ActiveAdmin.register Session do
       end
       row :recurring, &:recurring_text
       row :location_name
-      row :skill_level_name
+      row :skill_level do |session|
+        session.skill_level_name || 'N/A'
+      end
       row :is_private
       row :is_open_club
       row :coming_soon
