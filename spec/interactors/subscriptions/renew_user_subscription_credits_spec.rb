@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe Subscriptions::RenewUserSubscriptionCredits do
   describe '.call' do
-    let(:user_subscription_skill_session_credits) { rand(1..50) }
     let(:credits) { rand(1..50) }
-    let(:subscription_credits) { rand(1..50) }
+    let(:user_subscription_skill_session_credits) { credits + rand(1..5) }
+    let(:subscription_credits) { credits + rand(1..5) }
     let(:max_rollover_credits) { credits / 2 }
-    let(:product_skill_session_credits) { rand(1..50) }
+    let(:product_skill_session_credits) { credits + rand(1..5) }
     let(:product) do
       create(
         :product,

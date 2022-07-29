@@ -3,6 +3,7 @@ json = {
   name: product.name,
   credits: product.credits,
   skill_session_credits: product.skill_session_credits,
+  max_rollover_credits: product.max_rollover_credits,
   price_for_user: product.price(current_user),
   price: product.price,
   price_for_members: product.price_for_members,
