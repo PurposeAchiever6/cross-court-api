@@ -52,7 +52,9 @@ ActiveAdmin.register Session do
       f.input :time
       f.input :duration_minutes
       f.input :max_capacity
-      f.input :max_first_timers
+      f.input :max_first_timers,
+              hint: 'If no set, it means there\'s no restriction on the amount of first timers ' \
+                    'users who can book.'
       f.input :cc_cash_earned
       li do
         f.label 'Schedule'
