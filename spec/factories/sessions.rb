@@ -21,6 +21,7 @@
 #  all_skill_levels_allowed :boolean          default(TRUE)
 #  max_capacity             :integer          default(15)
 #  skill_session            :boolean          default(FALSE)
+#  cc_cash_earned           :decimal(, )      default(0.0)
 #
 # Indexes
 #
@@ -42,6 +43,7 @@ FactoryBot.define do
     is_open_club { false }
     max_capacity { 15 }
     max_first_timers { nil }
+    cc_cash_earned { 0 }
 
     trait :daily do
       recurring { IceCube::Rule.daily }

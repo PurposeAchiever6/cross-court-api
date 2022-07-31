@@ -4,7 +4,7 @@ ActiveAdmin.register Session do
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
                 :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
-                session_exceptions_attributes: %i[id date _destroy]
+                :cc_cash_earned, session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
 
@@ -53,6 +53,7 @@ ActiveAdmin.register Session do
       f.input :duration_minutes
       f.input :max_capacity
       f.input :max_first_timers
+      f.input :cc_cash_earned
       li do
         f.label 'Schedule'
         f.select_recurring :recurring, nil,
@@ -89,6 +90,7 @@ ActiveAdmin.register Session do
     column :max_first_timers do |session|
       session.max_first_timers || 'No restriction'
     end
+    number_column :cc_cash_earned, as: :currency
     column :active, &:active?
     toggle_bool_column :is_private
     toggle_bool_column :is_open_club
@@ -123,6 +125,7 @@ ActiveAdmin.register Session do
       row :max_first_timers do |session|
         session.max_first_timers || 'No restriction'
       end
+      number_row :cc_cash_earned, as: :currency
       row :recurring, &:recurring_text
       row :location_name
       row :skill_level do |session|
@@ -318,8 +321,8 @@ ActiveAdmin.register Session do
 
     if checked_in_user_session_ids.present?
       # Perform in 15 minutes in case front desk guy checked in wrong user by accident
-      ::ActiveCampaign::CheckInUsersJob.set(wait: 15.minutes)
-                                       .perform_later(checked_in_user_session_ids)
+      ::Sessions::CheckInUsersJob.set(wait: 15.minutes)
+                                 .perform_later(checked_in_user_session_ids)
       ::Sonar::FirstSessionSmsJob.set(wait: 15.minutes)
                                  .perform_later(checked_in_user_session_ids)
     end

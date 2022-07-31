@@ -12,6 +12,7 @@ json = {
   all_skill_levels_allowed: session.all_skill_levels_allowed,
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
+  cc_cash_earned: session.cc_cash_earned,
   votes: session.votes(session.start_time),
   reserved: user_sessions.values_at([session.id, session.start_time]).compact.present?,
   on_waitlist: user_sessions_waitlists.values_at([session.id, session.start_time]).compact.present?,

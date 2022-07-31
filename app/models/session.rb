@@ -21,6 +21,7 @@
 #  all_skill_levels_allowed :boolean          default(TRUE)
 #  max_capacity             :integer          default(15)
 #  skill_session            :boolean          default(FALSE)
+#  cc_cash_earned           :decimal(, )      default(0.0)
 #
 # Indexes
 #
@@ -58,6 +59,7 @@ class Session < ApplicationRecord
   validates :skill_level, presence: true, unless: -> { skill_session? || open_club? }
   validates :start_time, :time, :duration_minutes, presence: true
   validates :max_capacity, presence: true, if: -> { !open_club? }
+  validates :cc_cash_earned, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :end_time,
             absence: { message: 'must be blank if session is not recurring' },
             if: -> { single_occurrence? }

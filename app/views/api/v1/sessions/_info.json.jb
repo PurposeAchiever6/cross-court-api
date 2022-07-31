@@ -9,17 +9,14 @@ json = {
   women_only: session.women_only,
   skill_session: session.skill_session,
   all_skill_levels_allowed: session.all_skill_levels_allowed,
+  cc_cash_earned: session.cc_cash_earned,
   full: full,
   reservations_count: session.reservations_count(date),
   past: session.past?(date),
   spots_left: spots_left,
   on_waitlist: on_waitlist,
-  referee: {
-    name: referee&.full_name
-  },
-  sem: {
-    name: sem&.full_name
-  },
+  referee: { name: referee&.full_name },
+  sem: { name: sem&.full_name },
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
   skill_level: nil
 }
