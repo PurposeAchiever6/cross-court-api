@@ -4,7 +4,7 @@ module Api
       before_action :validate_free_session, only: :create_free_session_intent
 
       def index
-        @payments = current_user.payments.order(id: :desc)
+        @payments = current_user.payments.order(id: :desc).page(page)
       end
 
       # TODO: move these two endpoints to a 'drop_ins' controller or something like that
@@ -31,6 +31,10 @@ module Api
       end
 
       private
+
+      def page
+        params[:page] || 1
+      end
 
       def product
         Product.find(params[:product_id])
