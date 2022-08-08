@@ -15,7 +15,8 @@ describe Subscriptions::RenewUserSubscriptionCredits do
         skill_session_credits: product_skill_session_credits
       )
     end
-    let(:subscription) { create(:subscription, product: product) }
+    let(:status) { :active }
+    let(:subscription) { create(:subscription, product: product, status: status) }
     let(:user) do
       create(
         :user,
@@ -68,6 +69,21 @@ describe Subscriptions::RenewUserSubscriptionCredits do
             user.reload.subscription_credits
           }.from(subscription_credits).to(credits + max_rollover_credits)
         end
+      end
+    end
+
+    context 'when the subscription is not active' do
+      let(:status) { %i[paused canceled].sample }
+
+      before do
+        user.subscription_credits = 0
+        user.subscription_skill_session_credits = 0
+        user.save!
+      end
+
+      it 'does not renew the credits' do
+        expect { subject }.not_to change { user.reload.subscription_credits }
+        expect { subject }.not_to change { user.reload.subscription_skill_session_credits }
       end
     end
   end

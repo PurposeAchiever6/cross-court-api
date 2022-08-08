@@ -7,6 +7,8 @@ module Subscriptions
       subscription = context.subscription
       product = subscription.product
 
+      return unless subscription.active?
+
       subscription_credits = subscription.credits
 
       if product.unlimited?
