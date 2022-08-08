@@ -2,9 +2,9 @@ ActiveAdmin.register Session do
   menu label: 'Sessions', parent: 'Sessions'
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
-                :is_private, :is_open_club, :coming_soon, :women_only, :duration_minutes,
-                :max_first_timers, :all_skill_levels_allowed,
-                session_exceptions_attributes: %i[id date _destroy]
+                :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
+                :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
+                :cc_cash_earned, session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
 
@@ -16,6 +16,7 @@ ActiveAdmin.register Session do
   filter :is_open_club
   filter :coming_soon
   filter :women_only
+  filter :skill_session
 
   scope :all, default: true
   scope 'Deleted', :only_deleted
@@ -39,6 +40,7 @@ ActiveAdmin.register Session do
       f.input :all_skill_levels_allowed
       f.input :coming_soon
       f.input :women_only
+      f.input :skill_session
       f.input :start_time,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
@@ -49,7 +51,11 @@ ActiveAdmin.register Session do
               input_html: { autocomplete: :off }
       f.input :time
       f.input :duration_minutes
-      f.input :max_first_timers
+      f.input :max_capacity
+      f.input :max_first_timers,
+              hint: 'If no set, it means there\'s no restriction on the amount of first timers ' \
+                    'users who can book.'
+      f.input :cc_cash_earned
       li do
         f.label 'Schedule'
         f.select_recurring :recurring, nil,
@@ -68,7 +74,9 @@ ActiveAdmin.register Session do
     selectable_column
     id_column
     column :location_name
-    column :skill_level_name
+    column :skill_level do |session|
+      session.skill_level_name || 'N/A'
+    end
     column :recurring, &:recurring_text
     column :time do |session|
       session.time.strftime(Session::TIME_FORMAT)
@@ -78,14 +86,19 @@ ActiveAdmin.register Session do
     column :duration do |session|
       "#{session.duration_minutes} mins"
     end
+    column :max_capacity do |session|
+      session.max_capacity || 'N/A'
+    end
     column :max_first_timers do |session|
       session.max_first_timers || 'No restriction'
     end
+    number_column :cc_cash_earned, as: :currency
     column :active, &:active?
     toggle_bool_column :is_private
     toggle_bool_column :is_open_club
     toggle_bool_column :coming_soon
     toggle_bool_column :women_only
+    toggle_bool_column :skill_session
 
     actions unless params['scope'] == 'deleted'
   end
@@ -108,16 +121,23 @@ ActiveAdmin.register Session do
       row :duration do |session|
         "#{session.duration_minutes} mins"
       end
+      row :max_capacity do |session|
+        session.max_capacity || 'N/A'
+      end
       row :max_first_timers do |session|
         session.max_first_timers || 'No restriction'
       end
+      number_row :cc_cash_earned, as: :currency
       row :recurring, &:recurring_text
       row :location_name
-      row :skill_level_name
+      row :skill_level do |session|
+        session.skill_level_name || 'N/A'
+      end
       row :is_private
       row :is_open_club
       row :coming_soon
       row :women_only
+      row :skill_session
       row :all_skill_levels_allowed
       row :votes do |session|
         votes_by_date = session.user_session_votes
@@ -303,8 +323,8 @@ ActiveAdmin.register Session do
 
     if checked_in_user_session_ids.present?
       # Perform in 15 minutes in case front desk guy checked in wrong user by accident
-      ::ActiveCampaign::CheckInUsersJob.set(wait: 15.minutes)
-                                       .perform_later(checked_in_user_session_ids)
+      ::Sessions::CheckInUsersJob.set(wait: 15.minutes)
+                                 .perform_later(checked_in_user_session_ids)
       ::Sonar::FirstSessionSmsJob.set(wait: 15.minutes)
                                  .perform_later(checked_in_user_session_ids)
     end

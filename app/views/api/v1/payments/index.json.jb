@@ -1,3 +1,4 @@
 {
-  payments: render(partial: 'info', collection: @payments, as: :payment)
+  payments: render(partial: 'info', collection: @payments, as: :payment),
+  pagination: render(partial: 'api/v1/pagination', locals: { records: @payments })
 }

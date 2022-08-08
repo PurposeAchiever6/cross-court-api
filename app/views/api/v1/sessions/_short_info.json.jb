@@ -8,9 +8,11 @@ json = {
   coming_soon: session.coming_soon,
   is_open_club: session.is_open_club,
   women_only: session.women_only,
+  skill_session: session.skill_session,
   all_skill_levels_allowed: session.all_skill_levels_allowed,
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
+  cc_cash_earned: session.cc_cash_earned,
   votes: session.votes(session.start_time),
   reserved: user_sessions.values_at([session.id, session.start_time]).compact.present?,
   on_waitlist: user_sessions_waitlists.values_at([session.id, session.start_time]).compact.present?,
@@ -18,11 +20,15 @@ json = {
   full: session.full?(session.start_time, current_user),
   spots_left: session.spots_left(session.start_time, current_user),
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
-  skill_level: render(
+  skill_level: nil
+}
+
+if session.skill_level
+  json[:skill_level] = render(
     partial: 'api/v1/skill_levels/info',
     locals: { skill_level: session.skill_level }
   )
-}
+end
 
 if json[:on_waitlist]
   waitlist_index = session.waitlist(session.start_time).pending.map(&:user_id).index(user_id)

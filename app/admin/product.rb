@@ -1,9 +1,9 @@
 ActiveAdmin.register Product do
   menu label: 'Products', parent: 'Products'
 
-  permit_params :name, :credits, :price, :price_for_members, :order_number, :image, :label,
-                :referral_cc_cash, :product_type, :price_for_first_timers_no_free_session,
-                :available_for
+  permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
+                :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
+                :price_for_first_timers_no_free_session, :available_for
 
   filter :name
   filter :product_type
@@ -18,6 +18,16 @@ ActiveAdmin.register Product do
     column :name
     column :credits do |product|
       product.unlimited? ? 'Unlimited' : product.credits
+    end
+    column :skill_session_credits do |product|
+      if product.recurring?
+        product.skill_session_unlimited? ? 'Unlimited' : product.skill_session_credits
+      else
+        'N/A'
+      end
+    end
+    column :max_rollover_credits do |product|
+      product.unlimited? || product.one_time? ? 'N/A' : product.max_rollover_credits
     end
     number_column :price, as: :currency
     number_column :price_for_members, as: :currency
@@ -46,22 +56,39 @@ ActiveAdmin.register Product do
 
   form do |f|
     persisted = resource.persisted?
-    checkbox = []
-    checkbox << label_tag('unlimited')
-    checkbox << check_box_tag(
+
+    unlimited_sessions_checkbox = []
+    unlimited_sessions_checkbox << label_tag('Unlimited Sessions')
+    unlimited_sessions_checkbox << check_box_tag(
       'unlimited',
       '1',
-      persisted && resource.unlimited?,
+      resource.unlimited?,
       disabled: persisted,
-      id: 'product-unlimited'
+      id: 'product-sessions-unlimited'
+    )
+
+    unlimited_skill_sessions_checkbox = []
+    unlimited_skill_sessions_checkbox << label_tag('Unlimited Skill Sessions')
+    unlimited_skill_sessions_checkbox << check_box_tag(
+      'unlimited',
+      '1',
+      resource.skill_session_unlimited?,
+      disabled: persisted,
+      id: 'product-skill-sessions-unlimited'
     )
 
     f.inputs 'Product details' do
       f.input :product_type, input_html: { disabled: persisted }
       f.input :available_for, input_html: { disabled: persisted }
       f.input :name, input_html: { disabled: persisted }
+      f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits, input_html: { disabled: persisted }
-      f.li checkbox
+      f.li unlimited_skill_sessions_checkbox, id: 'product-skill-sessions-unlimited-container'
+      f.input :skill_session_credits, input_html: { disabled: persisted }
+      f.input :max_rollover_credits,
+              input_html: { disabled: resource.unlimited? },
+              hint: 'Max amount of rolled-over credits. If not set, ' \
+                    'all pack credits will be rolled over'
       f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
       f.input :price_for_first_timers_no_free_session
@@ -79,6 +106,14 @@ ActiveAdmin.register Product do
       row :name
       row :credits do |product|
         product.unlimited? ? 'Unlimited' : product.credits
+      end
+      if resource.recurring?
+        row :skill_session_credits do |product|
+          product.skill_session_unlimited? ? 'Unlimited' : product.skill_session_credits
+        end
+        row :max_rollover_credits do
+          product.unlimited? ? 'N/A' : product.max_rollover_credits
+        end
       end
       number_row :price, as: :currency
       number_row :price_for_members, as: :currency if resource.one_time?

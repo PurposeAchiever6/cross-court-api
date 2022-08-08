@@ -1,0 +1,4 @@
+{
+  total_pages: records.total_pages,
+  total_records: records.total_count
+}

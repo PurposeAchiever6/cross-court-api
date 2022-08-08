@@ -18,6 +18,8 @@
 #  referral_cc_cash                       :decimal(, )      default(0.0)
 #  price_for_first_timers_no_free_session :decimal(10, 2)
 #  available_for                          :integer          default("everyone")
+#  max_rollover_credits                   :integer
+#  skill_session_credits                  :integer          default(0)
 #
 # Indexes
 #
@@ -41,9 +43,14 @@ class Product < ApplicationRecord
   has_many :promo_codes, through: :products_promo_codes
 
   validates :name, :credits, :order_number, presence: true
+  validates :skill_session_credits, presence: true, if: -> { recurring? }
 
   def unlimited?
     credits == UNLIMITED
+  end
+
+  def skill_session_unlimited?
+    skill_session_credits == UNLIMITED
   end
 
   def memberships_count

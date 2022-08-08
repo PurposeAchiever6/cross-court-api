@@ -10,6 +10,7 @@ describe Sessions::ReachUserOnWaitlistJob do
         :session,
         time: session_time,
         location: location,
+        max_capacity: session_max_capacity,
         max_first_timers: max_first_timers
       )
     end
@@ -33,7 +34,8 @@ describe Sessions::ReachUserOnWaitlistJob do
     let(:session_time) { current_time }
     let(:user_1_credits) { 1 }
     let(:user_2_credits) { 1 }
-    let(:number_of_user_sessions) { Session::MAX_CAPACITY - 1 }
+    let(:session_max_capacity) { 15 }
+    let(:number_of_user_sessions) { session_max_capacity - 1 }
     let(:date) { Time.zone.today + 2.days }
     let(:max_first_timers) { nil }
     let(:job_arg_date) { date }
@@ -54,7 +56,7 @@ describe Sessions::ReachUserOnWaitlistJob do
     it { expect { subject }.not_to change { waitlist_item_2.reload.state } }
 
     context 'when the session is full' do
-      let(:number_of_user_sessions) { Session::MAX_CAPACITY }
+      let(:number_of_user_sessions) { session_max_capacity }
 
       it { is_expected.to eq(nil) }
       it { expect { subject }.not_to change { waitlist_item_1.reload.state } }

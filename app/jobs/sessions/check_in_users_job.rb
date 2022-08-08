@@ -1,4 +1,4 @@
-module ActiveCampaign
+module Sessions
   class CheckInUsersJob < ApplicationJob
     queue_as :default
 
@@ -10,6 +10,10 @@ module ActiveCampaign
                  .includes(user: :active_subscription)
                  .each do |user_session|
         user = user_session.user
+        session = user_session.session
+        cc_cash_earned = session.cc_cash_earned
+
+        user.increment!(:cc_cash, cc_cash_earned) if cc_cash_earned.positive?
 
         event = if user_session.first_session
                   ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN
