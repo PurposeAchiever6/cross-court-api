@@ -264,6 +264,7 @@ class User < ApplicationRecord
       duration: :repeating,
       duration_in_months: 1,
       max_redemptions_by_user: 1,
+      user_max_checked_in_sessions: 0,
       products: recurring_products
     }
 

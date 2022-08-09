@@ -255,6 +255,24 @@ ActiveAdmin.register User do
       return redirect_to admin_user_path(id: user.id)
     end
 
+    if params[:referral_user_id].present?
+      referral_user = User.find(params[:referral_user_id])
+      referral_promo_code = referral_user.referral_promo_code
+
+      unless referral_promo_code
+        flash[:error] = 'The selected user does not have a referral promo code'
+        return redirect_to admin_user_path(id: user.id)
+      end
+
+      referral_promo_code.validate!(user, product)
+
+      PromoCodes::CreateUserPromoCode.call(
+        user: user,
+        promo_code: referral_promo_code,
+        product: product
+      )
+    end
+
     case action_type
     when :create
       result = Subscriptions::PlaceSubscription.call(

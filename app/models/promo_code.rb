@@ -124,7 +124,10 @@ class PromoCode < ApplicationRecord
     end
 
     if max_checked_in_sessions_by_user?(user)
-      raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.not_valid_for_user')
+      raise PromoCodeInvalidException, I18n.t(
+        'api.errors.promo_code.max_checked_in_sessions',
+        user_max_checked_in_sessions: (user_max_checked_in_sessions + 1).ordinalize
+      )
     end
 
     if user == self.user

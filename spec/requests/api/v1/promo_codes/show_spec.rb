@@ -138,7 +138,12 @@ describe 'GET api/v1/promo_code' do
 
       it 'returns promo code no first subscription message' do
         subject
-        expect(json[:error]).to eq(I18n.t('api.errors.promo_code.not_valid_for_user'))
+        expect(json[:error]).to eq(
+          I18n.t(
+            'api.errors.promo_code.max_checked_in_sessions',
+            user_max_checked_in_sessions: (user_max_checked_in_sessions + 1).ordinalize
+          )
+        )
       end
     end
   end

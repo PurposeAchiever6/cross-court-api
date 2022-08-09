@@ -59,6 +59,11 @@
             <%= label_tag :payment_method_id, 'Promo Code', class: 'mb-1' %>
             <%= text_field_tag :promo_code, nil, style: 'width: 100px' %>
           </div>
+          <div class='mr-4 flex flex-col'>
+            <%= label_tag :referral_user_id, 'Referral User', class: 'mb-1' %>
+            <%= select_tag :referral_user_id,
+                           options_for_select(User.all.collect { |user| [user.full_name, user.id] }.insert(0, nil)) %>
+          </div>
           <%= button_tag 'Create',
                          type: :submit, name: :action_type, value: :create,
                          data: {
