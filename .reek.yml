@@ -4,7 +4,7 @@ detectors:
     exclude: []
   BooleanParameter:
     enabled: true
-    exclude: ["UserSessionConsumeCredit#initialize"]
+    exclude: ["UserSessionConsumeCredit#initialize", PromoCode#validate!]
   ClassVariable:
     enabled: false
     exclude: []
