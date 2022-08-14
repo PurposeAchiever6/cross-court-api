@@ -299,7 +299,7 @@ ActiveAdmin.register Session do
       elsif !user_session.jersey_rental && jersey_rental
         result = Users::Charge.call(
           user: user,
-          price: ENV['JERSEY_RENTAL_PRICE'].to_f,
+          amount: ENV['JERSEY_RENTAL_PRICE'].to_f,
           description: 'Jersey rental'
         )
 
