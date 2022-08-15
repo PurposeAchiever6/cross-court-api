@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
-  let!(:user) { create(:user, credits: 1, reserve_team: reserve_team) }
+  let!(:user) { create(:user, credits: 1, reserve_team: reserve_team, flagged: flagged) }
   let!(:session) do # Weekly today
     create(:session, :daily,
            is_open_club: is_open_club, all_skill_levels_allowed: all_skill_levels_allowed)
   end
+  let(:flagged) { false }
   let(:reserve_team) { false }
   let(:date) { 1.day.from_now }
   let(:is_open_club) { false }
@@ -264,6 +265,20 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         subject
         expect(json[:error]).to eq I18n.t('api.errors.sessions.reserve_team_not_allowed')
       end
+    end
+  end
+
+  context 'when the user flagged' do
+    let(:flagged) { true }
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'raises an error' do
+      subject
+      expect(json[:error]).to eq I18n.t('api.errors.users.flagged')
     end
   end
 end

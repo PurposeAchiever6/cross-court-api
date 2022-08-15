@@ -46,6 +46,7 @@
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
 #  subscription_skill_session_credits      :integer          default(0)
+#  flagged                                 :boolean          default(FALSE)
 #
 # Indexes
 #

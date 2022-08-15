@@ -25,6 +25,7 @@ module Api
       rescue_from ClaimFreeSessionException,                   with: :render_custom_exception
       rescue_from UserNotInWaitlistException,                  with: :render_custom_exception
       rescue_from UserDidNotVoteSessionException,              with: :render_custom_exception
+      rescue_from UserFlaggedException,                        with: :render_custom_exception
       rescue_from SessionInvalidDateException,                 with: :render_custom_exception
       rescue_from SessionNotComingSoonException,               with: :render_custom_exception
       rescue_from SubscriptionHasSameProductException,         with: :render_custom_exception
