@@ -10,10 +10,13 @@
 <%= month_calendar events: sessions do |date, events| %>
   <%
     filtered_events = events.select do |event|
-      if event.recurring[:validations].empty?
+      validations = event.recurring[:validations]
+      next unless validations
+
+      if validations.empty?
         true
       else
-        event.recurring[:validations][:day].include?(date.wday)
+        validations[:day].include?(date.wday)
       end
     end.uniq { |e| e.id }.sort_by(&:time)
   %>

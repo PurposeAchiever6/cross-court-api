@@ -10,6 +10,7 @@ module UserSessions
       not_charge_user_credit = context.not_charge_user_credit || false
       from_waitlist = context.from_waitlist || false
 
+      raise UserFlaggedException if user.flagged?
       raise SessionIsOpenClubException if session.open_club?
       raise FullSessionException if session.full?(date, user)
       raise SubscriptionIsNotActiveException if user.active_subscription&.paused?

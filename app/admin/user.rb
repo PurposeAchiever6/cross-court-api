@@ -5,7 +5,7 @@ ActiveAdmin.register User do
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits,
                 :subscription_skill_session_credits, :private_access, :birthday, :cc_cash, :source,
-                :reserve_team, :instagram_username
+                :reserve_team, :instagram_username, :flagged
 
   includes active_subscription: :product
 
@@ -13,6 +13,7 @@ ActiveAdmin.register User do
   filter :email
   filter :first_name
   filter :last_name
+  filter :flagged
   filter :instagram_username
   filter :is_sem
   filter :is_referee
@@ -35,6 +36,16 @@ ActiveAdmin.register User do
             data: { confirm: "Are you sure you want to manually verify user's email?" }
   end
 
+  action_item :flag_user, only: [:show] do
+    flagged = user.flagged
+    link_to flagged ? 'Unflag User' : 'Flag User',
+            flag_user_admin_user_path(id: user.id),
+            method: :post,
+            data: {
+              confirm: "Are you sure you want to #{flagged ? 'unflag' : 'flag'} the user?"
+            }
+  end
+
   form do |f|
     type = resource.unlimited_credits? ? 'text' : 'number'
     subscription_credits = resource.unlimited_credits? ? 'Unlimited' : resource.subscription_credits
@@ -49,6 +60,7 @@ ActiveAdmin.register User do
       f.input :email
       f.input :first_name
       f.input :last_name
+      f.input :flagged
       f.input :instagram_username
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
@@ -98,6 +110,7 @@ ActiveAdmin.register User do
     id_column
     column :email
     column :full_name
+    column :flagged
     column :instagram_username do |user|
       if user.instagram_profile
         link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
@@ -123,6 +136,7 @@ ActiveAdmin.register User do
       row :email
       row :first_name
       row :last_name
+      row :flagged
       row :instagram_username do
         if user.instagram_profile
           link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
@@ -236,6 +250,18 @@ ActiveAdmin.register User do
       user.update!(confirmed_at: Time.zone.now)
       flash[:notice] = "User's email verified successfully"
     end
+  rescue StandardError => e
+    flash[:error] = e.message
+  ensure
+    redirect_to admin_user_path(id: params[:id])
+  end
+
+  member_action :flag_user, method: :post do
+    user = User.find(params[:id])
+    flagged = user.flagged
+
+    user.flagged = !flagged
+    user.save!
   rescue StandardError => e
     flash[:error] = e.message
   ensure

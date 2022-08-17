@@ -6,7 +6,7 @@ describe Subscriptions::RenewUserSubscriptionCredits do
     let(:user_subscription_skill_session_credits) { credits + rand(1..5) }
     let(:subscription_credits) { credits + rand(1..5) }
     let(:max_rollover_credits) { credits / 2 }
-    let(:product_skill_session_credits) { credits + rand(1..5) }
+    let(:product_skill_session_credits) { credits + rand(6..10) }
     let(:product) do
       create(
         :product,

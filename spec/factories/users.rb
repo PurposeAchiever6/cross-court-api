@@ -46,6 +46,7 @@
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
 #  subscription_skill_session_credits      :integer          default(0)
+#  flagged                                 :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -80,6 +81,7 @@ FactoryBot.define do
     stripe_id { 'cus_AJ6y81jMo1Na22' }
     cc_cash { 0 }
     first_time_subscription_credits_used_at { Time.zone.today - 1.month }
+    flagged { false }
 
     trait :confirmed do
       confirmed_at { Time.current }
