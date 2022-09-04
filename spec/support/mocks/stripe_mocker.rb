@@ -102,6 +102,15 @@ class StripeMocker
     mock_request(url_path: "/coupons/#{coupon_id}", method: :delete)
   end
 
+  def cancel_subscription_at_period_end(stripe_subscription_id)
+    mock_request(
+      url_path: "/subscriptions/#{stripe_subscription_id}",
+      method: :post,
+      request_body: { cancel_at_period_end: true },
+      response_body: subscription_response(id: stripe_subscription_id, cancel_at_period_end: true)
+    )
+  end
+
   private
 
   def mock_request(
@@ -136,7 +145,10 @@ class StripeMocker
     }.to_json
   end
 
-  def subscription_response(id:, pause_collection: nil, status: 'active')
+  def subscription_response(id:,
+                            status: 'active',
+                            pause_collection: nil,
+                            cancel_at_period_end: false)
     {
       id: id,
       latest_invoice: 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr',
@@ -146,7 +158,7 @@ class StripeMocker
       current_period_end: (Time.current + 2.weeks).to_i,
       cancel_at: nil,
       canceled_at: Time.current.to_i,
-      cancel_at_period_end: false,
+      cancel_at_period_end: cancel_at_period_end,
       pause_collection: pause_collection
     }.to_json
   end
