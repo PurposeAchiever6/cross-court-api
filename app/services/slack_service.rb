@@ -49,6 +49,10 @@ class SlackService
     notify_subscription('notifier.slack.subscription_canceled', subscription)
   end
 
+  def subscription_scheduled_cancellation(subscription)
+    notify_subscription('notifier.slack.subscription_scheduled_cancellation', subscription)
+  end
+
   def subscription_updated(subscription, old_product)
     notify_subscription(
       'notifier.slack.subscription_updated',
@@ -59,6 +63,10 @@ class SlackService
 
   def subscription_reactivated(subscription)
     notify_subscription('notifier.slack.subscription_reactivated', subscription)
+  end
+
+  def subscription_scheduled_cancellation_removed(subscription)
+    notify_subscription('notifier.slack.subscription_scheduled_cancellation_removed', subscription)
   end
 
   def subscription_feedback(subscription_feedback)

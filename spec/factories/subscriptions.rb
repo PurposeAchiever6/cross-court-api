@@ -2,21 +2,22 @@
 #
 # Table name: subscriptions
 #
-#  id                   :integer          not null, primary key
-#  stripe_id            :string
-#  stripe_item_id       :string
-#  status               :string
-#  cancel_at_period_end :boolean          default(FALSE)
-#  current_period_start :datetime
-#  current_period_end   :datetime
-#  cancel_at            :datetime
-#  canceled_at          :datetime
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  user_id              :integer
-#  product_id           :integer
-#  promo_code_id        :integer
-#  payment_method_id    :integer
+#  id                           :integer          not null, primary key
+#  stripe_id                    :string
+#  stripe_item_id               :string
+#  status                       :string
+#  cancel_at_period_end         :boolean          default(FALSE)
+#  current_period_start         :datetime
+#  current_period_end           :datetime
+#  cancel_at                    :datetime
+#  canceled_at                  :datetime
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  user_id                      :integer
+#  product_id                   :integer
+#  promo_code_id                :integer
+#  payment_method_id            :integer
+#  mark_cancel_at_period_end_at :date
 #
 # Indexes
 #
@@ -41,6 +42,7 @@ FactoryBot.define do
     cancel_at_period_end { false }
     cancel_at { nil }
     canceled_at { nil }
+    mark_cancel_at_period_end_at { nil }
 
     after :create do |subscription|
       user = subscription.user

@@ -30,6 +30,7 @@ module Subscriptions
       subscription.payment_method_id = payment_method.id
       subscription.product_id = product.id
       subscription.promo_code_id = promo_code&.id
+      subscription.mark_cancel_at_period_end_at = nil
 
       subscription.save!
 

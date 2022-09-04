@@ -11,7 +11,10 @@ module Subscriptions
 
       stripe_subscription = StripeService.reactivate_subscription(subscription)
 
-      subscription.assign_stripe_attrs(stripe_subscription).save!
+      subscription = subscription.assign_stripe_attrs(stripe_subscription)
+      subscription.mark_cancel_at_period_end_at = nil
+
+      subscription.save!
     rescue Stripe::StripeError => e
       context.fail!(message: e.message)
     end

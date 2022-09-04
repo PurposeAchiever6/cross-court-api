@@ -2,21 +2,22 @@
 #
 # Table name: subscriptions
 #
-#  id                   :integer          not null, primary key
-#  stripe_id            :string
-#  stripe_item_id       :string
-#  status               :string
-#  cancel_at_period_end :boolean          default(FALSE)
-#  current_period_start :datetime
-#  current_period_end   :datetime
-#  cancel_at            :datetime
-#  canceled_at          :datetime
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  user_id              :integer
-#  product_id           :integer
-#  promo_code_id        :integer
-#  payment_method_id    :integer
+#  id                           :integer          not null, primary key
+#  stripe_id                    :string
+#  stripe_item_id               :string
+#  status                       :string
+#  cancel_at_period_end         :boolean          default(FALSE)
+#  current_period_start         :datetime
+#  current_period_end           :datetime
+#  cancel_at                    :datetime
+#  canceled_at                  :datetime
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  user_id                      :integer
+#  product_id                   :integer
+#  promo_code_id                :integer
+#  payment_method_id            :integer
+#  mark_cancel_at_period_end_at :date
 #
 # Indexes
 #
@@ -59,6 +60,7 @@ class Subscription < ApplicationRecord
 
   scope :recent, -> { order('current_period_end DESC NULLS LAST') }
   scope :cancel_at_period_end, -> { where(cancel_at_period_end: true) }
+  scope :not_cancel_at_period_end, -> { where(cancel_at_period_end: false) }
   scope :period_end_on_date, ->(date) { where(current_period_end: date.all_day) }
 
   def assign_stripe_attrs(stripe_subscription)
@@ -91,5 +93,15 @@ class Subscription < ApplicationRecord
 
   def will_pause?
     subscription_pauses.upcoming.any?
+  end
+
+  def no_longer_active?
+    canceled? || past_due? || cancel_at_period_end?
+  end
+
+  def cancel_at_next_period_end?
+    mark_cancel_at_period_end_at.present? \
+      && mark_cancel_at_period_end_at >= current_period_start + 1.month \
+        && mark_cancel_at_period_end_at <= current_period_end + 1.month
   end
 end

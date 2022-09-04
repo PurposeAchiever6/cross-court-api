@@ -32,6 +32,7 @@ detectors:
         "UserSessionConsumeCredit#save!",
         "Users::InactiveMembersJob#perform",
         "Subscriptions::UpdateUserSubscriptionCredits#call",
+        "Subscription#cancel_at_next_period_end?",
       ]
     max_calls: 1
     allow_calls: ["render :new"]
@@ -49,7 +50,7 @@ detectors:
         "StripeService#self.upcoming_invoice",
         "StripeService#self.update_subscription",
         "Users::Charge#create_payment",
-        "Api::V1::StripeController#create_payment"
+        "Api::V1::StripeController#create_payment",
       ]
     max_params: 4
     overrides:
@@ -93,7 +94,7 @@ detectors:
     max_instance_variables: 9
   TooManyMethods:
     enabled: true
-    exclude: []
+    exclude: ["SlackService"]
     max_methods: 25
   TooManyStatements:
     enabled: false

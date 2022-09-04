@@ -197,7 +197,8 @@ ActiveAdmin.register User do
       render partial: 'subscriptions', locals: {
         user: user,
         products: Product.recurring,
-        payment_methods: user.payment_methods
+        payment_methods: user.payment_methods,
+        referral_users: User.where.not(id: user.id)
       }
     end
   end
@@ -316,14 +317,27 @@ ActiveAdmin.register User do
         payment_method: payment_method,
         promo_code: promo_code
       )
-    when :cancel
+    when :cancel_at_period_end
       result = Subscriptions::CancelSubscriptionAtPeriodEnd.call(
+        user: user,
+        subscription: user.active_subscription
+      )
+    when :cancel_at_next_month_period_end
+      result = Subscriptions::CancelSubscriptionAtNextMonthPeriodEnd.call(
+        subscription: user.active_subscription
+      )
+    when :cancel_immediately
+      result = Subscriptions::CancelSubscription.call(
         user: user,
         subscription: user.active_subscription
       )
     when :reactivate
       result = Subscriptions::SubscriptionReactivation.call(
         user: user,
+        subscription: user.active_subscription
+      )
+    when :remove_scheduled_cancellation
+      result = Subscriptions::RemoveScheduledCancellation.call(
         subscription: user.active_subscription
       )
     end

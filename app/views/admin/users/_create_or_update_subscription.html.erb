@@ -1,0 +1,53 @@
+<div>
+  <div class='font-semibold mb-3'>
+    <%= user.active_subscription ? 'Update' : 'Create' %> Membership
+  </div>
+  <% if payment_methods.empty? %>
+    <p>User doesn't have any payment method available.</p>
+  <% else %>
+    <%
+      filtered_products = products.select do |product|
+        user.active_subscription ? product.id != user.active_subscription.product_id : true
+      end
+    %>
+    <div class="flex">
+      <div class='mr-4'>
+        <%= label_tag :product_id, 'Product', class: 'mr-1' %>
+        <%= select_tag :product_id,
+                       options_for_select(filtered_products.map { |prod| [prod.name, prod.id] }) %>
+      </div>
+      <div class='mr-4'>
+        <%= label_tag :payment_method_id, 'Payment Method', class: 'mr-1' %>
+        <%= select_tag :payment_method_id,
+                       options_for_select(payment_methods.map { |pm| ["**** #{pm.last_4}", pm.id] }) %>
+      </div>
+      <div class='mr-4'>
+        <%= label_tag :payment_method_id, 'Promo Code', class: 'mr-1' %>
+        <%= text_field_tag :promo_code, nil, style: 'width: 100px' %>
+      </div>
+      <% if user.active_subscription %>
+        <%= button_tag 'Update',
+                       type: :submit,
+                       name: :action_type,
+                       value: :update,
+                       data: { disable_with: 'Loading...',
+                               confirm: 'Are you sure you want to update the membership? ' \
+                                        'This may generate additional charges to the user.' } %>
+      <% else %>
+        <div class='mr-4'>
+          <%= label_tag :referral_user_id, 'Referral User', class: 'mr-1' %>
+          <%= select_tag :referral_user_id,
+                         options_for_select(referral_users.map { |user| [user.full_name, user.id] }),
+                         include_blank: true %>
+        </div>
+        <%= button_tag 'Create',
+                       type: :submit,
+                       name: :action_type,
+                       value: :create,
+                       data: { disable_with: 'Loading...',
+                               confirm: 'Are you sure you want to create the membership? ' \
+                                        'This will charge the user.' } %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

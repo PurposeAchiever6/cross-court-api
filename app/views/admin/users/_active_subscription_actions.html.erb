@@ -1,0 +1,47 @@
+<div>
+  <% if user.active_subscription_cancel_at_period_end? %>
+    <%= button_tag 'Reactivate',
+                   type: :submit,
+                   name: :action_type,
+                   value: :reactivate,
+                   data: { disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to reactivate the membership?' } %>
+  <% elsif user.active_subscription_cancel_at_next_period_end? %>
+    <%= button_tag 'Remove Scheduled Cancellation',
+                   type: :submit,
+                   name: :action_type,
+                   value: :remove_scheduled_cancellation,
+                   data: { disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to remove the membership ' \
+                                    'scheduled cancellation?' } %>
+  <% else %>
+    <%= button_tag 'Cancel At Current Period End',
+                   type: :submit,
+                   name: :action_type,
+                   value: :cancel_at_period_end,
+                   class: 'block mb-2 w-64',
+                   data: { disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to cancel the membership? ' \
+                                    'Subscription will be automatically canceled at ' \
+                                    'current period end.' } %>
+    <%= button_tag 'Cancel At Next Month Period End',
+                   type: :submit,
+                   name: :action_type,
+                   value: :cancel_at_next_month_period_end,
+                   class: 'block mb-2 w-64',
+                   data: { disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to cancel the membership? ' \
+                                    'Subscription will be automatically canceled at ' \
+                                    'next month period end.' } %>
+    <%= button_tag 'Cancel Immediately',
+                   type: :submit,
+                   name: :action_type,
+                   value: :cancel_immediately,
+                   class: 'block w-64',
+                   data: { disable_with: 'Loading...',
+                           confirm: 'Are you sure you want to cancel the membership? ' \
+                                    'Subscription will be canceled immediately. User ' \
+                                    'credits will be reset to zero and he will not be ' \
+                                    'a member anymore.' } %>
+  <% end %>
+</div>
