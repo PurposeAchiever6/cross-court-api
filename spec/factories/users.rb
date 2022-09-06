@@ -47,6 +47,7 @@
 #  first_time_subscription_credits_used_at :datetime
 #  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
+#  is_coach                                :boolean          default(FALSE), not null
 #
 # Indexes
 #

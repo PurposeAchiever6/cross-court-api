@@ -5,7 +5,7 @@ ActiveAdmin.register User do
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits,
                 :subscription_skill_session_credits, :private_access, :birthday, :cc_cash, :source,
-                :reserve_team, :instagram_username, :flagged
+                :reserve_team, :instagram_username, :flagged, :is_coach
 
   includes active_subscription: :product
 
@@ -17,6 +17,7 @@ ActiveAdmin.register User do
   filter :instagram_username
   filter :is_sem
   filter :is_referee
+  filter :is_coach
   filter :skill_rating
   filter :private_access
   filter :source
@@ -88,6 +89,7 @@ ActiveAdmin.register User do
               input_html: { autocomplete: :off }
       f.input :is_referee
       f.input :is_sem
+      f.input :is_coach
       f.input :image, as: :file
       f.input :confirmed_at, as: :hidden
       f.input :zipcode
@@ -165,6 +167,7 @@ ActiveAdmin.register User do
       row :referral_code
       row :is_referee
       row :is_sem
+      row :is_coach
       row :sign_in_count
       row :zipcode
       row :free_session_state

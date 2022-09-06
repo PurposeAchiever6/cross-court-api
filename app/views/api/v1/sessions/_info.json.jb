@@ -17,12 +17,14 @@ json = {
   on_waitlist: on_waitlist,
   referee: { name: referee&.full_name },
   sem: { name: sem&.full_name },
+  coach: { name: coach&.full_name },
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
   skill_level: nil
 }
 
 json[:referee][:image_url] = polymorphic_url(referee.image) if referee&.image&.attached?
 json[:sem][:image_url] = polymorphic_url(sem.image) if sem&.image&.attached?
+json[:coach][:image_url] = polymorphic_url(coach.image) if coach&.image&.attached?
 
 if user_session.present?
   json[:user_session] = render(

@@ -7,7 +7,6 @@ class DropSemSessionsTable < ActiveRecord::Migration[6.0]
       t.integer :state, null: false, default: 0
 
       t.timestamps
-
     end
   end
 end

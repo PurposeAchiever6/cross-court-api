@@ -5,6 +5,7 @@ class RemoveOrphanSessions
     session = context.session
     remove_orphan_sem_sessions(session)
     remove_orphan_referee_sessions(session)
+    remove_orphan_coach_sessions(session)
     remove_orphan_user_sessions(session)
   end
 
@@ -23,6 +24,14 @@ class RemoveOrphanSessions
       next if session.schedule.occurs_on?(referee_session.date)
 
       referee_session.destroy!
+    end
+  end
+
+  def remove_orphan_coach_sessions(session)
+    session.coach_sessions.future.find_each do |coach_session|
+      next if session.schedule.occurs_on?(coach_session.date)
+
+      coach_session.destroy!
     end
   end
 

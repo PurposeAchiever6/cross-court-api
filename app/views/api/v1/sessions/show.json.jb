@@ -4,6 +4,7 @@
       session: selected_session,
       referee: referee,
       sem: sem,
+      coach: coach,
       user_session: @user_session,
       full: selected_session.full?(date, current_user),
       spots_left: selected_session.spots_left(date, current_user),

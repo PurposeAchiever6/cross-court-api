@@ -30,6 +30,12 @@ class EmployeeSessionsQuery
           .order(:date)
           .includes(session: [
                       location: [images_attachments: :blob]
+                    ]),
+      user.coach_sessions
+          .future
+          .order(:date)
+          .includes(session: [
+                      location: [images_attachments: :blob]
                     ])
     ].flatten.uniq { |session| "#{session[:session_id]} - #{session[:date]}" }
   end

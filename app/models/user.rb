@@ -47,6 +47,7 @@
 #  first_time_subscription_credits_used_at :datetime
 #  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
+#  is_coach                                :boolean          default(FALSE), not null
 #
 # Indexes
 #
@@ -110,6 +111,7 @@ class User < ApplicationRecord
   has_many :user_sessions, dependent: :destroy
   has_many :sem_sessions, dependent: :destroy
   has_many :referee_sessions, dependent: :destroy
+  has_many :coach_sessions, dependent: :destroy
   has_many :sessions, through: :user_sessions
   has_many :payments, dependent: :nullify
   has_many :subscriptions, dependent: :destroy
@@ -133,6 +135,7 @@ class User < ApplicationRecord
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
+  scope :coaches, -> { where(is_coach: true) }
   scope :no_credits, -> { where(credits: 0, subscription_credits: 0) }
   scope :sorted_by_full_name, -> { order('LOWER(first_name) ASC, LOWER(last_name) ASC') }
   scope :members, -> { joins(:active_subscription) }

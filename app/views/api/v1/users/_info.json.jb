@@ -41,6 +41,7 @@ json = {
   unlimited_skill_session_credits: user.unlimited_skill_session_credits?,
   is_sem: user.is_sem,
   is_referee: user.is_referee,
+  is_coach: user.is_coach,
   has_reserve_any_session: user.reserve_any_session?,
   has_received_free_session: user.received_free_session?,
   free_session_state: user.free_session_state,
