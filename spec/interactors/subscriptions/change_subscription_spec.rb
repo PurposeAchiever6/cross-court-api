@@ -12,13 +12,15 @@ describe Subscriptions::ChangeSubscription do
         :subscription,
         user: user,
         payment_method: old_payment_method,
-        product: old_product
+        product: old_product,
+        mark_cancel_at_period_end_at: mark_cancel_at_period_end_at
       )
     end
 
     let(:proration_date) { nil }
     let(:promo_code) { nil }
     let(:stripe_response_status) { 'active' }
+    let(:mark_cancel_at_period_end_at) { nil }
 
     let(:stripe_response) do
       {
@@ -97,6 +99,18 @@ describe Subscriptions::ChangeSubscription do
       it { expect(subject.success?).to eq(true) }
 
       it { expect { subject }.not_to change { active_subscription.reload.payment_method } }
+    end
+
+    context 'when the subscription has set the attribute mark_cancel_at_period_end_at' do
+      let(:mark_cancel_at_period_end_at) { Time.zone.today + 1.week }
+
+      it { expect(subject.success?).to eq(true) }
+
+      it 'updates mark_cancel_at_period_end_at to nil' do
+        expect { subject }.to change {
+          active_subscription.reload.mark_cancel_at_period_end_at
+        }.from(mark_cancel_at_period_end_at).to(nil)
+      end
     end
   end
 end

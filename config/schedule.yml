@@ -47,3 +47,8 @@ reserve_team:
   cron: "0 * * * *" # Every hour at minute 0
   class: "UserSessions::ReserveTeamJob"
   queue: default
+
+cancel_subscriptions_at_period_end:
+  cron: "0 15 * * *" # 8 AM LA
+  class: "Subscriptions::CancelAtPeriodEndJob"
+  queue: default

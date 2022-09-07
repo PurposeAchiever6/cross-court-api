@@ -111,11 +111,17 @@ en:
         and didn't rebook or bought a membership.
       subscription_canceled: >
         %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
+      subscription_scheduled_cancellation: >
+        %{name} (phone: %{phone}) current subscription will be *canceled at next billing period*
+        (%{subscription_name}).
       subscription_updated: >
         %{name} (phone: %{phone}) has *updated* his current subscription from %{old_subscription_name}
         to %{subscription_name}.
       subscription_reactivated: >
         %{name} (phone: %{phone}) has *reactivated* his subscription (%{subscription_name}).
+      subscription_scheduled_cancellation_removed: >
+        %{name} (phone: %{phone}) subscription scheduled cancellation *has been removed*
+        (%{subscription_name}).
       subscription_feedback_created: >
         %{name} has shared his *feedback* about memberships!
         Here is the link: %{subscription_feedback_url}

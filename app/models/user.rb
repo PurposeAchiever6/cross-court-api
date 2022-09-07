@@ -148,7 +148,11 @@ class User < ApplicationRecord
   after_destroy :delete_stripe_customer,
                 :delete_stripe_promo_code
 
-  delegate :current_period_start, :current_period_end, :status, :cancel_at_period_end,
+  delegate :current_period_start,
+           :current_period_end,
+           :status,
+           :cancel_at_period_end?,
+           :cancel_at_next_period_end?,
            to: :active_subscription, prefix: true
 
   def self.from_social_provider(provider, user_params)
