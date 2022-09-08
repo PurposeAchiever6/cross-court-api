@@ -1,21 +1,32 @@
 <div>
   <table>
-    <tr>
-      <td>
-        <b>Referee</b>
-      </td>
-      <td>
-        <%= link_to referee.full_name, admin_user_path(referee.id) %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <b>SEM</b>
-      </td>
-      <td>
-        <%= link_to sem.full_name, admin_user_path(sem.id) %>
-      </td>
-    </tr>
+    <% if resource.skill_session %>
+      <tr>
+        <td>
+          <b>Coach</b>
+        </td>
+        <td>
+          <%= link_to coach.full_name, admin_user_path(coach.id) %>
+        </td>
+      </tr>
+    <% else %>
+      <tr>
+        <td>
+          <b>Referee</b>
+        </td>
+        <td>
+          <%= link_to referee.full_name, admin_user_path(referee.id) %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <b>SEM</b>
+        </td>
+        <td>
+          <%= link_to sem.full_name, admin_user_path(sem.id) %>
+        </td>
+      </tr>
+    <% end %>
   </table>
   <%= link_to 'Edit employees', admin_session_path(id: resource.id, date: date, edit_employees: 1) %>
 </div>

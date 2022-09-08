@@ -51,6 +51,7 @@ class Session < ApplicationRecord
   has_many :user_sessions
   has_many :referee_sessions
   has_many :sem_sessions
+  has_many :coach_sessions
   has_many :user_session_waitlists
   has_many :user_session_votes
   has_many :users, through: :user_sessions
@@ -136,6 +137,10 @@ class Session < ApplicationRecord
 
   def sem(date)
     sem_sessions.find_by(date: date)&.sem
+  end
+
+  def coach(date)
+    coach_sessions.find_by(date: date)&.coach
   end
 
   def reservations_count(date)

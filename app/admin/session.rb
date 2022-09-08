@@ -166,18 +166,26 @@ ActiveAdmin.register Session do
       panel 'Employees' do
         referee = resource.referee(date)
         sem = resource.sem(date)
-        if params[:edit_employees].present? || referee.nil? || sem.nil?
+        coach = resource.coach(date)
+
+        is_edit = params[:edit_employees].present? ||
+                  (!resource.skill_session && (referee.nil? || sem.nil?)) ||
+                  (resource.skill_session && coach.nil?)
+
+        if is_edit
           render partial: 'edit_employees', locals: {
             selected_session: resource,
             date: date,
             referee: referee,
-            sem: sem
+            sem: sem,
+            coach: coach
           }
         else
           render partial: 'show_employees', locals: {
             date: date,
             referee: referee,
-            sem: sem
+            sem: sem,
+            coach: coach
           }
         end
       end
@@ -255,14 +263,19 @@ ActiveAdmin.register Session do
   member_action :assign_employees, method: :put do
     referee_id = params[:referee_id]
     sem_id = params[:sem_id]
+    coach_id = params[:coach_id]
     date = params[:date]
 
-    if referee_id.empty? && sem_id.empty?
-      flash[:error] = 'You need to select a Referee or a SEM to assign'
-      return redirect_to admin_session_path(id: resource.id, date: date)
-    end
+    coach_sessions = resource.coach_sessions.where(date: date)
+    coach_sessions.destroy_all if resource.skill_session && coach_sessions.any?
+    resource.coach_sessions.create!(user_id: coach_id, date: date) if coach_id.present?
 
+    referee_sessions = resource.referee_sessions.where(date: date)
+    referee_sessions.destroy_all if !resource.skill_session && referee_sessions.any?
     resource.referee_sessions.create!(user_id: referee_id, date: date) if referee_id.present?
+
+    sem_sessions = resource.sem_sessions.where(date: date)
+    sem_sessions.destroy_all if !resource.skill_session && sem_sessions.any?
     resource.sem_sessions.create!(user_id: sem_id, date: date) if sem_id.present?
 
     redirect_to admin_root_path, notice: 'Employees assigned successfully'

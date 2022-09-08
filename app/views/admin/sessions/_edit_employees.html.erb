@@ -1,17 +1,26 @@
 <%= form_with url: assign_employees_admin_session_path(id: resource.id, date: date),
               method: :put,
               local: true do %>
-  <div class='mb-3'>
-    <%= label_tag :referee_id, 'Referee', class: 'inline-block w-12 mr-2 ' %>
-    <%= select_tag :referee_id,
-                  options_from_collection_for_select(User.referees, 'id', 'full_name', referee&.id),
-                  include_blank: true %>
-  </div>
-  <div class='mb-6'>
-    <%= label_tag :sem_id, 'SEM', class: 'inline-block w-12 mr-2' %>
-    <%= select_tag :sem_id,
-                  options_from_collection_for_select(User.sems, 'id', 'full_name', sem&.id),
-                  include_blank: true %>
-  </div>
+  <% if resource.skill_session %>
+    <div class='mb-6'>
+      <%= label_tag :coach_id, 'Coach', class: 'inline-block w-20 mr-2' %>
+      <%= select_tag :coach_id,
+                     options_from_collection_for_select(User.coaches, 'id', 'full_name', coach&.id),
+                     include_blank: true %>
+    </div>
+  <% else %>
+    <div class='mb-3'>
+      <%= label_tag :referee_id, 'Referee', class: 'inline-block w-20 mr-2' %>
+      <%= select_tag :referee_id,
+                     options_from_collection_for_select(User.referees, 'id', 'full_name', referee&.id),
+                     include_blank: true %>
+    </div>
+    <div class='mb-3'>
+      <%= label_tag :sem_id, 'SEM', class: 'inline-block w-20 mr-2' %>
+      <%= select_tag :sem_id,
+                     options_from_collection_for_select(User.sems, 'id', 'full_name', sem&.id),
+                     include_blank: true %>
+    </div>
+  <% end %>
   <%= submit_tag 'Assign' %>
 <% end %>

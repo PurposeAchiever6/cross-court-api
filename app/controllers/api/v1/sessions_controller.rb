@@ -3,7 +3,7 @@ module Api
     class SessionsController < Api::V1::ApiController
       include DeviseTokenAuth::Concerns::SetUserByToken
 
-      helper_method :selected_session, :referee, :sem, :date
+      helper_method :selected_session, :referee, :sem, :coach, :date
 
       before_action :log_user
 
@@ -67,6 +67,10 @@ module Api
 
       def sem
         @sem = selected_session.sem(params[:date])
+      end
+
+      def coach
+        @coach = selected_session.coach(params[:date])
       end
 
       def log_user
