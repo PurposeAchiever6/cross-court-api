@@ -63,6 +63,8 @@ en:
           amount_not_positive: "Amount should be greater or equal than 0"
           amount_not_present: "Amount not present"
           missing_payment_method: "The user does not have a saved credit card to be charged"
+        skill_rating_require_review: >
+          The new skill rating needs to be reviewed by our team before being updated
       sessions:
         full: "Session is full"
         is_open_club: "Can not reserve session for open club"
