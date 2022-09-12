@@ -52,3 +52,8 @@ cancel_subscriptions_at_period_end:
   cron: "0 15 * * *" # 8 AM LA
   class: "Subscriptions::CancelAtPeriodEndJob"
   queue: default
+
+assign_default_session_employees:
+  cron: "0 8 * * 1" # 8 AM UTC on Monday
+  class: "Sessions::AssignDefaultEmployeesJob"
+  queue: default

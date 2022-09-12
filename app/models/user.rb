@@ -166,7 +166,7 @@ class User < ApplicationRecord
   end
 
   def employee?
-    is_sem || is_referee
+    is_sem || is_referee || is_coach
   end
 
   def full_name

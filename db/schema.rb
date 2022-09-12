@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_11_202041) do
+ActiveRecord::Schema.define(version: 2022_09_12_001953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,8 +164,8 @@ ActiveRecord::Schema.define(version: 2022_09_11_202041) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "skill_session_credits", default: 0
     t.integer "max_rollover_credits"
+    t.integer "skill_session_credits", default: 0
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -245,6 +245,12 @@ ActiveRecord::Schema.define(version: 2022_09_11_202041) do
     t.integer "max_capacity", default: 15
     t.boolean "skill_session", default: false
     t.decimal "cc_cash_earned", default: "0.0"
+    t.integer "default_referee_id"
+    t.integer "default_sem_id"
+    t.integer "default_coach_id"
+    t.index ["default_coach_id"], name: "index_sessions_on_default_coach_id"
+    t.index ["default_referee_id"], name: "index_sessions_on_default_referee_id"
+    t.index ["default_sem_id"], name: "index_sessions_on_default_sem_id"
     t.index ["deleted_at"], name: "index_sessions_on_deleted_at"
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
@@ -415,9 +421,9 @@ ActiveRecord::Schema.define(version: 2022_09_11_202041) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
-    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at"
+    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

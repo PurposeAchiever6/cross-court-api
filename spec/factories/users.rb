@@ -100,6 +100,10 @@ FactoryBot.define do
       is_sem true
     end
 
+    trait :coach do
+      is_coach true
+    end
+
     trait :with_image do
       image { Rack::Test::UploadedFile.new('spec/fixtures/blank.png', 'image/png') }
     end

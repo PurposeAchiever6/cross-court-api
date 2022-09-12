@@ -47,7 +47,9 @@ class EmployeeSession < ApplicationRecord
   private
 
   def destroy_previous_assignment
-    self.class.where(session_id: session_id, date: date).where.not(id: id).destroy_all
+    self.class
+        .default_scoped
+        .where(session_id: session_id, date: date).where.not(id: id).destroy_all
   end
 
   def datetime
