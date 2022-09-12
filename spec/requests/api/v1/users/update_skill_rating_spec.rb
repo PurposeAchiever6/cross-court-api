@@ -64,7 +64,7 @@ describe 'PUT /api/v1/user/update_skill_rating' do
     it 'returns the correct error message' do
       expect(
         response_body[:error]
-      ).to match('The new skill rating need to be reviewed by our team before being updated')
+      ).to match('The new skill rating needs to be reviewed by our team before being updated')
     end
   end
 end

@@ -1,0 +1,22 @@
+<body>
+  <h1>New user update request</h1>
+  <p>
+    <%= @user_request_update.user.full_name.titleize %>
+    has requested to change his following information:
+  </p>
+  <ul>
+    <% @user_request_update.readable_requested_attributes.each do |requested_change| %>
+      <li>
+        <%= requested_change %>
+      </li>
+    <% end %>
+  </ul>
+  <p>
+    <strong>Reason:</strong> <%= @user_request_update.reason %>
+  </p>
+  <p>
+    Please visit the request
+    <%= link_to 'here', admin_user_update_request_url(@user_request_update.id), target: :_blank %>
+    to take some action.
+  </p>
+</body>

@@ -28,6 +28,19 @@ module Api
         head :ok
       end
 
+      def request_update
+        reason = params[:reason]
+        requested_attributes = requested_attributes_params
+
+        Users::UpdateRequest.call(
+          user: current_user,
+          requested_attributes: requested_attributes,
+          reason: reason
+        )
+
+        head :ok
+      end
+
       def resend_confirmation_instructions
         user.send_confirmation_instructions unless user.confirmed?
         head :no_content
@@ -49,6 +62,10 @@ module Api
 
       def skill_rating_params
         params.require(:user).permit(:skill_rating)
+      end
+
+      def requested_attributes_params
+        params.permit(:skill_rating)
       end
 
       def add_image(image)

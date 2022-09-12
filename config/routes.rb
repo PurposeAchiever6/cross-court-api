@@ -51,6 +51,7 @@ Rails.application.routes.draw do
           get :profile
           post :resend_confirmation_instructions
           put :update_skill_rating
+          post :request_update
           get :referrals
         end
         namespace :sem do

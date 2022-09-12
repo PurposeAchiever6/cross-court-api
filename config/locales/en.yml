@@ -65,6 +65,8 @@ en:
           missing_payment_method: "The user does not have a saved credit card to be charged"
         skill_rating_require_review: >
           The new skill rating needs to be reviewed by our team before being updated
+      user_update_requests:
+        not_pending: The request status should be pending
       sessions:
         full: "Session is full"
         is_open_club: "Can not reserve session for open club"
@@ -92,6 +94,8 @@ en:
         time: "Date: %{date}, Time: %{time}"
     subscription:
       feedback: New request for subscription cancellation
+    user:
+      update_request: User %{name} has requested to update his information
   notifier:
     slack:
       session_booked: "%{name} made a *reservation* for %{date} at %{time} on %{location}"
