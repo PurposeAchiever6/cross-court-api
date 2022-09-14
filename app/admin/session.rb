@@ -154,9 +154,15 @@ ActiveAdmin.register Session do
 
         safe_join(votes_by_date)
       end
-      row :default_referee
-      row :default_sem
-      row :default_coach
+      row :default_referee do |session|
+        session.skill_session ? 'N/A' : session.default_coach
+      end
+      row :default_sem do |session|
+        session.skill_session ? 'N/A' : session.default_coach
+      end
+      row :default_coach do |session|
+        session.skill_session ? session.default_coach : 'N/A'
+      end
       row :created_at
       row :updated_at
     end
