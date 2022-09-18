@@ -50,21 +50,26 @@ class UserSessionConsumeCredit
     if user.subscription_skill_session_credits.zero?
       if user.subscription_credits.zero?
         user.decrement(:credits)
+        user_session.credit_used_type = :credits
       else
         user.decrement(:subscription_credits) unless user.unlimited_credits?
+        user_session.credit_used_type = :subscription_credits
       end
     else
       unless user.unlimited_skill_session_credits?
         user.decrement(:subscription_skill_session_credits)
       end
+      user_session.credit_used_type = :subscription_skill_session_credits
     end
   end
 
   def decrement_user_session_credit
     if user.credits.positive?
       user.decrement(:credits)
+      user_session.credit_used_type = :credits
     else
       user.decrement(:subscription_credits) unless user.unlimited_credits?
+      user_session.credit_used_type = :subscription_credits
     end
   end
 

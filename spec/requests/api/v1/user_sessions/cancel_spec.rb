@@ -60,14 +60,6 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
         user_session.date
       ).on_queue('default')
     end
-
-    context 'when user has unlimited credits' do
-      let!(:user) { create(:user, :with_unlimited_subscription) }
-
-      it 'do not reimburse the credit to the user' do
-        expect { subject }.not_to change { user.reload.credits }
-      end
-    end
   end
 
   context 'when not in valid cancellation time' do

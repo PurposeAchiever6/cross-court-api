@@ -4,14 +4,29 @@ describe UserSessions::Cancel do
   describe '.call' do
     let!(:location) { create(:location) }
     let!(:session) { create(:session, :daily, location: location, time: session_time) }
-    let!(:user) { create(:user, subscription_credits: subscription_credits) }
     let!(:payment_method) { create(:payment_method, user: user, default: true) }
+    let!(:user) do
+      create(
+        :user,
+        subscription_credits: subscription_credits,
+        subscription_skill_session_credits: subscription_skill_session_credits
+      )
+    end
     let!(:user_session) do
-      create(:user_session, session: session, user: user, date: date, is_free_session: free_session)
+      create(
+        :user_session,
+        session: session,
+        user: user,
+        date: date,
+        is_free_session: free_session,
+        credit_used_type: credit_used_type
+      )
     end
 
     let(:subscription_credits) { 0 }
+    let(:subscription_skill_session_credits) { 0 }
     let(:free_session) { false }
+    let(:credit_used_type) { :credits }
     let(:time_now) { Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)) }
     let(:session_time) { time_now + Session::CANCELLATION_PERIOD + 1.minute }
     let(:date) { time_now.to_date }
@@ -29,6 +44,8 @@ describe UserSessions::Cancel do
     it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
     it { expect { subject }.to change { user_session.reload.credit_reimbursed }.to(true) }
     it { expect { subject }.to change { user.reload.credits }.by(1) }
+    it { expect { subject }.not_to change { user.reload.subscription_credits } }
+    it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     it { expect { subject }.not_to change { user.reload.free_session_state } }
 
     it 'calls Slack service' do
@@ -53,11 +70,58 @@ describe UserSessions::Cancel do
       it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
     end
 
-    context 'when user has unlimited credits' do
+    context 'when user has unlimited subscription credits' do
       let(:subscription_credits) { Product::UNLIMITED }
 
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+    end
+
+    context 'when user has unlimited subscription skill session credits' do
+      let(:subscription_credits) { Product::UNLIMITED }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+    end
+
+    context 'when user session credit used was from subscription credits' do
+      let(:credit_used_type) { :subscription_credits }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user.reload.subscription_credits }.by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+
+      context 'when user has unlimited subscription credits' do
+        let(:subscription_credits) { Product::UNLIMITED }
+
+        it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+        it { expect { subject }.not_to change { user.reload.subscription_credits } }
+        it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+      end
+    end
+
+    context 'when user session credit used was from skill session credits' do
+      let(:credit_used_type) { :subscription_skill_session_credits }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user.reload.subscription_skill_session_credits }.by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+
+      context 'when user has unlimited subscription skill session credits' do
+        let(:subscription_skill_session_credits) { Product::UNLIMITED }
+
+        it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+        it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+        it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      end
     end
 
     context 'when cancellation is not in time' do
@@ -168,13 +232,6 @@ describe UserSessions::Cancel do
 
         it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
         it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
-      end
-
-      context 'when user has unlimited credits' do
-        let(:subscription_credits) { Product::UNLIMITED }
-
-        it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
-        it { expect { subject }.not_to change { user.reload.credits } }
       end
     end
   end

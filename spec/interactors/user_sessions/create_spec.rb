@@ -54,6 +54,7 @@ describe UserSessions::Create do
     it { expect { subject }.to change(UserSession, :count).by(1) }
     it { expect { subject }.to change { user.reload.credits }.by(-1) }
     it { expect { subject }.not_to change { user.reload.free_session_state } }
+    it { expect(subject.user_session.credit_used_type).to eq('credits') }
 
     it { expect(subject.user_session.id).to eq(created_user_session.id) }
     it { expect(subject.user_session.first_session).to eq(true) }
@@ -88,6 +89,7 @@ describe UserSessions::Create do
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
+      it { expect(subject.user_session.credit_used_type).to eq('subscription_credits') }
 
       context 'when user has unlimited subscription' do
         let(:subscription_credits) { Product::UNLIMITED }
@@ -404,6 +406,9 @@ describe UserSessions::Create do
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.to change { user.reload.subscription_skill_session_credits }.by(-1) }
+      it 'sets the correct user session credit_used_type' do
+        expect(subject.user_session.credit_used_type).to eq('subscription_skill_session_credits')
+      end
 
       context 'when user has unlimited skill session credits' do
         let(:subscription_skill_session_credits) { Product::UNLIMITED }
@@ -421,6 +426,7 @@ describe UserSessions::Create do
         it { expect { subject }.not_to change { user.reload.credits } }
         it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
         it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+        it { expect(subject.user_session.credit_used_type).to eq('subscription_credits') }
 
         context 'when user does not have any subscription credit' do
           let(:subscription_credits) { 0 }
@@ -429,6 +435,7 @@ describe UserSessions::Create do
           it { expect { subject }.to change { user.reload.credits }.by(-1) }
           it { expect { subject }.not_to change { user.reload.subscription_credits } }
           it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+          it { expect(subject.user_session.credit_used_type).to eq('credits') }
 
           context 'when user does not have any credit' do
             let(:credits) { 0 }

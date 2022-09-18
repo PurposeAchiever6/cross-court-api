@@ -20,6 +20,7 @@
 #  no_show_up_fee_charged          :boolean          default(FALSE)
 #  reminder_sent_at                :datetime
 #  first_session                   :boolean          default(FALSE)
+#  credit_used_type                :integer
 #
 # Indexes
 #
@@ -37,5 +38,6 @@ FactoryBot.define do
     is_free_session { false }
     checked_in { false }
     no_show_up_fee_charged { false }
+    credit_used_type { :credits }
   end
 end
