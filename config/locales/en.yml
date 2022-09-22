@@ -205,6 +205,10 @@ en:
         reject: >
           Hey %{name}, unfortunately we are unable to complete your CC skill level adjustment at
           this time. If you have any questions, feel free to email us at %{cc_email}.
+      new_member_welcome: >
+        Hey %{name}, welcome to the ccteam! Did you have any questions?
+        Schedule a quick new member AMA call with one of our membership managers %{link}
+
   admin:
     products:
       created: "Product created successfully"
