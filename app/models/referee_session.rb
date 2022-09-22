@@ -14,6 +14,7 @@
 # Indexes
 #
 #  index_employee_sessions_on_session_id  (session_id)
+#  index_employee_sessions_on_type        (type)
 #  index_employee_sessions_on_user_id     (user_id)
 #
 
