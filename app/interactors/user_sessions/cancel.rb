@@ -11,7 +11,7 @@ module UserSessions
       in_cancellation_time = user_session.in_cancellation_time?
 
       if from_session_canceled || in_cancellation_time || is_free_session
-        user.increment(:credits) unless user.unlimited_credits?
+        increment_user_credit(user, user_session.credit_used_type)
         user.free_session_state = :claimed if is_free_session
         user.save!
 
@@ -99,6 +99,19 @@ module UserSessions
         amount_charged: amount_charged,
         unlimited_credits: user.unlimited_credits?.to_s
       )
+    end
+
+    def increment_user_credit(user, credit_used_type)
+      case credit_used_type&.to_sym
+      when :subscription_credits
+        user.increment(:subscription_credits) unless user.unlimited_credits?
+      when :subscription_skill_session_credits
+        unless user.unlimited_skill_session_credits?
+          user.increment(:subscription_skill_session_credits)
+        end
+      else
+        user.increment(:credits)
+      end
     end
   end
 end

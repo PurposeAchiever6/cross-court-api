@@ -1,11 +1,11 @@
 .status_tag {
-  &.reserved {
+  &.reserved, &.pending {
     background: #b1b8b2;
   }
-  &.canceled {
+  &.canceled, &.rejected {
     background: #d1847c;
   }
-  &.confirmed {
+  &.confirmed, &.approved {
     background: #7ebe88;
   }
 }

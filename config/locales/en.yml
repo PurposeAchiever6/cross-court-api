@@ -63,6 +63,10 @@ en:
           amount_not_positive: "Amount should be greater or equal than 0"
           amount_not_present: "Amount not present"
           missing_payment_method: "The user does not have a saved credit card to be charged"
+        skill_rating_require_review: >
+          The new skill rating needs to be reviewed by our team before being updated
+      user_update_requests:
+        not_pending: The request status should be pending
       sessions:
         full: "Session is full"
         is_open_club: "Can not reserve session for open club"
@@ -90,6 +94,8 @@ en:
         time: "Date: %{date}, Time: %{time}"
     subscription:
       feedback: New request for subscription cancellation
+    user:
+      update_request: User %{name} has requested to update his information
   notifier:
     slack:
       session_booked: "%{name} made a *reservation* for %{date} at %{time} on %{location}"
@@ -193,6 +199,12 @@ en:
         Hey %{name}! All your membership credits have been used this month. In case you wanted to
         purchase additional drop in sessions at a discount, go to our memberships page and toggle
         over to 'A La Carte'. %{link}
+      user_update_requests:
+        approve: >
+          Hey %{name}! Your CC skill level adjustment request has been approved.
+        reject: >
+          Hey %{name}, unfortunately we are unable to complete your CC skill level adjustment at
+          this time. If you have any questions, feel free to email us at %{cc_email}.
   admin:
     products:
       created: "Product created successfully"

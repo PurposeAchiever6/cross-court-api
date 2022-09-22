@@ -21,12 +21,28 @@ module Api
 
       def update_skill_rating
         user_to_update = current_user || user
-        user_to_update&.update!(skill_rating_params)
+        skill_rating = skill_rating_params[:skill_rating]
+
+        Users::UpdateSkillRating.call(user: user_to_update, skill_rating: skill_rating)
+
+        head :ok
+      end
+
+      def request_update
+        reason = params[:reason]
+        requested_attributes = requested_attributes_params
+
+        Users::UpdateRequest.call(
+          user: current_user,
+          requested_attributes: requested_attributes,
+          reason: reason
+        )
+
         head :ok
       end
 
       def resend_confirmation_instructions
-        user.send_confirmation_instructions unless user.nil? || user.confirmed?
+        user.send_confirmation_instructions unless user.confirmed?
         head :no_content
       end
 
@@ -37,7 +53,7 @@ module Api
       private
 
       def user
-        @user ||= User.find_by(email: params[:email])
+        @user ||= User.find_by!(email: params[:email])
       end
 
       def user_params
@@ -46,6 +62,10 @@ module Api
 
       def skill_rating_params
         params.require(:user).permit(:skill_rating)
+      end
+
+      def requested_attributes_params
+        params.permit(:skill_rating)
       end
 
       def add_image(image)

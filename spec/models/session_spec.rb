@@ -22,12 +22,18 @@
 #  max_capacity             :integer          default(15)
 #  skill_session            :boolean          default(FALSE)
 #  cc_cash_earned           :decimal(, )      default(0.0)
+#  default_referee_id       :integer
+#  default_sem_id           :integer
+#  default_coach_id         :integer
 #
 # Indexes
 #
-#  index_sessions_on_deleted_at      (deleted_at)
-#  index_sessions_on_location_id     (location_id)
-#  index_sessions_on_skill_level_id  (skill_level_id)
+#  index_sessions_on_default_coach_id    (default_coach_id)
+#  index_sessions_on_default_referee_id  (default_referee_id)
+#  index_sessions_on_default_sem_id      (default_sem_id)
+#  index_sessions_on_deleted_at          (deleted_at)
+#  index_sessions_on_location_id         (location_id)
+#  index_sessions_on_skill_level_id      (skill_level_id)
 #
 
 require 'rails_helper'

@@ -33,6 +33,7 @@ module Api
                                        :session_exceptions,
                                        :referee_sessions,
                                        :sem_sessions,
+                                       :coach_sessions,
                                        :skill_level)
                            .by_location(params[:location_id])
                            .visible_for(current_user)

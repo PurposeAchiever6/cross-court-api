@@ -4,7 +4,8 @@ ActiveAdmin.register Session do
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
                 :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
-                :cc_cash_earned, session_exceptions_attributes: %i[id date _destroy]
+                :cc_cash_earned, :default_referee_id, :default_sem_id, :default_coach_id,
+                session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
 
@@ -56,6 +57,9 @@ ActiveAdmin.register Session do
               hint: 'If no set, it means there\'s no restriction on the amount of first timers ' \
                     'users who can book.'
       f.input :cc_cash_earned
+      f.input :default_referee, collection: User.referees
+      f.input :default_sem, collection: User.sems
+      f.input :default_coach, collection: User.coaches
       li do
         f.label 'Schedule'
         f.select_recurring :recurring, nil,
@@ -149,6 +153,15 @@ ActiveAdmin.register Session do
         end
 
         safe_join(votes_by_date)
+      end
+      row :default_referee do |session|
+        session.skill_session ? 'N/A' : session.default_coach
+      end
+      row :default_sem do |session|
+        session.skill_session ? 'N/A' : session.default_coach
+      end
+      row :default_coach do |session|
+        session.skill_session ? session.default_coach : 'N/A'
       end
       row :created_at
       row :updated_at

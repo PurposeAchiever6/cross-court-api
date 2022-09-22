@@ -130,7 +130,7 @@ class User < ApplicationRecord
   validates :zipcode, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
   validates :phone_number, uniqueness: true
   validates :skill_rating,
-            numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 7 },
+            numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5 },
             allow_nil: true
 
   scope :referees, -> { where(is_referee: true) }
@@ -166,7 +166,7 @@ class User < ApplicationRecord
   end
 
   def employee?
-    is_sem || is_referee
+    is_sem || is_referee || is_coach
   end
 
   def full_name

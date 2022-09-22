@@ -20,6 +20,7 @@
 #  no_show_up_fee_charged          :boolean          default(FALSE)
 #  reminder_sent_at                :datetime
 #  first_session                   :boolean          default(FALSE)
+#  credit_used_type                :integer
 #
 # Indexes
 #

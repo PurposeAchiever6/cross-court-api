@@ -53,10 +53,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   end
 
   it 'sends session booked email' do
-    expect {
-      SessionMailer.session_booked.deliver_later
-    }.to have_enqueued_job.on_queue('mailers')
-    subject
+    expect { subject }.to have_enqueued_job.on_queue('mailers')
   end
 
   it "doesn't update user's free_session_state" do

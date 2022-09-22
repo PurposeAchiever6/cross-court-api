@@ -20,6 +20,7 @@
 #  no_show_up_fee_charged          :boolean          default(FALSE)
 #  reminder_sent_at                :datetime
 #  first_session                   :boolean          default(FALSE)
+#  credit_used_type                :integer
 #
 # Indexes
 #
@@ -29,6 +30,9 @@
 
 class UserSession < ApplicationRecord
   enum state: { reserved: 0, canceled: 1, confirmed: 2 }
+  enum credit_used_type: { credits: 0,
+                           subscription_credits: 1,
+                           subscription_skill_session_credits: 2 }
 
   belongs_to :user
   belongs_to :session, -> { with_deleted }, inverse_of: :user_sessions
