@@ -34,6 +34,7 @@
 #  index_sessions_on_deleted_at          (deleted_at)
 #  index_sessions_on_location_id         (location_id)
 #  index_sessions_on_skill_level_id      (skill_level_id)
+#  index_sessions_on_start_time          (start_time)
 #
 
 require 'rails_helper'

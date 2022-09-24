@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_18_190742) do
+ActiveRecord::Schema.define(version: 2022_09_22_145713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2022_09_18_190742) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_employee_sessions_on_session_id"
+    t.index ["type"], name: "index_employee_sessions_on_type"
     t.index ["user_id"], name: "index_employee_sessions_on_user_id"
   end
 
@@ -254,6 +255,7 @@ ActiveRecord::Schema.define(version: 2022_09_18_190742) do
     t.index ["deleted_at"], name: "index_sessions_on_deleted_at"
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
+    t.index ["start_time"], name: "index_sessions_on_start_time"
   end
 
   create_table "skill_levels", force: :cascade do |t|

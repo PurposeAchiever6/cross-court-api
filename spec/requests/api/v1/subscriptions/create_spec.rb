@@ -20,6 +20,7 @@ describe 'POST api/v1/subscriptions' do
         .to_return(status: 200, body: File.new('spec/fixtures/subscription_succeeded.json'))
       StripeMocker.new.retrieve_invoice(user.stripe_id, 'in_1Fin1BEbKIwsJiGZiMSDSLzw')
       ActiveCampaignMocker.new.mock
+      allow(SonarService).to receive(:send_message)
     end
 
     it 'returns success' do
@@ -43,6 +44,11 @@ describe 'POST api/v1/subscriptions' do
       expect {
         subject
       }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).exactly(:twice).on_queue('default')
+    end
+
+    it 'calls Sonar service' do
+      expect(SonarService).to receive(:send_message)
+      subject
     end
   end
 
