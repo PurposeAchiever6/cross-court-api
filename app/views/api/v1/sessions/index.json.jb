@@ -7,8 +7,7 @@
       user_sessions: @user_sessions,
       user_id: current_user&.id,
       user_sessions_waitlists: @user_sessions_waitlists,
-      user_sessions_votes: @user_sessions_votes,
-      include_reservations: true
+      user_sessions_votes: @user_sessions_votes
     }
   )
 }

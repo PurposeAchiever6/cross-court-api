@@ -5,9 +5,8 @@ module Api
         def index
           @user_sessions =
             Session.find(params[:session_id])
-                   .user_sessions
-                   .by_date(date)
-                   .checked_in
+                   .not_canceled_reservations(date)
+                   .where(checked_in: checked_in)
                    .includes(:session, user: { image_attachment: :blob })
                    .order(:created_at)
         end
@@ -24,6 +23,10 @@ module Api
         end
 
         private
+
+        def checked_in
+          params[:checked_in] == 'true' ? true : [true, false]
+        end
 
         def date
           date = params[:date]
