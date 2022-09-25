@@ -1,0 +1,18 @@
+<% if pending_subscription_cancellation_requests > 0 || pending_user_update_requests > 0 %>
+  <div class='mb-6'>
+    <% if pending_subscription_cancellation_requests > 0 %>
+      <div class='flash flash_warning'>
+        There are <%= pending_subscription_cancellation_requests %> pending membership
+        cancellation requests to review. Please take some action
+        <%= link_to 'here', admin_subscription_cancellation_requests_path %>.
+      </div>
+    <% end %>
+
+    <% if pending_user_update_requests > 0 %>
+      <div class='flash flash_warning mt-2'>
+        There are <%= pending_user_update_requests %> pending user update requests to review.
+        Please take some action <%= link_to 'here', admin_user_update_requests_path %>.
+      </div>
+    <% end %>
+  </div>
+<% end %>
