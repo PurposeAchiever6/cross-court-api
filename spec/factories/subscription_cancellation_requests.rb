@@ -15,22 +15,14 @@
 #  index_subscription_cancellation_requests_on_user_id  (user_id)
 #
 
-class SubscriptionCancellationRequest < ApplicationRecord
-  enum status: {
-    pending: 0,
-    ignored: 1,
-    cancel_at_current_period_end: 2,
-    cancel_at_next_month_period_end: 3,
-    cancel_immediately: 4
-  }
+FactoryBot.define do
+  factory :subscription_cancellation_request do
+    status { :pending }
+    reason { 'Some Reason!' }
+    user
 
-  belongs_to :user
-
-  delegate :url_helpers, to: 'Rails.application.routes'
-
-  scope :addressed, -> { not_pending }
-
-  def url
-    url_helpers.admin_subscription_cancellation_request_url(id, host: ENV['SERVER_URL'])
+    after :create do |subscription_cancellation_request|
+      subscription_cancellation_request.user.subscriptions << create(:subscription)
+    end
   end
 end

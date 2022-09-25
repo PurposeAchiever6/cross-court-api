@@ -67,6 +67,8 @@ en:
           The new skill rating needs to be reviewed by our team before being updated
       user_update_requests:
         not_pending: The request status should be pending
+      subscription_cancellation_requests:
+        not_pending: The cancellation request status should be pending
       sessions:
         full: "Session is full"
         is_open_club: "Can not reserve session for open club"
