@@ -1,32 +1,37 @@
 module Subscriptions
-  class CreateFeedback
+  class CreateCancellationRequest
     include Interactor
 
     def call
       user = context.user
-      subscription_feedback = SubscriptionFeedback.create!(user: user, feedback: feedback)
-      SlackService.new(user).subscription_feedback(subscription_feedback)
+
+      subscription_cancellation_request = SubscriptionCancellationRequest.create!(
+        user: user,
+        reason: reason
+      )
+
+      SlackService.new(user).subscription_cancellation_request(subscription_cancellation_request)
       SubscriptionMailer.with(
         user_id: user.id,
-        feedback: feedback
-      ).feedback.deliver_later
+        reason: reason
+      ).cancellation_request.deliver_later
 
-      context.subscription_feedback = subscription_feedback
+      context.subscription_cancellation_request = subscription_cancellation_request
     end
 
     private
 
-    def feedback
+    def reason
       experience_rate = context.experiencie_rate
       service_rate = context.service_rate
       recommend_rate = context.recommend_rate
-      feedback = context.feedback
+      reason = context.reason
 
       "Overall Experience: #{experience_rate}.\n" \
       "Service as Described: #{service_rate}.\n" \
       "Join Again or Recommend: #{recommend_rate}.\n" \
       "\n" \
-      "Feedback: #{feedback}"
+      "Reason: #{reason}"
     end
   end
 end

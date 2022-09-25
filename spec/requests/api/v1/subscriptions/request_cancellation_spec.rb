@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-describe 'POST api/v1/subscriptions/feedback' do
+describe 'POST api/v1/subscriptions/request_cancellation' do
   let!(:user) { create(:user) }
   let(:experience_rate) { rand(1..5) }
   let(:service_rate) { rand(1..5) }
   let(:recommend_rate) { rand(1..5) }
-  let(:feedback) { 'Too expensive!!!' }
+  let(:reason) { 'Too expensive!!!' }
 
   let(:request_headers) { auth_headers }
   let(:params) do
@@ -13,7 +13,7 @@ describe 'POST api/v1/subscriptions/feedback' do
       experiencie_rate: experience_rate,
       service_rate: service_rate,
       recommend_rate: recommend_rate,
-      feedback: feedback
+      reason: reason
     }
   end
 
@@ -22,7 +22,7 @@ describe 'POST api/v1/subscriptions/feedback' do
   let(:response_body) { subject.body }
 
   subject do
-    post feedback_api_v1_subscriptions_path,
+    post request_cancellation_api_v1_subscriptions_path,
          headers: request_headers,
          params: params,
          as: :json
@@ -30,11 +30,11 @@ describe 'POST api/v1/subscriptions/feedback' do
   end
 
   it { is_expected.to be_successful }
-  it { expect { subject }.to change(SubscriptionFeedback, :count).by(1) }
+  it { expect { subject }.to change(SubscriptionCancellationRequest, :count).by(1) }
   it { expect(response_body).to be_empty }
 
   it 'calls Slack Service' do
-    expect_any_instance_of(SlackService).to receive(:notify_subscription_feedback)
+    expect_any_instance_of(SlackService).to receive(:notify_subscription_cancellation_request)
     subject
   end
 
@@ -42,6 +42,6 @@ describe 'POST api/v1/subscriptions/feedback' do
     let(:request_headers) { nil }
 
     it { is_expected.to be_unauthorized }
-    it { expect { subject }.not_to change(SubscriptionFeedback, :count) }
+    it { expect { subject }.not_to change(SubscriptionCancellationRequest, :count) }
   end
 end

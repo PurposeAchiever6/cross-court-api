@@ -70,8 +70,10 @@ module Api
         @subscription = result.subscription
       end
 
-      def feedback
-        Subscriptions::CreateFeedback.call(subscription_feedback_params.merge(user: current_user))
+      def request_cancellation
+        Subscriptions::CreateCancellationRequest.call(
+          subscription_cancellation_request_params.merge(user: current_user)
+        )
         head :no_content
       end
 
@@ -114,8 +116,8 @@ module Api
         current_user.subscriptions.find(params[:id])
       end
 
-      def subscription_feedback_params
-        params.permit(:experiencie_rate, :service_rate, :recommend_rate, :feedback)
+      def subscription_cancellation_request_params
+        params.permit(:experiencie_rate, :service_rate, :recommend_rate, :reason)
       end
     end
   end

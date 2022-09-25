@@ -1,8 +1,8 @@
 class SubscriptionMailer < ApplicationMailer
-  def feedback
+  def cancellation_request
     @user = User.find(params[:user_id])
-    @feedback = params[:feedback]
+    @reason = params[:reason]
 
-    mail(to: ENV['CC_TEAM_EMAIL'], subject: I18n.t('mailer.subscription.feedback'))
+    mail(to: ENV['CC_TEAM_EMAIL'], subject: I18n.t('mailer.subscription.cancellation_request'))
   end
 end

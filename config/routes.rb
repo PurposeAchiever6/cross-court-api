@@ -70,7 +70,7 @@ Rails.application.routes.draw do
             put :unpause
           end
           collection do
-            post :feedback
+            post :request_cancellation
             get :preview_prorate
           end
         end
