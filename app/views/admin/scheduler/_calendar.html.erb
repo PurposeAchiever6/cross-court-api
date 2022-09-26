@@ -11,7 +11,7 @@
   <%
     filtered_events = events.select do |event|
       validations = event.recurring[:validations]
-      next unless validations
+      next(true) unless validations
 
       if validations.empty?
         true
