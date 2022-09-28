@@ -1,34 +1,36 @@
-<%= form_with url: admin_scheduler_path, method: :get, local: true, class: 'mb-5' do %>
-  <%= label_tag :location, 'Filter by location:', class: 'mr-2' %>
-  <%= select_tag :location,
-                options_from_collection_for_select(locations, 'id', 'name', selected_location),
-                include_blank: true,
-                class: 'w-40' %>
-  <%= submit_tag 'Filter', class: 'ml-4' %>
-<% end %>
+<div id='scheduler-calendar'>
+  <%= form_with url: admin_scheduler_path, method: :get, local: true, class: 'mb-5' do %>
+    <%= label_tag :location, 'Filter by location:', class: 'mr-2' %>
+    <%= select_tag :location,
+                  options_from_collection_for_select(locations, 'id', 'name', selected_location),
+                  include_blank: true,
+                  class: 'w-40' %>
+    <%= submit_tag 'Filter', class: 'ml-4' %>
+  <% end %>
 
-<%= month_calendar events: sessions do |date, events| %>
-  <%
-    filtered_events = events.select do |event|
-      validations = event.recurring[:validations]
-      next(true) unless validations
+  <%= month_calendar events: sessions do |date, events| %>
+    <%
+      filtered_events = events.select do |event|
+        validations = event.recurring[:validations]
+        next(true) unless validations
 
-      if validations.empty?
-        true
-      else
-        validations[:day].include?(date.wday)
-      end
-    end.uniq { |e| e.id }.sort_by(&:time)
-  %>
-  <div class='pb-6'>
-    <div class='mb-4'>
-      <strong><%= date.day %></strong>
-    </div>
-
-    <% filtered_events.each do |event| %>
-      <div>
-        <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
+        if validations.empty?
+          true
+        else
+          validations[:day].include?(date.wday)
+        end
+      end.uniq { |e| e.id }.sort_by(&:time)
+    %>
+    <div class='pb-6'>
+      <div class='mb-4'>
+        <strong><%= date.day %></strong>
       </div>
-    <% end %>
-  </div>
-<% end %>
+
+      <% filtered_events.each do |event| %>
+        <div>
+          <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
