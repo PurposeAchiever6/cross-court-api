@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_22_145713) do
+ActiveRecord::Schema.define(version: 2022_09_25_201310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -273,10 +273,14 @@ ActiveRecord::Schema.define(version: 2022_09_22_145713) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "subscription_feedbacks", force: :cascade do |t|
-    t.text "feedback"
+  create_table "subscription_cancellation_requests", force: :cascade do |t|
+    t.text "reason"
     t.bigint "user_id"
-    t.index ["user_id"], name: "index_subscription_feedbacks_on_user_id"
+    t.integer "status", default: 0
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
+    t.index ["status"], name: "index_subscription_cancellation_requests_on_status"
+    t.index ["user_id"], name: "index_subscription_cancellation_requests_on_user_id"
   end
 
   create_table "subscription_pauses", force: :cascade do |t|

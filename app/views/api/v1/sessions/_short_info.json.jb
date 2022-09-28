@@ -1,5 +1,3 @@
-include_reservations = include_reservations.nil? ? false : include_reservations
-
 json = {
   id: session.id,
   start_time: session.start_time.iso8601,
@@ -20,7 +18,8 @@ json = {
   full: session.full?(session.start_time, current_user),
   spots_left: session.spots_left(session.start_time, current_user),
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
-  skill_level: nil
+  skill_level: nil,
+  reservations_count: session.not_canceled_reservations(session.start_time).count
 }
 
 if session.skill_level
@@ -33,17 +32,6 @@ end
 if json[:on_waitlist]
   waitlist_index = session.waitlist(session.start_time).pending.map(&:user_id).index(user_id)
   json[:waitlist_placement] = waitlist_index + 1
-end
-
-if include_reservations
-  session_users = session.not_canceled_reservations(session.start_time)
-                         .includes(user: :image_attachment)
-                         .order(created_at: :asc)
-                         .map(&:user)
-
-  json[:reservations] = render(partial: 'api/v1/users/short_info',
-                               collection: session_users,
-                               as: :user)
 end
 
 json

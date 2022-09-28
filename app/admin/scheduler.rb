@@ -12,6 +12,11 @@ ActiveAdmin.register_page 'Scheduler' do
                       .by_location(location)
                       .for_range(from, to).flat_map { |session| session.calendar_events(from, to) }
 
+    render partial: 'alert_pending_requests', locals: {
+      pending_subscription_cancellation_requests: SubscriptionCancellationRequest.pending.count,
+      pending_user_update_requests: UserUpdateRequest.pending.count
+    }
+
     Time.use_zone(location.time_zone) do
       render partial: 'calendar', locals: {
         sessions: SessionDecorator.decorate_collection(sessions),

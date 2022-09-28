@@ -69,10 +69,10 @@ class SlackService
     notify_subscription('notifier.slack.subscription_scheduled_cancellation_removed', subscription)
   end
 
-  def subscription_feedback(subscription_feedback)
-    notify_subscription_feedback(
-      'notifier.slack.subscription_feedback_created',
-      subscription_feedback
+  def subscription_cancellation_request(subscription_cancellation_request)
+    notify_subscription_cancellation_request(
+      'notifier.slack.subscription_cancellation_request_created',
+      subscription_cancellation_request
     )
   end
 
@@ -138,12 +138,12 @@ class SlackService
     )
   end
 
-  def notify_subscription_feedback(i18n_message, subscription_feedback)
+  def notify_subscription_cancellation_request(i18n_message, subscription_cancellation_request)
     notify(
       I18n.t(
         i18n_message,
         name: user.full_name,
-        subscription_feedback_url: subscription_feedback.url
+        subscription_cancellation_request_url: subscription_cancellation_request.url
       ),
       channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
     )

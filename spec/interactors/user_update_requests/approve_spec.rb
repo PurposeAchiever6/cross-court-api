@@ -40,7 +40,7 @@ describe UserUpdateRequests::Approve do
     end
 
     context 'when user_update_request is not pending' do
-      let(:status) { %i[approved rejected].sample }
+      let(:status) { %i[approved rejected ignored].sample }
 
       it { expect { subject rescue nil }.not_to change { user.reload.skill_rating } }
 

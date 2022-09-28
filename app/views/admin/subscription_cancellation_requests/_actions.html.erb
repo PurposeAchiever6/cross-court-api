@@ -1,0 +1,66 @@
+<% if subscription_cancellation_request.pending? %>
+  <% if user.active_subscription %>
+    <div>
+      <div class="mb-5">
+        <div class='mb-2'>
+          <label class="font-semibold mr-1">Current membership:</label>
+          <%= status_tag 'yes', label: user.membership %>
+        </div>
+        <div class='mb-2'>
+          <label class="font-semibold mr-1">Billing period:</label>
+          <span>
+            <%= "#{user.active_subscription_current_period_start.to_date} to #{user.active_subscription_current_period_end.to_date}" %>
+          </span>
+        </div>
+        <div class='mb-2'>
+          <label class="font-semibold mr-1">Status:</label>
+          <span>
+            <%= user.active_subscription_status.humanize %>
+          </span>
+        </div>
+        <div class="mb-2">
+          <label class="font-semibold mr-1">Cancel at current period end:</label>
+          <%= status_tag user.active_subscription_cancel_at_period_end? %>
+        </div>
+        <div class="mb-6">
+          <label class="font-semibold mr-1">Cancel at next period end:</label>
+          <%= status_tag user.active_subscription_cancel_at_next_period_end? %>
+        </div>
+      </div>
+      <%= form_tag(action_admin_subscription_cancellation_request_path) do %>
+        <%= button_tag 'Cancel At Current Period End',
+                        type: :submit,
+                        name: :action_type,
+                        value: :cancel_at_current_period_end,
+                        class: 'block mb-2 w-64',
+                        data: { disable_with: 'Loading...',
+                                confirm: 'Are you sure you want to cancel the membership? ' \
+                                         'Subscription will be automatically canceled at ' \
+                                         'current period end.' } %>
+        <%= button_tag 'Cancel At Next Month Period End',
+                        type: :submit,
+                        name: :action_type,
+                        value: :cancel_at_next_month_period_end,
+                        class: 'block mb-2 w-64',
+                        data: { disable_with: 'Loading...',
+                                confirm: 'Are you sure you want to cancel the membership? ' \
+                                         'Subscription will be automatically canceled at ' \
+                                         'next month period end.' } %>
+        <%= button_tag 'Cancel Immediately',
+                        type: :submit,
+                        name: :action_type,
+                        value: :cancel_immediately,
+                        class: 'block w-64',
+                        data: { disable_with: 'Loading...',
+                                confirm: 'Are you sure you want to cancel the membership? ' \
+                                         'Subscription will be canceled immediately. User ' \
+                                         'credits will be reset to zero and he will not be ' \
+                                         'a member anymore.' } %>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render 'not_active_subscription', user: user %>
+  <% end %>
+<% else %>
+  <%= render 'not_pending', subscription_cancellation_request: subscription_cancellation_request %>
+<% end %>
