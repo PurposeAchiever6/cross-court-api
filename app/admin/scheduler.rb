@@ -25,10 +25,10 @@ ActiveAdmin.register_page 'Scheduler' do
       }
     end
 
-    div do
+    div class: 'm-6' do
       text_node 'References:'
       br
-      text_node 'EM - Referee or SEM not assigned'
+      text_node 'EM - Employee Missing (not assigned)'
       br
       text_node 'OC - Open Club'
       br
