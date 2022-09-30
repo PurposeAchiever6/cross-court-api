@@ -23,6 +23,9 @@ ActiveAdmin.register User do
   filter :source
   filter :created_at
 
+  scope 'All', :all, default: true
+  scope 'Members', :members
+
   action_item :resend_confirmation_email, only: [:show] do
     link_to 'Resend Confirmation Email',
             resend_confirmation_email_admin_user_path(id: user.id),
