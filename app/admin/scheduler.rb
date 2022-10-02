@@ -8,7 +8,7 @@ ActiveAdmin.register_page 'Scheduler' do
     from = start_date.beginning_of_month.beginning_of_week
     to = start_date.end_of_month.end_of_week
 
-    sessions = Session.includes(:session_exceptions, :location, :skill_level)
+    sessions = Session.includes(:session_exceptions)
                       .by_location(location)
                       .for_range(from, to).flat_map { |session| session.calendar_events(from, to) }
 

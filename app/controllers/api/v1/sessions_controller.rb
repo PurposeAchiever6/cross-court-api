@@ -29,12 +29,7 @@ module Api
         @user_sessions_votes = UserSessionVote.by_user(current_user)
                                               .group(:session_id, :date).count
 
-        @sessions = Session.eager_load(:location,
-                                       :session_exceptions,
-                                       :referee_sessions,
-                                       :sem_sessions,
-                                       :coach_sessions,
-                                       :skill_level)
+        @sessions = Session.includes(:location, :session_exceptions, :skill_level)
                            .by_location(params[:location_id])
                            .visible_for(current_user)
                            .for_range(from_date, to_date)

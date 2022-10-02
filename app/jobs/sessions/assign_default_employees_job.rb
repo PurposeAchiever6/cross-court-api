@@ -7,7 +7,8 @@ module Sessions
       to_date = from_date.end_of_week
 
       Location.find_each do |location|
-        sessions = Session.by_location(location.id)
+        sessions = Session.includes(:session_exceptions)
+                          .by_location(location.id)
                           .for_range(from_date, to_date)
                           .flat_map do |session_event|
                             session_event.calendar_events(from_date, to_date)

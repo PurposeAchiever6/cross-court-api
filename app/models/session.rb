@@ -48,8 +48,6 @@ class Session < ApplicationRecord
 
   acts_as_paranoid
 
-  attr_accessor :employees_assigned
-
   serialize :recurring, Hash
 
   belongs_to :location, -> { with_deleted }, inverse_of: :sessions
@@ -132,11 +130,15 @@ class Session < ApplicationRecord
 
   def calendar_events(start_date, end_date)
     if single_occurrence?
-      self.employees_assigned = referee_sessions.present? && sem_sessions.present?
       [self]
     else
       schedule.occurrences_between(start_date, end_date).map do |date|
-        Session.new(attributes.symbolize_keys.merge(start_time: date, location: location))
+        attributes = self.attributes.symbolize_keys.merge(start_time: date)
+
+        attributes[:location] = location if association_cached?(:location)
+        attributes[:skill_level] = skill_level if association_cached?(:skill_level)
+
+        Session.new(attributes)
       end
     end
   end
