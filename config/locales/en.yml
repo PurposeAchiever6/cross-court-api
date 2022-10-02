@@ -65,6 +65,9 @@ en:
           missing_payment_method: "The user does not have a saved credit card to be charged"
         skill_rating_require_review: >
           The new skill rating needs to be reviewed by our team before being updated
+        booked_sessions_limit_per_day: >
+          Unfortunately, we had to limit the number of sessions members can book in a day
+          in order to fulfill member demand
       user_update_requests:
         not_pending: The request status should be pending
       subscription_cancellation_requests:

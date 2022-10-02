@@ -2,10 +2,18 @@ require 'rails_helper'
 
 describe UserSessions::Create do
   describe '.call' do
+    let!(:location) do
+      create(
+        :location,
+        max_sessions_booked_per_day: max_sessions_booked_per_day,
+        max_skill_sessions_booked_per_day: max_skill_sessions_booked_per_day
+      )
+    end
     let!(:session) do
       create(
         :session,
         :daily,
+        location: location,
         time: session_time,
         is_open_club: is_open_club,
         skill_session: skill_session,
@@ -25,8 +33,10 @@ describe UserSessions::Create do
         first_time_subscription_credits_used_at: first_time_subscription_credits_used_at
       )
     end
-    let(:active_subscription) { create(:subscription, status: subscription_status) }
+    let!(:active_subscription) { create(:subscription, status: subscription_status) }
 
+    let(:max_sessions_booked_per_day) { nil }
+    let(:max_skill_sessions_booked_per_day) { nil }
     let(:subscription_status) { :active }
     let(:first_time_subscription_credits_used_at) { Time.zone.today }
     let(:reserve_team) { false }
@@ -149,6 +159,57 @@ describe UserSessions::Create do
 
       context 'when the user is advanced' do
         before { user.update(skill_rating: 5) }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
+    end
+
+    context 'when user has reached the number of sessions booked per day' do
+      let(:max_sessions_booked_per_day) { 1 }
+      let(:another_session_skill_session) { false }
+      let(:user_session_state) { :reserved }
+      let(:user_session_date) { date }
+
+      let!(:another_session) do
+        create(:session, :daily, location: location, skill_session: another_session_skill_session)
+      end
+      let!(:user_session) do
+        create(
+          :user_session,
+          session: another_session,
+          user: user,
+          date: user_session_date,
+          state: user_session_state
+        )
+      end
+
+      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+      it { expect { subject }.to raise_error(UserBookedSessionsLimitPerDayException) }
+
+      context 'when the user session has been canceled' do
+        let(:user_session_state) { :canceled }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
+
+      context 'when the user session if not on the same day' do
+        let(:user_session_date) { date + 1.day }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
+
+      context 'when from_waitlist is true' do
+        before do
+          subject_args.merge!(from_waitlist: true)
+          allow(SonarService).to receive(:send_message)
+        end
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
+
+      context 'when the user session booked is for a skill session' do
+        let(:another_session_skill_session) { true }
 
         it { expect { subject }.to change(UserSession, :count).by(1) }
       end
@@ -458,6 +519,57 @@ describe UserSessions::Create do
               }.not_to change { user.reload.subscription_skill_session_credits }
             end
           end
+        end
+      end
+
+      context 'when user has reached the number of skill sessions booked' do
+        let(:max_skill_sessions_booked_per_day) { 1 }
+        let(:another_session_skill_session) { true }
+        let(:user_session_state) { :reserved }
+        let(:user_session_date) { date }
+
+        let!(:another_session) do
+          create(:session, :daily, location: location, skill_session: another_session_skill_session)
+        end
+        let!(:user_session) do
+          create(
+            :user_session,
+            session: another_session,
+            user: user,
+            date: user_session_date,
+            state: user_session_state
+          )
+        end
+
+        it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+        it { expect { subject }.to raise_error(UserBookedSessionsLimitPerDayException) }
+
+        context 'when the user session has been canceled' do
+          let(:user_session_state) { :canceled }
+
+          it { expect { subject }.to change(UserSession, :count).by(1) }
+        end
+
+        context 'when the user session if not on the same day' do
+          let(:user_session_date) { date + 1.day }
+
+          it { expect { subject }.to change(UserSession, :count).by(1) }
+        end
+
+        context 'when from_waitlist is true' do
+          before do
+            subject_args.merge!(from_waitlist: true)
+            allow(SonarService).to receive(:send_message)
+          end
+
+          it { expect { subject }.to change(UserSession, :count).by(1) }
+        end
+
+        context 'when the user session booked is a normal session' do
+          let(:another_session_skill_session) { false }
+
+          it { expect { subject }.to change(UserSession, :count).by(1) }
         end
       end
     end

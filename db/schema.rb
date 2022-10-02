@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_25_201310) do
+ActiveRecord::Schema.define(version: 2022_10_02_144912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,6 +116,8 @@ ActiveRecord::Schema.define(version: 2022_09_25_201310) do
     t.string "state", default: "CA"
     t.text "description", default: ""
     t.decimal "free_session_miles_radius"
+    t.integer "max_sessions_booked_per_day"
+    t.integer "max_skill_sessions_booked_per_day"
     t.index ["deleted_at"], name: "index_locations_on_deleted_at"
   end
 

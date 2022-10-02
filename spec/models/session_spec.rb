@@ -423,4 +423,111 @@ describe Session do
       end
     end
   end
+
+  describe '#user_reached_book_limit?' do
+    let!(:user) { create(:user) }
+    let!(:location) do
+      create(
+        :location,
+        max_sessions_booked_per_day: max_sessions_booked_per_day,
+        max_skill_sessions_booked_per_day: max_skill_sessions_booked_per_day
+      )
+    end
+    let!(:session) do
+      create(
+        :session,
+        :daily,
+        location: location,
+        is_open_club: open_club,
+        skill_session: skill_session
+      )
+    end
+    let!(:user_session) do
+      create(
+        :user_session,
+        user: user,
+        session: session,
+        date: user_session_date,
+        state: state
+      )
+    end
+
+    let(:max_sessions_booked_per_day) { nil }
+    let(:max_skill_sessions_booked_per_day) { nil }
+    let(:open_club) { false }
+    let(:skill_session) { false }
+    let(:date) { Time.zone.today }
+    let(:user_session_date) { date }
+    let(:state) { %i[reserved confirmed].sample }
+
+    subject { session.user_reached_book_limit?(user, date) }
+
+    it { is_expected.to eq(false) }
+
+    context 'when max_sessions_booked_per_day is 1' do
+      let(:max_sessions_booked_per_day) { 1 }
+
+      it { is_expected.to eq(true) }
+
+      context 'when the session is open club' do
+        let(:open_club) { true }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'when the user_session has been canceled' do
+        let(:state) { :canceled }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'when the user_session is for another day' do
+        let(:user_session_date) { date - 1.day }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'when the user_session is for a skill session' do
+        let!(:another_session) do
+          create(
+            :session,
+            :daily,
+            location: location,
+            skill_session: true
+          )
+        end
+        let!(:user_session) do
+          create(
+            :user_session,
+            user: user,
+            session: another_session,
+            date: user_session_date,
+            state: state
+          )
+        end
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'when the session is a skill session' do
+        let(:skill_session) { true }
+
+        it { is_expected.to eq(false) }
+
+        context 'when max_skill_sessions_booked_per_day is 1' do
+          let(:max_skill_sessions_booked_per_day) { 1 }
+
+          it { is_expected.to eq(true) }
+        end
+      end
+    end
+
+    context 'when max_sessions_booked_per_day is 0' do
+      let(:max_sessions_booked_per_day) { 0 }
+
+      before { user_session.destroy! }
+
+      it { is_expected.to eq(true) }
+    end
+  end
 end
