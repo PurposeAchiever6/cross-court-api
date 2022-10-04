@@ -8,6 +8,7 @@ module Sessions
       Location.find_each do |location|
         date = Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)).to_date
         sessions = location.sessions
+                           .includes(:session_exceptions)
                            .for_range(date, date)
                            .in_next_minutes(waitlist_minutes_tolerance)
                            .flat_map { |session| session.calendar_events(date, date) }
