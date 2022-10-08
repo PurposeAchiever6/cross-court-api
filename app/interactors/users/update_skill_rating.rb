@@ -16,10 +16,13 @@ module Users
     def needs_review?(user, new_skill_rating)
       user_skill_rating = user.skill_rating
       skill_ratings_for_review = ENV.fetch('SKILL_RATINGS_FOR_REVIEW', '').split(',').map(&:to_f)
+      new_skill_rating_needs_review = skill_ratings_for_review.include?(new_skill_rating)
 
-      user_skill_rating \
-        && user_skill_rating < new_skill_rating \
-          && skill_ratings_for_review.include?(new_skill_rating)
+      if user_skill_rating
+        user_skill_rating < new_skill_rating && new_skill_rating_needs_review
+      else
+        new_skill_rating_needs_review
+      end
     end
   end
 end
