@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_02_144912) do
+ActiveRecord::Schema.define(version: 2022_10_08_160608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -435,6 +435,7 @@ ActiveRecord::Schema.define(version: 2022_10_02_144912) do
     t.datetime "first_time_subscription_credits_used_at"
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
+    t.integer "gender"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

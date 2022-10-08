@@ -13,14 +13,15 @@ describe 'POST api/v1/users', type: :request do
   after { Timecop.return }
 
   describe 'POST create' do
-    let(:email)                 { 'test@test.com' }
-    let(:password)              { '12345678' }
+    let(:email) { 'test@test.com' }
+    let(:password) { '12345678' }
     let(:password_confirmation) { '12345678' }
-    let(:first_name)            { 'Johnny' }
-    let(:last_name)             { 'Doe' }
-    let(:phone_number)          { '1234567' }
-    let(:zipcode)               { '12345' }
-    let(:birthday)              { Time.zone.today - 20.years }
+    let(:first_name) { 'Johnny' }
+    let(:last_name) { 'Doe' }
+    let(:phone_number) { '1234567' }
+    let(:zipcode) { '12345' }
+    let(:birthday) { Time.zone.today - 20.years }
+    let(:gender) { %w[male female].sample }
 
     let(:params) do
       {
@@ -32,7 +33,8 @@ describe 'POST api/v1/users', type: :request do
           password: password,
           password_confirmation: password_confirmation,
           phone_number: phone_number,
-          zipcode: zipcode
+          zipcode: zipcode,
+          gender: gender
         }
       }
     end
@@ -114,6 +116,15 @@ describe 'POST api/v1/users', type: :request do
         subject
         expect(new_user).to be_nil
       end
+
+      it 'does not return a successful response' do
+        subject
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+    context 'when the gender is not present' do
+      let(:gender) { nil }
 
       it 'does not return a successful response' do
         subject

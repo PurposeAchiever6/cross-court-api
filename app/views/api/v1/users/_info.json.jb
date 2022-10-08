@@ -54,7 +54,8 @@ json = {
   default_payment_method: default_payment_method,
   reserve_team: user.reserve_team,
   instagram_username: user.instagram_username,
-  instagram_profile: user.instagram_profile
+  instagram_profile: user.instagram_profile,
+  gender: user.gender
 }
 
 json[:image_url] = polymorphic_url(user.image) if user.image.attached?
