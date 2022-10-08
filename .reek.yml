@@ -95,7 +95,7 @@ detectors:
     max_instance_variables: 9
   TooManyMethods:
     enabled: true
-    exclude: ["SlackService"]
+    exclude: ["SlackService", "Session"]
     max_methods: 25
   TooManyStatements:
     enabled: false

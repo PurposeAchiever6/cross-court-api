@@ -165,6 +165,10 @@ class Session < ApplicationRecord
     user_sessions.not_canceled.by_date(date)
   end
 
+  def waitlist_count(date)
+    user_session_waitlists.by_date(date).pending.count
+  end
+
   def first_timer_reservations(date, user_sessions = nil)
     reservations = user_sessions || not_canceled_reservations(date)
 
