@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_08_160608) do
+ActiveRecord::Schema.define(version: 2022_10_09_232401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 2022_10_08_160608) do
     t.string "error_message"
     t.decimal "cc_cash", precision: 10, scale: 2, default: "0.0"
     t.index ["product_id"], name: "index_payments_on_product_id"
+    t.index ["status"], name: "index_payments_on_status"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 

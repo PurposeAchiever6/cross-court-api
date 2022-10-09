@@ -2,10 +2,10 @@
   &.reserved, &.pending {
     background: #b1b8b2;
   }
-  &.canceled, &.rejected {
+  &.canceled, &.rejected, &.error {
     background: #d1847c;
   }
-  &.confirmed, &.approved {
+  &.confirmed, &.approved, &.success {
     background: #7ebe88;
   }
 }

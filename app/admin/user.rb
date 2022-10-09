@@ -186,6 +186,9 @@ ActiveAdmin.register User do
       row 'User Sessions' do
         link_to 'link to user sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
       end
+      row 'Payments' do
+        link_to 'link to payments', admin_payments_path(q: { user_id_eq: user.id })
+      end
       row 'Stripe Customer' do
         link_to 'link to stripe',
                 "https://dashboard.stripe.com/#{'test/' unless Rails.env.production?}customers" \

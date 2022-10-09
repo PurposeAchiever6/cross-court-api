@@ -1,5 +1,5 @@
 ActiveAdmin.register UserUpdateRequest do
-  menu label: 'Update Requests', parent: 'Users', priority: 2
+  menu label: 'Update Requests', parent: 'Users', priority: 3
   actions :index, :show
 
   includes :user
