@@ -16,6 +16,7 @@ module UserSessions
       end
     end
 
-    organize UserSessions::ValidateDate
+    organize UserSessions::OpenClubValidations,
+             UserSessions::ValidateDate
   end
 end

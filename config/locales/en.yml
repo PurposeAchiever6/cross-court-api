@@ -55,6 +55,7 @@ en:
       payment_methods:
         has_active_subscription: "The payment method has an active membership"
       users:
+        not_member: "The user does not have an active subscription"
         flagged: >
           Your account has been flagged due to violation of CC policies, please email ccteam@cross-court.com for next steps
         registration:

@@ -1,7 +1,15 @@
 require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
-  let!(:user) { create(:user, credits: 1, reserve_team: reserve_team, flagged: flagged) }
+  let!(:user) do
+    create(
+      :user,
+      credits: 1,
+      reserve_team: reserve_team,
+      flagged: flagged,
+      active_subscription: active_subscription
+    )
+  end
   let!(:location) { create(:location, max_sessions_booked_per_day: max_sessions_booked_per_day) }
   let!(:session) do
     create(
@@ -20,6 +28,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:is_open_club) { false }
   let(:all_skill_levels_allowed) { true }
   let(:params) { { date: date.strftime(Session::DATE_FORMAT) } }
+  let(:active_subscription) { nil }
 
   before do
     ActiveCampaignMocker.new.mock
@@ -196,12 +205,24 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   context 'when session is open club' do
     let(:is_open_club) { true }
 
-    it 'returns success' do
-      subject
-      expect(response).to be_successful
+    context 'when is a member' do
+      let(:active_subscription) { create(:subscription) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+      it { expect { subject }.to change(UserSession, :count).by(1) }
     end
 
-    it { expect { subject }.to change(UserSession, :count).by(1) }
+    context 'when is not a member' do
+      it 'returns bad request' do
+        subject
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it { expect { subject }.not_to change(UserSession, :count) }
+    end
   end
 
   context 'when the session is not for all skill levels' do
