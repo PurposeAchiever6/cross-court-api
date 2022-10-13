@@ -170,7 +170,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       expect { subject }.not_to change(UserSession, :count)
     end
 
-    context 'when the user session has been canceled' do
+    context 'when the other user session has been canceled' do
       let(:user_session_state) { :canceled }
 
       it 'returns success' do
@@ -181,7 +181,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       it { expect { subject }.to change(UserSession, :count).by(1) }
     end
 
-    context 'when the user session if not on the same day' do
+    context 'when the user session is not on the same day' do
       let(:user_session_date) { date + 1.day }
 
       it 'returns success' do
@@ -196,19 +196,12 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   context 'when session is open club' do
     let(:is_open_club) { true }
 
-    it 'returns bad request' do
+    it 'returns success' do
       subject
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to be_successful
     end
 
-    it 'returns correct error message' do
-      subject
-      expect(json[:error]).to eq('Can not reserve session for open club')
-    end
-
-    it "doesn't create the user_session" do
-      expect { subject }.not_to change(UserSession, :count)
-    end
+    it { expect { subject }.to change(UserSession, :count).by(1) }
   end
 
   context 'when the session is not for all skill levels' do

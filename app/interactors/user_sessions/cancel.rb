@@ -9,6 +9,12 @@ module UserSessions
       user = user_session.user
       is_free_session = user_session.is_free_session
       in_cancellation_time = user_session.in_cancellation_time?
+      session = user_session.session
+
+      user_session.state = :canceled
+      user_session.save!
+
+      return if session.is_open_club?
 
       if from_session_canceled || in_cancellation_time || is_free_session
         increment_user_credit(user, user_session.credit_used_type)
@@ -16,10 +22,8 @@ module UserSessions
         user.save!
 
         user_session.credit_reimbursed = true
+        user_session.save!
       end
-
-      user_session.state = :canceled
-      user_session.save!
 
       if from_session_canceled
         cancel_session_actions(user_session)
@@ -30,7 +34,7 @@ module UserSessions
           cancel_out_of_time_actions(user_session)
         end
 
-        Sessions::ReachUserOnWaitlistJob.perform_later(user_session.session.id, user_session.date)
+        Sessions::ReachUserOnWaitlistJob.perform_later(session.id, user_session.date)
       end
     end
 

@@ -3,7 +3,8 @@ module UserSessions
     queue_as :default
 
     def perform
-      UserSession.for_yesterday
+      UserSession.not_open_club
+                 .for_yesterday
                  .confirmed
                  .not_checked_in
                  .no_show_up_fee_not_charged

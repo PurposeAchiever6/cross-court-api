@@ -87,6 +87,7 @@ class UserSession < ApplicationRecord
   scope :no_show_up_fee_not_charged, -> { where(no_show_up_fee_charged: false) }
   scope :skill_sessions, -> { joins(:session).where(sessions: { skill_session: true }) }
   scope :not_skill_sessions, -> { joins(:session).where(sessions: { skill_session: false }) }
+  scope :not_open_club, -> { joins(:session).where(sessions: { is_open_club: false }) }
 
   def in_cancellation_time?
     remaining_time > Session::CANCELLATION_PERIOD
