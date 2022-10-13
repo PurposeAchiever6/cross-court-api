@@ -76,6 +76,8 @@ class Session < ApplicationRecord
   delegate :name, :description, :time_zone, to: :location, prefix: true
   delegate :address, :time_zone, to: :location
   delegate :name, to: :skill_level, prefix: true, allow_nil: true
+  delegate :max_sessions_booked_per_day,
+           :max_skill_sessions_booked_per_day, to: :location, prefix: true
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
 
@@ -161,6 +163,10 @@ class Session < ApplicationRecord
 
   def not_canceled_reservations(date)
     user_sessions.not_canceled.by_date(date)
+  end
+
+  def waitlist_count(date)
+    user_session_waitlists.by_date(date).pending.count
   end
 
   def first_timer_reservations(date, user_sessions = nil)
@@ -263,6 +269,22 @@ class Session < ApplicationRecord
     return if open_club?
 
     self[:max_capacity]
+  end
+
+  def user_reached_book_limit?(user, date)
+    return false if open_club?
+
+    if skill_session
+      return false unless location_max_skill_sessions_booked_per_day
+
+      booked_sessions = user.user_sessions.skill_sessions.not_canceled.by_date(date).count
+      booked_sessions >= location_max_skill_sessions_booked_per_day
+    else
+      return false unless location_max_sessions_booked_per_day
+
+      booked_sessions = user.user_sessions.not_skill_sessions.not_canceled.by_date(date).count
+      booked_sessions >= location_max_sessions_booked_per_day
+    end
   end
 
   private

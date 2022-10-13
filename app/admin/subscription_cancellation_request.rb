@@ -1,5 +1,5 @@
 ActiveAdmin.register SubscriptionCancellationRequest do
-  menu label: 'Membership Cancellation Requests', parent: 'Users', priority: 3
+  menu label: 'Membership Cancellation Requests', parent: 'Users', priority: 4
   actions :index, :show
 
   includes :user

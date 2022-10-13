@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_25_201310) do
+ActiveRecord::Schema.define(version: 2022_10_09_232401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,6 +116,8 @@ ActiveRecord::Schema.define(version: 2022_09_25_201310) do
     t.string "state", default: "CA"
     t.text "description", default: ""
     t.decimal "free_session_miles_radius"
+    t.integer "max_sessions_booked_per_day"
+    t.integer "max_skill_sessions_booked_per_day"
     t.index ["deleted_at"], name: "index_locations_on_deleted_at"
   end
 
@@ -146,6 +148,7 @@ ActiveRecord::Schema.define(version: 2022_09_25_201310) do
     t.string "error_message"
     t.decimal "cc_cash", precision: 10, scale: 2, default: "0.0"
     t.index ["product_id"], name: "index_payments_on_product_id"
+    t.index ["status"], name: "index_payments_on_status"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
@@ -433,6 +436,7 @@ ActiveRecord::Schema.define(version: 2022_09_25_201310) do
     t.datetime "first_time_subscription_credits_used_at"
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
+    t.integer "gender"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

@@ -10,6 +10,8 @@ class SessionDecorator < Draper::Decorator
 
     text += " - #{reservations_count(date)}/#{max_capacity}"
 
+    text += " W/#{waitlist_count(date)}"
+
     text += ' (P)' if is_private?
 
     text += ' (WO)' if women_only?

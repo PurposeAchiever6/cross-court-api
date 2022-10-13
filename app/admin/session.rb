@@ -54,7 +54,7 @@ ActiveAdmin.register Session do
       f.input :duration_minutes
       f.input :max_capacity
       f.input :max_first_timers,
-              hint: 'If no set, it means there\'s no restriction on the amount of first timers ' \
+              hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
                     'users who can book.'
       f.input :cc_cash_earned
       f.input :default_referee, collection: User.referees

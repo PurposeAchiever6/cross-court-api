@@ -2,20 +2,22 @@
 #
 # Table name: locations
 #
-#  id                        :integer          not null, primary key
-#  name                      :string           not null
-#  address                   :string           not null
-#  lat                       :float            not null
-#  lng                       :float            not null
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  city                      :string           default(""), not null
-#  zipcode                   :string           default(""), not null
-#  time_zone                 :string           default("America/Los_Angeles"), not null
-#  deleted_at                :datetime
-#  state                     :string           default("CA")
-#  description               :text             default("")
-#  free_session_miles_radius :decimal(, )
+#  id                                :integer          not null, primary key
+#  name                              :string           not null
+#  address                           :string           not null
+#  lat                               :float            not null
+#  lng                               :float            not null
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  city                              :string           default(""), not null
+#  zipcode                           :string           default(""), not null
+#  time_zone                         :string           default("America/Los_Angeles"), not null
+#  deleted_at                        :datetime
+#  state                             :string           default("CA")
+#  description                       :text             default("")
+#  free_session_miles_radius         :decimal(, )
+#  max_sessions_booked_per_day       :integer
+#  max_skill_sessions_booked_per_day :integer
 #
 # Indexes
 #

@@ -43,11 +43,12 @@
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
-#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
+#  gender                                  :integer
 #
 # Indexes
 #
@@ -76,12 +77,19 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable
 
-  enum free_session_state: { not_claimed: 0,
-                             claimed: 1,
-                             used: 2,
-                             expired: 3,
-                             not_apply: 4 },
-       _prefix: :free_session
+  enum free_session_state: {
+    not_claimed: 0,
+    claimed: 1,
+    used: 2,
+    expired: 3,
+    not_apply: 4
+  }, _prefix: :free_session
+
+  enum gender: {
+    male: 0,
+    female: 1,
+    other: 2
+  }, _prefix: true
 
   has_one :last_checked_in_user_session,
           -> { checked_in.order(date: :desc) },
@@ -132,6 +140,7 @@ class User < ApplicationRecord
   validates :skill_rating,
             numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5 },
             allow_nil: true
+  validates :gender, presence: true, on: :create
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }

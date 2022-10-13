@@ -5,7 +5,7 @@ ActiveAdmin.register User do
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits,
                 :subscription_skill_session_credits, :private_access, :birthday, :cc_cash, :source,
-                :reserve_team, :instagram_username, :flagged, :is_coach
+                :reserve_team, :instagram_username, :flagged, :is_coach, :gender
 
   includes active_subscription: :product
 
@@ -15,6 +15,7 @@ ActiveAdmin.register User do
   filter :last_name
   filter :flagged
   filter :instagram_username
+  filter :gender, as: :select, collection: User.genders
   filter :is_sem
   filter :is_referee
   filter :is_coach
@@ -64,7 +65,7 @@ ActiveAdmin.register User do
       f.input :email
       f.input :first_name
       f.input :last_name
-      f.input :flagged
+      f.input :gender
       f.input :instagram_username
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
@@ -90,16 +91,17 @@ ActiveAdmin.register User do
               as: :datepicker,
               datepicker_options: { change_year: true },
               input_html: { autocomplete: :off }
-      f.input :is_referee
-      f.input :is_sem
-      f.input :is_coach
-      f.input :image, as: :file
       f.input :confirmed_at, as: :hidden
       f.input :zipcode
       f.input :skill_rating
       f.input :source
+      f.input :image, as: :file
+      f.input :is_referee
+      f.input :is_sem
+      f.input :is_coach
       f.input :private_access
       f.input :reserve_team
+      f.input :flagged
 
       if f.object.new_record?
         f.input :password
@@ -115,7 +117,7 @@ ActiveAdmin.register User do
     id_column
     column :email
     column :full_name
-    column :flagged
+    column :gender
     column :instagram_username do |user|
       if user.instagram_profile
         link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
@@ -141,6 +143,7 @@ ActiveAdmin.register User do
       row :email
       row :first_name
       row :last_name
+      row :gender
       row :flagged
       row :instagram_username do
         if user.instagram_profile
@@ -182,6 +185,9 @@ ActiveAdmin.register User do
       row :email_confirmed, &:confirmed?
       row 'User Sessions' do
         link_to 'link to user sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
+      end
+      row 'Payments' do
+        link_to 'link to payments', admin_payments_path(q: { user_id_eq: user.id })
       end
       row 'Stripe Customer' do
         link_to 'link to stripe',

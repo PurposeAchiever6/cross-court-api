@@ -33,6 +33,7 @@ detectors:
         "Users::InactiveMembersJob#perform",
         "Subscriptions::UpdateUserSubscriptionCredits#call",
         "Subscription#cancel_at_next_period_end?",
+        "Session#user_reached_book_limit?",
       ]
     max_calls: 1
     allow_calls: ["render :new"]
@@ -79,7 +80,7 @@ detectors:
     exclude: []
   RepeatedConditional:
     enabled: true
-    exclude: ["Api::V1::SubscriptionsController"]
+    exclude: ["Api::V1::SubscriptionsController", "Session"]
     max_ifs: 3
   SubclassedFromCoreClass:
     enabled: true
@@ -94,7 +95,7 @@ detectors:
     max_instance_variables: 9
   TooManyMethods:
     enabled: true
-    exclude: ["SlackService"]
+    exclude: ["SlackService", "Session"]
     max_methods: 25
   TooManyStatements:
     enabled: false

@@ -72,12 +72,12 @@ ActiveAdmin.register PromoCode do
       f.input :discount, input_html: { disabled: disabled }
       f.input :max_redemptions,
               hint: 'Number of times the code can be used across all users before it’s no longer ' \
-                    'valid. If no set, it can be used with no restrictions.'
+                    'valid. If not set, it can be used with no restrictions.'
       f.input :max_redemptions_by_user,
               hint: 'Number of times the code can be used per user before it’s no longer ' \
-                    'valid. If no set, the same user can use it the times he wants.'
+                    'valid. If not set, the same user can use it the times he wants.'
       f.input :user_max_checked_in_sessions,
-              hint: 'Number of sessions attended by user before it’s not valid. If no set, ' \
+              hint: 'Number of sessions attended by user before it’s not valid. If not set, ' \
                     'means no restriction. I.e, if set to 0 it means the ' \
                     'promo code is only valid for users who have not played any session.'
       f.input :expiration_date,

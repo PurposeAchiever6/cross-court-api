@@ -2,10 +2,18 @@ require 'rails_helper'
 
 describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let!(:user) { create(:user, credits: 1, reserve_team: reserve_team, flagged: flagged) }
-  let!(:session) do # Weekly today
-    create(:session, :daily,
-           is_open_club: is_open_club, all_skill_levels_allowed: all_skill_levels_allowed)
+  let!(:location) { create(:location, max_sessions_booked_per_day: max_sessions_booked_per_day) }
+  let!(:session) do
+    create(
+      :session,
+      :daily,
+      location: location,
+      is_open_club: is_open_club,
+      all_skill_levels_allowed: all_skill_levels_allowed
+    )
   end
+
+  let(:max_sessions_booked_per_day) { nil }
   let(:flagged) { false }
   let(:reserve_team) { false }
   let(:date) { 1.day.from_now }
@@ -126,6 +134,62 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
     it "doesn't create the user_session" do
       expect { subject }.not_to change(UserSession, :count)
+    end
+  end
+
+  context 'when user has reached the number of sessions booked per day' do
+    let(:max_sessions_booked_per_day) { 1 }
+    let(:user_session_state) { :reserved }
+    let(:user_session_date) { date }
+
+    let!(:another_session) { create(:session, :daily, location: location) }
+    let!(:user_session) do
+      create(
+        :user_session,
+        session: another_session,
+        user: user,
+        date: user_session_date,
+        state: user_session_state
+      )
+    end
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns correct error message' do
+      subject
+      expect(json[:error]).to eq(
+        'Unfortunately, we had to limit the number of sessions members can book in a day ' \
+        "in order to fulfill member demand\n"
+      )
+    end
+
+    it "doesn't create the user_session" do
+      expect { subject }.not_to change(UserSession, :count)
+    end
+
+    context 'when the user session has been canceled' do
+      let(:user_session_state) { :canceled }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+    end
+
+    context 'when the user session if not on the same day' do
+      let(:user_session_date) { date + 1.day }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
     end
   end
 

@@ -60,6 +60,7 @@ class UserSession < ApplicationRecord
              to_char(current_timestamp at time zone locations.time_zone, :time_format) >
              to_char(time, :time_format))', time_format: Session::QUERY_TIME_FORMAT)
   end)
+
   scope :future, (lambda do
     joins(session: :location)
       .where('date > (current_timestamp at time zone locations.time_zone)::date OR
@@ -67,10 +68,12 @@ class UserSession < ApplicationRecord
              to_char(current_timestamp at time zone locations.time_zone, :time_format) <
              to_char(time, :time_format))', time_format: Session::QUERY_TIME_FORMAT)
   end)
+
   scope :for_yesterday, (lambda do
     joins(session: :location)
       .where('date = (current_timestamp at time zone locations.time_zone)::date - 1')
   end)
+
   scope :ordered_by_date, -> { order(:date) }
   scope :by_user, ->(user_id) { where(user_id: user_id) }
   scope :by_date, ->(date) { where(date: date) }
@@ -82,6 +85,8 @@ class UserSession < ApplicationRecord
   scope :free_sessions, -> { where(is_free_session: true) }
   scope :not_free_sessions, -> { where(is_free_session: false) }
   scope :no_show_up_fee_not_charged, -> { where(no_show_up_fee_charged: false) }
+  scope :skill_sessions, -> { joins(:session).where(sessions: { skill_session: true }) }
+  scope :not_skill_sessions, -> { joins(:session).where(sessions: { skill_session: false }) }
 
   def in_cancellation_time?
     remaining_time > Session::CANCELLATION_PERIOD

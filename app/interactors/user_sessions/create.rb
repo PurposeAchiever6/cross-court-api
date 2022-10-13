@@ -12,9 +12,14 @@ module UserSessions
 
       raise UserFlaggedException if user.flagged?
       raise SessionIsOpenClubException if session.open_club?
-      raise FullSessionException if session.full?(date, user)
       raise SubscriptionIsNotActiveException if user.active_subscription&.paused?
       raise SessionIsOutOfSkillLevelException unless session.at_session_level?(user)
+      raise FullSessionException if session.full?(date, user)
+
+      if !from_waitlist && session.user_reached_book_limit?(user, date)
+        raise UserBookedSessionsLimitPerDayException
+      end
+
       if user.reserve_team && !session.reserve_team_reservation_allowed?(date)
         raise ReserveTeamNotAllowedException
       end

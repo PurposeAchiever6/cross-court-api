@@ -19,6 +19,7 @@
 # Indexes
 #
 #  index_payments_on_product_id  (product_id)
+#  index_payments_on_status      (status)
 #  index_payments_on_user_id     (user_id)
 #
 

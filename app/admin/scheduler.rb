@@ -28,13 +28,15 @@ ActiveAdmin.register_page 'Scheduler' do
     div class: 'm-6' do
       text_node 'References:'
       br
+      text_node 'W/# - Waitlist Count'
+      br
       text_node 'EM - Employee Missing (not assigned)'
       br
       text_node 'OC - Open Club'
       br
       text_node 'CS - Coming Soon'
       br
-      text_node 'P - Private session'
+      text_node 'P - Private Session'
       br
       text_node 'WO - Women Only'
       br
