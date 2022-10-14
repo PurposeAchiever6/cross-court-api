@@ -15,4 +15,15 @@ $(document).ready(function () {
       }
     })
     .change();
+
+  $("#session_is_open_club")
+    .change(function () {
+      if (this.checked) {
+        $("#session_max_capacity").val(null).trigger("change");
+        $("#session_max_capacity_input").hide();
+      } else {
+        $("#session_max_capacity_input").show();
+      }
+    })
+    .change();
 });

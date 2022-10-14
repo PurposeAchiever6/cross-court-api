@@ -4,11 +4,11 @@ class SessionDecorator < Draper::Decorator
   def title(date)
     text = time.utc.strftime(Session::TIME_FORMAT)
 
-    return text += ' - (OC)' if open_club?
-
     return text += ' - (CS)' if coming_soon?
 
-    text += " - #{reservations_count(date)}/#{max_capacity}"
+    text += " - #{reservations_count(date)}#{max_capacity ? "/#{max_capacity}" : ''}"
+
+    return text += ' - (OC)' if open_club?
 
     text += " W/#{waitlist_count(date)}"
 
@@ -20,7 +20,10 @@ class SessionDecorator < Draper::Decorator
 
     text += ' (AS)' if all_skill_levels_allowed
 
-    text += ' (EM)' if referee(date).blank? || sem(date).blank?
+    if (normal_session? && (referee(date).blank? || sem(date).blank?)) ||
+       (skill_session? && coach(date).blank?)
+      text += ' (EM)'
+    end
 
     text
   end

@@ -109,6 +109,10 @@ class Session < ApplicationRecord
     # rubocop:enable Metrics/LineLength
   end)
 
+  def normal_session?
+    !skill_session? && !is_open_club?
+  end
+
   def recurring=(value)
     super(RecurringSelect.dirty_hash_to_rule(value)&.to_hash)
   end
