@@ -15,6 +15,7 @@ ActiveAdmin.register UserSession do
   filter :first_session
   filter :is_free_session
   filter :checked_in
+  filter :date
 
   index do
     id_column

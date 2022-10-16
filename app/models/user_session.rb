@@ -34,6 +34,8 @@ class UserSession < ApplicationRecord
                            subscription_credits: 1,
                            subscription_skill_session_credits: 2 }
 
+  alias_attribute :checked, :checked_in # This is to make the checked_in filter work in the admin
+
   belongs_to :user
   belongs_to :session, -> { with_deleted }, inverse_of: :user_sessions
 
