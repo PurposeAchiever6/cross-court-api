@@ -25,6 +25,8 @@
 #  default_referee_id       :integer
 #  default_sem_id           :integer
 #  default_coach_id         :integer
+#  guests_allowed           :integer
+#  guests_allowed_per_user  :integer
 #
 # Indexes
 #

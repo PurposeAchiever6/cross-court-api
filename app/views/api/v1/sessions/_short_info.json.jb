@@ -8,6 +8,8 @@ json = {
   women_only: session.women_only,
   skill_session: session.skill_session,
   all_skill_levels_allowed: session.all_skill_levels_allowed,
+  guests_allowed: session.guests_allowed,
+  guests_allowed_per_user: session.guests_allowed_per_user,
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
   cc_cash_earned: session.cc_cash_earned,

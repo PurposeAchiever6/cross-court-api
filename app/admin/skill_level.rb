@@ -1,5 +1,5 @@
 ActiveAdmin.register SkillLevel do
-  menu label: 'Skill Levels', parent: 'Sessions'
+  menu label: 'Skill Levels', parent: 'Sessions', priority: 5
 
   permit_params :name, :description, :max, :min
 

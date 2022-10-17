@@ -46,6 +46,7 @@ class UserSession < ApplicationRecord
              inverse_of: :user_sessions
 
   has_many :session_survey_answers, dependent: :destroy
+  has_many :session_guests, dependent: :destroy
 
   validates :state, :date, presence: true
   validate :user_valid_age
@@ -150,6 +151,10 @@ class UserSession < ApplicationRecord
     else
       date.strftime(Session::DAY_MONTH_NAME_FORMAT)
     end
+  end
+
+  def to_s
+    "#{user_full_name}: #{date_when_format} - #{time.strftime(Session::TIME_FORMAT)}"
   end
 
   private

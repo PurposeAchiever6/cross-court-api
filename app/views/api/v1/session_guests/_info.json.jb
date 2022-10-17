@@ -1,0 +1,7 @@
+{
+  id: session_guest.id,
+  first_name: session_guest.first_name,
+  last_name: session_guest.last_name,
+  phone_number: session_guest.phone_number,
+  email: session_guest.email
+}

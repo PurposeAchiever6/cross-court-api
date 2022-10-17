@@ -1,10 +1,11 @@
 ActiveAdmin.register Session do
-  menu label: 'Sessions', parent: 'Sessions'
+  menu label: 'Sessions', parent: 'Sessions', priority: 2
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
                 :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
                 :cc_cash_earned, :default_referee_id, :default_sem_id, :default_coach_id,
+                :guests_allowed, :guests_allowed_per_user,
                 session_exceptions_attributes: %i[id date _destroy]
 
   includes :location, :session_exceptions, :skill_level
@@ -18,6 +19,8 @@ ActiveAdmin.register Session do
   filter :coming_soon
   filter :women_only
   filter :skill_session
+  filter :guests_allowed
+  filter :guests_allowed_per_user
 
   scope :all, default: true
   scope 'Deleted', :only_deleted
@@ -42,6 +45,11 @@ ActiveAdmin.register Session do
       f.input :coming_soon
       f.input :women_only
       f.input :skill_session
+      f.input :guests_allowed,
+              hint: 'Number of guests allowed per session. If not set, '\
+                    'it means that guests are not allowed for this session.'
+      f.input :guests_allowed_per_user,
+              hint: 'Number of guests allowed per user for this session.'
       f.input :start_time,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
@@ -143,6 +151,8 @@ ActiveAdmin.register Session do
       row :women_only
       row :skill_session
       row :all_skill_levels_allowed
+      row :guests_allowed
+      row :guests_allowed_per_user
       row :votes do |session|
         votes_by_date = session.user_session_votes
                                .group(:date)

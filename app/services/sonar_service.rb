@@ -17,6 +17,10 @@ module SonarService
 
   def send_message(user, message)
     phone = user.phone_number
+    send_message_to_phone(phone, message)
+  end
+
+  def send_message_to_phone(phone, message)
     SendSonar.message_customer(text: message, to: phone)
   rescue SendSonar::RequestException => e
     logger.error { "Error when sending message: #{e.class}: #{e.message} - #{phone}" }

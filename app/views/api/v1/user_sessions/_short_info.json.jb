@@ -6,5 +6,9 @@
   in_confirmation_time: user_session.in_confirmation_time?,
   checked_in: user_session.checked_in,
   is_first_session: user_session.first_session,
-  is_free_session: user_session.is_free_session
+  is_free_session: user_session.is_free_session,
+  session_guests: render(
+    partial: 'api/v1/session_guests/info',
+    collection: user_session.session_guests.not_canceled, as: :session_guest
+  )
 }

@@ -41,6 +41,7 @@ module Api
       rescue_from ReserveTeamMismatchException,                with: :render_custom_exception
       rescue_from UserBookedSessionsLimitPerDayException,      with: :render_custom_exception
       rescue_from Stripe::StripeError,                         with: :render_custom_exception
+      rescue_from SessionGuestsException,                      with: :render_custom_exception
 
       def status
         render json: { online: true }
