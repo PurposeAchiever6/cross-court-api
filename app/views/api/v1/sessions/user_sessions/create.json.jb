@@ -1,0 +1,4 @@
+render(
+  partial: 'api/v1/user_sessions/short_info',
+  locals: { user_session: @user_session }
+)
