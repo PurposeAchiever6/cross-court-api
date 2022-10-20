@@ -14,6 +14,10 @@ module UserSessions
       user_session.state = :canceled
       user_session.save!
 
+      user_session.session_guests.each do |session_guest|
+        SessionGuests::Remove.call(user_session: user_session, session_guest_id: session_guest.id)
+      end
+
       return if session.is_open_club?
 
       if from_session_canceled || in_cancellation_time || is_free_session
