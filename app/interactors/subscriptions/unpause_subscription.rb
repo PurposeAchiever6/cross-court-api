@@ -17,6 +17,7 @@ module Subscriptions
 
       stripe_invoice = StripeService.retrieve_invoice(stripe_subscription.latest_invoice)
       discount_amount = stripe_invoice.total_discount_amounts.map(&:amount).reduce(:+) || 0
+
       Payments::Create.call(
         product: subscription.product,
         user: user,

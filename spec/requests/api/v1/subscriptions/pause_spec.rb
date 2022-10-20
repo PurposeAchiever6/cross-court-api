@@ -5,7 +5,8 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
   let!(:status) { 'active' }
   let!(:subscription) { create(:subscription, user: user, status: status) }
   let(:months) { [1, 2].sample.to_s }
-  let(:params) { { months: months } }
+  let(:reason) { 'some reason' }
+  let(:params) { { months: months, reason: reason } }
   let(:resumes_at) { subscription.current_period_end - 1.day + months.to_i.months }
 
   subject do
@@ -26,7 +27,8 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
   it 'calls Subscriptions::UnpauseSubscription' do
     expect(Subscriptions::PauseSubscription).to receive(:call).with(
       subscription: subscription,
-      months: months
+      months: months,
+      reason: reason
     )
 
     subject rescue nil

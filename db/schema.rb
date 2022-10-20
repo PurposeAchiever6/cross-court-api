@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_09_232401) do
+ActiveRecord::Schema.define(version: 2022_10_19_234425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,8 +168,8 @@ ActiveRecord::Schema.define(version: 2022_10_09_232401) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "max_rollover_credits"
     t.integer "skill_session_credits", default: 0
+    t.integer "max_rollover_credits"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -311,6 +311,7 @@ ActiveRecord::Schema.define(version: 2022_10_09_232401) do
     t.integer "status", default: 0
     t.datetime "canceled_at"
     t.datetime "unpaused_at"
+    t.string "reason"
     t.index ["subscription_id"], name: "index_subscription_pauses_on_subscription_id"
   end
 
@@ -446,9 +447,9 @@ ActiveRecord::Schema.define(version: 2022_10_09_232401) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
+    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at"
-    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"

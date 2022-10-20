@@ -12,6 +12,7 @@
 #  status          :integer          default("upcoming")
 #  canceled_at     :datetime
 #  unpaused_at     :datetime
+#  reason          :string
 #
 # Indexes
 #
