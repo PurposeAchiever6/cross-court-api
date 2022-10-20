@@ -147,7 +147,7 @@ en:
         %{name} current subscription (%{subscription_name}) has been *paused*.
       subscription_paused_for_next_period: >
         %{name} has *paused* his current subscription (%{subscription_name}) for %{months} month(s).
-        Pause will start at %{pause_start_on_datetime}.
+        Pause will start at %{pause_start_on_datetime}. Reason: %{reason}
       subscription_pause_canceled: >
         %{name} has *canceled his scheduled pause* for his current subscription (%{subscription_name}).
       subscription_unpaused: >

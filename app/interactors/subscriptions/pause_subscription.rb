@@ -25,6 +25,7 @@ module Subscriptions
       SlackService.new(subscription.user)
                   .subscription_paused_for_next_period(subscription,
                                                        months: months,
+                                                       reason: reason,
                                                        pause_start_on_datetime: wait_until)
 
       job_id = ::Subscriptions::PauseJob.set(
