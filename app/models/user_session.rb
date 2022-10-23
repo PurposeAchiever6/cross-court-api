@@ -21,6 +21,7 @@
 #  reminder_sent_at                :datetime
 #  first_session                   :boolean          default(FALSE)
 #  credit_used_type                :integer
+#  goal                            :string
 #
 # Indexes
 #

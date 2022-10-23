@@ -6,6 +6,7 @@ module UserSessions
       user = context.user
       session = context.session
       date = context.date
+      goal = context.goal
       referral_code = context.referral_code || nil
       not_charge_user_credit = context.not_charge_user_credit || false
       from_waitlist = context.from_waitlist || false
@@ -17,7 +18,8 @@ module UserSessions
           UserSessions::CreateOpenClub.call(
             session: session,
             user: user,
-            date: date
+            date: date,
+            goal: goal
           )
         else
           UserSessions::CreateNormal.call(

@@ -7,7 +7,8 @@ module UserSessions
         user_session = UserSession.create!(
           session: context.session,
           user: context.user,
-          date: context.date
+          date: context.date,
+          goal: context.goal
         )
 
         context.user_session = user_session

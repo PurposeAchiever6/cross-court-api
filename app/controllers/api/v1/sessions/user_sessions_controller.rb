@@ -18,7 +18,8 @@ module Api
             referral_code: params[:referral_code],
             session: session,
             user: current_user,
-            date: params[:date]
+            date: params[:date],
+            goal: params[:goal]
           ).user_session
         end
 
