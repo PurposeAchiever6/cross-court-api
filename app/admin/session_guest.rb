@@ -37,7 +37,7 @@ ActiveAdmin.register SessionGuest do
     column :user_session_id do |session_guest|
       # This needs to be done like this, if not uses devise controller
       link_to session_guest.user_session_id,
-      "/admin/user_sessions/#{session_guest.user_session_id}"
+              "/admin/user_sessions/#{session_guest.user_session_id}"
     end
     column :access_code
     tag_column :state
