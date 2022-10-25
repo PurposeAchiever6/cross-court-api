@@ -160,6 +160,7 @@ Style/GuardClause:
     - app/interactors/promo_codes/create_user_promo_code.rb
     - app/models/promo_code.rb
     - app/jobs/sessions/assign_default_employees_job.rb
+    - app/interactors/user_sessions/open_club_validations.rb
 
 Style/IfUnlessModifier:
   Exclude:

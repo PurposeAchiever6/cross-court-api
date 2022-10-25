@@ -24,7 +24,7 @@ ActiveAdmin.register Payment do
     column :discount
     column :cc_cash
     column :card do |payment|
-      "****#{payment.last_4}"
+      payment.amount.positive? ? "****#{payment.last_4}" : 'N/A'
     end
     column 'Stripe Payment' do |payment|
       link_to 'link to stripe',
@@ -46,7 +46,7 @@ ActiveAdmin.register Payment do
       row :discount
       row :cc_cash
       row :card do
-        "****#{payment.last_4}"
+        payment.amount.positive? ? "****#{payment.last_4}" : 'N/A'
       end
       row :error_message
       row 'Stripe Payment' do

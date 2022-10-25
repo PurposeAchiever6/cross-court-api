@@ -1,5 +1,5 @@
 ActiveAdmin.register Location do
-  menu label: 'Locations', parent: 'Sessions'
+  menu label: 'Locations', parent: 'Sessions', priority: 1
 
   permit_params :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, :description,
                 :max_sessions_booked_per_day, :max_skill_sessions_booked_per_day,

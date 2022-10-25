@@ -5,7 +5,7 @@ module UserSessions
     def perform
       cancellation_period_hours = Session::CANCELLATION_PERIOD.to_i / 3600
 
-      SessionReminderQuery.new(UserSession.reserved)
+      SessionReminderQuery.new(UserSession.not_open_club.reserved)
                           .in(cancellation_period_hours + 1)
                           .includes(:user, session: :location)
                           .find_each do |user_session|

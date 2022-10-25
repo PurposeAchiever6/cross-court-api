@@ -3,7 +3,10 @@ require 'rails_helper'
 describe UserSessions::Cancel do
   describe '.call' do
     let!(:location) { create(:location) }
-    let!(:session) { create(:session, :daily, location: location, time: session_time) }
+    let(:is_open_club) { false }
+    let!(:session) do
+      create(:session, :daily, location: location, time: session_time, is_open_club: is_open_club)
+    end
     let!(:payment_method) { create(:payment_method, user: user, default: true) }
     let!(:user) do
       create(
@@ -68,6 +71,16 @@ describe UserSessions::Cancel do
 
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
       it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
+    end
+
+    context 'when is open club' do
+      let(:is_open_club) { true }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.not_to change { user.reload.free_session_state } }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     end
 
     context 'when user has unlimited subscription credits' do
@@ -233,6 +246,16 @@ describe UserSessions::Cancel do
         it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
         it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
       end
+    end
+
+    context 'when it has session guests' do
+      let!(:session_guest_1) { create(:session_guest, user_session: user_session) }
+      let!(:session_guest_2) { create(:session_guest, user_session: user_session) }
+
+      it { expect { subject }.to change { session_guest_1.reload.state }.to('canceled') }
+      it { expect { subject }.to change { session_guest_2.reload.state }.to('canceled') }
+
+      it { expect { subject }.to have_enqueued_job(::Sonar::SendMessageJob).twice }
     end
   end
 end

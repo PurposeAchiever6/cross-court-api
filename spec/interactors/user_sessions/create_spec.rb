@@ -142,8 +142,10 @@ describe UserSessions::Create do
     context 'when session is open club' do
       let(:is_open_club) { true }
 
-      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
-      it { expect { subject }.to raise_error(SessionIsOpenClubException) }
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     end
 
     context 'when the session is not for all skill levels' do

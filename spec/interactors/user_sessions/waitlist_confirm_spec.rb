@@ -1,10 +1,11 @@
 require 'rails_helper'
 
-describe UserSessionWaitlistConfirmed do
+describe UserSessions::WaitlistConfirm do
   let(:user)    { create(:user) }
   let(:session) { create(:session) }
+  let(:from_waitlist) { true }
 
-  describe '.save!' do
+  describe '.call' do
     let!(:user_session) do
       create(:user_session, user: user, session: session, date: Date.tomorrow)
     end
@@ -15,7 +16,12 @@ describe UserSessionWaitlistConfirmed do
       allow_any_instance_of(SlackService).to receive(:session_waitlist_confirmed)
     end
 
-    subject { UserSessionWaitlistConfirmed.new(user_session).save! }
+    subject do
+      UserSessions::WaitlistConfirm.call(
+        user_session: user_session,
+        from_waitlist: from_waitlist
+      )
+    end
 
     it { expect { subject }.to change { user_session.reload.state }.to('confirmed') }
 

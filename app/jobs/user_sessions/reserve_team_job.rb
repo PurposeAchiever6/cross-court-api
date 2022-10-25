@@ -8,7 +8,7 @@ module UserSessions
     end
 
     def notify_reserve_team(hours:, min_bookings:, max_bookings:)
-      user_sessions = SessionReminderQuery.new(UserSession.not_canceled)
+      user_sessions = SessionReminderQuery.new(UserSession.not_open_club.not_canceled)
                                           .in(hours)
 
       sample_user_session = user_sessions.first

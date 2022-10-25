@@ -55,6 +55,7 @@ en:
       payment_methods:
         has_active_subscription: "The payment method has an active membership"
       users:
+        not_member: "The user does not have an active subscription"
         flagged: >
           Your account has been flagged due to violation of CC policies, please email ccteam@cross-court.com for next steps
         registration:
@@ -84,6 +85,12 @@ en:
           user_did_not_vote: "The user did not vote for this session"
       waitlists:
         user_not_in_waitlist: "The user is not in the waitlist"
+      session_guests:
+        generic_error: "There was an error when adding the session guest"
+        guests_not_allowed: "Guests are not allowed for this session"
+        max_guests_reached_for_user: "You have reached the maximum number of guests allowed for this session"
+        max_guests_reached_for_session: "This session has reached the maximum number of guests allowed"
+        max_redemptions_by_guest_reached: "The guest has reached the maximum number of invites"
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:
@@ -140,7 +147,7 @@ en:
         %{name} current subscription (%{subscription_name}) has been *paused*.
       subscription_paused_for_next_period: >
         %{name} has *paused* his current subscription (%{subscription_name}) for %{months} month(s).
-        Pause will start at %{pause_start_on_datetime}.
+        Pause will start at %{pause_start_on_datetime}. Reason: %{reason}
       subscription_pause_canceled: >
         %{name} has *canceled his scheduled pause* for his current subscription (%{subscription_name}).
       subscription_unpaused: >
@@ -213,6 +220,15 @@ en:
       new_member_welcome: >
         Hey %{name}, welcome to the ccteam! Did you have any questions?
         Schedule a quick new member AMA call with one of our membership managers %{link}
+      session_guests:
+        added: >
+          Hey %{guest_name}! %{user_first_name} %{user_last_name} has invited you to join their
+          Crosscourt session at %{location} %{date} at %{time}.
+          When you arrive, please show this access code to our Experience Manager behind the desk:
+          %{access_code}.
+        removed: >
+          Hey %{guest_name} %{user_first_name} %{user_last_name} has removed you as a guest for
+          their Crosscourt session at %{location} %{date} at %{time}.
 
   admin:
     products:

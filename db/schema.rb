@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_09_232401) do
+ActiveRecord::Schema.define(version: 2022_10_23_153821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,6 +211,19 @@ ActiveRecord::Schema.define(version: 2022_10_09_232401) do
     t.index ["session_id"], name: "index_session_exceptions_on_session_id"
   end
 
+  create_table "session_guests", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "phone_number", null: false
+    t.string "email", null: false
+    t.string "access_code", null: false
+    t.integer "state", default: 0, null: false
+    t.bigint "user_session_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_session_id"], name: "index_session_guests_on_user_session_id"
+  end
+
   create_table "session_survey_answers", force: :cascade do |t|
     t.string "answer"
     t.bigint "session_survey_question_id"
@@ -252,6 +265,8 @@ ActiveRecord::Schema.define(version: 2022_10_09_232401) do
     t.integer "default_referee_id"
     t.integer "default_sem_id"
     t.integer "default_coach_id"
+    t.integer "guests_allowed"
+    t.integer "guests_allowed_per_user"
     t.index ["default_coach_id"], name: "index_sessions_on_default_coach_id"
     t.index ["default_referee_id"], name: "index_sessions_on_default_referee_id"
     t.index ["default_sem_id"], name: "index_sessions_on_default_sem_id"
@@ -296,6 +311,7 @@ ActiveRecord::Schema.define(version: 2022_10_09_232401) do
     t.integer "status", default: 0
     t.datetime "canceled_at"
     t.datetime "unpaused_at"
+    t.string "reason"
     t.index ["subscription_id"], name: "index_subscription_pauses_on_subscription_id"
   end
 
@@ -375,6 +391,7 @@ ActiveRecord::Schema.define(version: 2022_10_09_232401) do
     t.datetime "reminder_sent_at"
     t.boolean "first_session", default: false
     t.integer "credit_used_type"
+    t.string "goal"
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end

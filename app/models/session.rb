@@ -25,6 +25,8 @@
 #  default_referee_id       :integer
 #  default_sem_id           :integer
 #  default_coach_id         :integer
+#  guests_allowed           :integer
+#  guests_allowed_per_user  :integer
 #
 # Indexes
 #
@@ -108,6 +110,10 @@ class Session < ApplicationRecord
     )
     # rubocop:enable Metrics/LineLength
   end)
+
+  def normal_session?
+    !skill_session? && !is_open_club?
+  end
 
   def recurring=(value)
     super(RecurringSelect.dirty_hash_to_rule(value)&.to_hash)

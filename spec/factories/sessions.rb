@@ -25,6 +25,8 @@
 #  default_referee_id       :integer
 #  default_sem_id           :integer
 #  default_coach_id         :integer
+#  guests_allowed           :integer
+#  guests_allowed_per_user  :integer
 #
 # Indexes
 #
@@ -51,6 +53,8 @@ FactoryBot.define do
     max_capacity { 15 }
     max_first_timers { nil }
     cc_cash_earned { 0 }
+    guests_allowed { nil }
+    guests_allowed_per_user { nil }
 
     trait :daily do
       recurring { IceCube::Rule.daily }

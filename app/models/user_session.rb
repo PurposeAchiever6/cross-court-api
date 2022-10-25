@@ -21,6 +21,7 @@
 #  reminder_sent_at                :datetime
 #  first_session                   :boolean          default(FALSE)
 #  credit_used_type                :integer
+#  goal                            :string
 #
 # Indexes
 #
@@ -34,6 +35,8 @@ class UserSession < ApplicationRecord
                            subscription_credits: 1,
                            subscription_skill_session_credits: 2 }
 
+  alias_attribute :checked, :checked_in # This is to make the checked_in filter work in the admin
+
   belongs_to :user
   belongs_to :session, -> { with_deleted }, inverse_of: :user_sessions
 
@@ -44,6 +47,7 @@ class UserSession < ApplicationRecord
              inverse_of: :user_sessions
 
   has_many :session_survey_answers, dependent: :destroy
+  has_many :session_guests, dependent: :destroy
 
   validates :state, :date, presence: true
   validate :user_valid_age
@@ -87,6 +91,7 @@ class UserSession < ApplicationRecord
   scope :no_show_up_fee_not_charged, -> { where(no_show_up_fee_charged: false) }
   scope :skill_sessions, -> { joins(:session).where(sessions: { skill_session: true }) }
   scope :not_skill_sessions, -> { joins(:session).where(sessions: { skill_session: false }) }
+  scope :not_open_club, -> { joins(:session).where(sessions: { is_open_club: false }) }
 
   def in_cancellation_time?
     remaining_time > Session::CANCELLATION_PERIOD
@@ -147,6 +152,10 @@ class UserSession < ApplicationRecord
     else
       date.strftime(Session::DAY_MONTH_NAME_FORMAT)
     end
+  end
+
+  def to_s
+    "#{user_full_name}: #{date_when_format} - #{time.strftime(Session::TIME_FORMAT)}"
   end
 
   private

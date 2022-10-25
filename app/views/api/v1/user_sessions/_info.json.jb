@@ -9,6 +9,7 @@
     locals: { session: user_session.session }
   ),
   checked_in: user_session.checked_in,
+  goal: user_session.goal,
   is_first_session: user_session.first_session,
   is_free_session: user_session.is_free_session,
   survey_answers: user_session.session_survey_answers

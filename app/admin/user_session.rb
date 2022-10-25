@@ -1,8 +1,8 @@
 ActiveAdmin.register UserSession do
-  menu label: 'User Sessions', parent: 'Sessions'
+  menu label: 'User Sessions', parent: 'Sessions', priority: 3
 
   config.sort_order = ''
-  actions :index, :destroy
+  actions :index, :destroy, :show
   includes :user, session: :location
 
   scope :all
@@ -15,9 +15,13 @@ ActiveAdmin.register UserSession do
   filter :first_session
   filter :is_free_session
   filter :checked_in
+  filter :date
 
   index do
-    id_column
+    column :id do |user_session|
+      # This needs to be done like this, if not uses devise controller
+      link_to user_session.id, "/admin/user_sessions/#{user_session.id}"
+    end
     column :date
     column :time do |user_session|
       user_session.time.strftime(Session::TIME_FORMAT)

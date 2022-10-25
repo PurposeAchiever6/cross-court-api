@@ -6,6 +6,7 @@ module Subscriptions
       subscription = context.subscription
       subscription_id = subscription.id
       months = context.months.to_i
+      reason = context.reason
 
       raise SubscriptionIsNotActiveException unless subscription.active?
       raise SubscriptionInvalidPauseMonthsException unless [1, 2].include?(months)
@@ -17,12 +18,14 @@ module Subscriptions
       subscription_pause = SubscriptionPause.create!(
         paused_from: wait_until,
         paused_until: resumes_at,
-        subscription_id: subscription_id
+        subscription_id: subscription_id,
+        reason: reason
       )
 
       SlackService.new(subscription.user)
                   .subscription_paused_for_next_period(subscription,
                                                        months: months,
+                                                       reason: reason,
                                                        pause_start_on_datetime: wait_until)
 
       job_id = ::Subscriptions::PauseJob.set(

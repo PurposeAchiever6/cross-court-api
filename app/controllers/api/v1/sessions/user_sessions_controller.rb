@@ -14,12 +14,13 @@ module Api
         def create
           session = Session.find(params[:session_id])
 
-          UserSessions::Create.call(
+          @user_session = UserSessions::Create.call(
             referral_code: params[:referral_code],
             session: session,
             user: current_user,
-            date: params[:date]
-          )
+            date: params[:date],
+            goal: params[:goal]
+          ).user_session
         end
 
         private

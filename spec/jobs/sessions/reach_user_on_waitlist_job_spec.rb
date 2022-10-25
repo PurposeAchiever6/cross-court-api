@@ -2,8 +2,20 @@ require 'rails_helper'
 
 describe Sessions::ReachUserOnWaitlistJob do
   describe '#perform' do
-    let!(:user_1) { create(:user, credits: user_1_credits) }
-    let!(:user_2) { create(:user, credits: user_2_credits) }
+    let!(:user_1) do
+      create(
+        :user,
+        credits: user_1_credits,
+        subscription_skill_session_credits: user_1_skill_session_credits
+      )
+    end
+    let!(:user_2) do
+      create(
+        :user,
+        credits: user_2_credits,
+        subscription_skill_session_credits: user_2_skill_session_credits
+      )
+    end
     let!(:location) { create(:location) }
     let!(:session) do
       create(
@@ -11,7 +23,8 @@ describe Sessions::ReachUserOnWaitlistJob do
         time: session_time,
         location: location,
         max_capacity: session_max_capacity,
-        max_first_timers: max_first_timers
+        max_first_timers: max_first_timers,
+        skill_session: skill_session
       )
     end
     let!(:user_sessions) do
@@ -32,8 +45,11 @@ describe Sessions::ReachUserOnWaitlistJob do
 
     let(:current_time) { Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)) }
     let(:session_time) { current_time }
+    let(:skill_session) { true }
     let(:user_1_credits) { 1 }
     let(:user_2_credits) { 1 }
+    let(:user_1_skill_session_credits) { 0 }
+    let(:user_2_skill_session_credits) { 0 }
     let(:session_max_capacity) { 15 }
     let(:number_of_user_sessions) { session_max_capacity - 1 }
     let(:date) { Time.zone.today + 2.days }
@@ -146,6 +162,40 @@ describe Sessions::ReachUserOnWaitlistJob do
         it { is_expected.to eq(nil) }
         it { expect { subject }.not_to change { waitlist_item_1.reload.state } }
         it { expect { subject }.not_to change { waitlist_item_2.reload.state } }
+      end
+    end
+
+    context 'when the session is a skill session' do
+      let(:skill_session) { true }
+
+      it { is_expected.to eq(true) }
+
+      it 'updates user session waitlist state' do
+        expect { subject }.to change { waitlist_item_1.reload.state }.from('pending').to('success')
+      end
+
+      it { expect { subject }.not_to change { waitlist_item_2.reload.state } }
+
+      context 'when all users has no rcredits' do
+        let(:user_1_credits) { 0 }
+        let(:user_2_credits) { 0 }
+
+        it { is_expected.to eq(nil) }
+        it { expect { subject }.not_to change { waitlist_item_1.reload.state } }
+        it { expect { subject }.not_to change { waitlist_item_2.reload.state } }
+
+        context 'when second user on waitlist has one skill session credit left' do
+          let(:user_2_skill_session_credits) { 1 }
+
+          it { is_expected.to eq(true) }
+          it { expect { subject }.not_to change { waitlist_item_1.reload.state } }
+
+          it 'updates user session waitlist state' do
+            expect {
+              subject
+            }.to change { waitlist_item_2.reload.state }.from('pending').to('success')
+          end
+        end
       end
     end
   end

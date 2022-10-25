@@ -3,8 +3,10 @@ module UserSessions
     queue_as :default
 
     def perform
-      UserSessionsQuery.new.finished_cancellation_time.reserved.find_each do |user_session|
-        UserSessionAutoConfirmed.new(user_session).save!
+      relation = UserSession.reserved
+
+      UserSessionsQuery.new(relation).finished_cancellation_time.find_each do |user_session|
+        UserSessions::AutoConfirm.call(user_session: user_session)
       end
     end
   end

@@ -1,8 +1,9 @@
 require 'rails_helper'
 
-describe UserSessionAutoConfirmed do
-  describe '.save!' do
-    let!(:session) { create(:session, :daily, time: session_time) }
+describe UserSessions::AutoConfirm do
+  describe '.call' do
+    let(:is_open_club) { false }
+    let!(:session) { create(:session, :daily, time: session_time, is_open_club: is_open_club) }
     let!(:user) { create(:user) }
     let!(:user_session) do
       create(
@@ -30,7 +31,7 @@ describe UserSessionAutoConfirmed do
                                    link: user_session.invite_link))
     end
 
-    subject { UserSessionAutoConfirmed.new(user_session).save! }
+    subject { UserSessions::AutoConfirm.call(user_session: user_session) }
 
     before do
       allow(SendSonar).to receive(:message_customer)
@@ -81,6 +82,29 @@ describe UserSessionAutoConfirmed do
       it 'does not enque ActiveCampaign::CreateDealJob' do
         expect { subject }.not_to have_enqueued_job(
           ::ActiveCampaign::CreateDealJob
+        )
+      end
+    end
+
+    context 'when is open club' do
+      let(:is_open_club) { true }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('confirmed') }
+
+      it { expect { subject }.not_to change { user_session.reload.reminder_sent_at } }
+
+      it 'does not call Sonar service' do
+        expect(SonarService).not_to receive(:send_message)
+        subject
+      end
+
+      it 'enques ActiveCampaign::CreateDealJob' do
+        expect { subject }.to have_enqueued_job(
+          ::ActiveCampaign::CreateDealJob
+        ).with(
+          ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
+          user.id,
+          user_session_id: user_session.id
         )
       end
     end
