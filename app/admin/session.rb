@@ -45,11 +45,6 @@ ActiveAdmin.register Session do
       f.input :coming_soon
       f.input :women_only
       f.input :skill_session
-      f.input :guests_allowed,
-              hint: 'Number of guests allowed per session. If not set, '\
-                    'it means that guests are not allowed for this session.'
-      f.input :guests_allowed_per_user,
-              hint: 'Number of guests allowed per user for this session.'
       f.input :start_time,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
@@ -64,6 +59,11 @@ ActiveAdmin.register Session do
       f.input :max_first_timers,
               hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
                     'users who can book.'
+      f.input :guests_allowed,
+              hint: 'Number of guests allowed per session. If not set, '\
+                    'it means that guests are not allowed for this session.'
+      f.input :guests_allowed_per_user,
+              hint: 'Number of guests allowed per user for this session.'
       f.input :cc_cash_earned
       f.input :default_referee, collection: User.referees
       f.input :default_sem, collection: User.sems
@@ -246,6 +246,13 @@ ActiveAdmin.register Session do
           user_sessions: user_sessions,
           jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
         }
+      end
+
+      if resource.guests_allowed?
+        panel 'Guests' do
+          guests = resource.guests(date).not_canceled.includes(user_session: :user)
+          render partial: 'guests', locals: { guests: guests }
+        end
       end
 
       panel 'Waitlist' do

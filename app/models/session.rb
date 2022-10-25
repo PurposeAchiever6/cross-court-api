@@ -66,6 +66,7 @@ class Session < ApplicationRecord
   has_many :user_session_votes
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
+  has_many :session_guests, through: :user_sessions
 
   validates :skill_level, presence: true, unless: -> { skill_session? || open_club? }
   validates :start_time, :time, :duration_minutes, presence: true
@@ -217,6 +218,10 @@ class Session < ApplicationRecord
     user_session_waitlists.by_date(date).sorted
   end
 
+  def guests(date)
+    session_guests.by_date(date)
+  end
+
   def votes(date)
     return 0 unless coming_soon
 
@@ -291,6 +296,10 @@ class Session < ApplicationRecord
       booked_sessions = user.user_sessions.not_skill_sessions.not_canceled.by_date(date).count
       booked_sessions >= location_max_sessions_booked_per_day
     end
+  end
+
+  def guests_allowed?
+    guests_allowed&.positive?
   end
 
   private

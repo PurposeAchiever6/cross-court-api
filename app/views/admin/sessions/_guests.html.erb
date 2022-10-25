@@ -1,0 +1,35 @@
+<% if guests.length.zero? %>
+  <div>
+    No users guests for this session yet
+  </div>
+<% else %>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Phone Number</th>
+      <th>Email</th>
+      <th>Access Code</th>
+      <th>Invited By</th>
+    </tr>
+    <% guests.each do |guest| %>
+      <tr>
+        <td class='align-middle'>
+          <%= guest.full_name %>
+        </td>
+        <td class='align-middle'>
+          <%= guest.phone_number %>
+        </td>
+        <td class='align-middle'>
+          <%= guest.email %>
+        </td>
+        <td class='align-middle'>
+          <%= guest.access_code %>
+        </td>
+        <td class='align-middle'>
+          <%= link_to guest.user_session.user_full_name,
+                      admin_user_path(guest.user_session.user_id) %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
