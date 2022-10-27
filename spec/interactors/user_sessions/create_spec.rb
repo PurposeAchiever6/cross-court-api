@@ -25,6 +25,7 @@ describe UserSessions::Create do
       create(
         :user,
         credits: credits,
+        credits_without_expiration: credits_without_expiration,
         subscription_credits: subscription_credits,
         subscription_skill_session_credits: subscription_skill_session_credits,
         free_session_state: free_session_state,
@@ -45,6 +46,7 @@ describe UserSessions::Create do
     let(:all_skill_levels_allowed) { true }
     let(:is_open_club) { false }
     let(:credits) { 1 }
+    let(:credits_without_expiration) { 0 }
     let(:subscription_credits) { 0 }
     let(:subscription_skill_session_credits) { 2 }
     let(:free_session_state) { :used }
@@ -92,12 +94,24 @@ describe UserSessions::Create do
       ).with('SessionMailer', 'session_booked', anything, anything)
     end
 
+    context 'when user does not have credits but has season pass credits' do
+      let(:credits) { 0 }
+      let(:credits_without_expiration) { 1 }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.to change { user.reload.credits_without_expiration }.by(-1) }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect(subject.user_session.credit_used_type).to eq('credits_without_expiration') }
+    end
+
     context 'when user does not have credits but has subscription_credits' do
       let(:credits) { 0 }
       let(:subscription_credits) { 1 }
 
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
       it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
       it { expect(subject.user_session.credit_used_type).to eq('subscription_credits') }
 
@@ -106,6 +120,7 @@ describe UserSessions::Create do
 
         it { expect { subject }.to change(UserSession, :count).by(1) }
         it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
         it { expect { subject }.not_to change { user.reload.subscription_credits } }
       end
     end

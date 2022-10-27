@@ -50,6 +50,7 @@
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
 #  bio                                     :string
+#  credits_without_expiration              :integer          default(0)
 #
 # Indexes
 #

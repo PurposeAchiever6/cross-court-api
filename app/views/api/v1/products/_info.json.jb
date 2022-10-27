@@ -9,7 +9,8 @@ json = {
   price_for_members: product.price_for_members,
   price_for_first_timers_no_free_session: product.price_for_first_timers_no_free_session,
   product_type: product.product_type,
-  label: product.label
+  label: product.label,
+  season_pass: product.season_pass
 }
 
 json[:image_url] = polymorphic_url(product.image) if product.image.attached?

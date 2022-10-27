@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(version: 2022_11_01_131750) do
     t.integer "available_for", default: 0
     t.integer "max_rollover_credits"
     t.integer "skill_session_credits", default: 0
+    t.boolean "season_pass", default: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -455,6 +456,7 @@ ActiveRecord::Schema.define(version: 2022_11_01_131750) do
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
     t.string "bio"
+    t.integer "credits_without_expiration", default: 0
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

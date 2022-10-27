@@ -20,6 +20,7 @@
 #  available_for                          :integer          default("everyone")
 #  max_rollover_credits                   :integer
 #  skill_session_credits                  :integer          default(0)
+#  season_pass                            :boolean          default(FALSE)
 #
 # Indexes
 #

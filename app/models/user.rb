@@ -50,6 +50,7 @@
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
 #  bio                                     :string
+#  credits_without_expiration              :integer          default(0)
 #
 # Indexes
 #
@@ -186,7 +187,10 @@ class User < ApplicationRecord
   end
 
   def credits?
-    credits.positive? || subscription_credits.positive? || unlimited_credits?
+    credits.positive? \
+      || credits_without_expiration.positive? \
+        || subscription_credits.positive? \
+          || unlimited_credits?
   end
 
   def unlimited_credits?
@@ -202,9 +206,9 @@ class User < ApplicationRecord
   end
 
   def total_session_credits
-    return '' if !credits || !subscription_credits
+    return '' if !credits || !credits_without_expiration || !subscription_credits
 
-    unlimited_credits? ? 'Unlimited' : credits + subscription_credits
+    unlimited_credits? ? 'Unlimited' : credits + credits_without_expiration + subscription_credits
   end
 
   def age

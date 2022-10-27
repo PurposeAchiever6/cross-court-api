@@ -117,6 +117,8 @@ module UserSessions
         unless user.unlimited_skill_session_credits?
           user.increment(:subscription_skill_session_credits)
         end
+      when :credits_without_expiration
+        user.increment(:credits_without_expiration)
       else
         user.increment(:credits)
       end
