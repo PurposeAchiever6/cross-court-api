@@ -9,6 +9,7 @@
       <th>Image</th>
       <th>User</th>
       <th>Instagram</th>
+      <th>New Member</th>
       <th>First Session</th>
       <th>Status</th>
       <th>Membership</th>
@@ -29,7 +30,7 @@
                 <%= "##{index + 1}" if team.present? %>
               </td>
               <td class='align-middle'>
-                <%= image_tag user_session.user.image.attached? ? user_session.user.image : 'missing-profile-image.png',
+                <%= image_tag user.image.attached? ? user.image : 'missing-profile-image.png',
                               class: 'rounded-full w-12 h-12 object-cover' %>
               </td>
               <td class='align-middle'>
@@ -43,7 +44,10 @@
                 <% end %>
               </td>
               <td class='align-middle'>
-                <%= status_tag user_session.first_session || user_session.user.first_timer? %>
+                <%= status_tag user.new_member? %>
+              </td>
+              <td class='align-middle'>
+                <%= status_tag user_session.first_session || user.first_timer? %>
               </td>
               <td class='align-middle'>
                 <%= status_tag user_session.state %>
