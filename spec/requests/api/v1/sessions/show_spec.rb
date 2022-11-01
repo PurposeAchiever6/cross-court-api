@@ -66,7 +66,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
     it 'returns referee information' do
       subject
       expect(json[:session][:referee]).to include_json(
-        name: referee.full_name,
+        full_name: referee.full_name,
         image_url: polymorphic_url(referee.image)
       )
     end
@@ -74,7 +74,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
     it 'returns sem information' do
       subject
       expect(json[:session][:sem]).to include_json(
-        name: sem.full_name,
+        full_name: sem.full_name,
         image_url: polymorphic_url(sem.image)
       )
     end

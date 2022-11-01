@@ -49,6 +49,7 @@
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
+#  bio                                     :string
 #
 # Indexes
 #
@@ -56,6 +57,7 @@
 #  index_users_on_drop_in_expiration_date       (drop_in_expiration_date)
 #  index_users_on_email                         (email) UNIQUE
 #  index_users_on_free_session_expiration_date  (free_session_expiration_date)
+#  index_users_on_is_coach                      (is_coach)
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
 #  index_users_on_private_access                (private_access)
@@ -149,6 +151,7 @@ class User < ApplicationRecord
   scope :sorted_by_full_name, -> { order('LOWER(first_name) ASC, LOWER(last_name) ASC') }
   scope :members, -> { joins(:active_subscription) }
   scope :reserve_team, -> { where(reserve_team: true) }
+  scope :employees, -> { referees.or(sems).or(coaches) }
 
   before_validation :init_uid
   after_create :create_referral_code

@@ -17,9 +17,27 @@ json = {
   past: session.past?(date),
   spots_left: spots_left,
   on_waitlist: on_waitlist,
-  referee: { name: referee&.full_name },
-  sem: { name: sem&.full_name },
-  coach: { name: coach&.full_name },
+  referee: {
+    full_name: referee&.full_name,
+    first_name: referee&.first_name,
+    bio: referee&.bio,
+    instagram_username: referee&.instagram_username,
+    instagram_profile: referee&.instagram_profile
+  },
+  sem: {
+    full_name: sem&.full_name,
+    first_name: sem&.first_name,
+    bio: sem&.bio,
+    instagram_username: sem&.instagram_username,
+    instagram_profile: sem&.instagram_profile
+  },
+  coach: {
+    full_name: coach&.full_name,
+    first_name: coach&.first_name,
+    bio: coach&.bio,
+    instagram_username: coach&.instagram_username,
+    instagram_profile: coach&.instagram_profile
+  },
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
   skill_level: nil
 }
