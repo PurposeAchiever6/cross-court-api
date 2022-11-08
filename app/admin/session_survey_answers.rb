@@ -3,6 +3,10 @@ ActiveAdmin.register SessionSurveyAnswer do
   actions :index, :show, :destroy
   includes :user, :session_survey_question
 
+  filter :user
+  filter :answer
+  filter :session_survey_question
+
   index do
     selectable_column
     id_column

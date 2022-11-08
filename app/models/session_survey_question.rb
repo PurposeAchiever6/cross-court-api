@@ -24,4 +24,8 @@ class SessionSurveyQuestion < ApplicationRecord
 
   scope :enabled, -> { where(is_enabled: true) }
   scope :mandatory, -> { where(is_mandatory: true) }
+
+  def display_name
+    question
+  end
 end
