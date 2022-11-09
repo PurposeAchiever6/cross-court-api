@@ -356,4 +356,58 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       expect(json[:error]).to eq I18n.t('api.errors.users.flagged')
     end
   end
+
+  context 'when user reserves a shooting machine' do
+    let!(:shooting_machine) { create(:shooting_machine, session: session) }
+
+    before { params[:shooting_machine_id] = shooting_machine.id }
+
+    it 'returns success' do
+      subject
+      expect(response).to be_successful
+    end
+
+    it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
+    it { expect { subject }.not_to change(Payment, :count) }
+
+    context 'when session is open club' do
+      let!(:payment_method) { create(:payment_method, user: user, default: true) }
+      let!(:active_subscription) { create(:subscription) }
+      let(:is_open_club) { true }
+
+      before { allow(StripeService).to receive(:charge).and_return(double(id: 'payment_intent')) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
+      it { expect { subject }.to change(Payment, :count).by(1) }
+
+      context 'when the shooting machine has already been reserved' do
+        let!(:user_session) { create(:user_session, session: session, date: date) }
+        let!(:shooting_machine_reservation) do
+          create(
+            :shooting_machine_reservation,
+            shooting_machine: shooting_machine,
+            user_session: user_session
+          )
+        end
+
+        it 'returns bad request' do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'returns correct error message' do
+          subject
+          expect(json[:error]).to eq('The shooting machine has already been reserved')
+        end
+
+        it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
+        it { expect { subject }.not_to change(Payment, :count) }
+      end
+    end
+  end
 end

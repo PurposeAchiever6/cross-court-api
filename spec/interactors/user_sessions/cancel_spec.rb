@@ -275,5 +275,27 @@ describe UserSessions::Cancel do
 
       it { expect { subject }.to have_enqueued_job(::Sonar::SendMessageJob).twice }
     end
+
+    context 'when the user session has a shooting machine reserved' do
+      let(:status) { :reserved }
+      let!(:shooting_machine_reservation) do
+        create(:shooting_machine_reservation, user_session: user_session, status: status)
+      end
+
+      it 'updates the shooting machine reservation status' do
+        expect { subject }.to change { shooting_machine_reservation.reload.status }.to('canceled')
+      end
+
+      context 'when the shooting machine reservation has been canceled' do
+        let(:status) { :canceled }
+
+        it { expect { subject }.not_to change { shooting_machine_reservation.reload.status } }
+
+        it 'does not call ShootingMachineReservations::Cancel' do
+          expect(ShootingMachineReservations::Cancel).not_to receive(:call)
+          subject
+        end
+      end
+    end
   end
 end

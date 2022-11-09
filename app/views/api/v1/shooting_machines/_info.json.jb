@@ -1,0 +1,11 @@
+json = {
+  id: shooting_machine.id,
+  price: shooting_machine.price,
+  start_time: shooting_machine.start_time,
+  end_time: shooting_machine.end_time,
+  session_id: shooting_machine.session_id
+}
+
+json[:reserved] = shooting_machine.reserved?(date) if date
+
+json

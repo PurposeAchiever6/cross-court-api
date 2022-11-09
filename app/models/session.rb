@@ -67,6 +67,7 @@ class Session < ApplicationRecord
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
   has_many :session_guests, through: :user_sessions
+  has_many :shooting_machines, dependent: :destroy
 
   validates :skill_level, presence: true, unless: -> { skill_session? || open_club? }
   validates :start_time, :time, :duration_minutes, presence: true
@@ -83,6 +84,7 @@ class Session < ApplicationRecord
            :max_skill_sessions_booked_per_day, to: :location, prefix: true
 
   accepts_nested_attributes_for :session_exceptions, allow_destroy: true
+  accepts_nested_attributes_for :shooting_machines, allow_destroy: true
 
   after_update :remove_orphan_sessions
   before_destroy :check_for_future_user_sessions
@@ -300,6 +302,10 @@ class Session < ApplicationRecord
 
   def guests_allowed?
     guests_allowed&.positive?
+  end
+
+  def shooting_machines?
+    open_club?
   end
 
   private

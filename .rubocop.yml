@@ -58,6 +58,7 @@ Metrics/CyclomaticComplexity:
     - app/interactors/subscriptions/update_user_subscription_credits.rb
     - app/decorators/session_decorator.rb
     - app/jobs/sessions/assign_default_employees_job.rb
+    - app/interactors/user_sessions/cancel.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
@@ -73,6 +74,7 @@ Metrics/MethodLength:
     - app/interactors/users/charge.rb
     - app/jobs/users/inactive_non_members_job.rb
     - app/interactors/subscriptions/create_subscription.rb
+    - app/interactors/user_sessions/cancel.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

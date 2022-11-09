@@ -38,6 +38,12 @@ json = {
     instagram_username: coach&.instagram_username,
     instagram_profile: coach&.instagram_profile
   },
+  shooting_machines: render(
+    partial: 'api/v1/shooting_machines/info',
+    collection: session.shooting_machines,
+    as: :shooting_machine,
+    locals: { date: date }
+  ),
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
   skill_level: nil
 }

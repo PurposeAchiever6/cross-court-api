@@ -39,6 +39,10 @@ module Api
       rescue_from MaximumNumberOfPausesReachedException,       with: :render_custom_exception
       rescue_from ReserveTeamNotAllowedException,              with: :render_custom_exception
       rescue_from ReserveTeamMismatchException,                with: :render_custom_exception
+      rescue_from ChargeUserException,                         with: :render_custom_exception
+      rescue_from ShootingMachineSessionMismatchException,     with: :render_custom_exception
+      rescue_from ShootingMachineInvalidSessionException,      with: :render_custom_exception
+      rescue_from ShootingMachineAlreadyReservedException,     with: :render_custom_exception
       rescue_from UserBookedSessionsLimitPerDayException,      with: :render_custom_exception
       rescue_from Stripe::StripeError,                         with: :render_custom_exception
       rescue_from SessionGuestsException,                      with: :render_custom_exception

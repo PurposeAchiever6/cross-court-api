@@ -37,8 +37,8 @@
 #  subscription_credits                    :integer          default(0), not null
 #  skill_rating                            :decimal(2, 1)
 #  drop_in_expiration_date                 :date
-#  private_access                          :boolean          default(FALSE)
 #  active_campaign_id                      :integer
+#  private_access                          :boolean          default(FALSE)
 #  birthday                                :date
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
@@ -49,8 +49,8 @@
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  bio                                     :string
 #  credits_without_expiration              :integer          default(0)
+#  bio                                     :string
 #
 # Indexes
 #
@@ -121,6 +121,12 @@ FactoryBot.define do
     trait :not_first_timer do
       after :create do |user|
         create(:user_session, user: user, checked_in: true)
+      end
+    end
+
+    trait :with_payment_method do
+      after :create do |user|
+        create(:payment_method, user: user, default: true)
       end
     end
   end

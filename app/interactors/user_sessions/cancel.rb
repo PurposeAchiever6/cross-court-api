@@ -10,12 +10,19 @@ module UserSessions
       is_free_session = user_session.is_free_session
       in_cancellation_time = user_session.in_cancellation_time?
       session = user_session.session
+      shooting_machine_reservation = user_session.shooting_machine_reservation
 
       user_session.state = :canceled
       user_session.save!
 
       user_session.session_guests.each do |session_guest|
         SessionGuests::Remove.call(user_session: user_session, session_guest_id: session_guest.id)
+      end
+
+      if shooting_machine_reservation
+        ShootingMachineReservations::Cancel.call(
+          shooting_machine_reservation: shooting_machine_reservation
+        )
       end
 
       return if session.is_open_club?

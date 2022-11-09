@@ -161,6 +161,34 @@ describe UserSessions::Create do
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+
+      context 'when user reserves a shooting machine' do
+        let!(:payment_method) { create(:payment_method, user: user, default: true) }
+        let!(:shooting_machine) { create(:shooting_machine, session: session) }
+
+        before do
+          subject_args.merge!(shooting_machine: shooting_machine)
+          allow(StripeService).to receive(:charge).and_return(double(id: 'payment_intent'))
+        end
+
+        it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
+        it { expect { subject }.to change(Payment, :count).by(1) }
+
+        context 'when the shooting machine has already been reserved' do
+          let!(:user_session) { create(:user_session, session: session, date: date) }
+          let!(:shooting_machine_reservation) do
+            create(
+              :shooting_machine_reservation,
+              shooting_machine: shooting_machine,
+              user_session: user_session
+            )
+          end
+
+          it { expect { subject }.to raise_error(ShootingMachineAlreadyReservedException) }
+          it { expect { subject rescue nil }.not_to change(ShootingMachineReservation, :count) }
+          it { expect { subject rescue nil }.not_to change(Payment, :count) }
+        end
+      end
     end
 
     context 'when the session is not for all skill levels' do

@@ -6,7 +6,8 @@ ActiveAdmin.register Session do
                 :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
                 :cc_cash_earned, :default_referee_id, :default_sem_id, :default_coach_id,
                 :guests_allowed, :guests_allowed_per_user,
-                session_exceptions_attributes: %i[id date _destroy]
+                session_exceptions_attributes: %i[id date _destroy],
+                shooting_machines_attributes: %i[id start_time end_time price _destroy]
 
   includes :location, :session_exceptions, :skill_level
 
@@ -75,10 +76,24 @@ ActiveAdmin.register Session do
                            data: { select2: false },
                            class: 'w-40 p-2 border-gray-300 rounded'
       end
+    end
+
+    f.inputs 'Session Exceptions' do
       f.has_many :session_exceptions, allow_destroy: true do |p|
         p.input :date, as: :datepicker, input_html: { autocomplete: :off }
       end
     end
+
+    if session.shooting_machines?
+      f.inputs 'Shooting Machines' do
+        f.has_many :shooting_machines, allow_destroy: true do |p|
+          p.input :start_time, as: :time_picker, input_html: { autocomplete: :off }
+          p.input :end_time, as: :time_picker, input_html: { autocomplete: :off }
+          p.input :price
+        end
+      end
+    end
+
     f.actions
   end
 
@@ -123,6 +138,8 @@ ActiveAdmin.register Session do
       "Session #{session.id}"
     end
   } do
+    date = params[:date]
+
     attributes_table do
       row :id
       row :start_time
@@ -158,8 +175,8 @@ ActiveAdmin.register Session do
                                .group(:date)
                                .order(:date)
                                .count
-                               .map do |date, votes|
-          content_tag(:div, "#{date}: #{votes}")
+                               .map do |votes_date, votes_count|
+          content_tag(:div, "#{votes_date}: #{votes_count}")
         end
 
         safe_join(votes_by_date)
@@ -184,7 +201,22 @@ ActiveAdmin.register Session do
       end
     end
 
-    date = params[:date]
+    if session.shooting_machines?
+      panel 'Shooting machines' do
+        table_for session.shooting_machines.order(start_time: :asc) do
+          column :id
+          number_column :price, as: :currency
+          column :start_time
+          column :end_time
+          if date.present?
+            column :reserved do |shooting_machine|
+              shooting_machine.reserved?(date)
+            end
+          end
+        end
+      end
+    end
+
     if date.present?
       panel 'Employees' do
         referee = resource.referee(date)
@@ -218,7 +250,8 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .checked_in
-                                .includes(user: [:last_checked_in_user_session,
+                                .includes(:shooting_machine_reservation,
+                                          user: [:last_checked_in_user_session,
                                                  { active_subscription: :product,
                                                    image_attachment: :blob }])
                                 .order(assigned_team: :desc, updated_at: :asc)
@@ -236,7 +269,8 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .not_checked_in
-                                .includes(user: [:last_checked_in_user_session,
+                                .includes(:shooting_machine_reservation,
+                                          user: [:last_checked_in_user_session,
                                                  { active_subscription: :product,
                                                    image_attachment: :blob }])
                                 .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')

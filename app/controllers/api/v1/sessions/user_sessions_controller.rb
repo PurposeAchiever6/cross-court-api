@@ -18,6 +18,7 @@ module Api
             referral_code: params[:referral_code],
             session: session,
             user: current_user,
+            shooting_machine: shooting_machine,
             date: params[:date],
             goal: params[:goal]
           ).user_session
@@ -34,6 +35,10 @@ module Api
           return Time.zone.today unless date
 
           Date.strptime(date, '%m/%d/%Y')
+        end
+
+        def shooting_machine
+          ShootingMachine.find_by(id: params[:shooting_machine_id])
         end
       end
     end

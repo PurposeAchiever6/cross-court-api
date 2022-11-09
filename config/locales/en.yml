@@ -91,6 +91,10 @@ en:
         max_guests_reached_for_user: "You have reached the maximum number of guests allowed for this session"
         max_guests_reached_for_session: "This session has reached the maximum number of guests allowed"
         max_redemptions_by_guest_reached: "The guest has reached the maximum number of invites"
+      shooting_machines:
+        already_reserved: The shooting machine has already been reserved
+        invalid_session: The session does not support a shooting machine
+        mismatch_session: The shooting machine mismatch from the session reservation
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:
