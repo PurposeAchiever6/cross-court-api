@@ -55,7 +55,13 @@ class UserSession < ApplicationRecord
   validates :state, :date, presence: true
   validate :user_valid_age
 
-  delegate :time, :time_zone, :location, :location_name, :location_description, to: :session
+  delegate :time,
+           :time_zone,
+           :location,
+           :location_name,
+           :location_description,
+           :skill_session,
+           to: :session
   delegate :phone_number, :email, :full_name,
            to: :user,
            prefix: true
