@@ -27,6 +27,7 @@
 #  default_coach_id         :integer
 #  guests_allowed           :integer
 #  guests_allowed_per_user  :integer
+#  members_only             :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -55,6 +56,7 @@ FactoryBot.define do
     cc_cash_earned { 0 }
     guests_allowed { nil }
     guests_allowed_per_user { nil }
+    members_only { false }
 
     trait :daily do
       recurring { IceCube::Rule.daily }

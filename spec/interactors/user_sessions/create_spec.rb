@@ -18,7 +18,8 @@ describe UserSessions::Create do
         is_open_club: is_open_club,
         skill_session: skill_session,
         max_first_timers: max_first_timers,
-        all_skill_levels_allowed: all_skill_levels_allowed
+        all_skill_levels_allowed: all_skill_levels_allowed,
+        members_only: members_only
       )
     end
     let!(:user) do
@@ -44,6 +45,7 @@ describe UserSessions::Create do
     let(:skill_session) { false }
     let(:max_first_timers) { nil }
     let(:all_skill_levels_allowed) { true }
+    let(:members_only) { false }
     let(:is_open_club) { false }
     let(:credits) { 1 }
     let(:credits_without_expiration) { 0 }
@@ -615,6 +617,25 @@ describe UserSessions::Create do
           let(:another_session_skill_session) { false }
 
           it { expect { subject }.to change(UserSession, :count).by(1) }
+        end
+      end
+    end
+
+    context 'when session is only for members' do
+      let(:members_only) { true }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+
+      context 'when user does not have an active subscription' do
+        let(:active_subscription) { nil }
+
+        it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+        it 'raises SessionOnlyForMembersException' do
+          expect { subject }.to raise_error(
+            SessionOnlyForMembersException,
+            'The session is only for members'
+          )
         end
       end
     end

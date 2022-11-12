@@ -17,7 +17,8 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       :daily,
       location: location,
       is_open_club: is_open_club,
-      all_skill_levels_allowed: all_skill_levels_allowed
+      all_skill_levels_allowed: all_skill_levels_allowed,
+      members_only: members_only
     )
   end
 
@@ -27,6 +28,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:date) { 1.day.from_now }
   let(:is_open_club) { false }
   let(:all_skill_levels_allowed) { true }
+  let(:members_only) { false }
   let(:params) { { date: date.strftime(Session::DATE_FORMAT) } }
   let(:active_subscription) { nil }
 
@@ -212,6 +214,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         subject
         expect(response).to be_successful
       end
+
       it { expect { subject }.to change(UserSession, :count).by(1) }
     end
 
@@ -408,6 +411,31 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
         it { expect { subject }.not_to change(Payment, :count) }
       end
+    end
+  end
+
+  context 'when session is only for members' do
+    let(:members_only) { true }
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns correct error message' do
+      subject
+      expect(json[:error]).to eq('The session is only for members')
+    end
+
+    context 'when user is a member' do
+      let(:active_subscription) { create(:subscription) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
     end
   end
 end

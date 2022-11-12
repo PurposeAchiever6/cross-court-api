@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_05_133610) do
+ActiveRecord::Schema.define(version: 2022_11_12_182907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -268,6 +268,7 @@ ActiveRecord::Schema.define(version: 2022_11_05_133610) do
     t.integer "default_coach_id"
     t.integer "guests_allowed"
     t.integer "guests_allowed_per_user"
+    t.boolean "members_only", default: false
     t.index ["default_coach_id"], name: "index_sessions_on_default_coach_id"
     t.index ["default_referee_id"], name: "index_sessions_on_default_referee_id"
     t.index ["default_sem_id"], name: "index_sessions_on_default_sem_id"

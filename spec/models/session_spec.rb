@@ -27,6 +27,7 @@
 #  default_coach_id         :integer
 #  guests_allowed           :integer
 #  guests_allowed_per_user  :integer
+#  members_only             :boolean          default(FALSE)
 #
 # Indexes
 #

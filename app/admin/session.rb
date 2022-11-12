@@ -3,9 +3,9 @@ ActiveAdmin.register Session do
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
-                :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
-                :cc_cash_earned, :default_referee_id, :default_sem_id, :default_coach_id,
-                :guests_allowed, :guests_allowed_per_user,
+                :members_only, :duration_minutes, :max_capacity, :max_first_timers,
+                :all_skill_levels_allowed, :cc_cash_earned, :default_referee_id, :default_sem_id,
+                :default_coach_id, :guests_allowed, :guests_allowed_per_user,
                 session_exceptions_attributes: %i[id date _destroy],
                 shooting_machines_attributes: %i[id start_time end_time price _destroy]
 
@@ -20,6 +20,7 @@ ActiveAdmin.register Session do
   filter :coming_soon
   filter :women_only
   filter :skill_session
+  filter :members_only
   filter :guests_allowed
   filter :guests_allowed_per_user
 
@@ -36,16 +37,51 @@ ActiveAdmin.register Session do
                              'It will also make the session unavailable for this date.' }
   end
 
+  index do
+    selectable_column
+    id_column
+    column :location_name
+    column :skill_level do |session|
+      session.skill_level_name || 'N/A'
+    end
+    column :recurring, &:recurring_text
+    column :time do |session|
+      session.time.strftime(Session::TIME_FORMAT)
+    end
+    column :start_time
+    column :end_time
+    column :duration do |session|
+      "#{session.duration_minutes} mins"
+    end
+    column :max_capacity do |session|
+      session.max_capacity || 'N/A'
+    end
+    column :max_first_timers do |session|
+      session.max_first_timers || 'No restriction'
+    end
+    number_column :cc_cash_earned, as: :currency
+    column :active, &:active?
+    toggle_bool_column :is_open_club
+    toggle_bool_column :skill_session
+    toggle_bool_column :women_only
+    toggle_bool_column :members_only
+    toggle_bool_column :coming_soon
+    toggle_bool_column :is_private
+
+    actions unless params['scope'] == 'deleted'
+  end
+
   form do |f|
     f.inputs 'Session Details' do
       f.input :location
       f.input :skill_level
-      f.input :is_private
       f.input :is_open_club
+      f.input :skill_session
+      f.input :women_only
+      f.input :members_only
       f.input :all_skill_levels_allowed
       f.input :coming_soon
-      f.input :women_only
-      f.input :skill_session
+      f.input :is_private
       f.input :start_time,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
@@ -97,39 +133,6 @@ ActiveAdmin.register Session do
     f.actions
   end
 
-  index do
-    selectable_column
-    id_column
-    column :location_name
-    column :skill_level do |session|
-      session.skill_level_name || 'N/A'
-    end
-    column :recurring, &:recurring_text
-    column :time do |session|
-      session.time.strftime(Session::TIME_FORMAT)
-    end
-    column :start_time
-    column :end_time
-    column :duration do |session|
-      "#{session.duration_minutes} mins"
-    end
-    column :max_capacity do |session|
-      session.max_capacity || 'N/A'
-    end
-    column :max_first_timers do |session|
-      session.max_first_timers || 'No restriction'
-    end
-    number_column :cc_cash_earned, as: :currency
-    column :active, &:active?
-    toggle_bool_column :is_private
-    toggle_bool_column :is_open_club
-    toggle_bool_column :coming_soon
-    toggle_bool_column :women_only
-    toggle_bool_column :skill_session
-
-    actions unless params['scope'] == 'deleted'
-  end
-
   show title: proc { |session|
     date = params[:date]
     if date.present?
@@ -162,12 +165,13 @@ ActiveAdmin.register Session do
       row :skill_level do |session|
         session.skill_level_name || 'N/A'
       end
-      row :is_private
       row :is_open_club
-      row :coming_soon
-      row :women_only
       row :skill_session
+      row :women_only
+      row :members_only
       row :all_skill_levels_allowed
+      row :coming_soon
+      row :is_private
       row :guests_allowed
       row :guests_allowed_per_user
       row :votes do |session|

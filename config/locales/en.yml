@@ -81,6 +81,7 @@ en:
         not_coming_soon: "The session should be a coming soon session"
         has_already_been_played: "The session has already been played"
         reserve_team_not_allowed: "The Reserve Team is not allowed to reserve"
+        only_for_members: "The session is only for members"
         votes:
           user_did_not_vote: "The user did not vote for this session"
       waitlists:
