@@ -22,20 +22,14 @@ class ShootingMachine < ApplicationRecord
   belongs_to :session
   has_many :shooting_machine_reservations, dependent: :nullify
 
-  def start_time
-    start_time_value = attributes['start_time']
-
-    return unless start_time_value
-
-    "#{start_time_value.hour}:#{start_time_value.min}"
+  def start_time_str
+    start_time_value = start_time
+    start_time_value ? start_time_value.strftime('%I:%M %p') : nil
   end
 
-  def end_time
-    end_time_value = attributes['end_time']
-
-    return unless end_time_value
-
-    "#{end_time_value.hour}:#{end_time_value.min}"
+  def end_time_str
+    end_time_value = end_time
+    end_time_value ? end_time_value.strftime('%I:%M %p') : nil
   end
 
   def reserved?(date)

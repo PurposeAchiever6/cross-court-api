@@ -37,13 +37,13 @@
                 <%= link_to user_session.user_full_name,
                             admin_user_path(user_session.user_id),
                             class: 'block' %>
-                <% if user_session.goal %>
-                    <%= status_tag 'no', label: user_session.goal, class: 'inline-block mt-2' %>
-                <% end %>
                 <% if user_session.shooting_machine_reservation %>
                   <%= status_tag 'yes',
-                                 label: "SM #{user_session.shooting_machine_reservation.start_time}",
-                                 class: 'inline-block ml-2' %>
+                                label: "#{user_session.goal} " \
+                                       "#{user_session.shooting_machine_reservation.start_time_str}",
+                                class: 'inline-block mt-2'%>
+                <% elsif user_session.goal  %>
+                  <%= status_tag 'no', label: user_session.goal, class: 'inline-block mt-2' %>
                 <% end %>
               </td>
               <td class='align-middle'>

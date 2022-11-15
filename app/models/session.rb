@@ -68,7 +68,10 @@ class Session < ApplicationRecord
   has_many :users, through: :user_sessions
   has_many :session_exceptions, dependent: :destroy
   has_many :session_guests, through: :user_sessions
-  has_many :shooting_machines, dependent: :destroy
+  has_many :shooting_machines,
+           -> { order(:start_time, :end_time) },
+           dependent: :destroy,
+           inverse_of: :session
 
   validates :skill_level, presence: true, unless: -> { skill_session? || open_club? }
   validates :start_time, :time, :duration_minutes, presence: true

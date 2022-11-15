@@ -1,8 +1,8 @@
 json = {
   id: shooting_machine.id,
   price: shooting_machine.price,
-  start_time: shooting_machine.start_time,
-  end_time: shooting_machine.end_time,
+  start_time: shooting_machine.start_time_str,
+  end_time: shooting_machine.end_time_str,
   session_id: shooting_machine.session_id
 }
 

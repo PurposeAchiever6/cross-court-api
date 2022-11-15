@@ -210,8 +210,8 @@ ActiveAdmin.register Session do
         table_for session.shooting_machines.order(start_time: :asc) do
           column :id
           number_column :price, as: :currency
-          column :start_time
-          column :end_time
+          column :start_time, &:start_time_str
+          column :end_time, &:end_time_str
           if date.present?
             column :reserved do |shooting_machine|
               shooting_machine.reserved?(date)

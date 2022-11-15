@@ -21,7 +21,7 @@ class ShootingMachineReservation < ApplicationRecord
   belongs_to :shooting_machine
 
   delegate :user, to: :user_session
-  delegate :start_time, :end_time, to: :shooting_machine
+  delegate :start_time_str, :end_time_str, to: :shooting_machine
 
   enum status: { reserved: 0, canceled: 1 }
 
