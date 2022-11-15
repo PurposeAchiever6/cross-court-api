@@ -2,6 +2,9 @@ require 'rails_helper'
 
 describe Users::InactiveNonMembersJob do
   describe '.perform' do
+    let(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
+    let(:la_date) { la_time.to_date }
+
     let!(:session) { create(:session) }
     let!(:user) { create(:user, credits: user_credits) }
 
@@ -11,7 +14,7 @@ describe Users::InactiveNonMembersJob do
         user: user,
         session: session,
         checked_in: true,
-        date: Time.zone.today - 35.days
+        date: la_date - 35.days
       )
     end
     let!(:user_session_2) do
@@ -20,7 +23,7 @@ describe Users::InactiveNonMembersJob do
         user: user,
         session: session,
         checked_in: true,
-        date: Time.zone.today - date_ago_last_session,
+        date: la_date - date_ago_last_session,
         first_session: first_session
       )
     end
@@ -30,7 +33,7 @@ describe Users::InactiveNonMembersJob do
         user: user,
         session: session,
         checked_in: false,
-        date: Time.zone.today + 2.days,
+        date: la_date + 2.days,
         state: :canceled
       )
     end
@@ -130,7 +133,7 @@ describe Users::InactiveNonMembersJob do
           user: user,
           session: session,
           checked_in: false,
-          date: Time.zone.today + 4.days,
+          date: la_date + 4.days,
           state: :reserved
         )
       end

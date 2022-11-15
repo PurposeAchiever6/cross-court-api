@@ -18,7 +18,7 @@ module Users
         next if user.first_future_user_session
         next if user.active_subscription
 
-        today_date = Time.zone.today
+        today_date = Time.now.in_time_zone(last_session.time_zone).to_date
         last_session_was_first_session = last_session.first_session
 
         case last_session.date
