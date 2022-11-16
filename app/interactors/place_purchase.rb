@@ -3,9 +3,10 @@ class PlacePurchase
 
   organize MakeDiscount,
            Users::Charge,
-           IncrementUserCredits,
+           DropIns::IncrementUserCredits,
            PromoCodes::IncrementTimesUsed,
            PromoCodes::CreateUserPromoCode,
-           SetDropInExpirationDate,
+           DropIns::SetExpirationDate,
+           DropIns::SendPurchaseSlackNotification,
            Events::PurchasePlaced
 end
