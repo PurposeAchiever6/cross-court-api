@@ -2,7 +2,13 @@ require 'rails_helper'
 
 describe ::Subscriptions::PauseJob do
   describe '#perform' do
-    let!(:user) { create(:user, subscription_credits: rand(1..5)) }
+    let!(:user) do
+      create(
+        :user,
+        subscription_credits: rand(1..5),
+        subscription_skill_session_credits: rand(1..2)
+      )
+    end
     let!(:subscription) { create(:subscription, user: user, status: subscription_status) }
     let!(:subscription_pause) { create(:subscription_pause, subscription: subscription) }
 
@@ -34,6 +40,12 @@ describe ::Subscriptions::PauseJob do
     it 'updates user subscription credits' do
       expect { subject }.to change {
         user.reload.subscription_credits
+      }.to(0)
+    end
+
+    it 'updates user subscription skill session credits' do
+      expect { subject }.to change {
+        user.reload.subscription_skill_session_credits
       }.to(0)
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_23_153821) do
+ActiveRecord::Schema.define(version: 2022_11_12_182907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(version: 2022_10_23_153821) do
     t.integer "available_for", default: 0
     t.integer "skill_session_credits", default: 0
     t.integer "max_rollover_credits"
+    t.boolean "season_pass", default: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -267,6 +268,7 @@ ActiveRecord::Schema.define(version: 2022_10_23_153821) do
     t.integer "default_coach_id"
     t.integer "guests_allowed"
     t.integer "guests_allowed_per_user"
+    t.boolean "members_only", default: false
     t.index ["default_coach_id"], name: "index_sessions_on_default_coach_id"
     t.index ["default_referee_id"], name: "index_sessions_on_default_referee_id"
     t.index ["default_sem_id"], name: "index_sessions_on_default_sem_id"
@@ -274,6 +276,27 @@ ActiveRecord::Schema.define(version: 2022_10_23_153821) do
     t.index ["location_id"], name: "index_sessions_on_location_id"
     t.index ["skill_level_id"], name: "index_sessions_on_skill_level_id"
     t.index ["start_time"], name: "index_sessions_on_start_time"
+  end
+
+  create_table "shooting_machine_reservations", force: :cascade do |t|
+    t.bigint "shooting_machine_id"
+    t.bigint "user_session_id"
+    t.integer "status", default: 0
+    t.string "charge_payment_intent_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["shooting_machine_id"], name: "index_shooting_machine_reservations_on_shooting_machine_id"
+    t.index ["user_session_id"], name: "index_shooting_machine_reservations_on_user_session_id"
+  end
+
+  create_table "shooting_machines", force: :cascade do |t|
+    t.bigint "session_id"
+    t.float "price", default: 15.0
+    t.time "start_time"
+    t.time "end_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_shooting_machines_on_session_id"
   end
 
   create_table "skill_levels", force: :cascade do |t|
@@ -454,10 +477,13 @@ ActiveRecord::Schema.define(version: 2022_10_23_153821) do
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
+    t.integer "credits_without_expiration", default: 0
+    t.string "bio"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["free_session_expiration_date"], name: "index_users_on_free_session_expiration_date"
+    t.index ["is_coach"], name: "index_users_on_is_coach"
     t.index ["is_referee"], name: "index_users_on_is_referee"
     t.index ["is_sem"], name: "index_users_on_is_sem"
     t.index ["private_access"], name: "index_users_on_private_access"

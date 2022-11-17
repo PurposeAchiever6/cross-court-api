@@ -67,6 +67,9 @@ module UserSessions
       if user.credits.positive?
         user.decrement(:credits)
         user_session.credit_used_type = :credits
+      elsif user.credits_without_expiration.positive?
+        user.decrement(:credits_without_expiration)
+        user_session.credit_used_type = :credits_without_expiration
       else
         user.decrement(:subscription_credits) unless user.unlimited_credits?
         user_session.credit_used_type = :subscription_credits

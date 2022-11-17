@@ -6,10 +6,12 @@ module UserSessions
       user = context.user
       date = context.date
       session = context.session
+      user_active_subscription = user.active_subscription
 
       raise UserFlaggedException if user.flagged?
       raise FullSessionException if session.full?(date, user)
-      raise SubscriptionIsNotActiveException if user.active_subscription&.paused?
+      raise SubscriptionIsNotActiveException if user_active_subscription&.paused?
+      raise SessionOnlyForMembersException if session.members_only? && !user_active_subscription
     end
   end
 end

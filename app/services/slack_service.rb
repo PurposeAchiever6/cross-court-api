@@ -45,6 +45,10 @@ class SlackService
     notify_inactive('notifier.slack.inactive_first_timer_user', options)
   end
 
+  def season_pass_purchased(product)
+    notify_product('notifier.slack.season_pass_purchased', product)
+  end
+
   def subscription_canceled(subscription)
     notify_subscription('notifier.slack.subscription_canceled', subscription)
   end
@@ -121,6 +125,20 @@ class SlackService
         }.merge(options)
       ),
       channel: ENV['SLACK_CHANNEL_CHURN']
+    )
+  end
+
+  def notify_product(i18n_message, product, options = {})
+    notify(
+      I18n.t(
+        i18n_message,
+        {
+          name: user.full_name,
+          phone: user.phone_number,
+          product_name: product.name
+        }.merge(options)
+      ),
+      channel: ENV['SLACK_CHANNEL_PRODUCTS']
     )
   end
 

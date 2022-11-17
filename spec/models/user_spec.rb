@@ -37,8 +37,8 @@
 #  subscription_credits                    :integer          default(0), not null
 #  skill_rating                            :decimal(2, 1)
 #  drop_in_expiration_date                 :date
-#  private_access                          :boolean          default(FALSE)
 #  active_campaign_id                      :integer
+#  private_access                          :boolean          default(FALSE)
 #  birthday                                :date
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
@@ -49,6 +49,8 @@
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
+#  credits_without_expiration              :integer          default(0)
+#  bio                                     :string
 #
 # Indexes
 #
@@ -56,6 +58,7 @@
 #  index_users_on_drop_in_expiration_date       (drop_in_expiration_date)
 #  index_users_on_email                         (email) UNIQUE
 #  index_users_on_free_session_expiration_date  (free_session_expiration_date)
+#  index_users_on_is_coach                      (is_coach)
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
 #  index_users_on_private_access                (private_access)

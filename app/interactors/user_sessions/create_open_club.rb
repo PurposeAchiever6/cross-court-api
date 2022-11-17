@@ -18,6 +18,7 @@ module UserSessions
     end
 
     organize UserSessions::OpenClubValidations,
-             UserSessions::ValidateDate
+             UserSessions::ValidateDate,
+             ShootingMachineReservations::Create
   end
 end

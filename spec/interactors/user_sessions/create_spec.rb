@@ -18,13 +18,15 @@ describe UserSessions::Create do
         is_open_club: is_open_club,
         skill_session: skill_session,
         max_first_timers: max_first_timers,
-        all_skill_levels_allowed: all_skill_levels_allowed
+        all_skill_levels_allowed: all_skill_levels_allowed,
+        members_only: members_only
       )
     end
     let!(:user) do
       create(
         :user,
         credits: credits,
+        credits_without_expiration: credits_without_expiration,
         subscription_credits: subscription_credits,
         subscription_skill_session_credits: subscription_skill_session_credits,
         free_session_state: free_session_state,
@@ -43,8 +45,10 @@ describe UserSessions::Create do
     let(:skill_session) { false }
     let(:max_first_timers) { nil }
     let(:all_skill_levels_allowed) { true }
+    let(:members_only) { false }
     let(:is_open_club) { false }
     let(:credits) { 1 }
+    let(:credits_without_expiration) { 0 }
     let(:subscription_credits) { 0 }
     let(:subscription_skill_session_credits) { 2 }
     let(:free_session_state) { :used }
@@ -92,12 +96,24 @@ describe UserSessions::Create do
       ).with('SessionMailer', 'session_booked', anything, anything)
     end
 
+    context 'when user does not have credits but has season pass credits' do
+      let(:credits) { 0 }
+      let(:credits_without_expiration) { 1 }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.to change { user.reload.credits_without_expiration }.by(-1) }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect(subject.user_session.credit_used_type).to eq('credits_without_expiration') }
+    end
+
     context 'when user does not have credits but has subscription_credits' do
       let(:credits) { 0 }
       let(:subscription_credits) { 1 }
 
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
       it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
       it { expect(subject.user_session.credit_used_type).to eq('subscription_credits') }
 
@@ -106,6 +122,7 @@ describe UserSessions::Create do
 
         it { expect { subject }.to change(UserSession, :count).by(1) }
         it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
         it { expect { subject }.not_to change { user.reload.subscription_credits } }
       end
     end
@@ -146,6 +163,34 @@ describe UserSessions::Create do
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+
+      context 'when user reserves a shooting machine' do
+        let!(:payment_method) { create(:payment_method, user: user, default: true) }
+        let!(:shooting_machine) { create(:shooting_machine, session: session) }
+
+        before do
+          subject_args.merge!(shooting_machine: shooting_machine)
+          allow(StripeService).to receive(:charge).and_return(double(id: 'payment_intent'))
+        end
+
+        it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
+        it { expect { subject }.to change(Payment, :count).by(1) }
+
+        context 'when the shooting machine has already been reserved' do
+          let!(:user_session) { create(:user_session, session: session, date: date) }
+          let!(:shooting_machine_reservation) do
+            create(
+              :shooting_machine_reservation,
+              shooting_machine: shooting_machine,
+              user_session: user_session
+            )
+          end
+
+          it { expect { subject }.to raise_error(ShootingMachineAlreadyReservedException) }
+          it { expect { subject rescue nil }.not_to change(ShootingMachineReservation, :count) }
+          it { expect { subject rescue nil }.not_to change(Payment, :count) }
+        end
+      end
     end
 
     context 'when the session is not for all skill levels' do
@@ -572,6 +617,25 @@ describe UserSessions::Create do
           let(:another_session_skill_session) { false }
 
           it { expect { subject }.to change(UserSession, :count).by(1) }
+        end
+      end
+    end
+
+    context 'when session is only for members' do
+      let(:members_only) { true }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+
+      context 'when user does not have an active subscription' do
+        let(:active_subscription) { nil }
+
+        it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+        it 'raises SessionOnlyForMembersException' do
+          expect { subject }.to raise_error(
+            SessionOnlyForMembersException,
+            'The session is only for members'
+          )
         end
       end
     end

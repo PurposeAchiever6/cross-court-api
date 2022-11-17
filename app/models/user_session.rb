@@ -33,7 +33,8 @@ class UserSession < ApplicationRecord
   enum state: { reserved: 0, canceled: 1, confirmed: 2 }
   enum credit_used_type: { credits: 0,
                            subscription_credits: 1,
-                           subscription_skill_session_credits: 2 }
+                           subscription_skill_session_credits: 2,
+                           credits_without_expiration: 3 }
 
   alias_attribute :checked, :checked_in # This is to make the checked_in filter work in the admin
 
@@ -46,13 +47,21 @@ class UserSession < ApplicationRecord
              optional: true,
              inverse_of: :user_sessions
 
+  has_one :shooting_machine_reservation, -> { reserved }, inverse_of: :user_session
+
   has_many :session_survey_answers, dependent: :destroy
   has_many :session_guests, dependent: :destroy
 
   validates :state, :date, presence: true
   validate :user_valid_age
 
-  delegate :time, :time_zone, :location, :location_name, :location_description, to: :session
+  delegate :time,
+           :time_zone,
+           :location,
+           :location_name,
+           :location_description,
+           :skill_session,
+           to: :session
   delegate :phone_number, :email, :full_name,
            to: :user,
            prefix: true

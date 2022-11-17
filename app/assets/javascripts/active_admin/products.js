@@ -32,6 +32,7 @@ $(document).ready(function () {
       const productTypeValue = $(this).val();
 
       if (productTypeValue === "recurring") {
+        $("#product_season_pass_input").hide();
         $("#product_price_for_members_input").hide();
         $("#product_price_for_first_timers_no_free_session_input").hide();
         $("#product_referral_cc_cash_input").show();
@@ -40,6 +41,7 @@ $(document).ready(function () {
         $("#product-sessions-unlimited-container").show();
         $("#product_max_rollover_credits_input").show();
       } else {
+        $("#product_season_pass_input").show();
         $("#product_price_for_members_input").show();
         $("#product_price_for_first_timers_no_free_session_input").show();
         $("#product_referral_cc_cash_input").hide();

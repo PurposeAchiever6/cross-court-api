@@ -81,6 +81,7 @@ en:
         not_coming_soon: "The session should be a coming soon session"
         has_already_been_played: "The session has already been played"
         reserve_team_not_allowed: "The Reserve Team is not allowed to reserve"
+        only_for_members: "The session is only for members"
         votes:
           user_did_not_vote: "The user did not vote for this session"
       waitlists:
@@ -91,6 +92,10 @@ en:
         max_guests_reached_for_user: "You have reached the maximum number of guests allowed for this session"
         max_guests_reached_for_session: "This session has reached the maximum number of guests allowed"
         max_redemptions_by_guest_reached: "The guest has reached the maximum number of invites"
+      shooting_machines:
+        already_reserved: The shooting machine has already been reserved
+        invalid_session: The session does not support a shooting machine
+        mismatch_session: The shooting machine mismatch from the session reservation
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:
@@ -127,18 +132,20 @@ en:
       inactive_first_timer_user: >
         %{name} (phone: %{phone}) has played his *first free session %{last_session_days_ago} day(s) ago*
         and didn't rebook or bought a membership.
+      season_pass_purchased: >
+        %{name} has *purchased a season pass* (%{product_name})
       subscription_canceled: >
-        %{name} (phone: %{phone}) has *canceled* his current subscription (%{subscription_name}).
+        %{name} has *canceled* his current subscription (%{subscription_name}).
       subscription_scheduled_cancellation: >
-        %{name} (phone: %{phone}) current subscription will be *canceled at next billing period*
+        %{name} current subscription will be *canceled at next billing period*
         (%{subscription_name}).
       subscription_updated: >
-        %{name} (phone: %{phone}) has *updated* his current subscription from %{old_subscription_name}
+        %{name} has *updated* his current subscription from %{old_subscription_name}
         to %{subscription_name}.
       subscription_reactivated: >
-        %{name} (phone: %{phone}) has *reactivated* his subscription (%{subscription_name}).
+        %{name} has *reactivated* his subscription (%{subscription_name}).
       subscription_scheduled_cancellation_removed: >
-        %{name} (phone: %{phone}) subscription scheduled cancellation *has been removed*
+        %{name} subscription scheduled cancellation *has been removed*
         (%{subscription_name}).
       subscription_cancellation_request_created: >
         %{name} has *requested to cancel his membership*!

@@ -1,0 +1,7 @@
+{
+  id: shooting_machine_reservation.id,
+  status: shooting_machine_reservation.status,
+  price: shooting_machine_reservation.shooting_machine.price,
+  start_time: shooting_machine_reservation.shooting_machine.start_time_str,
+  end_time: shooting_machine_reservation.shooting_machine.end_time_str
+}

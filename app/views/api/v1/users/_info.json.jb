@@ -34,8 +34,9 @@ json = {
     user.skill_rating, precision: 1, strip_insignificant_zeros: true
   ),
   credits: user.credits,
+  credits_without_expiration: user.credits_without_expiration,
   subscription_credits: user.subscription_credits,
-  total_credits: user.credits + user.subscription_credits,
+  total_credits: user.credits + user.credits_without_expiration + user.subscription_credits,
   unlimited_credits: user.unlimited_credits?,
   subscription_skill_session_credits: user.subscription_skill_session_credits,
   unlimited_skill_session_credits: user.unlimited_skill_session_credits?,

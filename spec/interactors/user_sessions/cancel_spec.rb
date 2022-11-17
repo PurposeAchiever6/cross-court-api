@@ -47,6 +47,7 @@ describe UserSessions::Cancel do
     it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
     it { expect { subject }.to change { user_session.reload.credit_reimbursed }.to(true) }
     it { expect { subject }.to change { user.reload.credits }.by(1) }
+    it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
     it { expect { subject }.not_to change { user.reload.subscription_credits } }
     it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     it { expect { subject }.not_to change { user.reload.free_session_state } }
@@ -79,6 +80,7 @@ describe UserSessions::Cancel do
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
       it { expect { subject }.not_to change { user.reload.free_session_state } }
       it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     end
@@ -87,7 +89,8 @@ describe UserSessions::Cancel do
       let(:subscription_credits) { Product::UNLIMITED }
 
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
-      it { expect { subject }.to change { user.reload.credits } }
+      it { expect { subject }.to change { user.reload.credits }.by(1) }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     end
@@ -96,7 +99,18 @@ describe UserSessions::Cancel do
       let(:subscription_credits) { Product::UNLIMITED }
 
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
-      it { expect { subject }.to change { user.reload.credits } }
+      it { expect { subject }.to change { user.reload.credits }.by(1) }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+    end
+
+    context 'when user session credit used was from season pass credits' do
+      let(:credit_used_type) { :credits_without_expiration }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user.reload.credits_without_expiration }.by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     end
@@ -107,6 +121,7 @@ describe UserSessions::Cancel do
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
       it { expect { subject }.to change { user.reload.subscription_credits }.by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
 
       context 'when user has unlimited subscription credits' do
@@ -115,6 +130,7 @@ describe UserSessions::Cancel do
         it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
         it { expect { subject }.not_to change { user.reload.subscription_credits } }
         it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
         it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
       end
     end
@@ -125,6 +141,7 @@ describe UserSessions::Cancel do
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
       it { expect { subject }.to change { user.reload.subscription_skill_session_credits }.by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
 
       context 'when user has unlimited subscription skill session credits' do
@@ -133,6 +150,7 @@ describe UserSessions::Cancel do
         it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
         it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
         it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
         it { expect { subject }.not_to change { user.reload.subscription_credits } }
       end
     end
@@ -256,6 +274,28 @@ describe UserSessions::Cancel do
       it { expect { subject }.to change { session_guest_2.reload.state }.to('canceled') }
 
       it { expect { subject }.to have_enqueued_job(::Sonar::SendMessageJob).twice }
+    end
+
+    context 'when the user session has a shooting machine reserved' do
+      let(:status) { :reserved }
+      let!(:shooting_machine_reservation) do
+        create(:shooting_machine_reservation, user_session: user_session, status: status)
+      end
+
+      it 'updates the shooting machine reservation status' do
+        expect { subject }.to change { shooting_machine_reservation.reload.status }.to('canceled')
+      end
+
+      context 'when the shooting machine reservation has been canceled' do
+        let(:status) { :canceled }
+
+        it { expect { subject }.not_to change { shooting_machine_reservation.reload.status } }
+
+        it 'does not call ShootingMachineReservations::Cancel' do
+          expect(ShootingMachineReservations::Cancel).not_to receive(:call)
+          subject
+        end
+      end
     end
   end
 end

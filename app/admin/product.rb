@@ -3,7 +3,7 @@ ActiveAdmin.register Product do
 
   permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
                 :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
-                :price_for_first_timers_no_free_session, :available_for
+                :price_for_first_timers_no_free_session, :available_for, :season_pass
 
   filter :name
   filter :product_type
@@ -38,6 +38,7 @@ ActiveAdmin.register Product do
     column :product_type do |product|
       product.product_type.humanize
     end
+    tag_column :season_pass
     column :available_for do |product|
       product.available_for.humanize
     end
@@ -79,12 +80,13 @@ ActiveAdmin.register Product do
 
     f.inputs 'Product details' do
       f.input :product_type, input_html: { disabled: persisted }
-      f.input :available_for, input_html: { disabled: persisted }
-      f.input :name, input_html: { disabled: persisted }
+      f.input :available_for
+      f.input :season_pass
+      f.input :name
       f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
-      f.input :credits, input_html: { disabled: persisted }
+      f.input :credits
       f.li unlimited_skill_sessions_checkbox, id: 'product-skill-sessions-unlimited-container'
-      f.input :skill_session_credits, input_html: { disabled: persisted }
+      f.input :skill_session_credits
       f.input :max_rollover_credits,
               input_html: { disabled: resource.unlimited? },
               hint: 'Max amount of rolled-over credits. If not set, ' \
@@ -125,6 +127,7 @@ ActiveAdmin.register Product do
       row :available_for do |product|
         product.available_for.humanize
       end
+      row :season_pass
       row :label
       row :order_number
       row :memberships_count do |product|

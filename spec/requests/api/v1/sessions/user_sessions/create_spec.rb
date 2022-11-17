@@ -17,7 +17,8 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       :daily,
       location: location,
       is_open_club: is_open_club,
-      all_skill_levels_allowed: all_skill_levels_allowed
+      all_skill_levels_allowed: all_skill_levels_allowed,
+      members_only: members_only
     )
   end
 
@@ -27,6 +28,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:date) { 1.day.from_now }
   let(:is_open_club) { false }
   let(:all_skill_levels_allowed) { true }
+  let(:members_only) { false }
   let(:params) { { date: date.strftime(Session::DATE_FORMAT) } }
   let(:active_subscription) { nil }
 
@@ -212,6 +214,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         subject
         expect(response).to be_successful
       end
+
       it { expect { subject }.to change(UserSession, :count).by(1) }
     end
 
@@ -354,6 +357,85 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
     it 'raises an error' do
       subject
       expect(json[:error]).to eq I18n.t('api.errors.users.flagged')
+    end
+  end
+
+  context 'when user reserves a shooting machine' do
+    let!(:shooting_machine) { create(:shooting_machine, session: session) }
+
+    before { params[:shooting_machine_id] = shooting_machine.id }
+
+    it 'returns success' do
+      subject
+      expect(response).to be_successful
+    end
+
+    it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
+    it { expect { subject }.not_to change(Payment, :count) }
+
+    context 'when session is open club' do
+      let!(:payment_method) { create(:payment_method, user: user, default: true) }
+      let!(:active_subscription) { create(:subscription) }
+      let(:is_open_club) { true }
+
+      before { allow(StripeService).to receive(:charge).and_return(double(id: 'payment_intent')) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
+      it { expect { subject }.to change(Payment, :count).by(1) }
+
+      context 'when the shooting machine has already been reserved' do
+        let!(:user_session) { create(:user_session, session: session, date: date) }
+        let!(:shooting_machine_reservation) do
+          create(
+            :shooting_machine_reservation,
+            shooting_machine: shooting_machine,
+            user_session: user_session
+          )
+        end
+
+        it 'returns bad request' do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'returns correct error message' do
+          subject
+          expect(json[:error]).to eq('The shooting machine has already been reserved')
+        end
+
+        it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
+        it { expect { subject }.not_to change(Payment, :count) }
+      end
+    end
+  end
+
+  context 'when session is only for members' do
+    let(:members_only) { true }
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns correct error message' do
+      subject
+      expect(json[:error]).to eq('The session is only for members')
+    end
+
+    context 'when user is a member' do
+      let(:active_subscription) { create(:subscription) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
     end
   end
 end

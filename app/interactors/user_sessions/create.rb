@@ -5,6 +5,7 @@ module UserSessions
     def call
       user = context.user
       session = context.session
+      shooting_machine = context.shooting_machine
       date = context.date
       goal = context.goal
       referral_code = context.referral_code || nil
@@ -19,7 +20,8 @@ module UserSessions
             session: session,
             user: user,
             date: date,
-            goal: goal
+            goal: goal,
+            shooting_machine: shooting_machine
           )
         else
           UserSessions::CreateNormal.call(

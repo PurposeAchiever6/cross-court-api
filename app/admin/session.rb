@@ -3,10 +3,11 @@ ActiveAdmin.register Session do
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
-                :duration_minutes, :max_capacity, :max_first_timers, :all_skill_levels_allowed,
-                :cc_cash_earned, :default_referee_id, :default_sem_id, :default_coach_id,
-                :guests_allowed, :guests_allowed_per_user,
-                session_exceptions_attributes: %i[id date _destroy]
+                :members_only, :duration_minutes, :max_capacity, :max_first_timers,
+                :all_skill_levels_allowed, :cc_cash_earned, :default_referee_id, :default_sem_id,
+                :default_coach_id, :guests_allowed, :guests_allowed_per_user,
+                session_exceptions_attributes: %i[id date _destroy],
+                shooting_machines_attributes: %i[id start_time end_time price _destroy]
 
   includes :location, :session_exceptions, :skill_level
 
@@ -19,6 +20,7 @@ ActiveAdmin.register Session do
   filter :coming_soon
   filter :women_only
   filter :skill_session
+  filter :members_only
   filter :guests_allowed
   filter :guests_allowed_per_user
 
@@ -33,53 +35,6 @@ ActiveAdmin.register Session do
                     confirm: 'Are you sure you want to cancel this session? This will refund ' \
                              'all signed up users their credits back, and notify them via SMS. ' \
                              'It will also make the session unavailable for this date.' }
-  end
-
-  form do |f|
-    f.inputs 'Session Details' do
-      f.input :location
-      f.input :skill_level
-      f.input :is_private
-      f.input :is_open_club
-      f.input :all_skill_levels_allowed
-      f.input :coming_soon
-      f.input :women_only
-      f.input :skill_session
-      f.input :guests_allowed,
-              hint: 'Number of guests allowed per session. If not set, '\
-                    'it means that guests are not allowed for this session.'
-      f.input :guests_allowed_per_user,
-              hint: 'Number of guests allowed per user for this session.'
-      f.input :start_time,
-              as: :datepicker,
-              datepicker_options: { min_date: Date.current },
-              input_html: { autocomplete: :off }
-      f.input :end_time,
-              as: :datepicker,
-              datepicker_options: { min_date: Date.current },
-              input_html: { autocomplete: :off }
-      f.input :time
-      f.input :duration_minutes
-      f.input :max_capacity
-      f.input :max_first_timers,
-              hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
-                    'users who can book.'
-      f.input :cc_cash_earned
-      f.input :default_referee, collection: User.referees
-      f.input :default_sem, collection: User.sems
-      f.input :default_coach, collection: User.coaches
-      li do
-        f.label 'Schedule'
-        f.select_recurring :recurring, nil,
-                           { allow_blank: true },
-                           data: { select2: false },
-                           class: 'w-40 p-2 border-gray-300 rounded'
-      end
-      f.has_many :session_exceptions, allow_destroy: true do |p|
-        p.input :date, as: :datepicker, input_html: { autocomplete: :off }
-      end
-    end
-    f.actions
   end
 
   index do
@@ -106,13 +61,76 @@ ActiveAdmin.register Session do
     end
     number_column :cc_cash_earned, as: :currency
     column :active, &:active?
-    toggle_bool_column :is_private
     toggle_bool_column :is_open_club
-    toggle_bool_column :coming_soon
-    toggle_bool_column :women_only
     toggle_bool_column :skill_session
+    toggle_bool_column :women_only
+    toggle_bool_column :members_only
+    toggle_bool_column :coming_soon
+    toggle_bool_column :is_private
 
     actions unless params['scope'] == 'deleted'
+  end
+
+  form do |f|
+    f.inputs 'Session Details' do
+      f.input :location
+      f.input :skill_level
+      f.input :is_open_club
+      f.input :skill_session
+      f.input :women_only
+      f.input :members_only
+      f.input :all_skill_levels_allowed
+      f.input :coming_soon
+      f.input :is_private
+      f.input :start_time,
+              as: :datepicker,
+              datepicker_options: { min_date: Date.current },
+              input_html: { autocomplete: :off }
+      f.input :end_time,
+              as: :datepicker,
+              datepicker_options: { min_date: Date.current },
+              input_html: { autocomplete: :off }
+      f.input :time
+      f.input :duration_minutes
+      f.input :max_capacity
+      f.input :max_first_timers,
+              hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
+                    'users who can book.'
+      f.input :guests_allowed,
+              hint: 'Number of guests allowed per session. If not set, '\
+                    'it means that guests are not allowed for this session.'
+      f.input :guests_allowed_per_user,
+              hint: 'Number of guests allowed per user for this session.'
+      f.input :cc_cash_earned
+      f.input :default_referee, collection: User.referees
+      f.input :default_sem, collection: User.sems
+      f.input :default_coach, collection: User.coaches
+      li do
+        f.label 'Schedule'
+        f.select_recurring :recurring, nil,
+                           { allow_blank: true },
+                           data: { select2: false },
+                           class: 'w-40 p-2 border-gray-300 rounded'
+      end
+    end
+
+    f.inputs 'Session Exceptions' do
+      f.has_many :session_exceptions, allow_destroy: true do |p|
+        p.input :date, as: :datepicker, input_html: { autocomplete: :off }
+      end
+    end
+
+    if session.shooting_machines?
+      f.inputs 'Shooting Machines' do
+        f.has_many :shooting_machines, allow_destroy: true do |p|
+          p.input :start_time, as: :time_picker, input_html: { autocomplete: :off }
+          p.input :end_time, as: :time_picker, input_html: { autocomplete: :off }
+          p.input :price
+        end
+      end
+    end
+
+    f.actions
   end
 
   show title: proc { |session|
@@ -123,6 +141,8 @@ ActiveAdmin.register Session do
       "Session #{session.id}"
     end
   } do
+    date = params[:date]
+
     attributes_table do
       row :id
       row :start_time
@@ -145,12 +165,13 @@ ActiveAdmin.register Session do
       row :skill_level do |session|
         session.skill_level_name || 'N/A'
       end
-      row :is_private
       row :is_open_club
-      row :coming_soon
-      row :women_only
       row :skill_session
+      row :women_only
+      row :members_only
       row :all_skill_levels_allowed
+      row :coming_soon
+      row :is_private
       row :guests_allowed
       row :guests_allowed_per_user
       row :votes do |session|
@@ -158,8 +179,8 @@ ActiveAdmin.register Session do
                                .group(:date)
                                .order(:date)
                                .count
-                               .map do |date, votes|
-          content_tag(:div, "#{date}: #{votes}")
+                               .map do |votes_date, votes_count|
+          content_tag(:div, "#{votes_date}: #{votes_count}")
         end
 
         safe_join(votes_by_date)
@@ -184,7 +205,22 @@ ActiveAdmin.register Session do
       end
     end
 
-    date = params[:date]
+    if session.shooting_machines?
+      panel 'Shooting machines' do
+        table_for session.shooting_machines.order(start_time: :asc) do
+          column :id
+          number_column :price, as: :currency
+          column :start_time, &:start_time_str
+          column :end_time, &:end_time_str
+          if date.present?
+            column :reserved do |shooting_machine|
+              shooting_machine.reserved?(date)
+            end
+          end
+        end
+      end
+    end
+
     if date.present?
       panel 'Employees' do
         referee = resource.referee(date)
@@ -218,7 +254,8 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .checked_in
-                                .includes(user: [:last_checked_in_user_session,
+                                .includes(:shooting_machine_reservation,
+                                          user: [:last_checked_in_user_session,
                                                  { active_subscription: :product,
                                                    image_attachment: :blob }])
                                 .order(assigned_team: :desc, updated_at: :asc)
@@ -236,7 +273,8 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .not_checked_in
-                                .includes(user: [:last_checked_in_user_session,
+                                .includes(:shooting_machine_reservation,
+                                          user: [:last_checked_in_user_session,
                                                  { active_subscription: :product,
                                                    image_attachment: :blob }])
                                 .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
@@ -246,6 +284,13 @@ ActiveAdmin.register Session do
           user_sessions: user_sessions,
           jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
         }
+      end
+
+      if resource.guests_allowed?
+        panel 'Guests' do
+          guests = resource.guests(date).not_canceled.includes(user_session: :user)
+          render partial: 'guests', locals: { guests: guests }
+        end
       end
 
       panel 'Waitlist' do

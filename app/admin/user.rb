@@ -4,8 +4,9 @@ ActiveAdmin.register User do
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits,
-                :subscription_skill_session_credits, :private_access, :birthday, :cc_cash, :source,
-                :reserve_team, :instagram_username, :flagged, :is_coach, :gender
+                :credits_without_expiration, :subscription_skill_session_credits, :private_access,
+                :birthday, :cc_cash, :source, :reserve_team, :instagram_username, :flagged,
+                :is_coach, :gender, :bio
 
   includes active_subscription: :product
 
@@ -26,6 +27,7 @@ ActiveAdmin.register User do
 
   scope 'All', :all, default: true
   scope 'Members', :members
+  scope 'Employees', :employees
 
   action_item :resend_confirmation_email, only: [:show] do
     link_to 'Resend Confirmation Email',
@@ -69,6 +71,7 @@ ActiveAdmin.register User do
       f.input :instagram_username
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
+      f.input :credits_without_expiration
       f.input :subscription_credits,
               input_html: {
                 value: subscription_credits,
@@ -102,6 +105,7 @@ ActiveAdmin.register User do
       f.input :private_access
       f.input :reserve_team
       f.input :flagged
+      f.input :bio
 
       if f.object.new_record?
         f.input :password
@@ -157,6 +161,7 @@ ActiveAdmin.register User do
       row :phone_number
       row :membership
       row :drop_in_credits, &:credits
+      row :credits_without_expiration
       row :subscription_credits do
         user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
       end
@@ -196,6 +201,7 @@ ActiveAdmin.register User do
                 target: '_blank',
                 rel: 'noopener'
       end
+      row :bio if user.employee?
       row :created_at
       row :updated_at
     end

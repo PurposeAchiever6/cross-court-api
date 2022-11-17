@@ -4,11 +4,12 @@ module Users
 
     def call
       amount = context.amount
+      raise_error = context.raise_error || false
 
-      context.fail!(message: I18n.t('api.errors.users.charges.amount_not_present')) if amount.blank?
+      failure(I18n.t('api.errors.users.charges.amount_not_present'), raise_error) if amount.blank?
 
       if amount.negative?
-        context.fail!(message: I18n.t('api.errors.users.charges.amount_not_positive'))
+        failure(I18n.t('api.errors.users.charges.amount_not_positive'), raise_error)
       end
 
       user = context.user
@@ -23,7 +24,7 @@ module Users
       unless payment_method
         message = I18n.t('api.errors.users.charges.missing_payment_method')
         notify_slack(user, description, message) if notify_error
-        context.fail!(message: message)
+        failure(message, raise_error)
       end
 
       user_cc_cash = user.cc_cash
@@ -70,7 +71,9 @@ module Users
       end
     rescue Stripe::StripeError => e
       error_message = e.message
+
       notify_slack(user, description, error_message) if notify_error
+
       if create_payment_on_failure
         create_payment(
           user: user,
@@ -85,7 +88,8 @@ module Users
           error_message: error_message
         )
       end
-      context.fail!(message: error_message)
+
+      failure(error_message, raise_error)
     end
 
     private
@@ -120,6 +124,12 @@ module Users
       ).payment
 
       context.payment = payment
+    end
+
+    def failure(message, raise_error)
+      raise ChargeUserException, message if raise_error
+
+      context.fail!(message: message)
     end
   end
 end

@@ -27,6 +27,12 @@ class SessionGuest < ApplicationRecord
 
   before_validation :create_access_code
 
+  scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: date }) }
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   def create_access_code
     return if access_code.present?
 

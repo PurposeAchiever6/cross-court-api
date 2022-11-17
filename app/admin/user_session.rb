@@ -29,14 +29,13 @@ ActiveAdmin.register UserSession do
     tag_column :state
     column :first_session
     column :free_session, &:is_free_session
+    column :skill_session
     column :checked_in
     column :user
     column :location do |user_session|
       user_session.location.name
     end
     column :created_at
-
-    actions
   end
 
   controller do
