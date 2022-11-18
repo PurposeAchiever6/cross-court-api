@@ -21,6 +21,7 @@
 #  skill_session_credits                  :integer          default(0)
 #  max_rollover_credits                   :integer
 #  season_pass                            :boolean          default(FALSE)
+#  scouting                               :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -42,6 +43,8 @@ FactoryBot.define do
     referral_cc_cash { 0 }
     available_for { 'everyone' }
     product_type { 'one_time' }
+    season_pass { false }
+    scouting { false }
   end
 
   trait :unlimited do

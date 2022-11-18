@@ -3,7 +3,7 @@ ActiveAdmin.register User do
 
   permit_params :email, :first_name, :last_name, :phone_number, :password, :password_confirmation,
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
-                :drop_in_expiration_date, :credits, :subscription_credits,
+                :drop_in_expiration_date, :credits, :subscription_credits, :scouting_credits,
                 :credits_without_expiration, :subscription_skill_session_credits, :private_access,
                 :birthday, :cc_cash, :source, :reserve_team, :instagram_username, :flagged,
                 :is_coach, :gender, :bio
@@ -86,6 +86,7 @@ ActiveAdmin.register User do
                 type: resource.unlimited_skill_session_credits? ? 'text' : 'number',
                 disabled: resource.unlimited_skill_session_credits?
               }
+      f.input :scouting_credits
       f.input :cc_cash, label: 'CC Cash'
       f.input :drop_in_expiration_date,
               as: :datepicker,
@@ -173,6 +174,7 @@ ActiveAdmin.register User do
         end
       end
       row :total_session_credits
+      row :scouting_credits
       row :drop_in_expiration_date
       number_row 'CC Cash', :cc_cash, as: :currency
       row :referral_code

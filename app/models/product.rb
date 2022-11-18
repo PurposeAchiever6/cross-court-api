@@ -21,6 +21,7 @@
 #  skill_session_credits                  :integer          default(0)
 #  max_rollover_credits                   :integer
 #  season_pass                            :boolean          default(FALSE)
+#  scouting                               :boolean          default(FALSE)
 #
 # Indexes
 #
