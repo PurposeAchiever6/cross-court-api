@@ -45,6 +45,8 @@ module Api
       rescue_from ShootingMachineInvalidSessionException,      with: :render_custom_exception
       rescue_from ShootingMachineAlreadyReservedException,     with: :render_custom_exception
       rescue_from UserBookedSessionsLimitPerDayException,      with: :render_custom_exception
+      rescue_from NotEnoughScoutingCreditsException,           with: :render_custom_exception
+      rescue_from InvalidSessionForScoutingException,          with: :render_custom_exception
       rescue_from Stripe::StripeError,                         with: :render_custom_exception
       rescue_from SessionGuestsException,                      with: :render_custom_exception
 

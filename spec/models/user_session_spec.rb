@@ -22,6 +22,7 @@
 #  first_session                   :boolean          default(FALSE)
 #  credit_used_type                :integer
 #  goal                            :string
+#  scouting                        :boolean          default(FALSE)
 #
 # Indexes
 #

@@ -27,10 +27,12 @@ en:
       missing_param: "A required param is missing"
       invalid_content_type: "Invalid content type header"
       unauthorized: "User is not sem"
-      user_session:
+      user_sessions:
         invalid_date: "Invalid date"
         invalid_confirmation_date: "Can't confirm this session"
         not_enough_credits: "Not enough credits. Please buy more."
+        not_enough_scouting_credits: "Not enough scouting sessions. Please buy one"
+        invalid_session_for_scouting: "The session is not valid for scouting"
       free_session: "Free session already claimed"
       legal: "Invalid param"
       invalid_date_format: "The date value format is invalid"

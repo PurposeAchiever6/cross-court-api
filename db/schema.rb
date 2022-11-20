@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_17_232511) do
+ActiveRecord::Schema.define(version: 2022_11_19_203555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -416,6 +416,7 @@ ActiveRecord::Schema.define(version: 2022_11_17_232511) do
     t.boolean "first_session", default: false
     t.integer "credit_used_type"
     t.string "goal"
+    t.boolean "scouting", default: false
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end

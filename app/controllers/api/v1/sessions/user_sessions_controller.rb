@@ -20,7 +20,8 @@ module Api
             user: current_user,
             shooting_machine: shooting_machine,
             date: params[:date],
-            goal: params[:goal]
+            goal: params[:goal],
+            scouting: params[:scouting]
           ).user_session
         end
 

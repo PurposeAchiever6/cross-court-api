@@ -22,6 +22,7 @@
 #  first_session                   :boolean          default(FALSE)
 #  credit_used_type                :integer
 #  goal                            :string
+#  scouting                        :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -40,5 +41,6 @@ FactoryBot.define do
     checked_in { false }
     no_show_up_fee_charged { false }
     credit_used_type { :credits }
+    scouting { false }
   end
 end

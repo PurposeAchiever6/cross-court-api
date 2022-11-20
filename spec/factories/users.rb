@@ -89,6 +89,7 @@ FactoryBot.define do
     first_time_subscription_credits_used_at { Time.zone.today - 1.month }
     flagged { false }
     gender { %i[male female].sample }
+    scouting_credits { 0 }
 
     trait :confirmed do
       confirmed_at { Time.current }

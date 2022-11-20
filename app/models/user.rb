@@ -206,6 +206,10 @@ class User < ApplicationRecord
     subscription_skill_session_credits == Product::UNLIMITED
   end
 
+  def scouting_credits?
+    scouting_credits.positive?
+  end
+
   def total_session_credits
     return '' if !credits || !credits_without_expiration || !subscription_credits
 

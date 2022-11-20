@@ -8,6 +8,7 @@ module UserSessions
         user = context.user
         date = context.date
         from_waitlist = context.from_waitlist
+        scouting = context.scouting
 
         raise SessionIsOutOfSkillLevelException unless session.at_session_level?(user)
 
@@ -25,7 +26,8 @@ module UserSessions
           session: session,
           user: user,
           date: date,
-          referral: referral
+          referral: referral,
+          scouting: scouting
         )
 
         context.user_session = user_session
@@ -37,6 +39,7 @@ module UserSessions
 
     organize UserSessions::ValidateDate,
              UserSessions::ConsumeCredit,
+             UserSessions::ConsumeScoutingCredit,
              UserSessions::SlackNotification,
              UserSessions::WaitlistConfirm,
              UserSessions::AutoConfirm,

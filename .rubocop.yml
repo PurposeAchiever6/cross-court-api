@@ -129,6 +129,7 @@ Rails/SkipsModelValidations:
     - app/jobs/sessions/timeout_waitlists_job.rb
     - spec/models/product_spec.rb
     - app/jobs/sessions/check_in_users_job.rb
+    - app/interactors/user_sessions/consume_scouting_credit.rb
 
 Rails/HasManyOrHasOneDependent:
   Exclude:
