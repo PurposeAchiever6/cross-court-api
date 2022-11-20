@@ -32,6 +32,9 @@
             <%= link_to user_session.user_full_name,
                         admin_user_path(user_session.user_id),
                         class: 'block' %>
+            <% if user_session.scouting %>
+              <%= status_tag 'yes', label: 'Scout', class: 'inline-block mt-2' %>
+            <% end %>
             <% if user_session.shooting_machine_reservation %>
               <%= status_tag 'yes',
                              label: "#{user_session.goal} " \
