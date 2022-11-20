@@ -28,7 +28,9 @@ module UserSessions
       return if session.is_open_club?
 
       if from_session_canceled || in_cancellation_time || is_free_session
+        # On free session we reimburse user credits because we charge them a fee
         increment_user_credit(user, user_session.credit_used_type)
+        user.increment(:scouting_credits) if user_session.scouting
         user.free_session_state = :claimed if is_free_session
         user.save!
 

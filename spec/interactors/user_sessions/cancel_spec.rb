@@ -22,7 +22,8 @@ describe UserSessions::Cancel do
         user: user,
         date: date,
         is_free_session: free_session,
-        credit_used_type: credit_used_type
+        credit_used_type: credit_used_type,
+        scouting: scouting
       )
     end
 
@@ -34,6 +35,7 @@ describe UserSessions::Cancel do
     let(:session_time) { time_now + Session::CANCELLATION_PERIOD + 1.minute }
     let(:date) { time_now.to_date }
     let(:from_session_canceled) { false }
+    let(:scouting) { false }
 
     before { allow_any_instance_of(Slack::Notifier).to receive(:ping) }
 
@@ -50,6 +52,7 @@ describe UserSessions::Cancel do
     it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
     it { expect { subject }.not_to change { user.reload.subscription_credits } }
     it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+    it { expect { subject }.not_to change { user.reload.scouting_credits } }
     it { expect { subject }.not_to change { user.reload.free_session_state } }
 
     it 'calls Slack service' do
@@ -296,6 +299,15 @@ describe UserSessions::Cancel do
           subject
         end
       end
+    end
+
+    context 'when the user session has been marked for scouting' do
+      let(:scouting) { true }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user_session.reload.credit_reimbursed }.to(true) }
+      it { expect { subject }.to change { user.reload.credits }.by(1) }
+      it { expect { subject }.to change { user.reload.scouting_credits }.by(1) }
     end
   end
 end
