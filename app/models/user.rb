@@ -52,6 +52,11 @@
 #  bio                                     :string
 #  credits_without_expiration              :integer          default(0)
 #  scouting_credits                        :integer          default(0)
+#  weight                                  :integer
+#  height                                  :integer
+#  competitive_basketball_activity         :string
+#  current_basketball_activity             :string
+#  position                                :string
 #
 # Indexes
 #
@@ -94,6 +99,14 @@ class User < ApplicationRecord
     female: 1,
     other: 2
   }, _prefix: true
+
+  enum position: {
+    point_guard: 'point_guard',
+    shooting_guard: 'shooting_guard',
+    small_forward: 'small_forward',
+    power_forward: 'power_forward',
+    center: 'center'
+  }
 
   has_one :last_checked_in_user_session,
           -> { checked_in.order(date: :desc) },
@@ -271,6 +284,16 @@ class User < ApplicationRecord
     subscriptions.count == 1 &&
       (1.month.ago.beginning_of_day..Time.zone.today.end_of_day)
         .cover?(active_subscription&.created_at)
+  end
+
+  def formatted_height
+    return unless height
+
+    single_quote = '’'
+    double_quote = '”'
+    height_string = height.to_s
+
+    "#{height_string.first}#{single_quote}#{height_string.last(2)}#{double_quote}"
   end
 
   private

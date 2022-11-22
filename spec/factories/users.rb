@@ -52,6 +52,11 @@
 #  bio                                     :string
 #  credits_without_expiration              :integer          default(0)
 #  scouting_credits                        :integer          default(0)
+#  weight                                  :integer
+#  height                                  :integer
+#  competitive_basketball_activity         :string
+#  current_basketball_activity             :string
+#  position                                :string
 #
 # Indexes
 #

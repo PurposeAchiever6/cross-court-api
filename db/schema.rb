@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_19_203555) do
+ActiveRecord::Schema.define(version: 2022_11_21_202152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -482,6 +482,11 @@ ActiveRecord::Schema.define(version: 2022_11_19_203555) do
     t.string "bio"
     t.integer "credits_without_expiration", default: 0
     t.integer "scouting_credits", default: 0
+    t.integer "weight"
+    t.integer "height"
+    t.string "competitive_basketball_activity"
+    t.string "current_basketball_activity"
+    t.string "position"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

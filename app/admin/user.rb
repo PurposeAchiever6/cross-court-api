@@ -6,7 +6,8 @@ ActiveAdmin.register User do
                 :drop_in_expiration_date, :credits, :subscription_credits, :scouting_credits,
                 :credits_without_expiration, :subscription_skill_session_credits, :private_access,
                 :birthday, :cc_cash, :source, :reserve_team, :instagram_username, :flagged,
-                :is_coach, :gender, :bio
+                :is_coach, :gender, :bio, :weight, :height, :competitive_basketball_activity,
+                :current_basketball_activity, :position
 
   includes active_subscription: :product
 
@@ -107,6 +108,11 @@ ActiveAdmin.register User do
       f.input :reserve_team
       f.input :flagged
       f.input :bio
+      f.input :weight
+      f.input :height
+      f.input :competitive_basketball_activity
+      f.input :current_basketball_activity
+      f.input :position
 
       if f.object.new_record?
         f.input :password
@@ -183,7 +189,9 @@ ActiveAdmin.register User do
       row :is_coach
       row :sign_in_count
       row :zipcode
-      row :free_session_state
+      row :free_session_state do
+        user.free_session_state&.humanize
+      end
       row :free_session_expiration_date
       row :skill_rating
       row :source
@@ -204,6 +212,15 @@ ActiveAdmin.register User do
                 rel: 'noopener'
       end
       row :bio if user.employee?
+      row :weight
+      row :height do
+        user.formatted_height
+      end
+      row :competitive_basketball_activity
+      row :current_basketball_activity
+      row :position do
+        user.position&.humanize
+      end
       row :created_at
       row :updated_at
     end
