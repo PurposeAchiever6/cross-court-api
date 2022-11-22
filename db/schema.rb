@@ -287,6 +287,10 @@ ActiveRecord::Schema.define(version: 2022_11_23_220128) do
     t.integer "guests_allowed"
     t.integer "guests_allowed_per_user"
     t.boolean "members_only", default: false
+    t.string "theme_title"
+    t.string "theme_subheading"
+    t.integer "theme_sweat_level"
+    t.text "theme_description"
     t.index ["default_coach_id"], name: "index_sessions_on_default_coach_id"
     t.index ["default_referee_id"], name: "index_sessions_on_default_referee_id"
     t.index ["default_sem_id"], name: "index_sessions_on_default_sem_id"

@@ -28,6 +28,10 @@
 #  guests_allowed           :integer
 #  guests_allowed_per_user  :integer
 #  members_only             :boolean          default(FALSE)
+#  theme_title              :string
+#  theme_subheading         :string
+#  theme_sweat_level        :integer
+#  theme_description        :text
 #
 # Indexes
 #
