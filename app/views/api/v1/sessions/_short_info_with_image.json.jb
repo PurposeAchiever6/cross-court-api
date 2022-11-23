@@ -2,6 +2,7 @@
   id: session.id,
   start_time: session.start_time.iso8601,
   is_private: session.is_private,
+  normal_session: session.normal_session?,
   is_open_club: session.is_open_club,
   women_only: session.women_only,
   members_only: session.members_only,

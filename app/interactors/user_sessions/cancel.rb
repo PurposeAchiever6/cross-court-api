@@ -29,8 +29,7 @@ module UserSessions
 
       if from_session_canceled || in_cancellation_time || is_free_session
         # On free session we reimburse user credits because we charge them a fee
-        increment_user_credit(user, user_session.credit_used_type)
-        user.increment(:scouting_credits) if user_session.scouting
+        increment_user_credit(user, user_session)
         user.free_session_state = :claimed if is_free_session
         user.save!
 
@@ -118,7 +117,12 @@ module UserSessions
       )
     end
 
-    def increment_user_credit(user, credit_used_type)
+    def increment_user_credit(user, user_session)
+      credit_used_type = user_session.credit_used_type
+      scouting = user_session.scouting
+
+      user.increment(:scouting_credits) if scouting
+
       case credit_used_type&.to_sym
       when :subscription_credits
         user.increment(:subscription_credits) unless user.unlimited_credits?
