@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         resource :promo_code, only: :show
         resources :legals, only: :show, param: :title
         resources :locations, only: :index
+        resources :goals, only: :index
         resources :gallery_photos, only: :index
         resources :sessions, only: %i[index show] do
           scope module: :sessions do

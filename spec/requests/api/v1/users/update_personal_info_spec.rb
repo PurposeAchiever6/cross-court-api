@@ -8,7 +8,9 @@ describe 'PUT /api/v1/user/update_personal_info' do
       height: '311',
       competitive_basketball_activity: 'Varsity',
       current_basketball_activity: 'Equinox',
-      position: 'point_guard'
+      position: 'point_guard',
+      goals: ['Play better', 'Enjoy'],
+      main_goal: 'Play better'
     }
   end
 
@@ -38,6 +40,8 @@ describe 'PUT /api/v1/user/update_personal_info' do
     }.from(nil).to('Equinox')
   end
   it { expect { subject }.to change { user.reload.position }.from(nil).to('point_guard') }
+  it { expect { subject }.to change { user.reload.goals }.from(nil).to(['Play better', 'Enjoy']) }
+  it { expect { subject }.to change { user.reload.main_goal }.from(nil).to('Play better') }
 
   context 'when the user does not exist' do
     before { params[:email] = 'not-exist' }

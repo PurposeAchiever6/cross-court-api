@@ -57,6 +57,8 @@
 #  competitive_basketball_activity         :string
 #  current_basketball_activity             :string
 #  position                                :string
+#  goals                                   :string           is an Array
+#  main_goal                               :string
 #
 # Indexes
 #

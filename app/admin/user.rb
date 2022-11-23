@@ -221,6 +221,16 @@ ActiveAdmin.register User do
       row :position do
         user.position&.humanize
       end
+      row :goals do
+        if user.goals
+          ul class: 'm-0 p-0 ml-4' do
+            user.goals.each do |goal|
+              li goal
+            end
+          end
+        end
+      end
+      row :main_goal
       row :created_at
       row :updated_at
     end

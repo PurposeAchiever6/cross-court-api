@@ -89,7 +89,9 @@ module Api
           :height,
           :competitive_basketball_activity,
           :current_basketball_activity,
-          :position
+          :position,
+          :main_goal,
+          goals: []
         )
       end
 

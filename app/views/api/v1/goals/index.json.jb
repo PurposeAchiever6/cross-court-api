@@ -1,0 +1,3 @@
+{
+  goals: render(partial: 'info', collection: @goals, as: :goal)
+}
