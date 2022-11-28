@@ -148,91 +148,107 @@ ActiveAdmin.register User do
     actions
   end
 
-  show do |user|
-    attributes_table do
-      row :id
-      row :email
-      row :first_name
-      row :last_name
-      row :gender
-      row :flagged
-      row :instagram_username do
-        if user.instagram_profile
-          link_to user.instagram_username, user.instagram_profile, target: '_blank', rel: 'noopener'
+  show do
+    panel 'User Details' do
+      attributes_table_for user do
+        row :id
+        row :email
+        row :first_name
+        row :last_name
+        row :weight
+        row :height do
+          user.formatted_height
         end
-      end
-      row :birthday
-      row :image do
-        image_tag url_for(user.image), class: 'max-w-200' if user.image.attached?
-      end
-      row :phone_number
-      row :membership
-      row :drop_in_credits, &:credits
-      row :credits_without_expiration
-      row :subscription_credits do
-        user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
-      end
-      row :subscription_skill_session_credits do
-        if user.unlimited_skill_session_credits?
-          'Unlimited'
-        else
-          user.subscription_skill_session_credits
+        row :gender do
+          user.gender&.humanize
         end
-      end
-      row :total_session_credits
-      row :scouting_credits
-      row :drop_in_expiration_date
-      number_row 'CC Cash', :cc_cash, as: :currency
-      row :referral_code
-      row :is_referee
-      row :is_sem
-      row :is_coach
-      row :sign_in_count
-      row :zipcode
-      row :free_session_state do
-        user.free_session_state&.humanize
-      end
-      row :free_session_expiration_date
-      row :skill_rating
-      row :source
-      row :private_access
-      row :reserve_team
-      row :email_confirmed, &:confirmed?
-      row 'User Sessions' do
-        link_to 'link to user sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
-      end
-      row 'Payments' do
-        link_to 'link to payments', admin_payments_path(q: { user_id_eq: user.id })
-      end
-      row 'Stripe Customer' do
-        link_to 'link to stripe',
-                "https://dashboard.stripe.com/#{'test/' unless Rails.env.production?}customers" \
-                "/#{user.stripe_id}",
-                target: '_blank',
-                rel: 'noopener'
-      end
-      row :bio if user.employee?
-      row :weight
-      row :height do
-        user.formatted_height
-      end
-      row :competitive_basketball_activity
-      row :current_basketball_activity
-      row :position do
-        user.position&.humanize
-      end
-      row :goals do
-        if user.goals
-          ul class: 'm-0 p-0 ml-4' do
-            user.goals.each do |goal|
-              li goal
+        row :birthday
+        row :zipcode
+        row :source
+        row :free_session_expiration_date
+        row :referral_code
+        row :phone_number
+        row :instagram_username do
+          if user.instagram_profile
+            link_to user.instagram_username,
+                    user.instagram_profile,
+                    target: '_blank',
+                    rel: 'noopener'
+          end
+        end
+        row :image do
+          image_tag url_for(user.image), class: 'max-w-200' if user.image.attached?
+        end
+        row :membership
+        number_row 'CC Cash', :cc_cash, as: :currency
+        row :free_session_state do
+          user.free_session_state&.humanize
+        end
+        row :skill_rating
+        row :bio if user.employee?
+        row :competitive_basketball_activity
+        row :current_basketball_activity
+        row :position do
+          user.position&.humanize
+        end
+        row :goals do
+          if user.goals
+            ul class: 'm-0 p-0 ml-4' do
+              user.goals.each do |goal|
+                li goal
+              end
             end
           end
         end
+        row :main_goal
+        row 'User Sessions' do
+          link_to 'Link to User Sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
+        end
+        row 'Payments' do
+          link_to 'Link to Payments', admin_payments_path(q: { user_id_eq: user.id })
+        end
+        row 'Stripe Customer' do
+          link_to 'Link to Stripe',
+                  "https://dashboard.stripe.com/#{'test/' unless Rails.env.production?}customers" \
+                  "/#{user.stripe_id}",
+                  target: '_blank',
+                  rel: 'noopener'
+        end
+        row :created_at
+        row :updated_at
       end
-      row :main_goal
-      row :created_at
-      row :updated_at
+    end
+
+    panel 'Credits' do
+      attributes_table_for user do
+        row :drop_in_credits, &:credits
+        row :drop_in_expiration_date
+        row :credits_without_expiration
+        row :subscription_credits do
+          user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
+        end
+        row :subscription_skill_session_credits do
+          if user.unlimited_skill_session_credits?
+            'Unlimited'
+          else
+            user.subscription_skill_session_credits
+          end
+        end
+        row :total_session_credits
+        row :scouting_credits
+      end
+    end
+
+    panel 'Flags' do
+      attributes_table_for user do
+        row :flagged
+        row :is_referee
+        row :is_sem
+        row :is_coach
+        row :private_access
+        row :reserve_team
+        row :email_confirmed, &:confirmed?
+      end
     end
 
     panel 'Store Items Purchase' do
