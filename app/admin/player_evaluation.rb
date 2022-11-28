@@ -1,7 +1,9 @@
 ActiveAdmin.register PlayerEvaluation do
-  menu label: 'Player Evaluations', parent: 'Users', priority: 6
+  menu label: 'Evaluations', parent: 'Player Evaluation', priority: 0
 
   permit_params :user_id, :date, evaluation: {}
+
+  config.sort_order = 'date_desc'
 
   includes :user
 
@@ -16,6 +18,7 @@ ActiveAdmin.register PlayerEvaluation do
     id_column
     column :user
     column :total_score
+    column :rating
     column :evaluation do |player_evaluation|
       simple_format(player_evaluation.evaluation_formatted)
     end
@@ -28,6 +31,7 @@ ActiveAdmin.register PlayerEvaluation do
     attributes_table do
       row :user
       row :total_score
+      row :rating
       row :evaluation do |player_evaluation|
         simple_format(player_evaluation.evaluation_formatted)
       end

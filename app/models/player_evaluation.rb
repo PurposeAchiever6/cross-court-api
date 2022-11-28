@@ -25,6 +25,10 @@ class PlayerEvaluation < ApplicationRecord
 
   before_save :calculate_total_score
 
+  def rating
+    PlayerEvaluationRatingRange.rating_for_score(total_score)
+  end
+
   def evaluation_formatted
     evaluation.map { |key, value| "#{key.humanize}: #{value}" }.join("\n")
   end
