@@ -75,6 +75,7 @@ Metrics/MethodLength:
     - app/jobs/users/inactive_non_members_job.rb
     - app/interactors/subscriptions/create_subscription.rb
     - app/interactors/user_sessions/cancel.rb
+    - app/helpers/active_admin/player_evaluation_helper.rb
 
 Metrics/ModuleLength:
   CountComments: false # count full line comments?

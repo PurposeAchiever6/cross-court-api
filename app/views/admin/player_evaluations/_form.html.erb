@@ -1,0 +1,62 @@
+<div class="max-w-screen-md mx-auto">
+  <h1 class="text-center uppercase mb-8">
+    <span class="block text-6xl">Evaluation</span>
+    <span class="block text-4xl">Form</span>
+  </h1>
+  <%= semantic_form_for([:admin, @player_evaluation], builder: ActiveAdmin::FormBuilder) do |f| %>
+    <%= f.semantic_errors *@player_evaluation.errors.keys %>
+    <div class="sm:flex mb-8">
+      <div class="w-full">
+        <div class="sm:mr-3 mb-4 sm:mb-0">
+          <%= label_tag :user_id, 'User', class: 'block text-xl font-semibold uppercase mb-1' %>
+          <%= f.input :user,
+                      as: :select,
+                      collection: User.sorted_by_full_name,
+                      label: false,
+                      wrapper_html: { class: 'list-none' },
+                      input_html: { class: 'w-full' } %>
+        </div>
+      </div>
+      <div class="w-full">
+        <div class="sm:ml-3">
+          <%= label_tag :date, 'Date', class: 'block text-xl font-semibold uppercase mb-1' %>
+          <%= f.input :date,
+                      label: false,
+                      wrapper_html: { class: 'list-none' },
+                      input_html: { value: @player_evaluation.date || Time.zone.today,
+                                    class: '!w-full box-border' } %>
+        </div>
+      </div>
+    </div>
+    <div class="mb-10">
+      <% player_evaluation_data.each do |evaluation| %>
+        <div class="border-solid border-4 border-indigo-300 bg-indigo-100 bg-opacity-50 px-4 pb-5 mb-8">
+          <h3 class="text-xl font-semibold"><%= evaluation[:title]%></h3>
+          <% evaluation[:options].each do |option| %>
+            <div class="text-base flex justify-between items-center mb-1">
+              <div class="max-w-2xl">
+                <% selected = @player_evaluation.evaluation[evaluation[:key]] == option[:score] %>
+                <%= radio_button_tag "player_evaluation[evaluation][#{evaluation[:key]}]",
+                                     option[:score],
+                                     selected,
+                                     id: "#{evaluation[:key]}-#{option[:score]}" %>
+                <%= label_tag "#{evaluation[:key]}-#{option[:score]}",
+                              option[:content],
+                              class: '' %>
+              </div>
+              <span class="font-semibold bg-blue-300 px-3 py-1 rounded ml-6">
+                <%= option[:score] %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class="flex justify-between">
+      <%= link_to 'Cancel',
+                  admin_player_evaluations_path,
+                  class: 'button box-border text-center w-40' %>
+      <%= submit_tag 'Submit', class: 'w-40', data: { disable_with: 'Loading...' } %>
+    </div>
+  <% end %>
+</div>

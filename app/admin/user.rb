@@ -251,9 +251,24 @@ ActiveAdmin.register User do
       end
     end
 
-    panel 'Store Items Purchase' do
-      render partial: 'store_items_purchase',
-             locals: { user: user, store_items: StoreItem.sorted }
+    panel 'Player Evaluations' do
+      player_evaluations = user.player_evaluations.order(date: :desc)
+
+      if player_evaluations.any?
+        table_for player_evaluations do
+          column :player_evaluation do |player_evaluation|
+            link_to 'link to player evaluation',
+                    admin_player_evaluation_path(id: player_evaluation.id)
+          end
+          column :total_score
+          column :evaluation do |player_evaluation|
+            simple_format(player_evaluation.evaluation_formatted)
+          end
+          column :date
+        end
+      else
+        'No evaluations yet'
+      end
     end
 
     panel 'Membership' do
@@ -263,6 +278,11 @@ ActiveAdmin.register User do
         payment_methods: user.payment_methods,
         referral_users: User.where.not(id: user.id)
       }
+    end
+
+    panel 'Store Items Purchase' do
+      render partial: 'store_items_purchase',
+             locals: { user: user, store_items: StoreItem.sorted }
     end
   end
 

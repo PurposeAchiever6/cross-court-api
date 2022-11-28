@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_23_135430) do
+ActiveRecord::Schema.define(version: 2022_11_23_220128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -159,6 +159,16 @@ ActiveRecord::Schema.define(version: 2022_11_23_135430) do
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
+  create_table "player_evaluations", force: :cascade do |t|
+    t.bigint "user_id"
+    t.json "evaluation", default: {}
+    t.float "total_score"
+    t.date "date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_player_evaluations_on_user_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.integer "credits", default: 0, null: false
     t.string "name", null: false
@@ -175,8 +185,8 @@ ActiveRecord::Schema.define(version: 2022_11_23_135430) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "max_rollover_credits"
     t.integer "skill_session_credits", default: 0
+    t.integer "max_rollover_credits"
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
@@ -480,14 +490,14 @@ ActiveRecord::Schema.define(version: 2022_11_23_135430) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
+    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at"
-    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.string "bio"
     t.integer "credits_without_expiration", default: 0
+    t.string "bio"
     t.integer "scouting_credits", default: 0
     t.integer "weight"
     t.integer "height"
