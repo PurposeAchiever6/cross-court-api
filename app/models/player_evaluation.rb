@@ -44,7 +44,8 @@ class PlayerEvaluation < ApplicationRecord
   end
 
   def validate_evaluation_presence
-    error = EVALUATION_REQUIRED_KEYS.any? { |key| evaluation[key].blank? }
+    required_keys = PlayerEvaluationFormSection.all.map(&:key)
+    error = required_keys.any? { |key| evaluation[key].blank? }
     errors.add(:evaluation, 'options must be selected') if error
   end
 end

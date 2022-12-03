@@ -1,5 +1,5 @@
 ActiveAdmin.register PlayerEvaluationRatingRange do
-  menu label: 'Ratings', parent: 'Player Evaluation', priority: 1
+  menu label: 'Ratings', parent: 'Player Evaluation', priority: 2
 
   permit_params :min_score, :max_score, :rating
 

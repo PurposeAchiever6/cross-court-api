@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_28_182458) do
+ActiveRecord::Schema.define(version: 2022_12_03_172637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,6 +157,24 @@ ActiveRecord::Schema.define(version: 2022_11_28_182458) do
     t.index ["product_id"], name: "index_payments_on_product_id"
     t.index ["status"], name: "index_payments_on_status"
     t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
+  create_table "player_evaluation_form_section_options", force: :cascade do |t|
+    t.string "title"
+    t.string "content"
+    t.float "score"
+    t.bigint "player_evaluation_form_section_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["player_evaluation_form_section_id"], name: "index_on_player_evaluation_form_section_id"
+  end
+
+  create_table "player_evaluation_form_sections", force: :cascade do |t|
+    t.string "title"
+    t.string "subtitle"
+    t.integer "order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "player_evaluation_rating_ranges", force: :cascade do |t|
