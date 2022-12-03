@@ -8,6 +8,11 @@
 #  order      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  required   :boolean          default(TRUE)
+#
+# Indexes
+#
+#  index_player_evaluation_form_sections_on_title  (title) UNIQUE
 #
 
 class PlayerEvaluationFormSection < ApplicationRecord
@@ -24,6 +29,8 @@ class PlayerEvaluationFormSection < ApplicationRecord
   accepts_nested_attributes_for :options, allow_destroy: true
 
   default_scope { order(order: :asc) }
+
+  scope :required, -> { where(required: true) }
 
   def key
     title.parameterize

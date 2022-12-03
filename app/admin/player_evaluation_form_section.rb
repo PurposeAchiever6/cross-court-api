@@ -1,7 +1,11 @@
 ActiveAdmin.register PlayerEvaluationFormSection do
   menu label: 'Player Evaluation Form', parent: 'Player Evaluation', priority: 1
 
-  permit_params :title, :subtitle, :order, options_attributes: %i[id title content score _destroy]
+  permit_params :title,
+                :subtitle,
+                :order,
+                :required,
+                options_attributes: %i[id title content score _destroy]
 
   config.sort_order = 'order_asc'
 
@@ -14,6 +18,7 @@ ActiveAdmin.register PlayerEvaluationFormSection do
       f.input :title
       f.input :subtitle
       f.input :order
+      f.input :required
     end
 
     f.inputs 'Options' do
@@ -36,6 +41,7 @@ ActiveAdmin.register PlayerEvaluationFormSection do
     column :options do |player_evaluation_form_section|
       simple_format(player_evaluation_form_section.options_formatted)
     end
+    column :required
 
     actions
   end
@@ -45,6 +51,7 @@ ActiveAdmin.register PlayerEvaluationFormSection do
       row :title
       row :subtitle
       row :order
+      row :required
       row :updated_at
       row :created_at
     end
