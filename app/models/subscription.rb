@@ -69,10 +69,14 @@ class Subscription < ApplicationRecord
 
     pause_collection = stripe_subscription.pause_collection
 
+    stripe_subscription_status = stripe_subscription.status
+    is_pause = pause_collection.present? && stripe_subscription_status == 'active'
+    status = is_pause ? 'paused' : stripe_subscription_status
+
     assign_attributes(
       stripe_id: stripe_subscription.id,
       stripe_item_id: stripe_subscription.items.data.first.id,
-      status: pause_collection.nil? ? stripe_subscription.status : 'paused',
+      status: status,
       current_period_start: Time.zone.at(stripe_subscription.current_period_start),
       current_period_end: Time.zone.at(stripe_subscription.current_period_end),
       cancel_at: stripe_subscription.cancel_at ? Time.zone.at(stripe_subscription.cancel_at) : nil,
@@ -80,8 +84,10 @@ class Subscription < ApplicationRecord
       cancel_at_period_end: stripe_subscription.cancel_at_period_end
     )
 
-    if subscription_pauses.actual.any? && pause_collection.nil?
-      subscription_pauses.actual.last.update(status: :finished)
+    if subscription_pauses.actual.any?
+      actual_subscription_pause = subscription_pauses.actual.last
+      actual_subscription_pause.update(status: :finished) if pause_collection.nil?
+      actual_subscription_pause.update(status: :canceled) if status == 'canceled'
     end
 
     self
