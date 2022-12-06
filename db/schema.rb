@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_12_182907) do
+ActiveRecord::Schema.define(version: 2022_12_03_221805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,13 @@ ActiveRecord::Schema.define(version: 2022_11_12_182907) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "goals", force: :cascade do |t|
+    t.integer "category", null: false
+    t.string "description", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "legals", force: :cascade do |t|
     t.string "title", null: false
     t.text "text", null: false
@@ -152,6 +159,42 @@ ActiveRecord::Schema.define(version: 2022_11_12_182907) do
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
+  create_table "player_evaluation_form_section_options", force: :cascade do |t|
+    t.string "title"
+    t.string "content"
+    t.float "score"
+    t.bigint "player_evaluation_form_section_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["player_evaluation_form_section_id"], name: "index_on_player_evaluation_form_section_id"
+  end
+
+  create_table "player_evaluation_form_sections", force: :cascade do |t|
+    t.string "title"
+    t.string "subtitle"
+    t.integer "order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "required", default: true
+    t.index ["title"], name: "index_player_evaluation_form_sections_on_title", unique: true
+  end
+
+  create_table "player_evaluation_rating_ranges", force: :cascade do |t|
+    t.float "min_score"
+    t.float "max_score"
+    t.float "rating"
+  end
+
+  create_table "player_evaluations", force: :cascade do |t|
+    t.bigint "user_id"
+    t.json "evaluation", default: {}
+    t.float "total_score"
+    t.date "date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_player_evaluations_on_user_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.integer "credits", default: 0, null: false
     t.string "name", null: false
@@ -171,6 +214,7 @@ ActiveRecord::Schema.define(version: 2022_11_12_182907) do
     t.integer "skill_session_credits", default: 0
     t.integer "max_rollover_credits"
     t.boolean "season_pass", default: false
+    t.boolean "scouting", default: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
   end
@@ -269,6 +313,10 @@ ActiveRecord::Schema.define(version: 2022_11_12_182907) do
     t.integer "guests_allowed"
     t.integer "guests_allowed_per_user"
     t.boolean "members_only", default: false
+    t.string "theme_title"
+    t.string "theme_subheading"
+    t.integer "theme_sweat_level"
+    t.text "theme_description"
     t.index ["default_coach_id"], name: "index_sessions_on_default_coach_id"
     t.index ["default_referee_id"], name: "index_sessions_on_default_referee_id"
     t.index ["default_sem_id"], name: "index_sessions_on_default_sem_id"
@@ -415,6 +463,7 @@ ActiveRecord::Schema.define(version: 2022_11_12_182907) do
     t.boolean "first_session", default: false
     t.integer "credit_used_type"
     t.string "goal"
+    t.boolean "scouting", default: false
     t.index ["session_id"], name: "index_user_sessions_on_session_id"
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
@@ -479,6 +528,14 @@ ActiveRecord::Schema.define(version: 2022_11_12_182907) do
     t.integer "gender"
     t.integer "credits_without_expiration", default: 0
     t.string "bio"
+    t.integer "scouting_credits", default: 0
+    t.integer "weight"
+    t.integer "height"
+    t.string "competitive_basketball_activity"
+    t.string "current_basketball_activity"
+    t.string "position"
+    t.string "goals", array: true
+    t.string "main_goal"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

@@ -10,7 +10,7 @@ module UserSessions
       session = user_session.session
 
       unless user_has_credits?(user, session, not_charge_user_credit)
-        raise NotEnoughCreditsException, I18n.t('api.errors.user_session.not_enough_credits')
+        raise NotEnoughCreditsException, I18n.t('api.errors.user_sessions.not_enough_credits')
       end
 
       if user.free_session_claimed?

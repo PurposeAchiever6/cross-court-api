@@ -37,8 +37,8 @@
 #  subscription_credits                    :integer          default(0), not null
 #  skill_rating                            :decimal(2, 1)
 #  drop_in_expiration_date                 :date
-#  active_campaign_id                      :integer
 #  private_access                          :boolean          default(FALSE)
+#  active_campaign_id                      :integer
 #  birthday                                :date
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
@@ -49,8 +49,16 @@
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  credits_without_expiration              :integer          default(0)
 #  bio                                     :string
+#  credits_without_expiration              :integer          default(0)
+#  scouting_credits                        :integer          default(0)
+#  weight                                  :integer
+#  height                                  :integer
+#  competitive_basketball_activity         :string
+#  current_basketball_activity             :string
+#  position                                :string
+#  goals                                   :string           is an Array
+#  main_goal                               :string
 #
 # Indexes
 #
@@ -88,6 +96,7 @@ FactoryBot.define do
     first_time_subscription_credits_used_at { Time.zone.today - 1.month }
     flagged { false }
     gender { %i[male female].sample }
+    scouting_credits { 0 }
 
     trait :confirmed do
       confirmed_at { Time.current }

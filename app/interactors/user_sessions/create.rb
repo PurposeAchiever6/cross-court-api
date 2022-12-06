@@ -8,6 +8,7 @@ module UserSessions
       shooting_machine = context.shooting_machine
       date = context.date
       goal = context.goal
+      scouting = context.scouting
       referral_code = context.referral_code || nil
       not_charge_user_credit = context.not_charge_user_credit || false
       from_waitlist = context.from_waitlist || false
@@ -30,7 +31,8 @@ module UserSessions
             date: date,
             referral_code: referral_code,
             not_charge_user_credit: not_charge_user_credit,
-            from_waitlist: from_waitlist
+            from_waitlist: from_waitlist,
+            scouting: scouting
           )
         end.user_session
 

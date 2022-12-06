@@ -233,6 +233,8 @@ ActiveAdmin.setup do |config|
                priority: 7
       menu.add label: 'Feedbacks',
                priority: 8
+      menu.add label: 'Player Evaluations',
+               priority: 9
     end
   end
 

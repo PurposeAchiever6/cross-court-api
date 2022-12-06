@@ -3,7 +3,7 @@ ActiveAdmin.register Product do
 
   permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
                 :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
-                :price_for_first_timers_no_free_session, :available_for, :season_pass
+                :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting
 
   filter :name
   filter :product_type
@@ -39,6 +39,7 @@ ActiveAdmin.register Product do
       product.product_type.humanize
     end
     tag_column :season_pass
+    tag_column :scouting
     column :available_for do |product|
       product.available_for.humanize
     end
@@ -82,6 +83,7 @@ ActiveAdmin.register Product do
       f.input :product_type, input_html: { disabled: persisted }
       f.input :available_for
       f.input :season_pass
+      f.input :scouting
       f.input :name
       f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits
@@ -128,6 +130,7 @@ ActiveAdmin.register Product do
         product.available_for.humanize
       end
       row :season_pass
+      row :scouting
       row :label
       row :order_number
       row :memberships_count do |product|

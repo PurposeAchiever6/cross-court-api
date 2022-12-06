@@ -10,7 +10,7 @@ module UserSessions
 
       if session.calendar_events(date, date).empty? ||
          Time.current.in_time_zone(time_zone).to_date > date
-        raise InvalidDateException, I18n.t('api.errors.user_session.invalid_date')
+        raise InvalidDateException, I18n.t('api.errors.user_sessions.invalid_date')
       end
     end
   end

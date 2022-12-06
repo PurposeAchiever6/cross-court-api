@@ -7,7 +7,8 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       credits: 1,
       reserve_team: reserve_team,
       flagged: flagged,
-      active_subscription: active_subscription
+      active_subscription: active_subscription,
+      scouting_credits: scouting_credits
     )
   end
   let!(:location) { create(:location, max_sessions_booked_per_day: max_sessions_booked_per_day) }
@@ -17,6 +18,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       :daily,
       location: location,
       is_open_club: is_open_club,
+      skill_session: skill_session,
       all_skill_levels_allowed: all_skill_levels_allowed,
       members_only: members_only
     )
@@ -27,10 +29,12 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:reserve_team) { false }
   let(:date) { 1.day.from_now }
   let(:is_open_club) { false }
+  let(:skill_session) { false }
   let(:all_skill_levels_allowed) { true }
   let(:members_only) { false }
   let(:params) { { date: date.strftime(Session::DATE_FORMAT) } }
   let(:active_subscription) { nil }
+  let(:scouting_credits) { rand(1..5) }
 
   before do
     ActiveCampaignMocker.new.mock
@@ -305,7 +309,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
     it 'raises an error' do
       subject
-      expect(json[:error]).to eq I18n.t('api.errors.user_session.not_enough_credits')
+      expect(json[:error]).to eq I18n.t('api.errors.user_sessions.not_enough_credits')
     end
   end
 
@@ -436,6 +440,74 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       it { expect { subject }.to change(UserSession, :count).by(1) }
+    end
+  end
+
+  context 'when user want to use his scouting credit' do
+    let(:scouting) { true }
+
+    before { params[:scouting] = scouting }
+
+    it 'returns success' do
+      subject
+      expect(response).to be_successful
+    end
+
+    it { expect { subject }.to change { user.reload.scouting_credits }.by(-1) }
+
+    context 'when scouting parameter is empty' do
+      let(:scouting) { [false, nil].sample }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.not_to change { user.reload.scouting_credits } }
+    end
+
+    context 'when session is open club' do
+      let(:is_open_club) { true }
+      let(:active_subscription) { create(:subscription) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it { expect { subject }.not_to change { user.reload.scouting_credits } }
+    end
+
+    context 'when session is a skill session' do
+      let(:skill_session) { true }
+
+      it 'returns bad request' do
+        subject
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns correct error message' do
+        subject
+        expect(json[:error]).to eq('The session is not valid for scouting')
+      end
+
+      it { expect { subject }.not_to change { user.reload.scouting_credits } }
+    end
+
+    context 'when the user does not have any scouting credit' do
+      let(:scouting_credits) { 0 }
+
+      it 'returns bad request' do
+        subject
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns correct error message' do
+        subject
+        expect(json[:error]).to eq('Not enough scouting sessions. Please buy one')
+      end
+
+      it { expect { subject }.not_to change { user.reload.scouting_credits } }
     end
   end
 end

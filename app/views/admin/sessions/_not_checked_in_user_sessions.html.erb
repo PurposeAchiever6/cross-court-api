@@ -10,6 +10,7 @@
       <th>Instagram</th>
       <th>New Member</th>
       <th>First Session</th>
+      <th>Main Goal</th>
       <th>Status</th>
       <th>Membership</th>
       <th>Skill Level</th>
@@ -22,6 +23,7 @@
                   local: true do %>
       <% user_sessions.each do |user_session| %>
         <% user = user_session.user %>
+        <% first_time = user_session.first_session || user.first_timer? %>
         <%= hidden_field_tag 'user_sessions[][id]', user_session.id %>
         <tr>
           <td class='align-middle'>
@@ -32,6 +34,9 @@
             <%= link_to user_session.user_full_name,
                         admin_user_path(user_session.user_id),
                         class: 'block' %>
+            <% if user_session.scouting %>
+              <%= status_tag 'yes', label: 'Evaluation', class: 'inline-block mt-2' %>
+            <% end %>
             <% if user_session.shooting_machine_reservation %>
               <%= status_tag 'yes',
                              label: "#{user_session.goal} " \
@@ -52,7 +57,10 @@
             <%= status_tag user.new_member? %>
           </td>
           <td class='align-middle'>
-            <%= status_tag user_session.first_session || user.first_timer? %>
+            <%= status_tag first_time %>
+          </td>
+          <td class='align-middle max-w-100'>
+            <%= first_time ? user.main_goal : '' %>
           </td>
           <td class='align-middle'>
             <%= status_tag user_session.state %>

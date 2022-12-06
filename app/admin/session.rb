@@ -4,6 +4,7 @@ ActiveAdmin.register Session do
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
                 :members_only, :duration_minutes, :max_capacity, :max_first_timers,
+                :theme_title, :theme_subheading, :theme_sweat_level, :theme_description,
                 :all_skill_levels_allowed, :cc_cash_earned, :default_referee_id, :default_sem_id,
                 :default_coach_id, :guests_allowed, :guests_allowed_per_user,
                 session_exceptions_attributes: %i[id date _destroy],
@@ -120,6 +121,13 @@ ActiveAdmin.register Session do
       end
     end
 
+    f.inputs 'Extra information' do
+      f.input :theme_title
+      f.input :theme_subheading
+      f.input :theme_sweat_level
+      f.input :theme_description
+    end
+
     if session.shooting_machines?
       f.inputs 'Shooting Machines' do
         f.has_many :shooting_machines, allow_destroy: true do |p|
@@ -165,6 +173,7 @@ ActiveAdmin.register Session do
       row :skill_level do |session|
         session.skill_level_name || 'N/A'
       end
+
       row :is_open_club
       row :skill_session
       row :women_only
@@ -202,6 +211,15 @@ ActiveAdmin.register Session do
       table_for session.session_exceptions.order(date: :desc) do
         column :id
         column :date
+      end
+    end
+
+    panel 'Extra information' do
+      table_for session do
+        column :theme_title
+        column :theme_subheading
+        column :theme_sweat_level
+        column :theme_description
       end
     end
 

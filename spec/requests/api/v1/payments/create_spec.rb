@@ -35,6 +35,14 @@ describe 'POST api/v1/payments' do
       expect { subject }.to change { user.reload.credits }.from(0).to(product.credits)
     end
 
+    it "does not increment user's credits_without_expiration" do
+      expect { subject }.not_to change { user.reload.credits_without_expiration }
+    end
+
+    it "does not increment user's scouting_credits" do
+      expect { subject }.not_to change { user.reload.scouting_credits }
+    end
+
     it 'does not use user CC cash' do
       expect { subject }.not_to change { user.reload.cc_cash }
     end

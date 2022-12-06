@@ -9,7 +9,7 @@ class UserSessionConfirmed
 
   def save!
     unless in_confirmation_time?
-      raise InvalidDateException, I18n.t('api.errors.user_session.invalid_confirmation_date')
+      raise InvalidDateException, I18n.t('api.errors.user_sessions.invalid_confirmation_date')
     end
 
     user_session.state = :confirmed if user_session.reserved?

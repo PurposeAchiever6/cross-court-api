@@ -37,20 +37,28 @@
 #  subscription_credits                    :integer          default(0), not null
 #  skill_rating                            :decimal(2, 1)
 #  drop_in_expiration_date                 :date
-#  active_campaign_id                      :integer
 #  private_access                          :boolean          default(FALSE)
+#  active_campaign_id                      :integer
 #  birthday                                :date
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
-#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
 #  credits_without_expiration              :integer          default(0)
 #  bio                                     :string
+#  scouting_credits                        :integer          default(0)
+#  weight                                  :integer
+#  height                                  :integer
+#  competitive_basketball_activity         :string
+#  current_basketball_activity             :string
+#  position                                :string
+#  goals                                   :string           is an Array
+#  main_goal                               :string
 #
 # Indexes
 #
@@ -94,6 +102,14 @@ class User < ApplicationRecord
     other: 2
   }, _prefix: true
 
+  enum position: {
+    point_guard: 'point_guard',
+    shooting_guard: 'shooting_guard',
+    small_forward: 'small_forward',
+    power_forward: 'power_forward',
+    center: 'center'
+  }
+
   has_one :last_checked_in_user_session,
           -> { checked_in.order(date: :desc) },
           class_name: 'UserSession',
@@ -128,6 +144,7 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :user_session_waitlists, dependent: :destroy
   has_many :payment_methods, dependent: :destroy
+  has_many :player_evaluations, dependent: :destroy
 
   has_one_attached :image, dependent: :destroy
 
@@ -205,6 +222,10 @@ class User < ApplicationRecord
     subscription_skill_session_credits == Product::UNLIMITED
   end
 
+  def scouting_credits?
+    scouting_credits.positive?
+  end
+
   def total_session_credits
     return '' if !credits || !credits_without_expiration || !subscription_credits
 
@@ -266,6 +287,16 @@ class User < ApplicationRecord
     subscriptions.count == 1 &&
       (1.month.ago.beginning_of_day..Time.zone.today.end_of_day)
         .cover?(active_subscription&.created_at)
+  end
+
+  def formatted_height
+    return unless height
+
+    single_quote = '’'
+    double_quote = '”'
+    height_string = height.to_s
+
+    "#{height_string.first}#{single_quote}#{height_string.last(2)}#{double_quote}"
   end
 
   private

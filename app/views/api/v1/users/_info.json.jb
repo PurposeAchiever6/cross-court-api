@@ -40,6 +40,7 @@ json = {
   unlimited_credits: user.unlimited_credits?,
   subscription_skill_session_credits: user.subscription_skill_session_credits,
   unlimited_skill_session_credits: user.unlimited_skill_session_credits?,
+  scouting_credits: user.scouting_credits,
   is_sem: user.is_sem,
   is_referee: user.is_referee,
   is_coach: user.is_coach,
