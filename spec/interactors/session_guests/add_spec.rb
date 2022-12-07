@@ -93,7 +93,8 @@ describe SessionGuests::Add do
 
     context 'when the guest has already been invited' do
       let(:guests_allowed) { 2 }
-      let!(:session_guest) { create(:session_guest, phone_number: '+11342214334') }
+      let(:state) { %i[reserved confirmed].sample }
+      let!(:session_guest) { create(:session_guest, phone_number: '+11342214334', state: state) }
 
       it do
         expect {
@@ -105,6 +106,13 @@ describe SessionGuests::Add do
       end
 
       it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
+
+      context 'when the existing session guest has been canceled' do
+        let(:state) { :canceled }
+
+        it { expect { subject }.to change(SessionGuest, :count).by(1) }
+        it { expect { subject }.to have_enqueued_job(::Sonar::SendMessageJob) }
+      end
     end
   end
 end
