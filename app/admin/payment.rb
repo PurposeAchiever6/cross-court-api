@@ -27,7 +27,7 @@ ActiveAdmin.register Payment do
       payment.amount.positive? ? "****#{payment.last_4}" : 'N/A'
     end
     column 'Stripe Payment' do |payment|
-      link_to 'link to stripe',
+      link_to 'Link to Stripe',
               "https://dashboard.stripe.com/#{'test/' unless Rails.env.production?}payments" \
               "/#{payment.stripe_id}",
               target: '_blank',
@@ -40,7 +40,7 @@ ActiveAdmin.register Payment do
   show do
     attributes_table do
       row :user
-      row :status
+      tag_row :status
       row :description
       row :amount
       row :discount
@@ -50,7 +50,7 @@ ActiveAdmin.register Payment do
       end
       row :error_message
       row 'Stripe Payment' do
-        link_to 'link to stripe',
+        link_to 'Link to Stripe',
                 "https://dashboard.stripe.com/#{'test/' unless Rails.env.production?}payments" \
                 "/#{payment.stripe_id}",
                 target: '_blank',

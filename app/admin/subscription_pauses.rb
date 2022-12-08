@@ -1,5 +1,5 @@
 ActiveAdmin.register SubscriptionPause do
-  menu label: 'Subscription Pauses', parent: 'Users', priority: 5
+  menu label: 'Membership Pauses', parent: 'Users', priority: 5
   actions :index, :show
   includes subscription: :user
 
@@ -10,10 +10,14 @@ ActiveAdmin.register SubscriptionPause do
     column :user do |subscription_pause|
       subscription_pause.subscription&.user
     end
-    column :status
+    column :status do |subscription_pause|
+      subscription_pause.status&.humanize
+    end
     column :paused_from
     column :paused_until
-    column :reason
+    column :reason do |subscription_pause|
+      subscription_pause.reason&.humanize
+    end
     column :updated_at
     column :created_at
 
@@ -25,10 +29,14 @@ ActiveAdmin.register SubscriptionPause do
       row :user do
         subscription_pause.subscription&.user
       end
-      row :status
+      row :status do
+        subscription_pause.status&.humanize
+      end
       row :paused_from
       row :paused_until
-      row :reason
+      row :reason do
+        subscription_pause.reason&.humanize
+      end
       row :updated_at
       row :created_at
     end

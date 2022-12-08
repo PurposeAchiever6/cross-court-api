@@ -16,8 +16,10 @@ module SessionGuests
       end
 
       user_sessions_ids = session.user_sessions.by_date(user_session.date).ids
-      sessions_guests_count =
-        SessionGuest.where(user_session_id: user_sessions_ids).not_canceled.count
+      sessions_guests_count = SessionGuest.where(
+        user_session_id: user_sessions_ids
+      ).not_canceled.count
+
       if guests_allowed && sessions_guests_count >= guests_allowed
         raise SessionGuestsException,
               I18n.t('api.errors.session_guests.max_guests_reached_for_session')
@@ -31,7 +33,8 @@ module SessionGuests
 
       phone_number = guest_info[:phone_number].strip
 
-      times_invited_count = SessionGuest.where(phone_number: phone_number).count
+      times_invited_count = SessionGuest.not_canceled.for_phone(phone_number).count
+
       if max_redemptions_by_guest && times_invited_count >= max_redemptions_by_guest
         raise SessionGuestsException,
               I18n.t('api.errors.session_guests.max_redemptions_by_guest_reached')
