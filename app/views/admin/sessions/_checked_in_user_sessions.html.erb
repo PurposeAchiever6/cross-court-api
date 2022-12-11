@@ -26,6 +26,7 @@
           <% user_sessions.each_with_index do |user_session, index| %>
             <% user = user_session.user %>
             <% first_time = user_session.first_session || user.first_timer? %>
+            <% shooting_machine_reservation = user_session.shooting_machine_reservation %>
             <%= hidden_field_tag 'user_sessions[][id]', user_session.id %>
             <tr>
               <td class='align-middle'>
@@ -42,11 +43,16 @@
                 <% if user_session.scouting %>
                   <%= status_tag 'yes', label: 'Evaluation', class: 'inline-block mt-2' %>
                 <% end %>
-                <% if user_session.shooting_machine_reservation %>
-                  <%= status_tag 'yes',
+                <% if shooting_machine_reservation %>
+                  <%= status_tag shooting_machine_reservation.error_on_charge? ? 'error' : 'yes',
                                 label: "#{user_session.goal} " \
-                                       "#{user_session.shooting_machine_reservation.start_time_str}",
+                                       "#{shooting_machine_reservation.start_time_str}",
                                 class: 'inline-block mt-2'%>
+                  <% if shooting_machine_reservation.error_on_charge? %>
+                    <div class="max-w-200 italic mt-2">
+                      Shooting machine rental charge failed: <%= shooting_machine_reservation.error_on_charge %>
+                    </div>
+                  <% end %>
                 <% elsif user_session.goal  %>
                   <%= status_tag 'no', label: user_session.goal, class: 'inline-block mt-2' %>
                 <% end %>

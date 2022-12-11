@@ -22,7 +22,8 @@ module UserSessions
             user: user,
             date: date,
             goal: goal,
-            shooting_machine: shooting_machine
+            shooting_machine: shooting_machine,
+            from_waitlist: from_waitlist
           )
         else
           UserSessions::CreateNormal.call(

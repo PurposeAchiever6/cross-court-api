@@ -9,6 +9,7 @@
 #  charge_payment_intent_id :string
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  error_on_charge          :string
 #
 # Indexes
 #
@@ -21,9 +22,13 @@ class ShootingMachineReservation < ApplicationRecord
   belongs_to :shooting_machine
 
   delegate :user, to: :user_session
-  delegate :start_time_str, :end_time_str, to: :shooting_machine
+  delegate :price, :start_time_str, :end_time_str, to: :shooting_machine
 
-  enum status: { reserved: 0, canceled: 1 }
+  enum status: { reserved: 0, canceled: 1, confirmed: 2 }
 
   scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: date }) }
+
+  def charged?
+    charge_payment_intent_id.present?
+  end
 end

@@ -9,6 +9,7 @@
 #  charge_payment_intent_id :string
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  error_on_charge          :string
 #
 # Indexes
 #

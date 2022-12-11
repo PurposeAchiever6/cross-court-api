@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_03_221805) do
+ActiveRecord::Schema.define(version: 2022_12_11_161225) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -333,6 +333,7 @@ ActiveRecord::Schema.define(version: 2022_12_03_221805) do
     t.string "charge_payment_intent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "error_on_charge"
     t.index ["shooting_machine_id"], name: "index_shooting_machine_reservations_on_shooting_machine_id"
     t.index ["user_session_id"], name: "index_shooting_machine_reservations_on_user_session_id"
   end

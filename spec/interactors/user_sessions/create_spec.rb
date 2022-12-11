@@ -174,7 +174,6 @@ describe UserSessions::Create do
         end
 
         it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
-        it { expect { subject }.to change(Payment, :count).by(1) }
 
         context 'when the shooting machine has already been reserved' do
           let!(:user_session) { create(:user_session, session: session, date: date) }
@@ -188,7 +187,6 @@ describe UserSessions::Create do
 
           it { expect { subject }.to raise_error(ShootingMachineAlreadyReservedException) }
           it { expect { subject rescue nil }.not_to change(ShootingMachineReservation, :count) }
-          it { expect { subject rescue nil }.not_to change(Payment, :count) }
         end
       end
     end

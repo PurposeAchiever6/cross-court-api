@@ -98,6 +98,8 @@ en:
         already_reserved: The shooting machine has already been reserved
         invalid_session: The session does not support a shooting machine
         mismatch_session: The shooting machine mismatch from the session reservation
+      shooting_machine_reservations:
+        not_reserved: The shooting machine reservation status is not reserved
   mailer:
     greeting: "Sincerely, Crosscourt Team"
     session:

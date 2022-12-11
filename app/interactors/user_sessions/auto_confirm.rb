@@ -10,6 +10,7 @@ module UserSessions
       user_session = context.user_session
       user = user_session.user
       session = user_session.session
+      shooting_machine_reservation = user_session.shooting_machine_reservation
 
       return if user_session.in_cancellation_time?
 
@@ -18,6 +19,12 @@ module UserSessions
       if !user_session.reminder_sent_at && !session.is_open_club?
         SonarService.send_message(user, message_text(user_session))
         user_session.reminder_sent_at = Time.zone.now
+      end
+
+      if shooting_machine_reservation
+        ShootingMachineReservations::Confirm.call(
+          shooting_machine_reservation: shooting_machine_reservation
+        )
       end
 
       ::ActiveCampaign::CreateDealJob.perform_later(
