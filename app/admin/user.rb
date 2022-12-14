@@ -257,7 +257,7 @@ ActiveAdmin.register User do
       if player_evaluations.any?
         table_for player_evaluations do
           column :player_evaluation do |player_evaluation|
-            link_to 'link to player evaluation',
+            link_to 'Link to player evaluation',
                     admin_player_evaluation_path(id: player_evaluation.id)
           end
           column :total_score
@@ -265,6 +265,10 @@ ActiveAdmin.register User do
             simple_format(player_evaluation.evaluation_formatted)
           end
           column :date
+          column :edit do |player_evaluation|
+            link_to 'Edit',
+                    edit_admin_player_evaluation_path(id: player_evaluation.id)
+          end
         end
       else
         'No evaluations yet'
