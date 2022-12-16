@@ -1,0 +1,7 @@
+{
+  id: subscription_pause.id,
+  paused_from: subscription_pause.paused_from,
+  paused_until: subscription_pause.paused_until,
+  status: subscription_pause.status,
+  paid: subscription_pause.paid
+}

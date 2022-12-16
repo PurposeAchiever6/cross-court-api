@@ -13,7 +13,7 @@ module Users
       end
 
       user = context.user
-      product = context.product
+      chargeable = context.chargeable
       description = context.description
       discount = context.discount
       payment_method = context.payment_method || user.default_payment_method
@@ -37,7 +37,7 @@ module Users
             create_payment(
               user: user,
               amount: 0,
-              product: product,
+              chargeable: chargeable,
               description: description,
               status: :success,
               discount: discount,
@@ -58,7 +58,7 @@ module Users
         create_payment(
           user: user,
           amount: amount,
-          product: product,
+          chargeable: chargeable,
           description: description,
           status: :success,
           payment_method: payment_method,
@@ -78,7 +78,7 @@ module Users
         create_payment(
           user: user,
           amount: amount,
-          product: product,
+          chargeable: chargeable,
           description: description,
           payment_method: payment_method,
           payment_intent_id: context.payment_intent_id,
@@ -103,7 +103,7 @@ module Users
       amount:,
       description:,
       status:,
-      product: nil,
+      chargeable: nil,
       payment_method: nil,
       payment_intent_id: nil,
       discount: nil,
@@ -113,7 +113,7 @@ module Users
       payment = Payments::Create.call(
         user: user,
         amount: amount,
-        product: product,
+        chargeable: chargeable,
         description: description,
         payment_method: payment_method,
         payment_intent_id: payment_intent_id,

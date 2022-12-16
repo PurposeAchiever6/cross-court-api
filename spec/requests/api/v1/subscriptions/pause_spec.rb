@@ -70,16 +70,4 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
       expect(response).to have_http_status(:bad_request)
     end
   end
-
-  context 'when no more pauses are available' do
-    before do
-      ENV['SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
-      create_list(:subscription_pause, 3, subscription: subscription, status: :finished)
-    end
-
-    it 'returns bad request' do
-      subject
-      expect(response).to have_http_status(:bad_request)
-    end
-  end
 end

@@ -47,7 +47,6 @@ en:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"
         is_not_paused: "The subscription is not paused"
-        no_more_pauses: "The subscription can't be paused anymore"
         is_not_canceled: "The subscription has not been canceled"
         already_canceled: "The subscription is already canceled"
         incomplete_status: "Your card was declined. Please change payment method or contact support"
@@ -155,9 +154,9 @@ en:
         %{name} has *requested to cancel his membership*!
         Here is the link: %{subscription_cancellation_request_url}
       subscription_paused: >
-        %{name} current subscription (%{subscription_name}) has been *paused*.
+        %{name} current subscription (%{subscription_name}) has been *paused* %{pause_fee}.
       subscription_paused_for_next_period: >
-        %{name} has *paused* his current subscription (%{subscription_name}) for %{months} month(s).
+        %{name} has *paused* his current subscription (%{subscription_name}) for %{months} month(s) %{pause_fee}.
         Pause will start at %{pause_start_on_datetime}. Reason: %{reason}
       subscription_pause_canceled: >
         %{name} has *canceled his scheduled pause* for his current subscription (%{subscription_name}).

@@ -1,6 +1,12 @@
 class PlacePurchase
   include Interactor::Organizer
 
+  around do |interactor|
+    context.chargeable = context.product
+
+    interactor.call
+  end
+
   organize MakeDiscount,
            Users::Charge,
            DropIns::IncrementUserCredits,

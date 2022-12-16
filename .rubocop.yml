@@ -103,7 +103,7 @@ Metrics/ParameterLists:
     - app/interactors/users/charge.rb
 
 Metrics/PerceivedComplexity:
-  Max: 20
+  Max: 40
 
 Rails:
   Enabled: true

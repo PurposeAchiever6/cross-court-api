@@ -38,7 +38,7 @@ class Product < ApplicationRecord
   enum available_for: { everyone: 0, reserve_team: 1 }
 
   has_one_attached :image
-  has_many :payments, dependent: :nullify
+  has_many :payments, as: :chargeable, dependent: :nullify
 
   has_many :subscriptions
   has_many :products_promo_codes, dependent: :destroy

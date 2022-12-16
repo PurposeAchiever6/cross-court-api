@@ -19,7 +19,7 @@ module Subscriptions
       discount_amount = stripe_invoice.total_discount_amounts.map(&:amount).reduce(:+) || 0
 
       Payments::Create.call(
-        product: subscription.product,
+        chargeable: subscription.product,
         user: user,
         amount: stripe_invoice.total / 100.00,
         description: subscription.name,
