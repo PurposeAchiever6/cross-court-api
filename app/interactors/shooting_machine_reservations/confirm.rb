@@ -16,6 +16,7 @@ module ShootingMachineReservations
           user: user,
           amount: price,
           description: 'Shooting machine rental',
+          use_cc_cash: true,
           notify_error: true,
           create_payment_on_failure: true,
           raise_error: true
