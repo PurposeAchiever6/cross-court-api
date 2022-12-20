@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_03_221805) do
+ActiveRecord::Schema.define(version: 2022_12_16_143806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,9 @@ ActiveRecord::Schema.define(version: 2022_12_03_221805) do
     t.integer "status", default: 0
     t.string "error_message"
     t.decimal "cc_cash", precision: 10, scale: 2, default: "0.0"
+    t.string "chargeable_type"
+    t.bigint "chargeable_id"
+    t.index ["chargeable_type", "chargeable_id"], name: "index_payments_on_chargeable_type_and_chargeable_id"
     t.index ["product_id"], name: "index_payments_on_product_id"
     t.index ["status"], name: "index_payments_on_status"
     t.index ["user_id"], name: "index_payments_on_user_id"
@@ -211,8 +214,8 @@ ActiveRecord::Schema.define(version: 2022_12_03_221805) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "skill_session_credits", default: 0
     t.integer "max_rollover_credits"
+    t.integer "skill_session_credits", default: 0
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
@@ -333,6 +336,7 @@ ActiveRecord::Schema.define(version: 2022_12_03_221805) do
     t.string "charge_payment_intent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "error_on_charge"
     t.index ["shooting_machine_id"], name: "index_shooting_machine_reservations_on_shooting_machine_id"
     t.index ["user_session_id"], name: "index_shooting_machine_reservations_on_user_session_id"
   end
@@ -383,6 +387,7 @@ ActiveRecord::Schema.define(version: 2022_12_03_221805) do
     t.datetime "canceled_at"
     t.datetime "unpaused_at"
     t.string "reason"
+    t.boolean "paid", default: false
     t.index ["subscription_id"], name: "index_subscription_pauses_on_subscription_id"
   end
 
@@ -520,14 +525,14 @@ ActiveRecord::Schema.define(version: 2022_12_03_221805) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
-    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at"
+    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.integer "credits_without_expiration", default: 0
     t.string "bio"
+    t.integer "credits_without_expiration", default: 0
     t.integer "scouting_credits", default: 0
     t.integer "weight"
     t.integer "height"

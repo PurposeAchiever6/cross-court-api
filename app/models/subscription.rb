@@ -93,8 +93,9 @@ class Subscription < ApplicationRecord
     self
   end
 
-  def can_pause?
-    subscription_pauses.finished.this_year.count < ENV['SUBSCRIPTION_PAUSES_PER_YEAR'].to_i
+  def can_free_pause?
+    subscription_pauses.finished.free.this_year.count <
+      ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'].to_i
   end
 
   def will_pause?

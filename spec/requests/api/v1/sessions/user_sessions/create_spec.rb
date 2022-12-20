@@ -375,14 +375,11 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
     end
 
     it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
-    it { expect { subject }.not_to change(Payment, :count) }
 
     context 'when session is open club' do
       let!(:payment_method) { create(:payment_method, user: user, default: true) }
       let!(:active_subscription) { create(:subscription) }
       let(:is_open_club) { true }
-
-      before { allow(StripeService).to receive(:charge).and_return(double(id: 'payment_intent')) }
 
       it 'returns success' do
         subject
@@ -390,7 +387,6 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
-      it { expect { subject }.to change(Payment, :count).by(1) }
 
       context 'when the shooting machine has already been reserved' do
         let!(:user_session) { create(:user_session, session: session, date: date) }
@@ -413,7 +409,6 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
         end
 
         it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
-        it { expect { subject }.not_to change(Payment, :count) }
       end
     end
   end

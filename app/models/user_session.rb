@@ -48,7 +48,7 @@ class UserSession < ApplicationRecord
              optional: true,
              inverse_of: :user_sessions
 
-  has_one :shooting_machine_reservation, -> { reserved }, inverse_of: :user_session
+  has_one :shooting_machine_reservation, -> { not_canceled }, inverse_of: :user_session
 
   has_many :session_survey_answers, dependent: :destroy
   has_many :session_guests, dependent: :destroy

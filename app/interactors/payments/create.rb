@@ -4,7 +4,7 @@ module Payments
 
     def call
       payment = Payment.create!(
-        product_id: context.product&.id,
+        chargeable: context.chargeable,
         user_id: context.user.id,
         amount: context.amount,
         description: context.description,

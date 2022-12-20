@@ -7,10 +7,16 @@
   paused: subscription.paused?,
   paused_from: subscription.upcoming_or_actual_subscription_pause&.paused_from&.iso8601,
   paused_until: subscription.upcoming_or_actual_subscription_pause&.paused_until&.iso8601,
-  can_pause: subscription.can_pause?,
+  can_free_pause: subscription.can_free_pause?,
   will_pause: subscription.will_pause?,
   canceled_at: subscription&.canceled_at&.iso8601,
-  pauses_per_year: ENV['SUBSCRIPTION_PAUSES_PER_YEAR'],
+  free_pauses_per_year: ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'],
+  paid_subscription_pause_price: ENV['PAID_SUBSCRIPTION_PAUSE_PRICE'],
+  this_year_subscription_pauses: render(
+    partial: 'api/v1/subscription_pauses/info',
+    collection: subscription.subscription_pauses.this_year,
+    as: :subscription_pause
+  ),
   product: render(
     partial: 'api/v1/products/info',
     locals: { product: subscription.product }

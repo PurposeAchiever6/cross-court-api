@@ -13,6 +13,7 @@
 #  canceled_at     :datetime
 #  unpaused_at     :datetime
 #  reason          :string
+#  paid            :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -25,5 +26,6 @@ FactoryBot.define do
     paused_from { Time.current }
     paused_until { Time.current + 1.month }
     status { :upcoming }
+    paid { false }
   end
 end

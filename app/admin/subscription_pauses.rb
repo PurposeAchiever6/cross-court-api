@@ -18,6 +18,7 @@ ActiveAdmin.register SubscriptionPause do
     column :reason do |subscription_pause|
       subscription_pause.reason&.humanize
     end
+    tag_column :paid
     column :updated_at
     column :created_at
 
@@ -37,6 +38,7 @@ ActiveAdmin.register SubscriptionPause do
       row :reason do
         subscription_pause.reason&.humanize
       end
+      tag_row :paid
       row :updated_at
       row :created_at
     end

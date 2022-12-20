@@ -31,9 +31,30 @@ describe Subscriptions::PauseSubscription do
       expect { subject }.to change { SubscriptionPause.count }.by(1)
     end
 
+    it 'creates a non paid subscription pause' do
+      subject
+
+      subscription_pause = SubscriptionPause.last
+      expect(subscription_pause.paid).to eq(false)
+    end
+
     it 'sends a Slack message' do
       expect_any_instance_of(Slack::Notifier).to receive(:ping)
       subject
+    end
+
+    context 'when the pause is paid' do
+      before do
+        ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
+        create_list(:subscription_pause, 2, subscription: subscription, status: :finished)
+      end
+
+      it 'creates a paid subscription pause' do
+        subject
+
+        subscription_pause = SubscriptionPause.last
+        expect(subscription_pause.paid).to eq(true)
+      end
     end
 
     context 'when the subscription is already paused' do
@@ -48,17 +69,6 @@ describe Subscriptions::PauseSubscription do
       let(:months) { '123' }
 
       it { expect { subject }.to raise_error(SubscriptionInvalidPauseMonthsException) }
-
-      it { expect { subject rescue nil }.not_to change { subscription.reload.status } }
-    end
-
-    context 'when no more pauses are available' do
-      before do
-        ENV['SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
-        create_list(:subscription_pause, 2, subscription: subscription, status: :finished)
-      end
-
-      it { expect { subject }.to raise_error(MaximumNumberOfPausesReachedException) }
 
       it { expect { subject rescue nil }.not_to change { subscription.reload.status } }
     end

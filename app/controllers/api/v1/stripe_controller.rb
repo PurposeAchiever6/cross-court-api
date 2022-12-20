@@ -6,6 +6,7 @@ module Api
       STRIPE_WEBHOOK_SECRET = ENV['STRIPE_WEBHOOK_SECRET']
       INVOICE_PAYMENT_FAILED = 'invoice.payment_failed'.freeze
       INVOICE_PAYMENT_SUCCEEDED = 'invoice.payment_succeeded'.freeze
+      INVOICE_MARKED_UNCOLLECTIBLE = 'invoice.marked_uncollectible'.freeze
       CUSTOMER_SUBSCRIPTION_UPDATED = 'customer.subscription.updated'.freeze
       CUSTOMER_SUBSCRIPTION_DELETED = 'customer.subscription.deleted'.freeze
       SUBSCRIPTION_CYCLE = 'subscription_cycle'.freeze
@@ -88,6 +89,19 @@ module Api
           Subscriptions::ResetUserSubscriptionCredits.call(user: user)
         when CUSTOMER_SUBSCRIPTION_UPDATED
           update_database_subscription(object)
+        when INVOICE_MARKED_UNCOLLECTIBLE
+          actual_subscription_pause = active_subscription.subscription_pauses.actual.last
+          if active_subscription && actual_subscription_pause&.paid?
+            Users::Charge.call(
+              user: user,
+              amount: ENV['PAID_SUBSCRIPTION_PAUSE_PRICE'].to_f,
+              description: 'Membership pause fee',
+              chargeable: actual_subscription_pause,
+              create_payment_on_failure: true,
+              notify_error: true,
+              raise_error: false
+            )
+          end
         else
           Rails.logger.info "Stripe webhooks - unhandled event: #{type}"
         end
@@ -118,7 +132,7 @@ module Api
         return if payment_intent_id && Payment.find_by(stripe_id: payment_intent_id).present?
 
         Payments::Create.call(
-          product: subscription.product,
+          chargeable: subscription.product,
           user: subscription.user,
           amount: stripe_invoice.amount_due / 100.00,
           description: "#{subscription.name} (#{description_reason})",

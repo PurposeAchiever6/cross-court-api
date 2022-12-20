@@ -40,6 +40,8 @@ describe UserSessions::AutoConfirm do
 
     it { expect { subject }.to change { user_session.reload.state }.to('confirmed') }
 
+    it { expect { subject }.not_to change(Payment, :count) }
+
     it 'updates reminder_sent_at column' do
       expect { subject }.to change { user_session.reload.reminder_sent_at }.from(nil).to(anything)
     end
@@ -124,6 +126,26 @@ describe UserSessions::AutoConfirm do
       it 'calls Sonar service with expected args' do
         expect(SonarService).to receive(:send_message).with(user, expected_sms_message)
         subject
+      end
+    end
+
+    context 'when user session has a shooting machine reservation' do
+      let!(:user_payment_method) { create(:payment_method, user: user, default: true) }
+      let!(:shooting_machine) { create(:shooting_machine, session: session) }
+      let!(:shooting_machine_reservation) do
+        create(
+          :shooting_machine_reservation,
+          user_session: user_session,
+          shooting_machine: shooting_machine
+        )
+      end
+
+      before { allow(StripeService).to receive(:charge).and_return(double(id: 'id')) }
+
+      it { expect { subject }.to change(Payment, :count).by(1) }
+
+      it 'updates shooting machine reservation status' do
+        expect { subject }.to change { shooting_machine_reservation.reload.status }.to('confirmed')
       end
     end
   end

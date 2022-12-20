@@ -13,6 +13,7 @@
 #  canceled_at     :datetime
 #  unpaused_at     :datetime
 #  reason          :string
+#  paid            :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -22,8 +23,11 @@
 class SubscriptionPause < ApplicationRecord
   belongs_to :subscription
 
+  has_many :payments, as: :chargeable, dependent: :nullify
+
   enum status: { upcoming: 0, actual: 1, finished: 2, canceled: 3, unpaused: 4 }
 
   scope :this_year, -> { where(created_at: Time.zone.today.all_year) }
+  scope :free, -> { where(paid: false) }
   scope :upcoming_or_actual, -> { where(status: %i[upcoming actual]) }
 end

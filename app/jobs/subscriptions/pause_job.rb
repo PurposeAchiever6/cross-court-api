@@ -10,12 +10,16 @@ module Subscriptions
 
       stripe_subscription = StripeService.pause_subscription(subscription, resumes_at)
 
-      SubscriptionPause.find(subscription_pause_id).update!(status: :actual)
+      subscription_pause = SubscriptionPause.find(subscription_pause_id)
+      subscription_pause.update!(status: :actual)
       subscription.assign_stripe_attrs(stripe_subscription).save!
 
       user.update!(subscription_credits: 0, subscription_skill_session_credits: 0)
 
-      SlackService.new(user).subscription_paused(subscription)
+      SlackService.new(user).subscription_paused(
+        subscription,
+        pause_fee: subscription_pause.paid? ? '(paid)' : '(free)'
+      )
     end
   end
 end

@@ -84,8 +84,8 @@ class SlackService
     notify_subscription('notifier.slack.subscription_paused_for_next_period', subscription, options)
   end
 
-  def subscription_paused(subscription)
-    notify_subscription('notifier.slack.subscription_paused', subscription)
+  def subscription_paused(subscription, options)
+    notify_subscription('notifier.slack.subscription_paused', subscription, options)
   end
 
   def subscription_unpaused(subscription)
