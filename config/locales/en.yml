@@ -219,8 +219,7 @@ en:
         Tap %{link} to book!
       first_time_subscription_credits_used: >
         Hey %{name}! All your membership credits have been used this month. In case you wanted to
-        purchase additional drop in sessions at a discount, go to our memberships page and toggle
-        over to 'A La Carte'. %{link}
+        purchase additional drop in sessions at a discount, go to our memberships page! %{link}
       user_update_requests:
         approve: >
           Hey %{name}! Your CC skill level adjustment request has been approved.

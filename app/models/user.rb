@@ -186,6 +186,8 @@ class User < ApplicationRecord
            :status,
            :cancel_at_period_end?,
            :cancel_at_next_period_end?,
+           :will_pause?,
+           :paused?,
            to: :active_subscription, prefix: true
 
   def self.from_social_provider(provider, user_params)
