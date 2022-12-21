@@ -24,6 +24,7 @@ class PlayerEvaluation < ApplicationRecord
   validate :validate_evaluation_presence
 
   before_save :calculate_total_score
+  after_save :assign_user_skill_rating
 
   def rating
     PlayerEvaluationRatingRange.rating_for_score(total_score)
@@ -41,6 +42,13 @@ class PlayerEvaluation < ApplicationRecord
     end
 
     self.total_score = total_score
+  end
+
+  def assign_user_skill_rating
+    user.update!(skill_rating: rating)
+  rescue ActiveRecord::RecordInvalid => e
+    errors.add(:base, e.message)
+    raise ActiveRecord::RecordInvalid, self
   end
 
   def validate_evaluation_presence
