@@ -92,6 +92,10 @@ class SlackService
     notify_subscription('notifier.slack.subscription_unpaused', subscription)
   end
 
+  def subscription_unpause_failed_payment(subscription)
+    notify_subscription('notifier.slack.subscription_unpause_failed_payment', subscription)
+  end
+
   def subscription_pause_canceled(subscription)
     notify_subscription('notifier.slack.subscription_pause_canceled', subscription)
   end

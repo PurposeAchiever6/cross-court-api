@@ -86,7 +86,9 @@ class Subscription < ApplicationRecord
 
     if subscription_pauses.actual.any?
       actual_subscription_pause = subscription_pauses.actual.last
-      actual_subscription_pause.update(status: :finished) if pause_collection.nil?
+      if pause_collection.nil? && stripe_subscription.status == 'active'
+        actual_subscription_pause.update(status: :finished)
+      end
       actual_subscription_pause.update(status: :canceled) if status == 'canceled'
     end
 

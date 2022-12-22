@@ -42,6 +42,7 @@ Metrics/ClassLength:
     - app/models/**/*
     - app/services/active_campaign_service.rb
     - app/services/stripe_service.rb
+    - spec/support/mocks/stripe_mocker.rb
 
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:
@@ -59,10 +60,11 @@ Metrics/CyclomaticComplexity:
     - app/decorators/session_decorator.rb
     - app/jobs/sessions/assign_default_employees_job.rb
     - app/interactors/user_sessions/cancel.rb
+    - app/models/subscription.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
-  Max: 30
+  Max: 50
   Exclude:
     - app/jobs/user_session_reminders_job.rb
     - app/services/active_campaign_service.rb

@@ -162,6 +162,8 @@ en:
         %{name} has *canceled his scheduled pause* for his current subscription (%{subscription_name}).
       subscription_unpaused: >
         %{name} has *unpaused* his current subscription (%{subscription_name}).
+      subscription_unpause_failed_payment: >
+        Unpause payment for %{name} subscription has *failed*. His subscription (%{subscription_name}) was canceled.
       charge_error: >
         There was an *error* when charging the user %{name} on *%{description}*.
         Error: %{error_message}
