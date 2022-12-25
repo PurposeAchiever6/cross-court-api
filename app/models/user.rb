@@ -285,6 +285,10 @@ class User < ApplicationRecord
     user_sessions.count != 0
   end
 
+  def not_canceled_user_session?(session, date)
+    user_sessions.not_canceled.by_session(session).by_date(date).any?
+  end
+
   def instagram_profile
     return if instagram_username.blank?
 

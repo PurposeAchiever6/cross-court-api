@@ -77,6 +77,16 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
     it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
   end
 
+  context 'when user is already in the session' do
+    include_context 'disable bullet'
+
+    before { create(:user_session, session: session, user: user, date: date) }
+
+    it { is_expected.to have_http_status(:bad_request) }
+    it { expect(response_body[:error]).to eq('You are already in for this session') }
+    it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
+  end
+
   context 'when the session is not for all skill levels' do
     include_context 'disable bullet'
 
