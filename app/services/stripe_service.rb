@@ -112,11 +112,16 @@ class StripeService
       cancel_at_period_end: false,
       default_payment_method: payment_method_stripe_id,
       billing_cycle_anchor: 'now',
-      proration_behavior: 'always_invoice',
       payment_behavior: 'error_if_incomplete'
     }
 
-    subscription_params[:proration_date] = proration_date if proration_date
+    if subscription.paused?
+      subscription_params[:pause_collection] = ''
+      subscription_params[:proration_behavior] = 'none'
+    else
+      subscription_params[:proration_behavior] = 'always_invoice'
+      subscription_params[:proration_date] = proration_date if proration_date
+    end
 
     if promo_code
       subscription_params.merge!(promotion_code: promo_code.stripe_promo_code_id)
@@ -149,7 +154,8 @@ class StripeService
       subscription.stripe_id,
       pause_collection: '',
       billing_cycle_anchor: 'now',
-      proration_behavior: 'none'
+      proration_behavior: 'none',
+      payment_behavior: 'error_if_incomplete'
     )
   end
 

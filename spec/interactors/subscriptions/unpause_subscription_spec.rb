@@ -12,7 +12,7 @@ describe Subscriptions::UnpauseSubscription do
 
     before do
       allow_any_instance_of(Slack::Notifier).to receive(:ping)
-      StripeMocker.new.unpause_subscription(id: subscription.stripe_id)
+      StripeMocker.new.unpause_subscription(subscription.stripe_id)
       StripeMocker.new.retrieve_invoice(user.stripe_id, stripe_invoice_id)
       user.update!(subscription_credits: 0)
     end
@@ -47,7 +47,7 @@ describe Subscriptions::UnpauseSubscription do
 
       expect(payment.amount.to_f).to eq(1239 / 100.00)
       expect(payment.user).to eq(user)
-      expect(payment.description).to eq(subscription.name)
+      expect(payment.description).to eq("#{subscription.name} (unpaused)")
       expect(payment.discount.to_f).to eq(123 / 100.00)
       expect(payment.last_4).to eq(subscription.payment_method.last_4)
       expect(payment.stripe_id).to eq('pi_1Kooo9EbKIwsJiGZCM')
@@ -69,50 +69,6 @@ describe Subscriptions::UnpauseSubscription do
 
       it 'does not call Slack Service' do
         expect_any_instance_of(SlackService).not_to receive(:subscription_unpaused)
-        subject rescue nil
-      end
-    end
-
-    context 'when the unpause payment fails' do
-      let(:failure_code) { 'card_declined' }
-      let(:failure_message) { 'Your card was declined.' }
-
-      before do
-        StripeMocker.new.unpause_subscription(id: subscription.stripe_id, status: 'past_due')
-        StripeMocker.new.retrieve_charge(
-          stripe_charge_id: 'ch_1G8nTCEbKIwsJiGZgXb9maij',
-          failure_code: failure_code,
-          failure_message: failure_message
-        )
-        StripeMocker.new.cancel_subscription(subscription.stripe_id)
-      end
-
-      it 'calls the Subscriptions::CancelSubscription interactor' do
-        expect_any_instance_of(Subscriptions::CancelSubscription).to receive(:call)
-        subject rescue nil
-      end
-
-      it 'creates an error payment' do
-        subject rescue nil
-        payment = Payment.last
-
-        expect(payment.status).to eq('error')
-        expect(payment.error_message).to eq(failure_message)
-      end
-
-      it 'cancels the user subscription status' do
-        expect {
-          subject rescue nil
-        }.to change {
-          subscription.reload.status
-        }.from('paused').to('canceled')
-      end
-
-      it 'calls Slack Service' do
-        expect_any_instance_of(
-          SlackService
-        ).to receive(:subscription_unpause_failed_payment).with(subscription)
-
         subject rescue nil
       end
     end

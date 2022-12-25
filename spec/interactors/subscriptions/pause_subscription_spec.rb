@@ -8,6 +8,7 @@ describe Subscriptions::PauseSubscription do
     let(:resumes_at) { (subscription.current_period_end - 1.day + months.to_i.months).to_i }
 
     before do
+      ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
       Timecop.freeze(Time.current)
       StripeMocker.new.pause_subscription(subscription.stripe_id, resumes_at)
       allow_any_instance_of(Slack::Notifier).to receive(:ping)
@@ -45,7 +46,6 @@ describe Subscriptions::PauseSubscription do
 
     context 'when the pause is paid' do
       before do
-        ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
         create_list(:subscription_pause, 2, subscription: subscription, status: :finished)
       end
 

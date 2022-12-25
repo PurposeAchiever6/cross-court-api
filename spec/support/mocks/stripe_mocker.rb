@@ -46,16 +46,17 @@ class StripeMocker
     )
   end
 
-  def unpause_subscription(id:, status: 'active')
+  def unpause_subscription(stripe_subscription_id)
     mock_request(
-      url_path: "/subscriptions/#{id}",
+      url_path: "/subscriptions/#{stripe_subscription_id}",
       request_body: {
         pause_collection: '',
         billing_cycle_anchor: 'now',
-        proration_behavior: 'none'
+        proration_behavior: 'none',
+        payment_behavior: 'error_if_incomplete'
       },
       method: :post,
-      response_body: subscription_response(id: id, status: status)
+      response_body: subscription_response(id: stripe_subscription_id)
     )
   end
 
@@ -90,22 +91,6 @@ class StripeMocker
       response_body: invoice_response(
         customer_id: customer_id,
         stripe_invoice_id: stripe_invoice_id
-      )
-    )
-  end
-
-  def retrieve_charge(
-    stripe_charge_id: 'ch_1G8nTCEbKIwsJiGZgXb9maij',
-    failure_code: nil,
-    failure_message: nil
-  )
-    mock_request(
-      url_path: "/charges/#{stripe_charge_id}",
-      method: :get,
-      response_body: charge_response(
-        id: stripe_charge_id,
-        failure_code: failure_code,
-        failure_message: failure_message
       )
     )
   end
@@ -179,23 +164,10 @@ class StripeMocker
     }.to_json
   end
 
-  def charge_response(params)
-    {
-      id: params[:id],
-      object: 'charge',
-      amount: 5400,
-      amount_captured: 0,
-      amount_refunded: 0,
-      failure_code: params[:failure_code],
-      failure_message: params[:failure_message]
-    }.to_json
-  end
-
   def invoice_response(params)
     {
       amount_due: 1239,
       currency: 'usd',
-      charge: 'ch_1G8nTCEbKIwsJiGZgXb9maij',
       customer: params[:customer_id] || 'cus_AJ6y81jMo1Na22',
       payment_intent: 'pi_1Kooo9EbKIwsJiGZCM',
       lines: {
