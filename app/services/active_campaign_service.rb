@@ -45,6 +45,10 @@ class ActiveCampaignService
     execute_request(:get, "/dealStages?filters[d_groupid]=#{pipeline_id}&limit=100")
   end
 
+  def tags
+    execute_request(:get, '/tags?limit=100')
+  end
+
   def lists(name = nil)
     url = '/lists?limit=100'
     url += "&filters[name]=#{name}" if name.present?
@@ -60,6 +64,11 @@ class ActiveCampaignService
   def add_contact_to_list(list_name, active_campaign_id)
     payload = add_contact_to_list_payload(list_name, active_campaign_id)
     execute_request(:post, '/contactLists', payload)
+  end
+
+  def add_tag_to_contact(tag_name, active_campaign_id)
+    payload = add_tag_to_contact_payload(tag_name, active_campaign_id)
+    execute_request(:post, '/contactTags', payload)
   end
 
   private
@@ -120,6 +129,11 @@ class ActiveCampaignService
       deal_pipelines['dealGroups'].map { |field| [field['title'], field['id']] }.to_h
   end
 
+  def tags_map
+    @tags_map ||=
+      tags['tags'].map { |field| [field['tag'], field['id']] }.to_h
+  end
+
   def contact_payload(user)
     birthday = user.birthday
 
@@ -155,6 +169,17 @@ class ActiveCampaignService
         list: list_id,
         contact: active_campaign_id,
         status: 1 # subscribed status
+      }
+    }.compact.deep_transform_keys { |key| key.to_s.camelcase(:lower) }
+  end
+
+  def add_tag_to_contact_payload(tag_name, active_campaign_id)
+    tag_id = tags_map[tag_name]
+
+    {
+      contact_tag: {
+        contact: active_campaign_id,
+        tag: tag_id
       }
     }.compact.deep_transform_keys { |key| key.to_s.camelcase(:lower) }
   end

@@ -3,6 +3,7 @@ module Subscriptions
     include Interactor::Organizer
 
     organize Subscriptions::DeleteSubscription,
-             Subscriptions::ResetUserSubscriptionCredits
+             Subscriptions::ResetUserSubscriptionCredits,
+             Subscriptions::SendSubscriptionCanceledEvent
   end
 end
