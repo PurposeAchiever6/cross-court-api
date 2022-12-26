@@ -16,6 +16,12 @@
         <%= user.active_subscription_status.humanize %>
       </span>
     </div>
+    <% unless user.active_subscription_paused? %>
+      <div class="mb-2">
+        <label class="font-semibold mr-1">Will be paused:</label>
+        <%= status_tag user.active_subscription_will_pause? %>
+      </div>
+    <% end %>
     <div class="mb-2">
       <label class="font-semibold mr-1">Cancel at current period end:</label>
       <%= status_tag user.active_subscription_cancel_at_period_end? %>

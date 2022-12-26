@@ -135,6 +135,11 @@ class User < ApplicationRecord
           dependent: :destroy,
           inverse_of: :user
 
+  has_one :last_player_evaluation,
+          -> { order(date: :desc, created_at: :desc) },
+          class_name: 'PlayerEvaluation',
+          inverse_of: :user
+
   has_many :user_sessions, dependent: :destroy
   has_many :sem_sessions, dependent: :destroy
   has_many :referee_sessions, dependent: :destroy
@@ -186,6 +191,8 @@ class User < ApplicationRecord
            :status,
            :cancel_at_period_end?,
            :cancel_at_next_period_end?,
+           :will_pause?,
+           :paused?,
            to: :active_subscription, prefix: true
 
   def self.from_social_provider(provider, user_params)

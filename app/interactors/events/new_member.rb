@@ -16,7 +16,7 @@ module Events
         I18n.t(
           'notifier.sonar.new_member_welcome',
           name: user.first_name,
-          link: 'https://calendly.com/brendancrosscourt/welcome-to-the-ccteam-5-min-call'
+          link: 'https://calendly.com/rpadilla-55/new-member-kick-off-call'
         )
       )
     end

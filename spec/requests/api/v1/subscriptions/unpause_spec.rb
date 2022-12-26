@@ -23,7 +23,7 @@ describe 'PUT api/v1/subscriptions/:id/unpause' do
 
   before do
     allow_any_instance_of(Slack::Notifier).to receive(:ping)
-    StripeMocker.new.unpause_subscription(subscription.stripe_id)
+    StripeMocker.new.unpause_subscription(id: subscription.stripe_id)
     StripeMocker.new.retrieve_invoice(user.stripe_id, stripe_invoice_id)
   end
 
