@@ -38,6 +38,20 @@ describe Waitlists::AddUser do
       it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid) }
     end
 
+    context 'when user is already in the session' do
+      let(:state) { %i[reserved confirmed].sample }
+
+      before { create(:user_session, session: session, user: user, date: date, state: state) }
+
+      it { expect { subject }.to raise_error(UserAlreadyInSessionException) }
+
+      context 'when user session has been canceled' do
+        let(:state) { :canceled }
+
+        it { expect { subject }.to change(UserSessionWaitlist, :count).by(1) }
+      end
+    end
+
     context 'when the session is not for all skill levels' do
       let(:all_skill_levels_allowed) { false }
 

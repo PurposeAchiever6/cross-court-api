@@ -83,6 +83,7 @@ en:
         has_already_been_played: "The session has already been played"
         reserve_team_not_allowed: "The Reserve Team is not allowed to reserve"
         only_for_members: "The session is only for members"
+        user_already_in: "You are already in for this session"
         votes:
           user_did_not_vote: "The user did not vote for this session"
       waitlists:
@@ -162,8 +163,6 @@ en:
         %{name} has *canceled his scheduled pause* for his current subscription (%{subscription_name}).
       subscription_unpaused: >
         %{name} has *unpaused* his current subscription (%{subscription_name}).
-      subscription_unpause_failed_payment: >
-        Unpause payment for %{name} subscription has *failed*. His subscription (%{subscription_name}) was canceled.
       charge_error: >
         There was an *error* when charging the user %{name} on *%{description}*.
         Error: %{error_message}

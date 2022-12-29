@@ -150,6 +150,7 @@ class User < ApplicationRecord
   has_many :user_session_waitlists, dependent: :destroy
   has_many :payment_methods, dependent: :destroy
   has_many :player_evaluations, dependent: :destroy
+  has_many :user_update_requests, dependent: :destroy
 
   has_one_attached :image, dependent: :destroy
 
@@ -282,6 +283,10 @@ class User < ApplicationRecord
 
   def reserve_any_session?
     user_sessions.count != 0
+  end
+
+  def not_canceled_user_session?(session, date)
+    user_sessions.not_canceled.by_session(session).by_date(date).any?
   end
 
   def instagram_profile
