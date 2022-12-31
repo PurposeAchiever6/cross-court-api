@@ -21,8 +21,9 @@ ActiveAdmin.register User do
   filter :is_sem
   filter :is_referee
   filter :is_coach
-  filter :skill_rating
   filter :private_access
+  filter :skill_rating
+  filter :main_goal, as: :select, collection: Goal.pluck(:description)
   filter :source
   filter :created_at
 
