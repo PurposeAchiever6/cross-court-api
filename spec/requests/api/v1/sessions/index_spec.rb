@@ -8,7 +8,7 @@ describe 'GET api/v1/sessions', type: :request do
   end
   let(:beginning_of_week) { los_angeles_time.beginning_of_week }
   let(:from_date) { beginning_of_week.strftime(Session::DATE_FORMAT) }
-  let(:params) { { from_date: from_date } }
+  let(:params) { { from_date: } }
   let(:today) { los_angeles_time.to_date.to_s }
   let(:request_headers) { auth_headers }
 
@@ -20,7 +20,7 @@ describe 'GET api/v1/sessions', type: :request do
 
   context 'when the session is a one time only' do
     let(:is_private) { false }
-    let!(:session) { create(:session, time: los_angeles_time + 1.hour, is_private: is_private) }
+    let!(:session) { create(:session, time: los_angeles_time + 1.hour, is_private:) }
 
     it 'returns success' do
       subject
@@ -43,7 +43,7 @@ describe 'GET api/v1/sessions', type: :request do
     end
 
     context 'when the session is full' do
-      let!(:user_session) { create_list(:user_session, 15, session: session, date: today) }
+      let!(:user_session) { create_list(:user_session, 15, session:, date: today) }
 
       it 'retruns full on true' do
         subject
@@ -82,8 +82,8 @@ describe 'GET api/v1/sessions', type: :request do
       let!(:user_session_waitlist) do
         create(
           :user_session_waitlist,
-          session: session,
-          user: user,
+          session:,
+          user:,
           date: session.start_time
         )
       end
@@ -139,7 +139,7 @@ describe 'GET api/v1/sessions', type: :request do
   context 'when there are sessions for multiple locations' do
     let(:location)   { create(:location) }
     let(:location_2) { create(:location) }
-    let!(:session)   { create(:session, location: location) }
+    let!(:session)   { create(:session, location:) }
     let!(:session_2) { create(:session, location: location_2) }
 
     before do

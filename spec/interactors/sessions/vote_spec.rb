@@ -4,12 +4,12 @@ describe Sessions::Vote do
   describe '.call' do
     let!(:user) { create(:user) }
     let!(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
-    let!(:session) { create(:session, start_time: la_time.tomorrow, coming_soon: coming_soon) }
+    let!(:session) { create(:session, start_time: la_time.tomorrow, coming_soon:) }
 
     let(:date) { session.start_time }
     let(:coming_soon) { true }
 
-    subject { Sessions::Vote.call(session: session, user: user, date: date) }
+    subject { Sessions::Vote.call(session:, user:, date:) }
 
     it { expect { subject }.to change(UserSessionVote, :count).by(1) }
 
@@ -26,7 +26,7 @@ describe Sessions::Vote do
     end
 
     context 'when user has already voted for that session and date' do
-      before { create(:user_session_vote, session: session, user: user, date: date) }
+      before { create(:user_session_vote, session:, user:, date:) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid) }
     end

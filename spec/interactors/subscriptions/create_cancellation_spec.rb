@@ -13,10 +13,10 @@ describe Subscriptions::CreateCancellationRequest do
     subject do
       Subscriptions::CreateCancellationRequest.call(
         experiencie_rate: experience_rate,
-        service_rate: service_rate,
-        recommend_rate: recommend_rate,
-        reason: reason,
-        user: user
+        service_rate:,
+        recommend_rate:,
+        reason:,
+        user:
       )
     end
 

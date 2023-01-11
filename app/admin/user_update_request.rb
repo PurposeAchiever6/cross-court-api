@@ -68,7 +68,7 @@ ActiveAdmin.register UserUpdateRequest do
   member_action :approve, method: :post do
     user_update_request = UserUpdateRequest.find(params[:id])
 
-    UserUpdateRequests::Approve.call(user_update_request: user_update_request)
+    UserUpdateRequests::Approve.call(user_update_request:)
 
     redirect_to admin_user_update_requests_path, notice: 'Request approved successfully'
   rescue StandardError => e
@@ -79,7 +79,7 @@ ActiveAdmin.register UserUpdateRequest do
   member_action :reject, method: :post do
     user_update_request = UserUpdateRequest.find(params[:id])
 
-    UserUpdateRequests::Reject.call(user_update_request: user_update_request)
+    UserUpdateRequests::Reject.call(user_update_request:)
 
     redirect_to admin_user_update_requests_path, notice: 'Request rejected successfully'
   rescue StandardError => e
@@ -90,7 +90,7 @@ ActiveAdmin.register UserUpdateRequest do
   member_action :ignore, method: :post do
     user_update_request = UserUpdateRequest.find(params[:id])
 
-    UserUpdateRequests::Ignore.call(user_update_request: user_update_request)
+    UserUpdateRequests::Ignore.call(user_update_request:)
 
     redirect_to admin_user_update_requests_path, notice: 'Request ignored successfully'
   rescue StandardError => e

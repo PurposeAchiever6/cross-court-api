@@ -6,10 +6,10 @@ describe Subscriptions::CancelSubscriptionAtPeriodEnd do
     let!(:subscription) do
       create(
         :subscription,
-        user: user,
-        status: status,
-        mark_cancel_at_period_end_at: mark_cancel_at_period_end_at,
-        cancel_at_period_end: cancel_at_period_end
+        user:,
+        status:,
+        mark_cancel_at_period_end_at:,
+        cancel_at_period_end:
       )
     end
 
@@ -24,8 +24,8 @@ describe Subscriptions::CancelSubscriptionAtPeriodEnd do
 
     subject do
       Subscriptions::CancelSubscriptionAtPeriodEnd.call(
-        user: user,
-        subscription: subscription
+        user:,
+        subscription:
       )
     end
 

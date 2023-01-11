@@ -35,10 +35,10 @@ FactoryBot.define do
       "#{Faker::Lorem.unique}_#{n}"
     end
     name { Faker::Lorem.word }
-    credits { Faker::Number.between(1, 10) }
-    skill_session_credits { Faker::Number.between(1, 10) }
+    credits { Faker::Number.between(from: 1, to: 10) }
+    skill_session_credits { Faker::Number.between(from: 1, to: 10) }
     max_rollover_credits { credits / 2 }
-    order_number { Faker::Number.number(1) }
+    order_number { Faker::Number.number(digits: 1) }
     price { Faker::Commerce.price }
     referral_cc_cash { 0 }
     available_for { 'everyone' }

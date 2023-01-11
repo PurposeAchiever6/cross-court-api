@@ -15,7 +15,7 @@ class PlayerEvaluationRatingRange < ApplicationRecord
             presence: true,
             numericality: { greater_than_or_equal_to: 0 }
 
-  scope :for_score, ->(score) { where('min_score <= :score AND max_score >= :score', score: score) }
+  scope :for_score, ->(score) { where('min_score <= :score AND max_score >= :score', score:) }
 
   def self.rating_for_score(score)
     for_score(score).first&.rating

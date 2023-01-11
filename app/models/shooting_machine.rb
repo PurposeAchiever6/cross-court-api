@@ -24,12 +24,12 @@ class ShootingMachine < ApplicationRecord
 
   def start_time_str
     start_time_value = start_time
-    start_time_value ? start_time_value.strftime('%I:%M %p') : nil
+    start_time_value&.strftime('%I:%M %p')
   end
 
   def end_time_str
     end_time_value = end_time
-    end_time_value ? end_time_value.strftime('%I:%M %p') : nil
+    end_time_value&.strftime('%I:%M %p')
   end
 
   def reserved?(date)

@@ -11,8 +11,9 @@
 #
 # Indexes
 #
-#  index_user_promo_codes_on_promo_code_id  (promo_code_id)
-#  index_user_promo_codes_on_user_id        (user_id)
+#  index_user_promo_codes_on_promo_code_id              (promo_code_id)
+#  index_user_promo_codes_on_promo_code_id_and_user_id  (promo_code_id,user_id) UNIQUE
+#  index_user_promo_codes_on_user_id                    (user_id)
 #
 
 FactoryBot.define do

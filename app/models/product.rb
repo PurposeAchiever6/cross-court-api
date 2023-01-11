@@ -47,6 +47,10 @@ class Product < ApplicationRecord
   validates :name, :credits, :order_number, presence: true
   validates :skill_session_credits, presence: true, if: -> { recurring? }
 
+  def self.for_user(user)
+    user&.reserve_team ? Product.reserve_team.or(Product.one_time) : Product.everyone
+  end
+
   def unlimited?
     credits == UNLIMITED
   end
@@ -67,10 +71,6 @@ class Product < ApplicationRecord
     return price_for_members if apply_price_for_members?(user)
 
     super()
-  end
-
-  def self.for_user(user)
-    user&.reserve_team ? Product.reserve_team.or(Product.one_time) : Product.everyone
   end
 
   private

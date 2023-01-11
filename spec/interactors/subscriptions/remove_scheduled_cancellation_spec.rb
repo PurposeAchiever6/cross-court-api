@@ -4,7 +4,7 @@ describe Subscriptions::RemoveScheduledCancellation do
   describe '.call' do
     let!(:user) { create(:user) }
     let!(:subscription) do
-      create(:subscription, user: user, mark_cancel_at_period_end_at: mark_cancel_at_period_end_at)
+      create(:subscription, user:, mark_cancel_at_period_end_at:)
     end
 
     let(:mark_cancel_at_period_end_at) { Time.zone.today + 1.week }
@@ -13,7 +13,7 @@ describe Subscriptions::RemoveScheduledCancellation do
 
     subject do
       Subscriptions::RemoveScheduledCancellation.call(
-        subscription: subscription
+        subscription:
       )
     end
 

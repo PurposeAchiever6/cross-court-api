@@ -6,10 +6,10 @@ describe 'DELETE api/v1/sessions/:session_id/waitlists' do
   let!(:user_session_waitlist) do
     create(
       :user_session_waitlist,
-      session: session,
-      user: user,
+      session:,
+      user:,
       date: session.start_time,
-      state: state
+      state:
     )
   end
 
@@ -26,7 +26,7 @@ describe 'DELETE api/v1/sessions/:session_id/waitlists' do
   subject do
     delete api_v1_session_waitlists_path(session_id: session.id),
            headers: request_headers,
-           params: params,
+           params:,
            as: :json
     response
   end

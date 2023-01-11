@@ -39,12 +39,14 @@ class Subscription < ApplicationRecord
   has_one :upcoming_subscription_pause,
           -> { upcoming.order(created_at: :desc) },
           class_name: 'SubscriptionPause',
-          inverse_of: :subscription
+          inverse_of: :subscription,
+          dependent: nil
 
   has_one :upcoming_or_actual_subscription_pause,
           -> { upcoming_or_actual.order(created_at: :desc) },
           class_name: 'SubscriptionPause',
-          inverse_of: :subscription
+          inverse_of: :subscription,
+          dependent: nil
 
   delegate :credits, :skill_session_credits, :name, :unlimited?, to: :product, prefix: false
 
@@ -76,20 +78,20 @@ class Subscription < ApplicationRecord
     assign_attributes(
       stripe_id: stripe_subscription.id,
       stripe_item_id: stripe_subscription.items.data.first.id,
-      status: status,
+      status:,
       current_period_start: Time.zone.at(stripe_subscription.current_period_start),
       current_period_end: Time.zone.at(stripe_subscription.current_period_end),
       cancel_at: stripe_subscription.cancel_at ? Time.zone.at(stripe_subscription.cancel_at) : nil,
-      canceled_at: canceled_at,
+      canceled_at:,
       cancel_at_period_end: stripe_subscription.cancel_at_period_end
     )
 
     if subscription_pauses.actual.any?
       actual_subscription_pause = subscription_pauses.actual.last
       if pause_collection.nil? && stripe_subscription.status == 'active'
-        actual_subscription_pause.update(status: :finished)
+        actual_subscription_pause.update!(status: :finished)
       end
-      actual_subscription_pause.update(status: :canceled) if status == 'canceled'
+      actual_subscription_pause.update!(status: :canceled) if status == 'canceled'
     end
 
     self

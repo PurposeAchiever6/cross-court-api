@@ -43,10 +43,10 @@ describe Product do
     let!(:product) do
       create(
         :product,
-        price: price,
-        price_for_members: price_for_members,
-        price_for_first_timers_no_free_session: price_for_first_timers_no_free_session,
-        product_type: product_type
+        price:,
+        price_for_members:,
+        price_for_first_timers_no_free_session:,
+        product_type:
       )
     end
 
@@ -120,7 +120,7 @@ describe Product do
       end
 
       context 'when user is not a first timer' do
-        let!(:user_session) { create(:user_session, user: user) }
+        let!(:user_session) { create(:user_session, user:) }
 
         it { is_expected.to eq(price) }
       end

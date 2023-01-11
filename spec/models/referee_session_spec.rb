@@ -34,7 +34,7 @@ describe RefereeSession do
 
     context 'when there is no referee assigned' do
       let(:referee_session) do
-        build(:referee_session, session: session, user: user1, date: date)
+        build(:referee_session, session:, user: user1, date:)
       end
 
       it 'assigns the referee to the session' do
@@ -47,10 +47,10 @@ describe RefereeSession do
     context 'when there is a previous referee assigned' do
       let(:user2) { create(:user) }
       let!(:first_referee_session) do
-        create(:referee_session, session: session, user: user1, date: date)
+        create(:referee_session, session:, user: user1, date:)
       end
       let(:second_referee_session) do
-        build(:referee_session, session: session, user: user2, date: date)
+        build(:referee_session, session:, user: user2, date:)
       end
 
       it 'assigns the new referee to the session' do

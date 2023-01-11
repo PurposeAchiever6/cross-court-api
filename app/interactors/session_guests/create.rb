@@ -12,10 +12,10 @@ module SessionGuests
       guest_name = guest_info[:first_name].strip
 
       session_guest = SessionGuest.create!(
-        user_session: user_session,
+        user_session:,
         first_name: guest_name,
         last_name: guest_info[:last_name].strip,
-        phone_number: phone_number,
+        phone_number:,
         email: guest_info[:email].strip
       )
 
@@ -23,7 +23,7 @@ module SessionGuests
         phone_number,
         I18n.t(
           'notifier.sonar.session_guests.added',
-          guest_name: guest_name,
+          guest_name:,
           user_first_name: user.first_name,
           user_last_name: user.last_name,
           location: "#{location.name} (#{location.address})",

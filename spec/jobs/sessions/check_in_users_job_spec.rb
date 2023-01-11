@@ -4,7 +4,7 @@ describe ::Sessions::CheckInUsersJob do
   describe '#perform' do
     let(:la_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
     let!(:la_date) { la_time.to_date }
-    let!(:session) { create(:session, cc_cash_earned: cc_cash_earned) }
+    let!(:session) { create(:session, cc_cash_earned:) }
 
     let(:subscription_credits) { rand(1..5) }
     let(:active_subscription) { create(:subscription) }
@@ -14,20 +14,20 @@ describe ::Sessions::CheckInUsersJob do
     let!(:user) do
       create(
         :user,
-        subscription_credits: subscription_credits,
-        active_subscription: active_subscription
+        subscription_credits:,
+        active_subscription:
       )
     end
 
     let!(:user_session) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: true,
         date: la_date,
         state: :confirmed,
-        first_session: first_session
+        first_session:
       )
     end
     let(:user_session_id) { user_session.id }
@@ -160,8 +160,8 @@ describe ::Sessions::CheckInUsersJob do
         create_list(
           :user_session,
           previous_user_session_count,
-          user: user,
-          session: session,
+          user:,
+          session:,
           checked_in: true,
           date: la_date,
           state: :confirmed
@@ -169,7 +169,7 @@ describe ::Sessions::CheckInUsersJob do
       end
 
       it 'does not send checked in session notice email' do
-        expect { subject }.not_to have_enqueued_job.on_queue('mailers')
+        expect { subject }.not_to have_enqueued_job.on_queue('default')
 
         subject
       end
@@ -178,7 +178,7 @@ describe ::Sessions::CheckInUsersJob do
         before { ENV['NUMBER_OF_SESSIONS_TO_NOTIFY'] = '10, 20, 50' }
 
         it 'sends checked in session notice email' do
-          expect { subject }.to have_enqueued_job.on_queue('mailers')
+          expect { subject }.to have_enqueued_job(ActionMailer::MailDeliveryJob).on_queue('default')
 
           subject
         end
@@ -188,7 +188,7 @@ describe ::Sessions::CheckInUsersJob do
         let(:active_subscription) { nil }
 
         it 'does not send the checked in session notice email' do
-          expect { subject }.not_to have_enqueued_job.on_queue('mailers')
+          expect { subject }.not_to have_enqueued_job.on_queue('default')
 
           subject
         end
@@ -198,7 +198,7 @@ describe ::Sessions::CheckInUsersJob do
         let(:previous_user_session_count) { 10 }
 
         it 'does not send the checked in session notice email' do
-          expect { subject }.not_to have_enqueued_job.on_queue('mailers')
+          expect { subject }.not_to have_enqueued_job.on_queue('default')
 
           subject
         end

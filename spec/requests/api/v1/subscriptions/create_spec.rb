@@ -1,17 +1,17 @@
 require 'rails_helper'
 
 describe 'POST api/v1/subscriptions' do
-  let!(:user) { create(:user, reserve_team: reserve_team) }
+  let!(:user) { create(:user, reserve_team:) }
   let(:reserve_team) { false }
-  let!(:payment_method) { create(:payment_method, user: user) }
+  let!(:payment_method) { create(:payment_method, user:) }
   let!(:product) do
-    create(:product, price: 100, product_type: :recurring, available_for: available_for)
+    create(:product, price: 100, product_type: :recurring, available_for:)
   end
   let(:available_for) { :everyone }
   let(:params) { { product_id: product.id, payment_method_id: payment_method.id } }
 
   subject do
-    post api_v1_subscriptions_path, params: params, headers: auth_headers, as: :json
+    post api_v1_subscriptions_path, params:, headers: auth_headers, as: :json
   end
 
   context 'when the transaction succeeds' do
@@ -53,7 +53,7 @@ describe 'POST api/v1/subscriptions' do
   end
 
   context 'when user already has an active subscription' do
-    let!(:active_subscription) { create(:subscription, user: user, product: product) }
+    let!(:active_subscription) { create(:subscription, user:, product:) }
 
     it 'returns bad_request' do
       subject

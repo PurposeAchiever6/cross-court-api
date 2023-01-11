@@ -25,7 +25,7 @@ describe Subscriptions::UpdateUserSubscriptionCredits do
     let(:product_credits) { rand(1..1000) }
     let(:product_skill_session_credits) { rand(1..1000) }
 
-    subject { Subscriptions::UpdateUserSubscriptionCredits.call(user: user, product: product) }
+    subject { Subscriptions::UpdateUserSubscriptionCredits.call(user:, product:) }
 
     it 'does not update user credits' do
       expect { subject }.not_to change { user.reload.credits }

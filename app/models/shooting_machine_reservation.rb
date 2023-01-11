@@ -26,7 +26,7 @@ class ShootingMachineReservation < ApplicationRecord
 
   enum status: { reserved: 0, canceled: 1, confirmed: 2 }
 
-  scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: date }) }
+  scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: }) }
 
   def charged?
     charge_payment_intent_id.present?

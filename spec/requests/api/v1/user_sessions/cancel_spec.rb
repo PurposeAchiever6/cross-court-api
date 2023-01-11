@@ -26,7 +26,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     let(:session) do
       create(:session, :daily, time: los_angeles_time + Session::CANCELLATION_PERIOD + 1.minute)
     end
-    let!(:user_session) { create(:user_session, user: user, session: session) }
+    let!(:user_session) { create(:user_session, user:, session:) }
 
     it 'returns success' do
       subject
@@ -66,7 +66,7 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
     let(:session) do
       create(:session, :daily, time: los_angeles_time + Session::CANCELLATION_PERIOD - 1.minute)
     end
-    let!(:user_session) { create(:user_session, user: user, session: session) }
+    let!(:user_session) { create(:user_session, user:, session:) }
 
     it 'returns success' do
       subject

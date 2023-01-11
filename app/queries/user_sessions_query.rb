@@ -9,7 +9,7 @@ class UserSessionsQuery
     relation.where('date = (current_timestamp at time zone locations.time_zone)::date AND
     to_char((current_timestamp at time zone locations.time_zone) +
     interval :cancellation_period hour, :time_format) >
-    to_char(time, :time_format)', cancellation_period: ENV['CANCELLATION_PERIOD'],
+    to_char(time, :time_format)', cancellation_period: ENV.fetch('CANCELLATION_PERIOD', nil),
                                   time_format: Session::QUERY_TIME_FORMAT)
   end
 

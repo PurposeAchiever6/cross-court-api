@@ -24,7 +24,7 @@ describe SonarService do
     let!(:user) { create(:user, is_referee: employee) }
     let!(:session) { create(:session, :daily, time: time_24) }
     let!(:user_session) do
-      create(:user_session, date: la_date.tomorrow, session: session, user: user, state: state)
+      create(:user_session, date: la_date.tomorrow, session:, user:, state:)
     end
 
     subject { SonarService.message_received(user, text) }
@@ -79,7 +79,8 @@ describe SonarService do
     context 'when the message is negative' do
       let(:text) { %w[no n].sample }
       let(:expected_message) do
-        I18n.t('notifier.sonar.no_more_sonar_cancellation', frontend_url: ENV['FRONTENT_URL'])
+        I18n.t('notifier.sonar.no_more_sonar_cancellation',
+               frontend_url: ENV.fetch('FRONTENT_URL', nil))
       end
 
       it 'sends the cancellation message' do

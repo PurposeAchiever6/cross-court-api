@@ -27,8 +27,8 @@ class SessionGuest < ApplicationRecord
 
   before_validation :create_access_code
 
-  scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: date }) }
-  scope :for_phone, ->(phone_number) { where(phone_number: phone_number) }
+  scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: }) }
+  scope :for_phone, ->(phone_number) { where(phone_number:) }
 
   def full_name
     "#{first_name} #{last_name}"

@@ -47,6 +47,6 @@ class Location < ApplicationRecord
   end
 
   def google_maps_link
-    "#{GOOGLE_MAPS_BASE_URL}#{full_address}".split(' ').join('+')
+    "#{GOOGLE_MAPS_BASE_URL}#{full_address}".split.join('+')
   end
 end

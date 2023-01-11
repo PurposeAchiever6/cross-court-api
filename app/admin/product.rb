@@ -151,7 +151,7 @@ ActiveAdmin.register Product do
       if @resource.valid?
         stripe_product_id = StripeService.create_product(product_params).id
         stripe_price_id = StripeService.create_price(
-          product_params.merge(stripe_product_id: stripe_product_id)
+          product_params.merge(stripe_product_id:)
         ).id
 
         @resource.stripe_product_id = stripe_product_id

@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "Crosscourt <#{ENV['CC_TEAM_EMAIL']}>"
+  default from: "Crosscourt <#{ENV.fetch('CC_TEAM_EMAIL', nil)}>"
   layout 'mailer'
 end

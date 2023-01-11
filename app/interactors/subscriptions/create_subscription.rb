@@ -26,10 +26,10 @@ module Subscriptions
       end
 
       subscription = Subscription.new(
-        user: user,
-        product: product,
-        promo_code: promo_code,
-        payment_method: payment_method
+        user:,
+        product:,
+        promo_code:,
+        payment_method:
       ).assign_stripe_attrs(stripe_subscription)
 
       subscription.save!

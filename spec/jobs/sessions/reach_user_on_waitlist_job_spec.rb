@@ -21,26 +21,26 @@ describe Sessions::ReachUserOnWaitlistJob do
       create(
         :session,
         time: session_time,
-        location: location,
+        location:,
         max_capacity: session_max_capacity,
-        max_first_timers: max_first_timers,
-        skill_session: skill_session
+        max_first_timers:,
+        skill_session:
       )
     end
     let!(:user_sessions) do
       create_list(
         :user_session,
         number_of_user_sessions,
-        session: session,
-        date: date,
+        session:,
+        date:,
         state: %i[reserved confirmed].sample
       )
     end
     let!(:waitlist_item_1) do
-      create(:user_session_waitlist, user: user_1, session: session, date: date)
+      create(:user_session_waitlist, user: user_1, session:, date:)
     end
     let!(:waitlist_item_2) do
-      create(:user_session_waitlist, user: user_2, session: session, date: date)
+      create(:user_session_waitlist, user: user_2, session:, date:)
     end
 
     let(:current_time) { Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)) }

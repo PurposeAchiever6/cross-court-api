@@ -10,12 +10,12 @@ module Api
       # TODO: move these two endpoints to a 'drop_ins' controller or something like that
       def create
         result = PlacePurchase.call(
-          product: product,
+          product:,
           user: current_user,
-          payment_method: payment_method,
-          promo_code: promo_code,
+          payment_method:,
+          promo_code:,
           description: "#{product.name} purchase",
-          use_cc_cash: use_cc_cash
+          use_cc_cash:
         )
 
         raise PaymentException, result.message unless result.success?
@@ -24,7 +24,7 @@ module Api
       def create_free_session_intent
         result = Users::ClaimFreeSession.call(
           user: current_user,
-          payment_method: payment_method
+          payment_method:
         )
 
         raise ClaimFreeSessionException, result.message unless result.success?

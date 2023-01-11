@@ -25,10 +25,11 @@ class PaymentMethod < ApplicationRecord
   has_one :active_subscription,
           -> { where(status: %i[active paused]).recent },
           class_name: 'Subscription',
-          inverse_of: :payment_method
+          inverse_of: :payment_method,
+          dependent: nil
 
   validates :default, uniqueness: { scope: :user_id }, if: :default
-  validates :user_id, :stripe_id, presence: true
+  validates :stripe_id, presence: true
 
   scope :sorted, -> { order(created_at: :desc) }
 end

@@ -4,14 +4,14 @@ describe ShootingMachineReservations::Confirm do
   describe '.call' do
     let!(:user) { create(:user, :with_payment_method) }
     let!(:session) { create(:session) }
-    let!(:user_session) { create(:user_session, session: session, user: user) }
-    let!(:shooting_machine) { create(:shooting_machine, session: session, price: price) }
+    let!(:user_session) { create(:user_session, session:, user:) }
+    let!(:shooting_machine) { create(:shooting_machine, session:, price:) }
     let!(:shooting_machine_reservation) do
       create(
         :shooting_machine_reservation,
-        user_session: user_session,
-        shooting_machine: shooting_machine,
-        status: status
+        user_session:,
+        shooting_machine:,
+        status:
       )
     end
 
@@ -23,7 +23,7 @@ describe ShootingMachineReservations::Confirm do
 
     subject do
       ShootingMachineReservations::Confirm.call(
-        shooting_machine_reservation: shooting_machine_reservation
+        shooting_machine_reservation:
       )
     end
 

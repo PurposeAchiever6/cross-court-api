@@ -16,7 +16,7 @@ describe Subscriptions::PauseSubscription do
 
     after { Timecop.return }
 
-    subject { described_class.call(subscription: subscription, months: months) }
+    subject { described_class.call(subscription:, months:) }
 
     it 'enques ::Subscriptions::PauseJob' do
       expect { subject }.to have_enqueued_job(
@@ -46,7 +46,8 @@ describe Subscriptions::PauseSubscription do
 
     context 'when the pause is paid' do
       before do
-        create_list(:subscription_pause, 2, subscription: subscription, status: :finished)
+        ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
+        create_list(:subscription_pause, 2, subscription:, status: :finished)
       end
 
       it 'creates a paid subscription pause' do

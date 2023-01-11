@@ -39,7 +39,7 @@ describe UserSessionWaitlist do
     let!(:waitlist_item_1) do
       create(
         :user_session_waitlist,
-        session: session,
+        session:,
         user: user_1,
         state: state_1,
         created_at: created_at_1
@@ -48,7 +48,7 @@ describe UserSessionWaitlist do
     let!(:waitlist_item_2) do
       create(
         :user_session_waitlist,
-        session: session,
+        session:,
         user: user_2,
         state: state_2,
         created_at: created_at_2
@@ -86,7 +86,7 @@ describe UserSessionWaitlist do
         let!(:waitlist_item_3) do
           create(
             :user_session_waitlist,
-            session: session,
+            session:,
             user: user_3,
             state: state_3,
             created_at: created_at_3

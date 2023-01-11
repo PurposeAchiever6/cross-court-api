@@ -5,7 +5,7 @@ describe UserSessions::ChargeCanceledOutOfTime do
     let!(:user) { create(:user) }
     let!(:session) { create(:session, :daily, time: session_time) }
     let!(:user_session) do
-      create(:user_session, user: user, session: session, is_free_session: is_free_session)
+      create(:user_session, user:, session:, is_free_session:)
     end
 
     let(:los_angeles_time) do
@@ -20,11 +20,11 @@ describe UserSessions::ChargeCanceledOutOfTime do
     before do
       ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'] = free_session_amount_to_charge
       ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'] = unlimited_credits_amount_to_charge
-      create(:payment_method, user: user, default: true)
+      create(:payment_method, user:, default: true)
       allow(StripeService).to receive(:charge).and_return(double(id: payment_intent_id))
     end
 
-    subject { UserSessions::ChargeCanceledOutOfTime.call(user_session: user_session) }
+    subject { UserSessions::ChargeCanceledOutOfTime.call(user_session:) }
 
     it { expect(subject.amount_charged).to eq(0) }
     it { expect(subject.payment_intent_id).to eq(nil) }
@@ -41,14 +41,14 @@ describe UserSessions::ChargeCanceledOutOfTime do
       it { expect(subject.payment_intent_id).to eq(payment_intent_id) }
 
       it 'calls Users::Charge with right amount' do
-        expect(Users::Charge).to receive(:call).with(
-          user: user,
+        expect(Users::Charge).to receive(:call).with({
+          user:,
           amount: free_session_amount_to_charge.to_f,
           description: 'Session canceled out of time fee',
           notify_error: true,
           use_cc_cash: true,
           create_payment_on_failure: true
-        ).once
+        }).once
 
         subject rescue nil
       end
@@ -83,14 +83,14 @@ describe UserSessions::ChargeCanceledOutOfTime do
       it { expect(subject.payment_intent_id).to eq(payment_intent_id) }
 
       it 'calls Users::Charge with right amount' do
-        expect(Users::Charge).to receive(:call).with(
-          user: user,
+        expect(Users::Charge).to receive(:call).with({
+          user:,
           amount: unlimited_credits_amount_to_charge.to_f,
           description: 'Session canceled out of time fee',
           notify_error: true,
           use_cc_cash: true,
           create_payment_on_failure: true
-        ).once
+        }).once
 
         subject rescue nil
       end

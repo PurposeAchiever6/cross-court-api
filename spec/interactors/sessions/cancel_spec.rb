@@ -3,9 +3,9 @@ require 'rails_helper'
 describe Sessions::Cancel do
   describe '.call' do
     let!(:session) { create(:session) }
-    let!(:user_session_1) { create(:user_session, session: session, date: date) }
-    let!(:user_session_2) { create(:user_session, session: session, date: date) }
-    let!(:user_session_3) { create(:user_session, session: session, date: date, state: :canceled) }
+    let!(:user_session_1) { create(:user_session, session:, date:) }
+    let!(:user_session_2) { create(:user_session, session:, date:) }
+    let!(:user_session_3) { create(:user_session, session:, date:, state: :canceled) }
 
     let(:date) { Time.zone.today + 2.days }
 
@@ -14,7 +14,7 @@ describe Sessions::Cancel do
       allow(SendSonar).to receive(:message_customer)
     end
 
-    subject { Sessions::Cancel.call(session: session, date: date) }
+    subject { Sessions::Cancel.call(session:, date:) }
 
     it { expect { subject }.to change(Session, :count).by(-1) }
 

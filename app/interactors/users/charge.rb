@@ -20,6 +20,8 @@ module Users
       notify_error = context.notify_error || false
       use_cc_cash = context.use_cc_cash || false
       create_payment_on_failure = context.create_payment_on_failure || false
+      paid_with_cc_cash = nil
+      payment_intent_id = nil
 
       unless payment_method
         message = I18n.t('api.errors.users.charges.missing_payment_method')
@@ -33,41 +35,43 @@ module Users
         if use_cc_cash && user_cc_cash.positive?
           if user_cc_cash >= amount
             user.update!(cc_cash: user_cc_cash - amount)
-            context.paid_with_cc_cash = true
+            paid_with_cc_cash = true
             create_payment(
-              user: user,
+              user:,
               amount: 0,
-              chargeable: chargeable,
-              description: description,
+              chargeable:,
+              description:,
               status: :success,
-              discount: discount,
+              discount:,
               cc_cash: amount
             )
-            return
           else
             amount -= user_cc_cash
             user.update!(cc_cash: 0)
           end
         end
 
-        if amount.positive?
+        if amount.positive? && !paid_with_cc_cash
           payment_intent = StripeService.charge(user, payment_method.stripe_id, amount, description)
           payment_intent_id = payment_intent.id
         end
 
-        create_payment(
-          user: user,
-          amount: amount,
-          chargeable: chargeable,
-          description: description,
-          status: :success,
-          payment_method: payment_method,
-          payment_intent_id: payment_intent_id,
-          discount: discount,
-          cc_cash: use_cc_cash ? user_cc_cash : 0
-        )
+        unless paid_with_cc_cash
+          create_payment(
+            user:,
+            amount:,
+            chargeable:,
+            description:,
+            status: :success,
+            payment_method:,
+            payment_intent_id:,
+            discount:,
+            cc_cash: use_cc_cash ? user_cc_cash : 0
+          )
+        end
 
         context.payment_intent_id = payment_intent_id
+        context.paid_with_cc_cash = paid_with_cc_cash
       end
     rescue Stripe::StripeError => e
       error_message = e.message
@@ -76,16 +80,16 @@ module Users
 
       if create_payment_on_failure
         create_payment(
-          user: user,
-          amount: amount,
-          chargeable: chargeable,
-          description: description,
-          payment_method: payment_method,
+          user:,
+          amount:,
+          chargeable:,
+          description:,
+          payment_method:,
           payment_intent_id: context.payment_intent_id,
           status: :error,
-          discount: discount,
+          discount:,
           cc_cash: user_cc_cash,
-          error_message: error_message
+          error_message:
         )
       end
 
@@ -111,16 +115,16 @@ module Users
       error_message: nil
     )
       payment = Payments::Create.call(
-        user: user,
-        amount: amount,
-        chargeable: chargeable,
-        description: description,
-        payment_method: payment_method,
-        payment_intent_id: payment_intent_id,
-        status: status,
-        discount: discount,
-        cc_cash: cc_cash,
-        error_message: error_message
+        user:,
+        amount:,
+        chargeable:,
+        description:,
+        payment_method:,
+        payment_intent_id:,
+        status:,
+        discount:,
+        cc_cash:,
+        error_message:
       ).payment
 
       context.payment = payment
@@ -129,7 +133,7 @@ module Users
     def failure(message, raise_error)
       raise ChargeUserException, message if raise_error
 
-      context.fail!(message: message)
+      context.fail!(message:)
     end
   end
 end

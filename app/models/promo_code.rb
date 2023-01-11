@@ -95,7 +95,7 @@ class PromoCode < ApplicationRecord
   def max_times_used_by_user?(user)
     return false if max_redemptions_by_user.nil?
 
-    user_promo_code_times_used = user_promo_codes.find_by(user: user)&.times_used || 0
+    user_promo_code_times_used = user_promo_codes.find_by(user:)&.times_used || 0
 
     user_promo_code_times_used >= max_redemptions_by_user
   end

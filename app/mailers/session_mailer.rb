@@ -18,7 +18,7 @@ class SessionMailer < ApplicationMailer
     @number_of_sessions = params[:number_of_sessions]
 
     mail(
-      to: [ENV['CC_TEAM_EMAIL'], ENV['CC_MKTG_EMAIL']],
+      to: [ENV.fetch('CC_TEAM_EMAIL', nil), ENV.fetch('CC_MKTG_EMAIL', nil)],
       subject: I18n.t('mailer.session.checked_in_session_notice',
                       number_of_sessions: @number_of_sessions)
     )

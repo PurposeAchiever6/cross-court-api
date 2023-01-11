@@ -14,7 +14,7 @@ describe Sessions::AssignDefaultEmployeesJob do
     let!(:session) do
       create(
         :session,
-        location: location,
+        location:,
         recurring: recurring_rule,
         default_referee_id: referee.id,
         default_sem_id: sem&.id,

@@ -12,7 +12,7 @@ class AddAttachment
 
     object.send(column_name).attach(
       io: StringIO.new(decoded_image),
-      content_type: content_type,
+      content_type:,
       filename: "#{attachment_name}.#{content_type.split('/').last}"
     )
   end

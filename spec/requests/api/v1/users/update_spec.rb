@@ -8,17 +8,17 @@ describe 'PUT api/v1/user/', type: :request do
     let(:params) { { user: { first_name: 'new first_name' } } }
 
     it 'returns success' do
-      put api_v1_user_path, params: params, headers: auth_headers, as: :json
+      put api_v1_user_path, params:, headers: auth_headers, as: :json
       expect(response).to have_http_status(:success)
     end
 
     it 'updates the user' do
-      put api_v1_user_path, params: params, headers: auth_headers, as: :json
+      put api_v1_user_path, params:, headers: auth_headers, as: :json
       expect(user.reload.first_name).to eq(params[:user][:first_name])
     end
 
     it 'returns the user' do
-      put api_v1_user_path, params: params, headers: auth_headers, as: :json
+      put api_v1_user_path, params:, headers: auth_headers, as: :json
 
       expect(json[:user][:id]).to eq user.id
     end

@@ -5,7 +5,7 @@ describe Subscriptions::UnpauseSubscription do
     let(:subscription_status) { 'paused' }
     let!(:subscription) { create(:subscription, status: subscription_status) }
     let!(:subscription_pause) do
-      create(:subscription_pause, subscription: subscription, status: :finished)
+      create(:subscription_pause, subscription:, status: :finished)
     end
     let(:user) { subscription.user }
     let(:stripe_invoice_id) { 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr' }
@@ -17,7 +17,7 @@ describe Subscriptions::UnpauseSubscription do
       user.update!(subscription_credits: 0)
     end
 
-    subject { described_class.call(subscription: subscription) }
+    subject { described_class.call(subscription:) }
 
     it 'updates subscription status' do
       expect { subject }.to change {

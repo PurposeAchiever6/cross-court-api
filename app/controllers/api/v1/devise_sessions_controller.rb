@@ -6,10 +6,6 @@ module Api
 
       after_action :create_stripe_user, only: :create
 
-      def create
-        super
-      end
-
       private
 
       def resource_params

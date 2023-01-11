@@ -27,7 +27,7 @@
 FactoryBot.define do
   factory :payment do
     user
-    amount { Faker::Number.decimal(2) }
+    amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
     description { Faker::Lorem.word }
 
     transient do

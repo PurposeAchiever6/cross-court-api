@@ -1,12 +1,16 @@
 module Api
   module V1
     class SubscriptionsController < Api::V1::ApiUserController
+      def index
+        @subscriptions = current_user.subscriptions.order(id: :desc)
+      end
+
       def create
         result = Subscriptions::PlaceSubscription.call(
-          product: product,
+          product:,
           user: current_user,
-          payment_method: payment_method,
-          promo_code: promo_code,
+          payment_method:,
+          promo_code:,
           description: product.name
         )
 
@@ -15,14 +19,24 @@ module Api
         @subscription = result.subscription
       end
 
-      def index
-        @subscriptions = current_user.subscriptions.order(id: :desc)
+      def update
+        result = Subscriptions::UpdateSubscription.call(
+          user: current_user,
+          subscription:,
+          product:,
+          payment_method:,
+          promo_code:
+        )
+
+        raise SubscriptionException, result.message unless result.success?
+
+        @subscription = result.subscription
       end
 
       def destroy
         result = Subscriptions::CancelSubscriptionAtPeriodEnd.call(
           user: current_user,
-          subscription: subscription
+          subscription:
         )
 
         @subscription = result.subscription
@@ -32,28 +46,14 @@ module Api
         @invoice = Subscriptions::ProratePrice.call(
           user: current_user,
           new_product: product,
-          promo_code: promo_code
+          promo_code:
         ).invoice
-      end
-
-      def update
-        result = Subscriptions::UpdateSubscription.call(
-          user: current_user,
-          subscription: subscription,
-          product: product,
-          payment_method: payment_method,
-          promo_code: promo_code
-        )
-
-        raise SubscriptionException, result.message unless result.success?
-
-        @subscription = result.subscription
       end
 
       def reactivate
         result = Subscriptions::SubscriptionReactivation.call(
           user: current_user,
-          subscription: subscription
+          subscription:
         )
 
         raise SubscriptionException, result.message unless result.success?
@@ -63,8 +63,8 @@ module Api
 
       def change_payment_method
         result = Subscriptions::ChangePaymentMethod.call(
-          subscription: subscription,
-          payment_method: payment_method
+          subscription:,
+          payment_method:
         )
 
         @subscription = result.subscription
@@ -79,7 +79,7 @@ module Api
 
       def pause
         result = Subscriptions::PauseSubscription.call(
-          subscription: subscription,
+          subscription:,
           months: params[:months],
           reason: params[:reason]
         )
@@ -88,13 +88,13 @@ module Api
       end
 
       def cancel_pause
-        result = Subscriptions::CancelSubscriptionPause.call(subscription: subscription)
+        result = Subscriptions::CancelSubscriptionPause.call(subscription:)
 
         @subscription = result.subscription
       end
 
       def unpause
-        result = Subscriptions::UnpauseSubscription.call(subscription: subscription)
+        result = Subscriptions::UnpauseSubscription.call(subscription:)
 
         @subscription = result.subscription
       end

@@ -11,16 +11,16 @@ describe 'POST api/v1/users/sign_in', type: :request do
       }
     }
   end
-  let(:user) { create(:user, :confirmed, password: password, tokens: token) }
+  let(:user) { create(:user, :confirmed, password:, tokens: token) }
 
   before do
     allow(StripeService).to receive(:create_user)
   end
 
   context 'with correct params' do
-    let(:params) { { user: { email: user.email, password: password } } }
+    let(:params) { { user: { email: user.email, password: } } }
 
-    subject { post new_user_session_path, params: params, as: :json }
+    subject { post new_user_session_path, params:, as: :json }
 
     it 'returns success' do
       subject
@@ -63,7 +63,7 @@ describe 'POST api/v1/users/sign_in', type: :request do
           password: 'wrong_password!'
         }
       }
-      post new_user_session_path, params: params, as: :json
+      post new_user_session_path, params:, as: :json
 
       expect(response).to be_unauthorized
       expected_response = {

@@ -8,7 +8,7 @@ describe Subscriptions::DeleteSubscription do
 
     before { StripeMocker.new.cancel_subscription(subscription.stripe_id) }
 
-    subject { Subscriptions::DeleteSubscription.call(subscription: subscription) }
+    subject { Subscriptions::DeleteSubscription.call(subscription:) }
 
     it 'updates subscription status' do
       expect { subject }.to change {
@@ -17,7 +17,7 @@ describe Subscriptions::DeleteSubscription do
     end
 
     it 'calls Stripe Service with correct params' do
-      expect(Stripe::Subscription).to receive(:delete).with(subscription.stripe_id)
+      expect(Stripe::Subscription).to receive(:cancel).with(subscription.stripe_id)
       subject rescue nil
     end
 

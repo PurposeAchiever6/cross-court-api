@@ -70,15 +70,15 @@ describe Session do
   describe 'callbacks' do
     let!(:session) { create(:session, :daily) }
     let!(:yesterday_sem_session) do
-      create(:sem_session, session: session, date: los_angeles_date.yesterday)
+      create(:sem_session, session:, date: los_angeles_date.yesterday)
     end
     let(:new_recurring_rule) { IceCube::Rule.weekly }
     let(:user) { create(:user) }
     before do
       8.times do |i|
-        create(:sem_session, session: session, date: los_angeles_date + i.days)
-        create(:referee_session, session: session, date: los_angeles_date + i.days)
-        create(:user_session, session: session, user: user, date: los_angeles_date + i.days)
+        create(:sem_session, session:, date: los_angeles_date + i.days)
+        create(:referee_session, session:, date: los_angeles_date + i.days)
+        create(:user_session, session:, user:, date: los_angeles_date + i.days)
       end
     end
 
@@ -115,8 +115,8 @@ describe Session do
       create_list(
         :user_session,
         11,
-        session: session,
-        date: date,
+        session:,
+        date:,
         state: %i[reserved confirmed].sample
       )
     end
@@ -124,15 +124,15 @@ describe Session do
     let!(:user_session_1) do
       create(
         :user_session,
-        session: session,
-        date: date,
+        session:,
+        date:,
         state: :canceled
       )
     end
     let!(:user_session_2) do
       create(
         :user_session,
-        session: session,
+        session:,
         date: date + 1.day,
         state: %i[reserved confirmed].sample
       )
@@ -140,7 +140,7 @@ describe Session do
     let!(:user_session_3) do
       create(
         :user_session,
-        session: session,
+        session:,
         date: date - 1.day,
         state: %i[reserved confirmed].sample
       )
@@ -156,16 +156,16 @@ describe Session do
   describe '#destroy' do
     let!(:session) { create(:session, :daily) }
     let!(:yesterday_sem_session) do
-      create(:sem_session, session: session, date: los_angeles_date.yesterday)
+      create(:sem_session, session:, date: los_angeles_date.yesterday)
     end
     let!(:tomorrow_sem_session) do
-      create(:sem_session, session: session, date: los_angeles_date.tomorrow)
+      create(:sem_session, session:, date: los_angeles_date.tomorrow)
     end
     let!(:yesterday_referee_session) do
-      create(:referee_session, session: session, date: los_angeles_date.yesterday)
+      create(:referee_session, session:, date: los_angeles_date.yesterday)
     end
     let!(:tomorrow_referee_session) do
-      create(:referee_session, session: session, date: los_angeles_date.tomorrow)
+      create(:referee_session, session:, date: los_angeles_date.tomorrow)
     end
 
     subject { session.destroy }
@@ -197,9 +197,9 @@ describe Session do
       let!(:user_session) do
         create(
           :user_session,
-          session: session,
+          session:,
           date: los_angeles_date.tomorrow,
-          state: state
+          state:
         )
       end
 
@@ -233,7 +233,7 @@ describe Session do
       let!(:user_session) do
         create(
           :user_session,
-          session: session,
+          session:,
           date: los_angeles_date.yesterday
         )
       end
@@ -246,8 +246,8 @@ describe Session do
     let!(:session) do
       create(
         :session,
-        max_capacity: max_capacity,
-        max_first_timers: max_first_timers,
+        max_capacity:,
+        max_first_timers:,
         is_open_club: open_club
       )
     end
@@ -261,8 +261,8 @@ describe Session do
       create(
         :user_session,
         user: user_1,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :reserved
       )
     end
@@ -270,8 +270,8 @@ describe Session do
       create(
         :user_session,
         user: user_2,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :reserved
       )
     end
@@ -279,16 +279,16 @@ describe Session do
       create(
         :user_session,
         user: user_3,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :confirmed
       )
     end
     let!(:user_session_4) do
       create(
         :user_session,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :canceled
       )
     end
@@ -339,8 +339,8 @@ describe Session do
     let!(:session) do
       create(
         :session,
-        max_capacity: max_capacity,
-        max_first_timers: max_first_timers,
+        max_capacity:,
+        max_first_timers:,
         is_open_club: open_club
       )
     end
@@ -354,8 +354,8 @@ describe Session do
       create(
         :user_session,
         user: user_1,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :reserved
       )
     end
@@ -363,8 +363,8 @@ describe Session do
       create(
         :user_session,
         user: user_2,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :reserved
       )
     end
@@ -372,16 +372,16 @@ describe Session do
       create(
         :user_session,
         user: user_3,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :confirmed
       )
     end
     let!(:user_session_4) do
       create(
         :user_session,
-        date: date,
-        session: session,
+        date:,
+        session:,
         state: :canceled
       )
     end
@@ -436,26 +436,26 @@ describe Session do
     let!(:location) do
       create(
         :location,
-        max_sessions_booked_per_day: max_sessions_booked_per_day,
-        max_skill_sessions_booked_per_day: max_skill_sessions_booked_per_day
+        max_sessions_booked_per_day:,
+        max_skill_sessions_booked_per_day:
       )
     end
     let!(:session) do
       create(
         :session,
         :daily,
-        location: location,
+        location:,
         is_open_club: open_club,
-        skill_session: skill_session
+        skill_session:
       )
     end
     let!(:user_session) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         date: user_session_date,
-        state: state
+        state:
       )
     end
 
@@ -499,17 +499,17 @@ describe Session do
           create(
             :session,
             :daily,
-            location: location,
+            location:,
             skill_session: true
           )
         end
         let!(:user_session) do
           create(
             :user_session,
-            user: user,
+            user:,
             session: another_session,
             date: user_session_date,
-            state: state
+            state:
           )
         end
 

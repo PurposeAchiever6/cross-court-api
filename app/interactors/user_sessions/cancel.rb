@@ -16,12 +16,12 @@ module UserSessions
       user_session.save!
 
       user_session.session_guests.each do |session_guest|
-        SessionGuests::Remove.call(user_session: user_session, session_guest_id: session_guest.id)
+        SessionGuests::Remove.call(user_session:, session_guest_id: session_guest.id)
       end
 
       if shooting_machine_reservation
         ShootingMachineReservations::Cancel.call(
-          shooting_machine_reservation: shooting_machine_reservation
+          shooting_machine_reservation:
         )
       end
 
@@ -72,7 +72,7 @@ module UserSessions
           when: user_session.date_when_format,
           time: session_time.strftime(Session::TIME_FORMAT),
           location: "#{location.name} (#{location.address})",
-          schedule_url: "#{ENV['FRONTENT_URL']}/locations"
+          schedule_url: "#{ENV.fetch('FRONTENT_URL', nil)}/locations"
         )
       )
     end
@@ -98,7 +98,7 @@ module UserSessions
       user = user_session.user
 
       amount_charged = UserSessions::ChargeCanceledOutOfTime.call(
-        user_session: user_session
+        user_session:
       ).amount_charged
 
       SlackService.new(
@@ -112,7 +112,7 @@ module UserSessions
         ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
         user.id,
         user_session_id: user_session.id,
-        amount_charged: amount_charged,
+        amount_charged:,
         unlimited_credits: user.unlimited_credits?.to_s
       )
     end

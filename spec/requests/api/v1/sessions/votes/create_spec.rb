@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'POST api/v1/sessions/:session_id/votes' do
   let!(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
   let!(:user) { create(:user) }
-  let!(:session) { create(:session, start_time: la_time.tomorrow, coming_soon: coming_soon) }
+  let!(:session) { create(:session, start_time: la_time.tomorrow, coming_soon:) }
   let(:date) { session.start_time }
   let(:coming_soon) { true }
 
@@ -17,7 +17,7 @@ describe 'POST api/v1/sessions/:session_id/votes' do
   subject do
     post api_v1_session_votes_path(session_id: session.id),
          headers: request_headers,
-         params: params,
+         params:,
          as: :json
     response
   end
@@ -58,7 +58,7 @@ describe 'POST api/v1/sessions/:session_id/votes' do
   end
 
   context 'when user has already voted for that session and date' do
-    before { create(:user_session_vote, session: session, user: user, date: date) }
+    before { create(:user_session_vote, session:, user:, date:) }
 
     it { is_expected.to have_http_status(:bad_request) }
     it { expect(response_body[:errors][:date]).to eq(['has already been taken']) }

@@ -18,20 +18,20 @@ describe 'POST api/v1/session_guests' do
   let!(:session) do
     create(
       :session,
-      guests_allowed: guests_allowed,
-      guests_allowed_per_user: guests_allowed_per_user
+      guests_allowed:,
+      guests_allowed_per_user:
     )
   end
 
   let!(:user) { create(:user) }
-  let!(:user_session) { create(:user_session, session: session, user: user) }
+  let!(:user_session) { create(:user_session, session:, user:) }
 
   let(:params) do
-    { guest_info: guest_info, user_session_id: user_session.id }
+    { guest_info:, user_session_id: user_session.id }
   end
 
   subject do
-    post api_v1_session_guests_path, params: params, headers: auth_headers, as: :json
+    post api_v1_session_guests_path, params:, headers: auth_headers, as: :json
   end
 
   it 'returns success' do
@@ -55,7 +55,7 @@ describe 'POST api/v1/session_guests' do
   end
 
   context 'when the session reaches the max guests' do
-    let!(:another_user_session) { create(:user_session, session: session) }
+    let!(:another_user_session) { create(:user_session, session:) }
     let!(:session_guest) { create(:session_guest, user_session: another_user_session) }
 
     it 'returns bad_request' do
@@ -68,7 +68,7 @@ describe 'POST api/v1/session_guests' do
 
   context 'when the user reaches the max guests' do
     let(:guests_allowed) { 2 }
-    let!(:session_guest) { create(:session_guest, user_session: user_session) }
+    let!(:session_guest) { create(:session_guest, user_session:) }
 
     it 'returns bad_request' do
       subject

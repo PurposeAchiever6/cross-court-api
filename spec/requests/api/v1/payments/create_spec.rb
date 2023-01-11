@@ -3,16 +3,16 @@ require 'rails_helper'
 describe 'POST api/v1/payments' do
   let!(:user) { create(:user, cc_cash: 150) }
   let!(:product) { create(:product, price: 100) }
-  let(:payment_method) { create(:payment_method, user: user) }
+  let(:payment_method) { create(:payment_method, user:) }
   let(:payment_method_id) { payment_method.id }
   let(:use_cc_cash) { false }
 
   let(:params) do
-    { product_id: product.id, payment_method_id: payment_method_id, use_cc_cash: use_cc_cash }
+    { product_id: product.id, payment_method_id:, use_cc_cash: }
   end
 
   subject do
-    post api_v1_payments_path, params: params, headers: auth_headers, as: :json
+    post api_v1_payments_path, params:, headers: auth_headers, as: :json
   end
 
   context 'when the transaction succeeds' do
@@ -63,7 +63,7 @@ describe 'POST api/v1/payments' do
       let(:params) do
         {
           product_id: product.id,
-          payment_method_id: payment_method_id,
+          payment_method_id:,
           promo_code: promo_code.code
         }
       end
@@ -87,7 +87,7 @@ describe 'POST api/v1/payments' do
         end
 
         context 'when the user has already used the promo code' do
-          let!(:user_promo_code) { create(:user_promo_code, user: user, promo_code: promo_code) }
+          let!(:user_promo_code) { create(:user_promo_code, user:, promo_code:) }
 
           it 'increments the times used' do
             expect { subject }.to change { user_promo_code.reload.times_used }.from(1).to(2)

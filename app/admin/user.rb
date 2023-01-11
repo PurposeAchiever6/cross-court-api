@@ -77,11 +77,11 @@ ActiveAdmin.register User do
       f.input :subscription_credits,
               input_html: {
                 value: subscription_credits,
-                type: type,
+                type:,
                 disabled: resource.unlimited_credits?
               }
       f.input :total_session_credits,
-              input_html: { value: resource.total_session_credits, type: type, disabled: true }
+              input_html: { value: resource.total_session_credits, type:, disabled: true }
       f.input :subscription_skill_session_credits,
               input_html: {
                 value: subscription_skill_session_credits,
@@ -278,7 +278,7 @@ ActiveAdmin.register User do
 
     panel 'Membership' do
       render partial: 'subscriptions', locals: {
-        user: user,
+        user:,
         products: Product.recurring,
         payment_methods: user.payment_methods,
         referral_users: User.where.not(id: user.id)
@@ -287,7 +287,7 @@ ActiveAdmin.register User do
 
     panel 'Store Items Purchase' do
       render partial: 'store_items_purchase',
-             locals: { user: user, store_items: StoreItem.sorted }
+             locals: { user:, store_items: StoreItem.sorted }
     end
   end
 
@@ -297,10 +297,10 @@ ActiveAdmin.register User do
     use_cc_cash = params[:use_cc_cash] == 'true'
 
     result = Users::Charge.call(
-      user: user,
+      user:,
       amount: store_item.price,
       description: store_item.description,
-      use_cc_cash: use_cc_cash
+      use_cc_cash:
     )
 
     if result.success?
@@ -335,7 +335,7 @@ ActiveAdmin.register User do
     if user.confirmed_at
       flash[:error] = 'User has already confirmed his email'
     else
-      Users::GiveFreeCredit.call(user: user)
+      Users::GiveFreeCredit.call(user:)
       user.update!(confirmed_at: Time.zone.now)
       flash[:notice] = "User's email verified successfully"
     end
@@ -382,32 +382,32 @@ ActiveAdmin.register User do
       referral_promo_code.validate!(user, product, true)
 
       PromoCodes::CreateUserPromoCode.call(
-        user: user,
+        user:,
         promo_code: referral_promo_code,
-        product: product
+        product:
       )
     end
 
     case action_type
     when :create
       result = Subscriptions::PlaceSubscription.call(
-        product: product,
-        user: user,
-        payment_method: payment_method,
-        promo_code: promo_code,
+        product:,
+        user:,
+        payment_method:,
+        promo_code:,
         description: product.name
       )
     when :update
       result = Subscriptions::UpdateSubscription.call(
-        user: user,
+        user:,
         subscription: user.active_subscription,
-        product: product,
-        payment_method: payment_method,
-        promo_code: promo_code
+        product:,
+        payment_method:,
+        promo_code:
       )
     when :cancel_at_period_end
       result = Subscriptions::CancelSubscriptionAtPeriodEnd.call(
-        user: user,
+        user:,
         subscription: user.active_subscription
       )
     when :cancel_at_next_month_period_end
@@ -416,12 +416,12 @@ ActiveAdmin.register User do
       )
     when :cancel_immediately
       result = Subscriptions::CancelSubscription.call(
-        user: user,
+        user:,
         subscription: user.active_subscription
       )
     when :reactivate
       result = Subscriptions::SubscriptionReactivation.call(
-        user: user,
+        user:,
         subscription: user.active_subscription
       )
     when :remove_scheduled_cancellation

@@ -22,7 +22,7 @@ module Sessions
                      name: user.first_name,
                      time: session.time.strftime(Session::TIME_FORMAT),
                      location: location.name,
-                     schedule_url: "#{ENV['FRONTENT_URL']}/locations")
+                     schedule_url: "#{ENV.fetch('FRONTENT_URL', nil)}/locations")
             )
 
             # We use update_column instead of update because a weird bug on rails. It tries to

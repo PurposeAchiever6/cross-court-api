@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'GET api/v1/user/referrals' do
   let!(:user) { create(:user) }
-  let!(:referral_promo_code) { create(:promo_code, for_referral: true, user: user) }
+  let!(:referral_promo_code) { create(:promo_code, for_referral: true, user:) }
   let!(:user_promo_codes) do
     create_list(:user_promo_code, amount_referrals, promo_code: referral_promo_code)
   end

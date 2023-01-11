@@ -31,8 +31,8 @@ class UserSessionWaitlist < ApplicationRecord
 
   validates :date, presence: true, uniqueness: { scope: %i[session_id user_id] }
 
-  scope :by_date, ->(date) { where(date: date) }
-  scope :by_user, ->(user_id) { where(user_id: user_id) }
+  scope :by_date, ->(date) { where(date:) }
+  scope :by_user, ->(user_id) { where(user_id:) }
 
   def self.sorted
     joins(:user).left_outer_joins(user: :active_subscription)

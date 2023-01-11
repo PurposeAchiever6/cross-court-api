@@ -24,7 +24,7 @@ FactoryBot.define do
   factory :subscription_pause do
     subscription
     paused_from { Time.current }
-    paused_until { Time.current + 1.month }
+    paused_until { 1.month.from_now }
     status { :upcoming }
     paid { false }
   end

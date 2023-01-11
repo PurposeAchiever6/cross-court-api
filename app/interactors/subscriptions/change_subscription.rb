@@ -9,7 +9,7 @@ module Subscriptions
       payment_method = context.payment_method
       promo_code = context.promo_code
 
-      redis = Redis.new(url: ENV['REDIS_HOST'])
+      redis = Redis.new(url: ENV.fetch('REDIS_HOST', nil))
       proration_date = redis.get("#{user.id}-#{subscription.id}-proration_date")
 
       old_product = subscription.product

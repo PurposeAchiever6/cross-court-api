@@ -26,8 +26,9 @@
 #
 # Indexes
 #
-#  index_user_sessions_on_session_id  (session_id)
-#  index_user_sessions_on_user_id     (user_id)
+#  index_user_sessions_on_referral_id  (referral_id)
+#  index_user_sessions_on_session_id   (session_id)
+#  index_user_sessions_on_user_id      (user_id)
 #
 
 FactoryBot.define do

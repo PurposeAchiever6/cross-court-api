@@ -7,7 +7,7 @@ describe UserSessions::WaitlistConfirm do
 
   describe '.call' do
     let!(:user_session) do
-      create(:user_session, user: user, session: session, date: Date.tomorrow)
+      create(:user_session, user:, session:, date: Date.tomorrow)
     end
 
     before do
@@ -18,8 +18,8 @@ describe UserSessions::WaitlistConfirm do
 
     subject do
       UserSessions::WaitlistConfirm.call(
-        user_session: user_session,
-        from_waitlist: from_waitlist
+        user_session:,
+        from_waitlist:
       )
     end
 

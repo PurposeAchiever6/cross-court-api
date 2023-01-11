@@ -5,25 +5,25 @@ describe UserSessions::Cancel do
     let!(:location) { create(:location) }
     let(:is_open_club) { false }
     let!(:session) do
-      create(:session, :daily, location: location, time: session_time, is_open_club: is_open_club)
+      create(:session, :daily, location:, time: session_time, is_open_club:)
     end
-    let!(:payment_method) { create(:payment_method, user: user, default: true) }
+    let!(:payment_method) { create(:payment_method, user:, default: true) }
     let!(:user) do
       create(
         :user,
-        subscription_credits: subscription_credits,
-        subscription_skill_session_credits: subscription_skill_session_credits
+        subscription_credits:,
+        subscription_skill_session_credits:
       )
     end
     let!(:user_session) do
       create(
         :user_session,
-        session: session,
-        user: user,
-        date: date,
+        session:,
+        user:,
+        date:,
         is_free_session: free_session,
-        credit_used_type: credit_used_type,
-        scouting: scouting
+        credit_used_type:,
+        scouting:
       )
     end
 
@@ -41,8 +41,8 @@ describe UserSessions::Cancel do
 
     subject do
       UserSessions::Cancel.call(
-        user_session: user_session,
-        from_session_canceled: from_session_canceled
+        user_session:,
+        from_session_canceled:
       )
     end
 
@@ -270,8 +270,8 @@ describe UserSessions::Cancel do
     end
 
     context 'when it has session guests' do
-      let!(:session_guest_1) { create(:session_guest, user_session: user_session) }
-      let!(:session_guest_2) { create(:session_guest, user_session: user_session) }
+      let!(:session_guest_1) { create(:session_guest, user_session:) }
+      let!(:session_guest_2) { create(:session_guest, user_session:) }
 
       it { expect { subject }.to change { session_guest_1.reload.state }.to('canceled') }
       it { expect { subject }.to change { session_guest_2.reload.state }.to('canceled') }
@@ -282,7 +282,7 @@ describe UserSessions::Cancel do
     context 'when the user session has a shooting machine reserved' do
       let(:status) { :reserved }
       let!(:shooting_machine_reservation) do
-        create(:shooting_machine_reservation, user_session: user_session, status: status)
+        create(:shooting_machine_reservation, user_session:, status:)
       end
 
       it 'updates the shooting machine reservation status' do

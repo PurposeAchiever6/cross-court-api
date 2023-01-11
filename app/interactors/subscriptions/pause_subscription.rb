@@ -18,27 +18,27 @@ module Subscriptions
       subscription_pause = SubscriptionPause.create!(
         paused_from: wait_until,
         paused_until: resumes_at,
-        subscription_id: subscription_id,
-        reason: reason,
-        paid: paid
+        subscription_id:,
+        reason:,
+        paid:
       )
 
       SlackService.new(subscription.user)
                   .subscription_paused_for_next_period(subscription,
-                                                       months: months,
-                                                       reason: reason,
+                                                       months:,
+                                                       reason:,
                                                        pause_start_on_datetime: wait_until,
                                                        pause_fee: paid ? '(paid)' : '(free)')
 
       job_id = ::Subscriptions::PauseJob.set(
-        wait_until: wait_until
+        wait_until:
       ).perform_later(
         subscription_id,
         resumes_at.to_i,
         subscription_pause.id
       ).provider_job_id
 
-      subscription_pause.update!(job_id: job_id)
+      subscription_pause.update!(job_id:)
     end
   end
 end

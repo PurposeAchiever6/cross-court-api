@@ -26,8 +26,9 @@
 #
 # Indexes
 #
-#  index_user_sessions_on_session_id  (session_id)
-#  index_user_sessions_on_user_id     (user_id)
+#  index_user_sessions_on_referral_id  (referral_id)
+#  index_user_sessions_on_session_id   (session_id)
+#  index_user_sessions_on_user_id      (user_id)
 #
 
 require 'rails_helper'
@@ -50,8 +51,8 @@ describe UserSession do
 
   describe 'date_when_format' do
     let!(:location) { create(:location) }
-    let!(:session) { create(:session, location: location) }
-    let!(:user_session) { create(:user_session, date: date, session: session) }
+    let!(:session) { create(:session, location:) }
+    let!(:user_session) { create(:user_session, date:, session:) }
 
     let(:time_zone) { location.time_zone }
     let(:date) { Time.current.in_time_zone(location.time_zone).to_date }

@@ -6,8 +6,8 @@ describe 'DELETE api/v1/subscriptions/:id' do
   let(:subscription) do
     create(
       :subscription,
-      user: user,
-      cancel_at_period_end: cancel_at_period_end
+      user:,
+      cancel_at_period_end:
     )
   end
 

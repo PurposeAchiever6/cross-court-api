@@ -16,8 +16,8 @@ module ShootingMachineReservations
       raise ShootingMachineAlreadyReservedException if shooting_machine.reserved?(date)
 
       shooting_machine_reservation = ShootingMachineReservation.create!(
-        shooting_machine: shooting_machine,
-        user_session: user_session
+        shooting_machine:,
+        user_session:
       )
 
       context.shooting_machine_reservation = shooting_machine_reservation

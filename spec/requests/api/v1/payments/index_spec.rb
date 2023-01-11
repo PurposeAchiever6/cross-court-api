@@ -22,7 +22,7 @@ describe 'GET api/v1/payments' do
   end
 
   context 'when the user has payments' do
-    let!(:payment) { create(:payment, user: user) }
+    let!(:payment) { create(:payment, user:) }
 
     before do
       subject
@@ -37,7 +37,7 @@ describe 'GET api/v1/payments' do
     end
 
     context 'when the payment has a discount' do
-      let!(:payment) { create(:payment, user: user, amount: 100, discount: 20) }
+      let!(:payment) { create(:payment, user:, amount: 100, discount: 20) }
 
       it 'returns the payment with the discount' do
         expect(json[:payments][0][:amount].to_i).to eq(100)
@@ -46,7 +46,7 @@ describe 'GET api/v1/payments' do
     end
 
     context 'when the payment was paid using cc_cash' do
-      let!(:payment) { create(:payment, user: user, amount: 100, cc_cash: 20) }
+      let!(:payment) { create(:payment, user:, amount: 100, cc_cash: 20) }
 
       it 'returns the payment with the discount' do
         expect(json[:payments][0][:amount].to_i).to eq(100)

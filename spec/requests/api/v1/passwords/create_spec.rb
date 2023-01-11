@@ -7,17 +7,17 @@ describe 'POST api/v1/users/passwords', type: :request do
     let(:params) { { email: user.email } }
 
     it 'returns a successful response' do
-      post user_password_path, params: params, as: :json
+      post user_password_path, params:, as: :json
       expect(response).to have_http_status(:success)
     end
 
     it 'returns the user email' do
-      post user_password_path, params: params, as: :json
+      post user_password_path, params:, as: :json
       expect(json[:message]).to match(/#{user.email}/)
     end
 
     it 'sends an email' do
-      expect { post user_password_path, params: params, as: :json }
+      expect { post user_password_path, params:, as: :json }
         .to change { ActionMailer::Base.deliveries.count }.by(1)
     end
   end

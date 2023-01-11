@@ -3,7 +3,7 @@ ActiveAdmin.register GalleryPhoto do
 
   actions :all, except: :edit
 
-  before_filter :skip_sidebar!, only: :index
+  before_action :skip_sidebar!, only: :index
 
   permit_params :image
 
@@ -50,7 +50,7 @@ ActiveAdmin.register GalleryPhoto do
         render :new
       else
         gallery_photo_params[:image].each do |image|
-          GalleryPhoto.create!(image: image)
+          GalleryPhoto.create!(image:)
         end
 
         redirect_to admin_gallery_photos_path

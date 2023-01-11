@@ -6,7 +6,7 @@ module ActiveCampaign
 
     def perform(event, user_id, args = {}, pipeline_name = ::ActiveCampaign::Deal::Pipeline::EMAILS)
       user = User.find(user_id)
-      ActiveCampaignService.new(pipeline_name: pipeline_name).create_deal(event, user, args)
+      ActiveCampaignService.new(pipeline_name:).create_deal(event, user, args)
     end
   end
 end

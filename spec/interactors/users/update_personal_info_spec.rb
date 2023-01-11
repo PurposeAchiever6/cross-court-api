@@ -15,7 +15,7 @@ describe Users::UpdatePersonalInfo do
       }
     end
 
-    subject { Users::UpdatePersonalInfo.call(user: user, personal_info: personal_info) }
+    subject { Users::UpdatePersonalInfo.call(user:, personal_info:) }
 
     it { expect { subject }.to change { user.reload.weight }.from(nil).to(35) }
     it { expect { subject }.to change { user.reload.height }.from(nil).to(311) }

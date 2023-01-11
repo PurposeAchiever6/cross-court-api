@@ -58,7 +58,7 @@ module SonarService
       send_message(user, I18n.t('notifier.sonar.no_session_booked'))
     else
       send_message(user, I18n.t('notifier.sonar.no_more_sonar_cancellation',
-                                frontend_url: ENV['FRONTENT_URL']))
+                                frontend_url: ENV.fetch('FRONTENT_URL', nil)))
     end
   end
 

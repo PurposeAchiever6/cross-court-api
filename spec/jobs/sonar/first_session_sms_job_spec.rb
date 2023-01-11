@@ -9,7 +9,7 @@ describe ::Sonar::FirstSessionSmsJob do
     let!(:user_session_1) do
       create(
         :user_session,
-        session: session,
+        session:,
         checked_in: true,
         date: la_date,
         state: :confirmed,
@@ -21,7 +21,7 @@ describe ::Sonar::FirstSessionSmsJob do
     let!(:user_session_2) do
       create(
         :user_session,
-        session: session,
+        session:,
         checked_in: true,
         date: la_date,
         state: :confirmed,

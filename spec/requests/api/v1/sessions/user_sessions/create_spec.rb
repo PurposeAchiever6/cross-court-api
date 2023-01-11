@@ -5,22 +5,22 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
     create(
       :user,
       credits: 1,
-      reserve_team: reserve_team,
-      flagged: flagged,
-      active_subscription: active_subscription,
-      scouting_credits: scouting_credits
+      reserve_team:,
+      flagged:,
+      active_subscription:,
+      scouting_credits:
     )
   end
-  let!(:location) { create(:location, max_sessions_booked_per_day: max_sessions_booked_per_day) }
+  let!(:location) { create(:location, max_sessions_booked_per_day:) }
   let!(:session) do
     create(
       :session,
       :daily,
-      location: location,
-      is_open_club: is_open_club,
-      skill_session: skill_session,
-      all_skill_levels_allowed: all_skill_levels_allowed,
-      members_only: members_only
+      location:,
+      is_open_club:,
+      skill_session:,
+      all_skill_levels_allowed:,
+      members_only:
     )
   end
 
@@ -49,7 +49,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   subject do
     post api_v1_session_user_sessions_path(session_id: session.id),
          headers: auth_headers,
-         params: params,
+         params:,
          as: :json
   end
 
@@ -76,7 +76,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   end
 
   it 'sends session booked email' do
-    expect { subject }.to have_enqueued_job.on_queue('mailers')
+    expect { subject }.to have_enqueued_job(ActionMailer::MailDeliveryJob).on_queue('default')
   end
 
   it "doesn't update user's free_session_state" do
@@ -100,7 +100,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
     before do
       allow(SonarService).to receive(:send_message).and_return(1)
-      session.update!(time: time)
+      session.update!(time:)
     end
 
     it 'confirms the session automatically' do
@@ -140,7 +140,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   end
 
   context 'when the session is full' do
-    let!(:user_session) { create_list(:user_session, 15, session: session, date: date) }
+    let!(:user_session) { create_list(:user_session, 15, session:, date:) }
 
     it 'returns bad request' do
       subject
@@ -157,12 +157,12 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
     let(:user_session_state) { :reserved }
     let(:user_session_date) { date }
 
-    let!(:another_session) { create(:session, :daily, location: location) }
+    let!(:another_session) { create(:session, :daily, location:) }
     let!(:user_session) do
       create(
         :user_session,
         session: another_session,
-        user: user,
+        user:,
         date: user_session_date,
         state: user_session_state
       )
@@ -314,7 +314,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   end
 
   context 'when user has a paused subscription' do
-    before { create(:subscription, user: user, status: :paused) }
+    before { create(:subscription, user:, status: :paused) }
 
     it 'returns bad request' do
       subject
@@ -336,7 +336,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
     end
 
     context 'when the session is not allowed for reserve team members' do
-      let!(:user_session) { create(:user_session, session: session, date: date) }
+      let!(:user_session) { create(:user_session, session:, date:) }
 
       it 'returns bad request' do
         subject
@@ -365,7 +365,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   end
 
   context 'when user reserves a shooting machine' do
-    let!(:shooting_machine) { create(:shooting_machine, session: session) }
+    let!(:shooting_machine) { create(:shooting_machine, session:) }
 
     before { params[:shooting_machine_id] = shooting_machine.id }
 
@@ -377,7 +377,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
     it { expect { subject }.not_to change(ShootingMachineReservation, :count) }
 
     context 'when session is open club' do
-      let!(:payment_method) { create(:payment_method, user: user, default: true) }
+      let!(:payment_method) { create(:payment_method, user:, default: true) }
       let!(:active_subscription) { create(:subscription) }
       let(:is_open_club) { true }
 
@@ -389,12 +389,12 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
 
       context 'when the shooting machine has already been reserved' do
-        let!(:user_session) { create(:user_session, session: session, date: date) }
+        let!(:user_session) { create(:user_session, session:, date:) }
         let!(:shooting_machine_reservation) do
           create(
             :shooting_machine_reservation,
-            shooting_machine: shooting_machine,
-            user_session: user_session
+            shooting_machine:,
+            user_session:
           )
         end
 

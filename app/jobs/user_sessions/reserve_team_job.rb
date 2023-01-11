@@ -30,7 +30,7 @@ module UserSessions
               time: session.time.strftime(Session::TIME_FORMAT),
               location: location.name,
               when: sample_user_session.date_when_format,
-              link: "#{ENV['FRONTENT_URL']}/locations"
+              link: "#{ENV.fetch('FRONTENT_URL', nil)}/locations"
             )
           )
         end

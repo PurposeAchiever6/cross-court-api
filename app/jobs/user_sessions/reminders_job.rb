@@ -30,8 +30,8 @@ module UserSessions
                  name: user.first_name,
                  time: user_session.time.strftime(Session::TIME_FORMAT),
                  location: user_session.location.name,
-                 cancellation_period_hours: cancellation_period_hours,
-                 frontend_url: ENV['FRONTENT_URL'],
+                 cancellation_period_hours:,
+                 frontend_url: ENV.fetch('FRONTENT_URL', nil),
                  invite_friend: invite_friend(user_session, user))
         )
 

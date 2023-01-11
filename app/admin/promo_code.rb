@@ -67,9 +67,9 @@ ActiveAdmin.register PromoCode do
       f.input :type,
               as: :select,
               collection: PromoCode::TYPES.map { |type| [type.underscore.humanize, type] },
-              input_html: { disabled: disabled }
-      f.input :code, input_html: { disabled: disabled }
-      f.input :discount, input_html: { disabled: disabled }
+              input_html: { disabled: }
+      f.input :code, input_html: { disabled: }
+      f.input :discount, input_html: { disabled: }
       f.input :max_redemptions,
               hint: 'Number of times the code can be used across all users before it’s no longer ' \
                     'valid. If not set, it can be used with no restrictions.'
@@ -83,12 +83,12 @@ ActiveAdmin.register PromoCode do
       f.input :expiration_date,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
-              input_html: { autocomplete: :off, disabled: disabled }
+              input_html: { autocomplete: :off, disabled: }
       f.input :duration,
               as: :select,
-              input_html: { disabled: disabled },
+              input_html: { disabled: },
               hint: 'Only valid for recurring products.'
-      f.input :duration_in_months, input_html: { disabled: disabled }
+      f.input :duration_in_months, input_html: { disabled: }
     end
     f.actions
   end

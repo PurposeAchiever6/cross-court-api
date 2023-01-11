@@ -11,8 +11,8 @@ describe Users::InactiveNonMembersJob do
     let!(:user_session_1) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: true,
         date: la_date - 35.days
       )
@@ -20,18 +20,18 @@ describe Users::InactiveNonMembersJob do
     let!(:user_session_2) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: true,
         date: la_date - date_ago_last_session,
-        first_session: first_session
+        first_session:
       )
     end
     let!(:user_session_3) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: false,
         date: la_date + 2.days,
         state: :canceled
@@ -56,7 +56,7 @@ describe Users::InactiveNonMembersJob do
       it 'calls service with the correct parameters' do
         expect_any_instance_of(SlackService).to receive(:notify).with(
           I18n.t('notifier.slack.inactive_user', name: user.full_name, phone: user.phone_number),
-          channel: ENV['SLACK_CHANNEL_CHURN']
+          channel: ENV.fetch('SLACK_CHANNEL_CHURN', nil)
         ).once
         expect_any_instance_of(ActiveCampaignService).not_to receive(:create_deal)
 
@@ -80,7 +80,7 @@ describe Users::InactiveNonMembersJob do
           expect_any_instance_of(SlackService).to receive(:notify).with(
             I18n.t('notifier.slack.inactive_first_timer_user',
                    name: user.full_name, phone: user.phone_number, last_session_days_ago: 1),
-            channel: ENV['SLACK_CHANNEL_CHURN']
+            channel: ENV.fetch('SLACK_CHANNEL_CHURN', nil)
           ).once
 
           subject
@@ -104,7 +104,7 @@ describe Users::InactiveNonMembersJob do
           expect_any_instance_of(SlackService).to receive(:notify).with(
             I18n.t('notifier.slack.inactive_first_timer_user',
                    name: user.full_name, phone: user.phone_number, last_session_days_ago: 14),
-            channel: ENV['SLACK_CHANNEL_CHURN']
+            channel: ENV.fetch('SLACK_CHANNEL_CHURN', nil)
           ).once
 
           expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).with(
@@ -130,8 +130,8 @@ describe Users::InactiveNonMembersJob do
       let!(:user_session_4) do
         create(
           :user_session,
-          user: user,
-          session: session,
+          user:,
+          session:,
           checked_in: false,
           date: la_date + 4.days,
           state: :reserved

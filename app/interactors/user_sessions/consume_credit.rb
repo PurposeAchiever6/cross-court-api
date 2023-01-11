@@ -86,7 +86,7 @@ module UserSessions
           I18n.t(
             'notifier.sonar.first_time_subscription_credits_used',
             name: user.first_name,
-            link: "#{ENV['FRONTENT_URL']}/memberships"
+            link: "#{ENV.fetch('FRONTENT_URL', nil)}/memberships"
           )
         )
 

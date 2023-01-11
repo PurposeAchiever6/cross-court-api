@@ -6,7 +6,7 @@ module Api
           @user_sessions =
             Session.find(params[:session_id])
                    .not_canceled_reservations(date)
-                   .where(checked_in: checked_in)
+                   .where(checked_in:)
                    .includes(:session, user: { image_attachment: :blob })
                    .order(:created_at)
         end
@@ -16,9 +16,9 @@ module Api
 
           @user_session = UserSessions::Create.call(
             referral_code: params[:referral_code],
-            session: session,
+            session:,
             user: current_user,
-            shooting_machine: shooting_machine,
+            shooting_machine:,
             date: params[:date],
             goal: params[:goal],
             scouting: params[:scouting]

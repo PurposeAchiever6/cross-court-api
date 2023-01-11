@@ -12,13 +12,13 @@ module Sessions
 
       user_sessions.each do |user_session|
         UserSessions::Cancel.call(
-          user_session: user_session,
+          user_session:,
           from_session_canceled: true
         )
       end
 
       if session.recurring?
-        session.session_exceptions.find_or_create_by!(date: date)
+        session.session_exceptions.find_or_create_by!(date:)
       else
         session.destroy!
       end

@@ -7,7 +7,6 @@ require 'helpers'
 require 'webmock/rspec'
 require 'shoulda/matchers'
 require 'sidekiq/testing'
-require 'mock_redis'
 
 Sidekiq::Testing.fake!
 
@@ -34,11 +33,10 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before :each do
+    Sidekiq::Worker.clear_all
     allow(SonarService).to receive(:add_update_customer)
     allow(Stripe::Coupon).to receive(:create).and_return(double(id: 'coupon-id'))
     allow(Stripe::PromotionCode).to receive(:create).and_return(double(id: 'promo-id'))
     ActionMailer::Base.deliveries.clear
-    redis_instance = MockRedis.new
-    allow(Redis).to receive(:new).and_return(redis_instance)
   end
 end

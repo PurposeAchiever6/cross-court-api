@@ -5,34 +5,34 @@ describe UserSessions::Create do
     let!(:location) do
       create(
         :location,
-        max_sessions_booked_per_day: max_sessions_booked_per_day,
-        max_skill_sessions_booked_per_day: max_skill_sessions_booked_per_day
+        max_sessions_booked_per_day:,
+        max_skill_sessions_booked_per_day:
       )
     end
     let!(:session) do
       create(
         :session,
         :daily,
-        location: location,
+        location:,
         time: session_time,
-        is_open_club: is_open_club,
-        skill_session: skill_session,
-        max_first_timers: max_first_timers,
-        all_skill_levels_allowed: all_skill_levels_allowed,
-        members_only: members_only
+        is_open_club:,
+        skill_session:,
+        max_first_timers:,
+        all_skill_levels_allowed:,
+        members_only:
       )
     end
     let!(:user) do
       create(
         :user,
-        credits: credits,
-        credits_without_expiration: credits_without_expiration,
-        subscription_credits: subscription_credits,
-        subscription_skill_session_credits: subscription_skill_session_credits,
-        free_session_state: free_session_state,
-        reserve_team: reserve_team,
-        active_subscription: active_subscription,
-        first_time_subscription_credits_used_at: first_time_subscription_credits_used_at
+        credits:,
+        credits_without_expiration:,
+        subscription_credits:,
+        subscription_skill_session_credits:,
+        free_session_state:,
+        reserve_team:,
+        active_subscription:,
+        first_time_subscription_credits_used_at:
       )
     end
     let!(:active_subscription) { create(:subscription, status: subscription_status) }
@@ -56,7 +56,7 @@ describe UserSessions::Create do
     let(:session_time) { time_now + Session::CANCELLATION_PERIOD + 1.minute }
     let(:date) { time_now.to_date }
 
-    let(:subject_args) { { user: user, session: session, date: date } }
+    let(:subject_args) { { user:, session:, date: } }
     let(:created_user_session) { UserSession.last }
 
     before { allow_any_instance_of(Slack::Notifier).to receive(:ping) }
@@ -132,15 +132,15 @@ describe UserSessions::Create do
         create_list(
           :user_session,
           session.max_capacity - 1,
-          session: session,
-          date: date
+          session:,
+          date:
         )
       end
 
       it { expect { subject }.to change(UserSession, :count).by(1) }
 
       context 'when session is full' do
-        let!(:last_user_session) { create(:user_session, session: session, date: date) }
+        let!(:last_user_session) { create(:user_session, session:, date:) }
 
         it { expect { subject rescue nil }.not_to change(UserSession, :count) }
         it { expect { subject }.to raise_error(FullSessionException, 'Session is full') }
@@ -149,7 +149,7 @@ describe UserSessions::Create do
 
     context 'when there are no more spots for first timers' do
       let!(:some_user) { create(:user) }
-      let!(:user_session) { create(:user_session, session: session, date: date, user: some_user) }
+      let!(:user_session) { create(:user_session, session:, date:, user: some_user) }
       let(:max_first_timers) { 1 }
 
       it { expect { subject rescue nil }.not_to change(UserSession, :count) }
@@ -165,23 +165,23 @@ describe UserSessions::Create do
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
 
       context 'when user reserves a shooting machine' do
-        let!(:payment_method) { create(:payment_method, user: user, default: true) }
-        let!(:shooting_machine) { create(:shooting_machine, session: session) }
+        let!(:payment_method) { create(:payment_method, user:, default: true) }
+        let!(:shooting_machine) { create(:shooting_machine, session:) }
 
         before do
-          subject_args.merge!(shooting_machine: shooting_machine)
+          subject_args.merge!(shooting_machine:)
           allow(StripeService).to receive(:charge).and_return(double(id: 'payment_intent'))
         end
 
         it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
 
         context 'when the shooting machine has already been reserved' do
-          let!(:user_session) { create(:user_session, session: session, date: date) }
+          let!(:user_session) { create(:user_session, session:, date:) }
           let!(:shooting_machine_reservation) do
             create(
               :shooting_machine_reservation,
-              shooting_machine: shooting_machine,
-              user_session: user_session
+              shooting_machine:,
+              user_session:
             )
           end
 
@@ -216,13 +216,13 @@ describe UserSessions::Create do
       let(:user_session_date) { date }
 
       let!(:another_session) do
-        create(:session, :daily, location: location, skill_session: another_session_skill_session)
+        create(:session, :daily, location:, skill_session: another_session_skill_session)
       end
       let!(:user_session) do
         create(
           :user_session,
           session: another_session,
-          user: user,
+          user:,
           date: user_session_date,
           state: user_session_state
         )
@@ -268,7 +268,7 @@ describe UserSessions::Create do
     end
 
     context 'when there is no session for the selected date' do
-      let!(:session_exception) { create(:session_exception, session: session, date: date) }
+      let!(:session_exception) { create(:session_exception, session:, date:) }
 
       it { expect { subject rescue nil }.not_to change(UserSession, :count) }
       it { expect { subject }.to raise_error(InvalidDateException, 'Invalid date') }
@@ -313,7 +313,7 @@ describe UserSessions::Create do
     end
 
     context 'when is not user first session' do
-      let!(:user_session) { create(:user_session, user: user, first_session: true) }
+      let!(:user_session) { create(:user_session, user:, first_session: true) }
 
       it { expect(subject.user_session.first_session).to eq(false) }
       it { expect(subject.user_session.is_free_session).to eq(false) }
@@ -380,7 +380,7 @@ describe UserSessions::Create do
       end
 
       context 'when is not user first session' do
-        let!(:user_session) { create(:user_session, user: user) }
+        let!(:user_session) { create(:user_session, user:) }
 
         it { expect { subject }.to change(UserSession, :count).by(1) }
         it { expect { subject }.not_to change { referral_user.reload.credits } }
@@ -463,7 +463,7 @@ describe UserSessions::Create do
       it { expect { subject }.to change(UserSession, :count).by(1) }
 
       context 'when the session is not allowed for reserve team members' do
-        let!(:user_session) { create(:user_session, session: session, date: date) }
+        let!(:user_session) { create(:user_session, session:, date:) }
 
         it { expect { subject rescue nil }.not_to change(UserSession, :count) }
       end
@@ -477,7 +477,7 @@ describe UserSessions::Create do
         I18n.t(
           'notifier.sonar.first_time_subscription_credits_used',
           name: user.first_name,
-          link: "#{ENV['FRONTENT_URL']}/memberships"
+          link: "#{ENV.fetch('FRONTENT_URL', nil)}/memberships"
         )
       end
 
@@ -574,13 +574,13 @@ describe UserSessions::Create do
         let(:user_session_date) { date }
 
         let!(:another_session) do
-          create(:session, :daily, location: location, skill_session: another_session_skill_session)
+          create(:session, :daily, location:, skill_session: another_session_skill_session)
         end
         let!(:user_session) do
           create(
             :user_session,
             session: another_session,
-            user: user,
+            user:,
             date: user_session_date,
             state: user_session_state
           )

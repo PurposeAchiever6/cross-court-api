@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe 'DELETE api/v1/payment_methods' do
   let(:user) { create(:user) }
-  let!(:payment_method) { create(:payment_method, user: user, default: true) }
-  let!(:payment_method_2) { create(:payment_method, user: user) }
-  let!(:payment_method_3) { create(:payment_method, user: user) }
-  let!(:payment_method_4) { create(:payment_method, user: user) }
+  let!(:payment_method) { create(:payment_method, user:, default: true) }
+  let!(:payment_method_2) { create(:payment_method, user:) }
+  let!(:payment_method_3) { create(:payment_method, user:) }
+  let!(:payment_method_4) { create(:payment_method, user:) }
 
   let(:payment_method_atts) { { stripe_id: payment_method.stripe_id } }
 
@@ -46,7 +46,7 @@ describe 'DELETE api/v1/payment_methods' do
   end
 
   context 'when payment method has an active subscription' do
-    let!(:subscription) { create(:subscription, user: user, payment_method: payment_method) }
+    let!(:subscription) { create(:subscription, user:, payment_method:) }
 
     it 'returns bad_request' do
       subject

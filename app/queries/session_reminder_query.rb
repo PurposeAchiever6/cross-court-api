@@ -23,7 +23,7 @@ class SessionReminderQuery
     for_today.where(
       "to_char(current_timestamp at time zone locations.time_zone, :time_format) =
        to_char(time - interval ':hours hour', :time_format)",
-      hours: hours, time_format: QUERY_TIME_FORMAT
+      hours:, time_format: QUERY_TIME_FORMAT
     )
   end
 end

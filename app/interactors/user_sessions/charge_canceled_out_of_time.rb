@@ -21,7 +21,7 @@ module UserSessions
       return unless amount_to_charge.positive?
 
       result = Users::Charge.call(
-        user: user,
+        user:,
         amount: amount_to_charge,
         description: 'Session canceled out of time fee',
         notify_error: true,

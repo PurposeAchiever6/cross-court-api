@@ -3,8 +3,8 @@ require 'rails_helper'
 describe PromoCodes::CreateUserPromoCode do
   describe '.call' do
     let!(:user) { create(:user) }
-    let!(:product) { create(:product, referral_cc_cash: referral_cc_cash) }
-    let!(:promo_code) { create(:promo_code, for_referral: for_referral, user: promo_code_user) }
+    let!(:product) { create(:product, referral_cc_cash:) }
+    let!(:promo_code) { create(:promo_code, for_referral:, user: promo_code_user) }
 
     let(:referral_cc_cash) { rand(1..100) }
     let(:promo_code_user) { nil }
@@ -12,9 +12,9 @@ describe PromoCodes::CreateUserPromoCode do
 
     subject do
       PromoCodes::CreateUserPromoCode.call(
-        user: user,
-        promo_code: promo_code,
-        product: product
+        user:,
+        promo_code:,
+        product:
       )
     end
 
@@ -42,7 +42,7 @@ describe PromoCodes::CreateUserPromoCode do
     end
 
     context 'when the user had already used that promo code' do
-      let!(:user_promo_code) { create(:user_promo_code, user: user, promo_code: promo_code) }
+      let!(:user_promo_code) { create(:user_promo_code, user:, promo_code:) }
 
       it { expect { subject }.not_to change(UserPromoCode, :count) }
 
@@ -50,7 +50,7 @@ describe PromoCodes::CreateUserPromoCode do
     end
 
     context 'when the promo code is for referral' do
-      let!(:promo_code_user) { create(:user, cc_cash: cc_cash) }
+      let!(:promo_code_user) { create(:user, cc_cash:) }
       let(:for_referral) { true }
       let(:cc_cash) { 0 }
 

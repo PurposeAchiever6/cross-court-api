@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Users::ClaimFreeSession do
   describe '.call' do
-    let!(:user) { create(:user, free_session_state: free_session_state) }
-    let!(:payment_method) { create(:payment_method, user: user) }
+    let!(:user) { create(:user, free_session_state:) }
+    let!(:payment_method) { create(:payment_method, user:) }
 
     let(:free_session_state) { :not_claimed }
     let(:intent_id) { rand(1_000).to_s }
@@ -12,7 +12,7 @@ describe Users::ClaimFreeSession do
       allow(StripeService).to receive(:create_free_session_intent).and_return(double(id: intent_id))
     end
 
-    subject { Users::ClaimFreeSession.call(user: user, payment_method: payment_method) }
+    subject { Users::ClaimFreeSession.call(user:, payment_method:) }
 
     it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
     it { expect { subject }.to change { user.reload.free_session_payment_intent }.to(intent_id) }
@@ -31,7 +31,7 @@ describe Users::ClaimFreeSession do
 
     context 'when payment_method_id is not passed as argument' do
       let!(:payment_method) { nil }
-      let!(:user_payment_method) { create(:payment_method, user: user, default: true) }
+      let!(:user_payment_method) { create(:payment_method, user:, default: true) }
 
       it { expect { subject }.to change { user.reload.free_session_state }.to('claimed') }
       it { expect { subject }.to change { user.reload.free_session_payment_intent }.to(intent_id) }

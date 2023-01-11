@@ -6,8 +6,8 @@ describe 'DELETE api/v1/sessions/:session_id/votes' do
   let!(:user_session_vote) do
     create(
       :user_session_vote,
-      session: session,
-      user: user,
+      session:,
+      user:,
       date: session.start_time
     )
   end
@@ -24,7 +24,7 @@ describe 'DELETE api/v1/sessions/:session_id/votes' do
   subject do
     delete api_v1_session_votes_path(session_id: session.id),
            headers: request_headers,
-           params: params,
+           params:,
            as: :json
     response
   end

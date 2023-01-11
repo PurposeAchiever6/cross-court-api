@@ -7,8 +7,8 @@ describe FirstTimerSurveys::Create do
 
     subject do
       FirstTimerSurveys::Create.call(
-        user: user,
-        how_did_you_hear_about_us: how_did_you_hear_about_us
+        user:,
+        how_did_you_hear_about_us:
       )
     end
 
@@ -29,7 +29,7 @@ describe FirstTimerSurveys::Create do
       let!(:first_timer_survey) do
         create(
           :first_timer_survey,
-          user: user,
+          user:,
           how_did_you_hear_about_us: old_how_did_you_hear_about_us
         )
       end

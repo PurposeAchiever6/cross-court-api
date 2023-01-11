@@ -38,7 +38,7 @@ FactoryBot.define do
     stripe_item_id { 'stripe-subscription-item-id' }
     status { 'active' }
     current_period_start { Time.current }
-    current_period_end { Time.current + 1.month }
+    current_period_end { 1.month.from_now }
     cancel_at_period_end { false }
     cancel_at { nil }
     canceled_at { nil }

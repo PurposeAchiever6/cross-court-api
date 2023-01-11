@@ -2,15 +2,15 @@ require 'rails_helper'
 
 describe 'POST api/v1/subscriptions/:id/payment_method' do
   let!(:user) { create(:user) }
-  let!(:payment_method) { create(:payment_method, user: user) }
-  let!(:subscription) { create(:subscription, user: user, status: subscription_status) }
+  let!(:payment_method) { create(:payment_method, user:) }
+  let!(:subscription) { create(:subscription, user:, status: subscription_status) }
   let!(:old_payment_method) { subscription.payment_method }
 
   let(:subscription_id) { subscription.id }
   let(:payment_method_id) { payment_method.id }
   let(:subscription_status) { 'active' }
   let(:request_headers) { auth_headers }
-  let(:params) { { payment_method_id: payment_method_id } }
+  let(:params) { { payment_method_id: } }
 
   let(:response_body) do
     JSON.parse(subject.body).with_indifferent_access
@@ -21,7 +21,7 @@ describe 'POST api/v1/subscriptions/:id/payment_method' do
   subject do
     post payment_method_api_v1_subscription_path(subscription_id),
          headers: request_headers,
-         params: params,
+         params:,
          as: :json
     response
   end

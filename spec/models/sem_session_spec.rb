@@ -34,7 +34,7 @@ describe SemSession do
 
     context 'when there is no sem assigned' do
       let(:sem_session) do
-        build(:sem_session, session: session, user: user1, date: date)
+        build(:sem_session, session:, user: user1, date:)
       end
 
       it 'assigns the sem to the session' do
@@ -47,10 +47,10 @@ describe SemSession do
     context 'when there is a previous sem assigned' do
       let(:user2) { create(:user) }
       let!(:first_sem_session) do
-        create(:sem_session, session: session, user: user1, date: date)
+        create(:sem_session, session:, user: user1, date:)
       end
       let(:second_sem_session) do
-        build(:sem_session, session: session, user: user2, date: date)
+        build(:sem_session, session:, user: user2, date:)
       end
 
       it 'assigns the new sem to the session' do

@@ -4,7 +4,7 @@ describe Subscriptions::CancelSubscriptionAtNextMonthPeriodEnd do
   describe '.call' do
     let!(:user) { create(:user) }
     let!(:subscription) do
-      create(:subscription, user: user, status: status, cancel_at_period_end: cancel_at_period_end)
+      create(:subscription, user:, status:, cancel_at_period_end:)
     end
 
     let(:status) { 'active' }
@@ -14,7 +14,7 @@ describe Subscriptions::CancelSubscriptionAtNextMonthPeriodEnd do
 
     subject do
       Subscriptions::CancelSubscriptionAtNextMonthPeriodEnd.call(
-        subscription: subscription
+        subscription:
       )
     end
 

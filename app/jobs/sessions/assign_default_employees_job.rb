@@ -30,30 +30,30 @@ module Sessions
       session_id = session.id
       date = session.start_time
 
-      referee_session = RefereeSession.find_by(session_id: session_id, date: date)
+      referee_session = RefereeSession.find_by(session_id:, date:)
       if default_referee_id && !referee_session
         RefereeSession.find_or_create_by!(
           user_id: default_referee_id,
-          session_id: session_id,
-          date: date
+          session_id:,
+          date:
         )
       end
 
-      sem_session = SemSession.find_by(session_id: session_id, date: date)
+      sem_session = SemSession.find_by(session_id:, date:)
       if default_sem_id && !sem_session
         SemSession.find_or_create_by!(
           user_id: default_sem_id,
-          session_id: session_id,
-          date: date
+          session_id:,
+          date:
         )
       end
 
-      coach_session = CoachSession.find_by(session_id: session_id, date: date)
+      coach_session = CoachSession.find_by(session_id:, date:)
       if default_coach_id && !coach_session
         CoachSession.find_or_create_by!(
           user_id: default_coach_id,
-          session_id: session_id,
-          date: date
+          session_id:,
+          date:
         )
       end
     end

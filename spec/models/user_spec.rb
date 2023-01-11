@@ -69,6 +69,7 @@
 #  index_users_on_is_coach                      (is_coach)
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
+#  index_users_on_phone_number                  (phone_number) UNIQUE
 #  index_users_on_private_access                (private_access)
 #  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
@@ -99,7 +100,7 @@ describe User do
   describe '#create' do
     let(:first_name) { 'John' }
     let(:last_name) { 'Travolta' }
-    let(:user_params) { { first_name: first_name, last_name: last_name } }
+    let(:user_params) { { first_name:, last_name: } }
 
     subject { create(:user, user_params) }
 
@@ -175,7 +176,7 @@ describe User do
     let(:stripe_customer_id) { 'stripe-customer-id' }
     let!(:user) { create(:user, stripe_id: stripe_customer_id) }
     let!(:promo_code) do
-      create(:promo_code, for_referral: true, user: user, stripe_coupon_id: stripe_coupon_id)
+      create(:promo_code, for_referral: true, user:, stripe_coupon_id:)
     end
 
     before do
@@ -204,17 +205,17 @@ describe User do
     subject { user.first_not_first_session? }
 
     context 'when it has only one user_session' do
-      before { create(:user_session, user: user, first_session: true, checked_in: true) }
+      before { create(:user_session, user:, first_session: true, checked_in: true) }
 
       it { is_expected.to eq(false) }
     end
 
     context 'when it has multiple user_sessions' do
       before do
-        create(:user_session, user: user, first_session: true, checked_in: true)
-        create(:user_session, user: user, first_session: false, checked_in: true)
-        create(:user_session, user: user, first_session: false, checked_in: true)
-        create(:user_session, user: user, first_session: false, checked_in: true)
+        create(:user_session, user:, first_session: true, checked_in: true)
+        create(:user_session, user:, first_session: false, checked_in: true)
+        create(:user_session, user:, first_session: false, checked_in: true)
+        create(:user_session, user:, first_session: false, checked_in: true)
       end
 
       it { is_expected.to eq(false) }
@@ -222,8 +223,8 @@ describe User do
 
     context 'when is has two user_session' do
       before do
-        create(:user_session, user: user, first_session: true, checked_in: true)
-        create(:user_session, user: user, first_session: false, checked_in: true)
+        create(:user_session, user:, first_session: true, checked_in: true)
+        create(:user_session, user:, first_session: false, checked_in: true)
       end
 
       it { is_expected.to eq(true) }
@@ -231,7 +232,7 @@ describe User do
   end
 
   describe '#generate_referral_code' do
-    let(:user) { build(:user, first_name: first_name, last_name: last_name) }
+    let(:user) { build(:user, first_name:, last_name:) }
     let(:first_name) { 'Elon' }
     let(:last_name) { 'Musk' }
 
@@ -240,12 +241,12 @@ describe User do
     it { is_expected.to eq('ELONMUSK') }
 
     context 'when already exists a user with the same full name' do
-      let!(:other_user) { create(:user, first_name: first_name, last_name: last_name) }
+      let!(:other_user) { create(:user, first_name:, last_name:) }
 
       it { is_expected.to eq('ELONMUSK1') }
 
       context 'when already exists multiple users with the same full name' do
-        let!(:other_users) { create_list(:user, 5, first_name: first_name, last_name: last_name) }
+        let!(:other_users) { create_list(:user, 5, first_name:, last_name:) }
 
         it { is_expected.to eq('ELONMUSK6') }
       end

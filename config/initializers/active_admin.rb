@@ -222,7 +222,7 @@ ActiveAdmin.setup do |config|
   config.namespace :admin do |admin|
     admin.build_menu :default do |menu|
       menu.add label: 'Dashboard',
-               url: "#{ENV['FRONTENT_URL']}/dashboard",
+               url: "#{ENV.fetch('FRONTENT_URL', nil)}/dashboard",
                html_options: { target: :blank },
                priority: 2
       menu.add label: 'Sessions',

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'PUT api/v1/payments/create_free_session_intent' do
   let(:user) { create(:user) }
-  let(:payment_method) { create(:payment_method, user: user) }
+  let(:payment_method) { create(:payment_method, user:) }
   let(:params) { { payment_method_id: payment_method.id } }
 
   before do
@@ -13,7 +13,7 @@ describe 'PUT api/v1/payments/create_free_session_intent' do
 
   subject do
     put create_free_session_intent_api_v1_payments_path,
-        params: params, headers: auth_headers, as: :json
+        params:, headers: auth_headers, as: :json
   end
 
   context "when the user hasn't claimed the free session" do

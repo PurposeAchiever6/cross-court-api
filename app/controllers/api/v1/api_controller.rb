@@ -56,7 +56,7 @@ module Api
       end
 
       def render_error(status, message)
-        render json: { error: message }, status: status
+        render json: { error: message }, status:
       end
 
       private

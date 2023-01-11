@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Users::GiveFreeCredit do
   describe '.call' do
-    let!(:user) { create(:user, free_session_expiration_date: free_session_expiration_date) }
+    let!(:user) { create(:user, free_session_expiration_date:) }
     let!(:location) { create(:location, dtla_coordinates) }
 
     let(:dtla_coordinates) { { lat: 34.0520842, lng: -118.2273522 } }
@@ -14,7 +14,7 @@ describe Users::GiveFreeCredit do
       )
     end
 
-    subject { Users::GiveFreeCredit.call(user: user) }
+    subject { Users::GiveFreeCredit.call(user:) }
 
     it { expect { subject }.to change { user.reload.credits }.by(1) }
 

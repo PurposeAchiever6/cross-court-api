@@ -21,7 +21,7 @@ module Api
       end
 
       def cancel
-        UserSessions::Cancel.call(user_session: user_session)
+        UserSessions::Cancel.call(user_session:)
       end
 
       def confirm

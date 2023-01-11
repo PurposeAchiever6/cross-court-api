@@ -15,7 +15,7 @@ describe UserSessions::ConfirmUnconfirmedJob do
 
     let(:time) { la_time + 30.minutes }
 
-    let(:session) { create(:session, time: time) }
+    let(:session) { create(:session, time:) }
     let!(:user) { create(:user) }
 
     let(:reminder_sent_at) { nil }
@@ -23,8 +23,8 @@ describe UserSessions::ConfirmUnconfirmedJob do
     let!(:user_session_1) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: true,
         date: la_date.yesterday,
         state: :confirmed
@@ -33,19 +33,19 @@ describe UserSessions::ConfirmUnconfirmedJob do
     let!(:user_session_2) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: false,
         date: la_date,
         state: :reserved,
-        reminder_sent_at: reminder_sent_at
+        reminder_sent_at:
       )
     end
     let!(:user_session_3) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: false,
         date: la_date.tomorrow,
         state: :reserved
@@ -92,13 +92,13 @@ describe UserSessions::ConfirmUnconfirmedJob do
     end
 
     context 'when the session is open club' do
-      let(:session) { create(:session, time: time, is_open_club: true) }
+      let(:session) { create(:session, time:, is_open_club: true) }
 
       let!(:user_session_1) do
         create(
           :user_session,
-          user: user,
-          session: session,
+          user:,
+          session:,
           checked_in: true,
           date: la_date.yesterday,
           state: :confirmed
@@ -108,8 +108,8 @@ describe UserSessions::ConfirmUnconfirmedJob do
       let!(:user_session_2) do
         create(
           :user_session,
-          user: user,
-          session: session,
+          user:,
+          session:,
           checked_in: false,
           date: la_date,
           state: :reserved

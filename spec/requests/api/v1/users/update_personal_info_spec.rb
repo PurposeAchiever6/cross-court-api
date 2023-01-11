@@ -14,12 +14,12 @@ describe 'PUT /api/v1/user/update_personal_info' do
     }
   end
 
-  let(:params) { { email: user.email, personal_info: personal_info } }
+  let(:params) { { email: user.email, personal_info: } }
 
   subject do
     put update_personal_info_api_v1_user_path,
         headers: nil,
-        params: params,
+        params:,
         as: :json
     response
   end

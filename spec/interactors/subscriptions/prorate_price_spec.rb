@@ -9,8 +9,8 @@ describe Subscriptions::ProratePrice do
     let!(:active_subscription) do
       create(
         :subscription,
-        user: user,
-        product: product
+        user:,
+        product:
       )
     end
     let(:items) do
@@ -36,9 +36,9 @@ describe Subscriptions::ProratePrice do
 
     subject do
       Subscriptions::ProratePrice.call(
-        user: user,
-        new_product: new_product,
-        promo_code: promo_code
+        user:,
+        new_product:,
+        promo_code:
       )
     end
 

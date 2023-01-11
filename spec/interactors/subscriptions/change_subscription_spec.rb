@@ -3,17 +3,17 @@ require 'rails_helper'
 describe Subscriptions::ChangeSubscription do
   describe '.call' do
     let!(:user) { create(:user) }
-    let!(:new_payment_method) { create(:payment_method, user: user) }
-    let!(:old_payment_method) { create(:payment_method, user: user) }
+    let!(:new_payment_method) { create(:payment_method, user:) }
+    let!(:old_payment_method) { create(:payment_method, user:) }
     let!(:new_product) { create(:product) }
     let!(:old_product) { create(:product) }
     let!(:active_subscription) do
       create(
         :subscription,
-        user: user,
+        user:,
         payment_method: old_payment_method,
         product: old_product,
-        mark_cancel_at_period_end_at: mark_cancel_at_period_end_at
+        mark_cancel_at_period_end_at:
       )
     end
 
@@ -28,7 +28,7 @@ describe Subscriptions::ChangeSubscription do
         items: double(data: [double(id: 'new-stripe-subscription-item-id')]),
         status: stripe_response_status,
         current_period_start: Time.current.to_i,
-        current_period_end: (Time.current + 1.month).to_i,
+        current_period_end: 1.month.from_now.to_i,
         cancel_at: nil,
         canceled_at: nil,
         cancel_at_period_end: false,
@@ -42,12 +42,12 @@ describe Subscriptions::ChangeSubscription do
 
     subject do
       Subscriptions::ChangeSubscription.call(
-        user: user,
+        user:,
         subscription: active_subscription,
         product: new_product,
         payment_method: new_payment_method,
-        promo_code: promo_code,
-        proration_date: proration_date
+        promo_code:,
+        proration_date:
       )
     end
 

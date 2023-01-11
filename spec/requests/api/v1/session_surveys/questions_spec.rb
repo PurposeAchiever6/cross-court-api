@@ -10,12 +10,12 @@ describe 'GET api/v1/session_surveys/questions' do
   let!(:disabled_questions) do
     create_list(:session_survey_question, questions_count, is_enabled: false)
   end
-  let!(:user_session) { create(:user_session, user: user, checked_in: true) }
+  let!(:user_session) { create(:user_session, user:, checked_in: true) }
 
   let(:params) { { user_session_id: user_session.id } }
 
   subject do
-    get questions_api_v1_session_surveys_path, params: params, headers: auth_headers, as: :json
+    get questions_api_v1_session_surveys_path, params:, headers: auth_headers, as: :json
   end
 
   it 'returns success' do
@@ -31,7 +31,7 @@ describe 'GET api/v1/session_surveys/questions' do
   end
 
   context 'when the user did answered for the session' do
-    before { create(:session_survey_answer, user_session: user_session) }
+    before { create(:session_survey_answer, user_session:) }
 
     it 'returns an empty array' do
       subject

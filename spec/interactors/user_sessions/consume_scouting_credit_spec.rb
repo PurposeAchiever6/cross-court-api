@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe UserSessions::ConsumeScoutingCredit do
   describe '.call' do
-    let!(:user) { create(:user, scouting_credits: scouting_credits) }
-    let!(:session) { create(:session, is_open_club: open_club, skill_session: skill_session) }
-    let!(:user_session) { create(:user_session, user: user, session: session, scouting: scouting) }
+    let!(:user) { create(:user, scouting_credits:) }
+    let!(:session) { create(:session, is_open_club: open_club, skill_session:) }
+    let!(:user_session) { create(:user_session, user:, session:, scouting:) }
 
     let(:scouting_credits) { rand(1..5) }
     let(:scouting) { true }
@@ -14,8 +14,8 @@ describe UserSessions::ConsumeScoutingCredit do
 
     subject do
       UserSessions::ConsumeScoutingCredit.call(
-        user_session: user_session,
-        not_charge_user_credit: not_charge_user_credit
+        user_session:,
+        not_charge_user_credit:
       )
     end
 

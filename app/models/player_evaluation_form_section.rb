@@ -24,7 +24,8 @@ class PlayerEvaluationFormSection < ApplicationRecord
   has_many :options,
            -> { order(score: :asc) },
            class_name: 'PlayerEvaluationFormSectionOption',
-           inverse_of: :player_evaluation_form_section
+           inverse_of: :player_evaluation_form_section,
+           dependent: nil
 
   accepts_nested_attributes_for :options, allow_destroy: true
 

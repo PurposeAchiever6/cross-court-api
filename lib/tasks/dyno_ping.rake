@@ -1,5 +1,5 @@
 desc 'Pings PING_URL to keep a dyno alive'
-task :dyno_ping do
+task dyno_ping: :environment do
   require 'net/http'
 
   if ENV['PING_URL']

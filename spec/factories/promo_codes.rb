@@ -28,7 +28,7 @@
 
 FactoryBot.define do
   factory :promo_code, class: SpecificAmountDiscount do
-    discount { Faker::Number.number(2) }
+    discount { Faker::Number.number(digits: 2) }
     code { Faker::Lorem.word }
     expiration_date { 1.year.from_now }
     duration { 'repeating' }

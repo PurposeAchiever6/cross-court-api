@@ -7,15 +7,15 @@ describe Sessions::RemoveVote do
     let!(:user_session_vote) do
       create(
         :user_session_vote,
-        session: session,
-        user: user,
+        session:,
+        user:,
         date: session.start_time
       )
     end
 
     let(:date) { session.start_time }
 
-    subject { Sessions::RemoveVote.call(session: session, user: user, date: date) }
+    subject { Sessions::RemoveVote.call(session:, user:, date:) }
 
     it { expect { subject }.to change(UserSessionVote, :count).by(-1) }
 

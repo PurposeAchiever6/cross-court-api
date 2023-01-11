@@ -44,12 +44,12 @@ describe UserPromoCode do
     create(
       :promo_code,
       products: [product],
-      expiration_date: expiration_date,
-      max_redemptions: max_redemptions,
-      max_redemptions_by_user: max_redemptions_by_user,
-      user_max_checked_in_sessions: user_max_checked_in_sessions,
-      times_used: times_used,
-      for_referral: for_referral,
+      expiration_date:,
+      max_redemptions:,
+      max_redemptions_by_user:,
+      user_max_checked_in_sessions:,
+      times_used:,
+      for_referral:,
       user: promo_code_user
     )
   end
@@ -87,7 +87,7 @@ describe UserPromoCode do
       let(:times_used) { 2 }
 
       let!(:user_promo_code) do
-        create(:user_promo_code, promo_code: promo_code, user: user, times_used: user_times_used)
+        create(:user_promo_code, promo_code:, user:, times_used: user_times_used)
       end
 
       it { is_expected.to eq(false) }
@@ -114,7 +114,7 @@ describe UserPromoCode do
       end
 
       context 'when user is not a new member of crosscourt' do
-        let!(:subscription) { create(:subscription, user: user) }
+        let!(:subscription) { create(:subscription, user:) }
 
         it { is_expected.to eq(false) }
       end
@@ -126,7 +126,7 @@ describe UserPromoCode do
       it { is_expected.to eq(true) }
 
       context 'when user has already attended to a session' do
-        let!(:user_session) { create(:user_session, user: user, checked_in: true) }
+        let!(:user_session) { create(:user_session, user:, checked_in: true) }
 
         it { is_expected.to eq(false) }
       end

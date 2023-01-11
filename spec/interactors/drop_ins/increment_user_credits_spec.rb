@@ -3,12 +3,12 @@ require 'rails_helper'
 describe DropIns::IncrementUserCredits do
   describe '.call' do
     let!(:user) { create(:user) }
-    let!(:product) { create(:product, season_pass: season_pass, scouting: scouting) }
+    let!(:product) { create(:product, season_pass:, scouting:) }
 
     let(:season_pass) { false }
     let(:scouting) { false }
 
-    subject { DropIns::IncrementUserCredits.call(user: user, product: product) }
+    subject { DropIns::IncrementUserCredits.call(user:, product:) }
 
     it { expect { subject }.to change { user.reload.credits }.by(product.credits) }
     it { expect { subject }.not_to change { user.reload.credits_without_expiration } }

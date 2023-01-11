@@ -52,7 +52,7 @@ ActiveAdmin.register SubscriptionCancellationRequest do
     subscription_cancellation_request = SubscriptionCancellationRequest.find(params[:id])
 
     SubscriptionCancellationRequests::Ignore.call(
-      subscription_cancellation_request: subscription_cancellation_request
+      subscription_cancellation_request:
     )
 
     redirect_to admin_subscription_cancellation_requests_path,
@@ -69,15 +69,15 @@ ActiveAdmin.register SubscriptionCancellationRequest do
     case action_type
     when :cancel_at_current_period_end
       SubscriptionCancellationRequests::CancelAtCurrentPeriodEnd.call(
-        subscription_cancellation_request: subscription_cancellation_request
+        subscription_cancellation_request:
       )
     when :cancel_at_next_month_period_end
       SubscriptionCancellationRequests::CancelAtNextMonthPeriodEnd.call(
-        subscription_cancellation_request: subscription_cancellation_request
+        subscription_cancellation_request:
       )
     when :cancel_immediately
       SubscriptionCancellationRequests::CancelImmediately.call(
-        subscription_cancellation_request: subscription_cancellation_request
+        subscription_cancellation_request:
       )
     else
       raise 'Unkown action type'

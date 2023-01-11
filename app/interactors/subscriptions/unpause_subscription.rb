@@ -13,14 +13,14 @@ module Subscriptions
 
       subscription.subscription_pauses.finished.last.update!(unpaused_at: Time.current)
 
-      Subscriptions::RenewUserSubscriptionCredits.call(user: user, subscription: subscription)
+      Subscriptions::RenewUserSubscriptionCredits.call(user:, subscription:)
 
       stripe_invoice = StripeService.retrieve_invoice(stripe_subscription.latest_invoice)
       discount_amount = stripe_invoice.total_discount_amounts.map(&:amount).reduce(:+) || 0
 
       Payments::Create.call(
         chargeable: subscription.product,
-        user: user,
+        user:,
         amount: stripe_invoice.total / 100.00,
         description: "#{subscription.name} (unpaused)",
         payment_method: subscription.payment_method,

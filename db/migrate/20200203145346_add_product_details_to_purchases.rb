@@ -9,7 +9,7 @@ class AddProductDetailsToPurchases < ActiveRecord::Migration[6.0]
       product = purchase.product
       credits = product&.credits || 0
       name = product&.name || 'Pack'
-      purchase.update!(credits: credits, name: name)
+      purchase.update!(credits:, name:)
     end
 
     change_column_null :purchases, :credits, false

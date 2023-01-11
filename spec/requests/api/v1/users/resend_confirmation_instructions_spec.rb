@@ -6,7 +6,7 @@ describe 'POST api/v1/user/resend_confirmation_instructions', type: :request do
 
   subject do
     post resend_confirmation_instructions_api_v1_user_path,
-         params: params,
+         params:,
          headers: auth_headers,
          as: :json
   end

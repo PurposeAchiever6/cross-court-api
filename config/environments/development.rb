@@ -58,8 +58,8 @@ Rails.application.configure do
     Bullet.console = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Session', association: :location
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Session',
-                         association: :session_exceptions
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session', association: :location
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session',
+                        association: :session_exceptions
   end
 end

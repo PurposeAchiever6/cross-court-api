@@ -8,8 +8,8 @@ describe 'GET api/v1/subscriptions/preview_prorate' do
   let!(:active_subscription) do
     create(
       :subscription,
-      user: user,
-      product: product
+      user:,
+      product:
     )
   end
   let(:items) do
@@ -25,7 +25,7 @@ describe 'GET api/v1/subscriptions/preview_prorate' do
   end
 
   subject do
-    get preview_prorate_api_v1_subscriptions_path, params: params, headers: auth_headers, as: :json
+    get preview_prorate_api_v1_subscriptions_path, params:, headers: auth_headers, as: :json
   end
 
   before do

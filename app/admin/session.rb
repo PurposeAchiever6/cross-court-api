@@ -98,7 +98,7 @@ ActiveAdmin.register Session do
               hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
                     'users who can book.'
       f.input :guests_allowed,
-              hint: 'Number of guests allowed per session. If not set, '\
+              hint: 'Number of guests allowed per session. If not set, ' \
                     'it means that guests are not allowed for this session.'
       f.input :guests_allowed_per_user,
               hint: 'Number of guests allowed per user for this session.'
@@ -252,17 +252,17 @@ ActiveAdmin.register Session do
         if is_edit
           render partial: 'edit_employees', locals: {
             selected_session: resource,
-            date: date,
-            referee: referee,
-            sem: sem,
-            coach: coach
+            date:,
+            referee:,
+            sem:,
+            coach:
           }
         else
           render partial: 'show_employees', locals: {
-            date: date,
-            referee: referee,
-            sem: sem,
-            coach: coach
+            date:,
+            referee:,
+            sem:,
+            coach:
           }
         end
       end
@@ -279,9 +279,9 @@ ActiveAdmin.register Session do
                                 .order(assigned_team: :desc, updated_at: :asc)
 
         render partial: 'checked_in_user_sessions', locals: {
-          date: date,
+          date:,
           user_sessions_by_team: user_sessions.group_by(&:assigned_team),
-          jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
+          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil)
         }
       end
 
@@ -298,16 +298,16 @@ ActiveAdmin.register Session do
                                 .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
 
         render partial: 'not_checked_in_user_sessions', locals: {
-          date: date,
-          user_sessions: user_sessions,
-          jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
+          date:,
+          user_sessions:,
+          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil)
         }
       end
 
       if resource.guests_allowed?
         panel 'Guests' do
           guests = resource.guests(date).not_canceled.includes(user_session: :user)
-          render partial: 'guests', locals: { guests: guests }
+          render partial: 'guests', locals: { guests: }
         end
       end
 
@@ -318,15 +318,15 @@ ActiveAdmin.register Session do
                                             :active_subscription,
                                             { image_attachment: :blob }])
 
-        render partial: 'waitlist', locals: { waitlist: waitlist, time_zone: session.time_zone }
+        render partial: 'waitlist', locals: { waitlist:, time_zone: session.time_zone }
       end
 
       panel 'Create User Session Manually' do
         users_for_select = User.sorted_by_full_name.map { |user| [user.full_name, user.id] }
 
         render partial: 'create_user_session', locals: {
-          date: date,
-          users_for_select: users_for_select
+          date:,
+          users_for_select:
         }
       end
     end
@@ -352,17 +352,17 @@ ActiveAdmin.register Session do
     coach_id = params[:coach_id]
     date = params[:date]
 
-    coach_sessions = resource.coach_sessions.where(date: date)
+    coach_sessions = resource.coach_sessions.where(date:)
     coach_sessions.destroy_all if resource.skill_session && coach_sessions.any?
-    resource.coach_sessions.create!(user_id: coach_id, date: date) if coach_id.present?
+    resource.coach_sessions.create!(user_id: coach_id, date:) if coach_id.present?
 
-    referee_sessions = resource.referee_sessions.where(date: date)
+    referee_sessions = resource.referee_sessions.where(date:)
     referee_sessions.destroy_all if !resource.skill_session && referee_sessions.any?
-    resource.referee_sessions.create!(user_id: referee_id, date: date) if referee_id.present?
+    resource.referee_sessions.create!(user_id: referee_id, date:) if referee_id.present?
 
-    sem_sessions = resource.sem_sessions.where(date: date)
+    sem_sessions = resource.sem_sessions.where(date:)
     sem_sessions.destroy_all if !resource.skill_session && sem_sessions.any?
-    resource.sem_sessions.create!(user_id: sem_id, date: date) if sem_id.present?
+    resource.sem_sessions.create!(user_id: sem_id, date:) if sem_id.present?
 
     redirect_to admin_root_path, notice: 'Employees assigned successfully'
   end
@@ -397,7 +397,7 @@ ActiveAdmin.register Session do
         jersey_rental_payment_intent_id = nil
       elsif !user_session.jersey_rental && jersey_rental
         result = Users::Charge.call(
-          user: user,
+          user:,
           amount: ENV['JERSEY_RENTAL_PRICE'].to_f,
           description: 'Jersey rental'
         )
@@ -411,10 +411,10 @@ ActiveAdmin.register Session do
       end
 
       user_session.update!(
-        checked_in: checked_in,
-        jersey_rental: jersey_rental,
-        jersey_rental_payment_intent_id: jersey_rental_payment_intent_id,
-        assigned_team: assigned_team
+        checked_in:,
+        jersey_rental:,
+        jersey_rental_payment_intent_id:,
+        assigned_team:
       )
 
       checked_in_user_session_ids << user_session_id if execute_checked_in_job
@@ -434,7 +434,7 @@ ActiveAdmin.register Session do
       flash[:notice] = 'Users sessions updated successfully'
     end
 
-    redirect_to admin_session_path(id: session_id, date: date)
+    redirect_to admin_session_path(id: session_id, date:)
   end
 
   member_action :create_user_session, method: :post do
@@ -446,32 +446,32 @@ ActiveAdmin.register Session do
     session = Session.find(session_id)
     user = User.find(user_id)
 
-    if session.not_canceled_reservations(date).where(user_id: user_id).exists?
+    if session.not_canceled_reservations(date).exists?(user_id:)
       flash[:error] = 'The player is already in the session'
-      return redirect_to admin_session_path(id: session_id, date: date)
+      return redirect_to admin_session_path(id: session_id, date:)
     end
 
     if user_id.empty?
       flash[:error] = 'You need to select a player'
-      return redirect_to admin_session_path(id: session_id, date: date)
+      return redirect_to admin_session_path(id: session_id, date:)
     end
 
     ActiveRecord::Base.transaction do
-      Users::ClaimFreeSession.call(user: user)
+      Users::ClaimFreeSession.call(user:)
 
       UserSessions::Create.call(
-        session: session,
-        user: user,
-        date: date,
-        not_charge_user_credit: not_charge_user_credit
+        session:,
+        user:,
+        date:,
+        not_charge_user_credit:
       )
     end
 
-    redirect_to admin_session_path(id: session_id, date: date),
+    redirect_to admin_session_path(id: session_id, date:),
                 notice: 'User session created successfully'
   rescue StandardError => e
     flash[:error] = e.message
-    redirect_to admin_session_path(id: session_id, date: date)
+    redirect_to admin_session_path(id: session_id, date:)
   end
 
   member_action :cancel_user_session, method: :post do
@@ -479,13 +479,13 @@ ActiveAdmin.register Session do
     date = params[:date]
     user_session = UserSession.find(params[:user_session_id])
 
-    UserSessions::Cancel.call(user_session: user_session)
+    UserSessions::Cancel.call(user_session:)
 
-    redirect_to admin_session_path(id: session_id, date: date),
+    redirect_to admin_session_path(id: session_id, date:),
                 notice: 'User session canceled successfully'
   rescue StandardError => e
     flash[:error] = e.message
-    redirect_to admin_session_path(id: session_id, date: date)
+    redirect_to admin_session_path(id: session_id, date:)
   end
 
   member_action :cancel, method: :post do
@@ -493,8 +493,8 @@ ActiveAdmin.register Session do
     date = Date.parse(params[:date])
 
     Sessions::Cancel.call(
-      session: session,
-      date: date
+      session:,
+      date:
     )
 
     redirect_to admin_scheduler_path, notice: 'Session canceled successfully'

@@ -7,16 +7,6 @@ module Api
 
       before_action :log_user
 
-      def show
-        @user_session = selected_session.user_sessions
-                                        .by_user(current_user)
-                                        .by_date(date)
-                                        .not_canceled
-                                        .first
-
-        @on_waitlist = selected_session.waitlist(date).pending.by_user(current_user).exists?
-      end
-
       def index
         @user_sessions = UserSession.future.not_canceled.by_user(current_user)
                                     .group(:session_id, :date).count
@@ -36,6 +26,16 @@ module Api
                            .flat_map do |session_event|
                              session_event.calendar_events(from_date, to_date)
                            end
+      end
+
+      def show
+        @user_session = selected_session.user_sessions
+                                        .by_user(current_user)
+                                        .by_date(date)
+                                        .not_canceled
+                                        .first
+
+        @on_waitlist = selected_session.waitlist(date).pending.by_user(current_user).exists?
       end
 
       private

@@ -13,7 +13,7 @@ module ShootingMachineReservations
 
       if price.positive?
         charge_payment_intent_id = Users::Charge.call(
-          user: user,
+          user:,
           amount: price,
           description: 'Shooting machine rental',
           use_cc_cash: true,

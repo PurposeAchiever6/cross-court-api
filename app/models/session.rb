@@ -107,19 +107,19 @@ class Session < ApplicationRecord
   end)
 
   scope :by_location, (lambda do |location_id|
-    location_id.blank? ? all : where(location_id: location_id)
+    location_id.blank? ? all : where(location_id:)
   end)
 
   scope :in_next_minutes, (lambda do |minutes|
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     joins(:location).where(
       'to_char(time, :time_format) ' \
       'BETWEEN to_char(current_timestamp at time zone locations.time_zone, :time_format) AND ' \
       "to_char((current_timestamp + interval ':minutes minutes') at time zone locations.time_zone, :time_format)",
-      minutes: minutes,
+      minutes:,
       time_format: 'HH24MI'
     )
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
   end)
 
   def normal_session?
@@ -163,15 +163,15 @@ class Session < ApplicationRecord
   end
 
   def referee(date)
-    referee_sessions.find_by(date: date)&.referee
+    referee_sessions.find_by(date:)&.referee
   end
 
   def sem(date)
-    sem_sessions.find_by(date: date)&.sem
+    sem_sessions.find_by(date:)&.sem
   end
 
   def coach(date)
-    coach_sessions.find_by(date: date)&.coach
+    coach_sessions.find_by(date:)&.coach
   end
 
   def reservations_count(date)
@@ -189,10 +189,10 @@ class Session < ApplicationRecord
   def first_timer_reservations(date, user_sessions = nil)
     reservations = user_sessions || not_canceled_reservations(date)
 
-    ActiveRecord::Associations::Preloader.new.preload(
-      reservations,
-      user: :last_checked_in_user_session
-    )
+    ActiveRecord::Associations::Preloader.new(
+      records: reservations,
+      associations: { user: :last_checked_in_user_session }
+    ).call
 
     reservations.select { |reservation| reservation.user.first_timer? }
   end

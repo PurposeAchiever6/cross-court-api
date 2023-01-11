@@ -23,11 +23,11 @@ module UserSessions
         referral = User.find_by(referral_code: context.referral_code)
 
         user_session = UserSession.create!(
-          session: session,
-          user: user,
-          date: date,
-          referral: referral,
-          scouting: scouting
+          session:,
+          user:,
+          date:,
+          referral:,
+          scouting:
         )
 
         context.user_session = user_session

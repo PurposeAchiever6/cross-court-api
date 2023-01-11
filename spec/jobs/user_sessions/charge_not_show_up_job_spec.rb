@@ -21,7 +21,7 @@ describe UserSessions::ChargeNotShowUpJob do
       create(:user, subscription_credits: Product::UNLIMITED, cc_cash: unlimited_user_cc_cash)
     end
 
-    let!(:user_payment_method) { create(:payment_method, user: user, default: true) }
+    let!(:user_payment_method) { create(:payment_method, user:, default: true) }
     let!(:unlimited_user_payment_method) do
       create(:payment_method, user: unlimited_user, default: true)
     end
@@ -29,8 +29,8 @@ describe UserSessions::ChargeNotShowUpJob do
     let!(:user_session_1) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: false,
         date: la_date.yesterday,
         state: :confirmed,
@@ -42,7 +42,7 @@ describe UserSessions::ChargeNotShowUpJob do
       create(
         :user_session,
         user: unlimited_user,
-        session: session,
+        session:,
         checked_in: false,
         date: la_date.yesterday,
         state: :confirmed,
@@ -53,7 +53,7 @@ describe UserSessions::ChargeNotShowUpJob do
       create(
         :user_session,
         user: unlimited_user,
-        session: session,
+        session:,
         checked_in: true,
         date: la_date.tomorrow,
         state: :confirmed,
@@ -63,8 +63,8 @@ describe UserSessions::ChargeNotShowUpJob do
     let!(:user_session_4) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: false,
         date: la_date.yesterday,
         state: :confirmed,
