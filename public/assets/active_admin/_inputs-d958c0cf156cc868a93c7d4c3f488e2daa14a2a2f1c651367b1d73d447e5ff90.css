@@ -1,0 +1,11 @@
+/* line 1, app/assets/stylesheets/active_admin/_inputs.scss */
+input[disabled="disabled"],
+input[disabled] {
+  background-color: #f4f4f4;
+  border: 0px solid #f4f4f4 !important;
+}
+
+/* line 7, app/assets/stylesheets/active_admin/_inputs.scss */
+select {
+  min-width: 6rem;
+}

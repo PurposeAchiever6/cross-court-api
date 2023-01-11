@@ -1,0 +1,14 @@
+/* line 2, app/assets/stylesheets/active_admin/_simple_calendar.scss */
+.simple-calendar .prev-month {
+  background-color: #dddddd;
+}
+
+/* line 5, app/assets/stylesheets/active_admin/_simple_calendar.scss */
+.simple-calendar .next-month {
+  background-color: #dddddd;
+}
+
+/* line 8, app/assets/stylesheets/active_admin/_simple_calendar.scss */
+.simple-calendar .today {
+  background-color: #ffffcc;
+}

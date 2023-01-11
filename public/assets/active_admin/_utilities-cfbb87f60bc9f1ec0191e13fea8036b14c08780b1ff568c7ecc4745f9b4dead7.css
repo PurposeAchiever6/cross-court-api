@@ -1,0 +1,19 @@
+/* line 1, app/assets/stylesheets/active_admin/_utilities.scss */
+.max-w-100 {
+  max-width: 100px;
+}
+
+/* line 5, app/assets/stylesheets/active_admin/_utilities.scss */
+.max-w-200 {
+  max-width: 200px;
+}
+
+/* line 9, app/assets/stylesheets/active_admin/_utilities.scss */
+.max-h-100 {
+  max-height: 100px;
+}
+
+/* line 13, app/assets/stylesheets/active_admin/_utilities.scss */
+.\!w-full {
+  width: 100% !important;
+}

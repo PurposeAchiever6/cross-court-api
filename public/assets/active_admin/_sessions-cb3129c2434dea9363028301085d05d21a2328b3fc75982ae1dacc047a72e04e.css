@@ -1,0 +1,29 @@
+/* line 1, app/assets/stylesheets/active_admin/_sessions.scss */
+.table-user-sessions-checked-in {
+  border-spacing: 0;
+}
+
+/* line 4, app/assets/stylesheets/active_admin/_sessions.scss */
+.table-user-sessions-checked-in .session-team-light {
+  background-color: #f9fafb;
+}
+
+/* line 8, app/assets/stylesheets/active_admin/_sessions.scss */
+.table-user-sessions-checked-in .session-team-dark {
+  background-color: #d1d5db;
+}
+
+/* line 12, app/assets/stylesheets/active_admin/_sessions.scss */
+.table-user-sessions-checked-in .session-no-team {
+  background-color: #fee2e2;
+}
+
+/* line 18, app/assets/stylesheets/active_admin/_sessions.scss */
+.table-user-sessions-checked-in tbody tr:first-of-type td {
+  padding-top: 1rem;
+}
+
+/* line 24, app/assets/stylesheets/active_admin/_sessions.scss */
+.table-user-sessions-checked-in tbody tr:last-of-type td {
+  padding-bottom: 1rem;
+}
