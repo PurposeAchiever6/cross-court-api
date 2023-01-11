@@ -249,6 +249,11 @@ Rails/UniqueValidationWithoutIndex:
 Style/MapToSet:
   Enabled: true
 
+Style/GlobalVars:
+  Enabled: true
+  Exclude:
+    - config/initializers/redis.rb
+
 Style/MinMaxComparison:
   Enabled: true
 
