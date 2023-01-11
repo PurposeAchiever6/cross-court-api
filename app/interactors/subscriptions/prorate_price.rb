@@ -15,8 +15,7 @@ module Subscriptions
       }]
 
       proration_date = Time.now.to_i
-      redis = Redis.new(url: ENV.fetch('REDIS_HOST', nil))
-      redis.setex("#{user.id}-#{current_subscription.id}-proration_date", 1800, proration_date)
+      $redis.setex("#{user.id}-#{current_subscription.id}-proration_date", 1800, proration_date)
 
       context.invoice = StripeService.upcoming_invoice(
         user.stripe_id,

@@ -251,8 +251,8 @@ Style/MapToSet:
 
 Style/GlobalVars:
   Enabled: true
-  Exclude:
-    - config/initializers/redis.rb
+  AllowedVariables:
+    - $redis
 
 Style/MinMaxComparison:
   Enabled: true
