@@ -20,6 +20,10 @@ json = {
   cc_cash_earned: session.cc_cash_earned,
   full:,
   reservations_count: session.reservations_count(date),
+  allowed_products: render(
+    partial: 'api/v1/sessions/allowed_products/info',
+    locals: { session: }
+  ),
   past: session.past?(date),
   spots_left:,
   on_waitlist:,

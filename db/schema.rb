@@ -218,8 +218,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_31_230453) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "max_rollover_credits"
     t.integer "skill_session_credits", default: 0
+    t.integer "max_rollover_credits"
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
@@ -252,6 +252,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_31_230453) do
     t.integer "user_max_checked_in_sessions"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
+  end
+
+  create_table "session_allowed_products", force: :cascade do |t|
+    t.bigint "session_id"
+    t.bigint "product_id"
+    t.index ["product_id"], name: "index_session_allowed_products_on_product_id"
+    t.index ["session_id"], name: "index_session_allowed_products_on_session_id"
   end
 
   create_table "session_exceptions", force: :cascade do |t|
@@ -531,14 +538,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_31_230453) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
+    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
-    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.string "bio"
     t.integer "credits_without_expiration", default: 0
+    t.string "bio"
     t.integer "scouting_credits", default: 0
     t.integer "weight"
     t.integer "height"

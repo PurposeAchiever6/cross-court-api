@@ -423,7 +423,9 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
 
     it 'returns correct error message' do
       subject
-      expect(json[:error]).to eq('The session is only for members')
+      expect(
+        json[:error]
+      ).to eq('The session is only for members or is restricted for certain memberships')
     end
 
     context 'when user is a member' do

@@ -55,5 +55,8 @@ Rails.application.configure do
     Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session', association: :location
     Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session',
                         association: :session_exceptions
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session',
+                        association: :session_allowed_products
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session', association: :products
   end
 end

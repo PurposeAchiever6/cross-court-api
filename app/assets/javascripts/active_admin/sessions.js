@@ -26,4 +26,14 @@ $(document).ready(function () {
       }
     })
     .change();
+
+  $("#session_members_only")
+    .change(function () {
+      if (this.checked) {
+        $("#session_products_input").show();
+      } else {
+        $("#session_products_input").hide();
+      }
+    })
+    .change();
 });

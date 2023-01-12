@@ -76,6 +76,8 @@ class Session < ApplicationRecord
            -> { order(:start_time, :end_time) },
            dependent: :destroy,
            inverse_of: :session
+  has_many :session_allowed_products, dependent: :destroy
+  has_many :products, through: :session_allowed_products
 
   validates :skill_level, presence: true, unless: -> { skill_session? || open_club? }
   validates :start_time, :time, :duration_minutes, presence: true
@@ -156,6 +158,7 @@ class Session < ApplicationRecord
 
         attributes[:location] = location if association_cached?(:location)
         attributes[:skill_level] = skill_level if association_cached?(:skill_level)
+        attributes[:products] = products if association_cached?(:products)
 
         Session.new(attributes)
       end
@@ -314,6 +317,16 @@ class Session < ApplicationRecord
 
   def shooting_machines?
     open_club?
+  end
+
+  def allowed_for_member?(user)
+    return true unless members_only?
+
+    return false unless user.active_subscription
+
+    return true if session_allowed_products.empty?
+
+    session_allowed_products.pluck(:product_id).include?(user.active_subscription.product_id)
   end
 
   private

@@ -38,7 +38,7 @@ module Api
       rescue_from SubscriptionIsNotPausedException,               with: :render_custom_exception
       rescue_from ReserveTeamNotAllowedException,                 with: :render_custom_exception
       rescue_from ReserveTeamMismatchException,                   with: :render_custom_exception
-      rescue_from SessionOnlyForMembersException,                 with: :render_custom_exception
+      rescue_from SessionAllowedMembersException,                 with: :render_custom_exception
       rescue_from ChargeUserException,                            with: :render_custom_exception
       rescue_from ShootingMachineSessionMismatchException,        with: :render_custom_exception
       rescue_from ShootingMachineInvalidSessionException,         with: :render_custom_exception

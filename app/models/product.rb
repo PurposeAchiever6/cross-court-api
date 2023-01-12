@@ -43,6 +43,7 @@ class Product < ApplicationRecord
   has_many :subscriptions
   has_many :products_promo_codes, dependent: :destroy
   has_many :promo_codes, through: :products_promo_codes
+  has_many :session_allowed_products, dependent: :destroy
 
   validates :name, :credits, :order_number, presence: true
   validates :skill_session_credits, presence: true, if: -> { recurring? }

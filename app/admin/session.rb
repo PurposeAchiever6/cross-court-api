@@ -7,6 +7,7 @@ ActiveAdmin.register Session do
                 :theme_title, :theme_subheading, :theme_sweat_level, :theme_description,
                 :all_skill_levels_allowed, :cc_cash_earned, :default_referee_id, :default_sem_id,
                 :default_coach_id, :guests_allowed, :guests_allowed_per_user,
+                product_ids: [],
                 session_exceptions_attributes: %i[id date _destroy],
                 shooting_machines_attributes: %i[id start_time end_time price _destroy]
 
@@ -79,10 +80,15 @@ ActiveAdmin.register Session do
       f.input :is_open_club
       f.input :skill_session
       f.input :women_only
-      f.input :members_only
       f.input :all_skill_levels_allowed
       f.input :coming_soon
       f.input :is_private
+      f.input :members_only
+      f.input :products,
+              collection: Product.recurring.order(price: :asc),
+              label: 'Allowed Members',
+              hint: 'If not set, it means all members are allowed to book this session.',
+              input_html: { class: 'w-64' }
       f.input :start_time,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
@@ -178,6 +184,12 @@ ActiveAdmin.register Session do
       row :skill_session
       row :women_only
       row :members_only
+      if session.members_only
+        row :members_allowed do |session|
+          allowed_products = session.products
+          allowed_products.any? ? allowed_products.map(&:name).split(', ') : 'All members'
+        end
+      end
       row :all_skill_levels_allowed
       row :coming_soon
       row :is_private

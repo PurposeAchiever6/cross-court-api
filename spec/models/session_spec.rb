@@ -537,4 +537,45 @@ describe Session do
       it { is_expected.to eq(true) }
     end
   end
+
+  describe '#allowed_for_member?' do
+    let!(:user) { create(:user) }
+    let!(:session) { create(:session, :daily, members_only:) }
+    let!(:product) { create(:product, product_type: :recurring) }
+    let!(:active_subscription) { create(:subscription, user:, product:) }
+
+    let(:members_only) { true }
+    let(:active_subscription_product) { product }
+
+    subject { session.allowed_for_member?(user) }
+
+    it { is_expected.to eq(true) }
+
+    context 'when the session is only allowed for certain product' do
+      let!(:session_allowed_product) do
+        create(:session_allowed_product, session:, product:)
+      end
+
+      it { is_expected.to eq(true) }
+
+      context 'when user active subscription product is not allowed' do
+        let!(:another_product) { create(:product, product_type: :recurring) }
+        let(:active_subscription_product) { another_product }
+
+        it { is_expected.to eq(true) }
+      end
+    end
+
+    context 'when user does not have an active subscription' do
+      let(:active_subscription) { nil }
+
+      it { is_expected.to eq(false) }
+
+      context 'when session is not only for members' do
+        let(:members_only) { false }
+
+        it { is_expected.to eq(true) }
+      end
+    end
+  end
 end

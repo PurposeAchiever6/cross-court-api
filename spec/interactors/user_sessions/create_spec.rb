@@ -35,8 +35,12 @@ describe UserSessions::Create do
         first_time_subscription_credits_used_at:
       )
     end
-    let!(:active_subscription) { create(:subscription, status: subscription_status) }
+    let!(:product) { create(:product, product_type: :recurring) }
+    let!(:active_subscription) do
+      create(:subscription, product: active_subscription_product, status: subscription_status)
+    end
 
+    let(:active_subscription_product) { product }
     let(:max_sessions_booked_per_day) { nil }
     let(:max_skill_sessions_booked_per_day) { nil }
     let(:subscription_status) { :active }
@@ -629,11 +633,33 @@ describe UserSessions::Create do
 
         it { expect { subject rescue nil }.not_to change(UserSession, :count) }
 
-        it 'raises SessionOnlyForMembersException' do
+        it 'raises SessionAllowedMembersException' do
           expect { subject }.to raise_error(
-            SessionOnlyForMembersException,
-            'The session is only for members'
+            SessionAllowedMembersException,
+            'The session is only for members or is restricted for certain memberships'
           )
+        end
+      end
+
+      context 'when the session is only allowed for certain product' do
+        let!(:session_allowed_product) do
+          create(:session_allowed_product, session:, product:)
+        end
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+
+        context 'when user active subscription product is not allowed' do
+          let!(:another_product) { create(:product, product_type: :recurring) }
+          let(:active_subscription_product) { another_product }
+
+          it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+          it 'raises SessionAllowedMembersException' do
+            expect { subject }.to raise_error(
+              SessionAllowedMembersException,
+              'The session is only for members or is restricted for certain memberships'
+            )
+          end
         end
       end
     end
