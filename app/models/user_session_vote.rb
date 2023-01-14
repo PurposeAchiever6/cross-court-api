@@ -2,10 +2,10 @@
 #
 # Table name: user_session_votes
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  date       :date
-#  user_id    :integer
-#  session_id :integer
+#  user_id    :bigint
+#  session_id :bigint
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

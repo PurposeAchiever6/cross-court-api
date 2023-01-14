@@ -2,7 +2,7 @@
 #
 # Table name: player_evaluation_form_sections
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  title      :string
 #  subtitle   :string
 #  order      :integer

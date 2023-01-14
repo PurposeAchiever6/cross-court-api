@@ -2,9 +2,9 @@
 #
 # Table name: session_allowed_products
 #
-#  id         :integer          not null, primary key
-#  session_id :integer
-#  product_id :integer
+#  id         :bigint           not null, primary key
+#  session_id :bigint
+#  product_id :bigint
 #
 # Indexes
 #

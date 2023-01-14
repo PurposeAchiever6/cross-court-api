@@ -2,9 +2,9 @@
 #
 # Table name: user_promo_codes
 #
-#  id            :integer          not null, primary key
-#  user_id       :integer          not null
-#  promo_code_id :integer          not null
+#  id            :bigint           not null, primary key
+#  user_id       :bigint           not null
+#  promo_code_id :bigint           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  times_used    :integer          default(0)

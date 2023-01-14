@@ -2,10 +2,10 @@
 #
 # Table name: session_survey_answers
 #
-#  id                         :integer          not null, primary key
+#  id                         :bigint           not null, primary key
 #  answer                     :string
-#  session_survey_question_id :integer
-#  user_session_id            :integer
+#  session_survey_question_id :bigint
+#  user_session_id            :bigint
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #

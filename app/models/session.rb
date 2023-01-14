@@ -2,15 +2,15 @@
 #
 # Table name: sessions
 #
-#  id                       :integer          not null, primary key
+#  id                       :bigint           not null, primary key
 #  start_time               :date             not null
 #  recurring                :text
 #  time                     :time             not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  location_id              :integer          not null
+#  location_id              :bigint           not null
 #  end_time                 :date
-#  skill_level_id           :integer
+#  skill_level_id           :bigint
 #  is_private               :boolean          default(FALSE)
 #  coming_soon              :boolean          default(FALSE)
 #  is_open_club             :boolean          default(FALSE)

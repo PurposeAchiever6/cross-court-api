@@ -2,8 +2,8 @@
 #
 # Table name: payments
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
+#  id              :bigint           not null, primary key
+#  user_id         :bigint
 #  amount          :decimal(10, 2)   not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -15,7 +15,7 @@
 #  error_message   :string
 #  cc_cash         :decimal(10, 2)   default(0.0)
 #  chargeable_type :string
-#  chargeable_id   :integer
+#  chargeable_id   :bigint
 #
 # Indexes
 #

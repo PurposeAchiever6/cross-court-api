@@ -2,8 +2,8 @@
 #
 # Table name: session_exceptions
 #
-#  id         :integer          not null, primary key
-#  session_id :integer          not null
+#  id         :bigint           not null, primary key
+#  session_id :bigint           not null
 #  date       :date             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

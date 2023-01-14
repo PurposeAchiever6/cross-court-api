@@ -2,7 +2,7 @@
 #
 # Table name: store_items
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  name        :string
 #  description :string
 #  price       :decimal(, )

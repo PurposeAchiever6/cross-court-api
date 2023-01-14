@@ -2,7 +2,7 @@
 #
 # Table name: subscriptions
 #
-#  id                           :integer          not null, primary key
+#  id                           :bigint           not null, primary key
 #  stripe_id                    :string
 #  stripe_item_id               :string
 #  status                       :string
@@ -13,10 +13,10 @@
 #  canceled_at                  :datetime
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
-#  user_id                      :integer
-#  product_id                   :integer
-#  promo_code_id                :integer
-#  payment_method_id            :integer
+#  user_id                      :bigint
+#  product_id                   :bigint
+#  promo_code_id                :bigint
+#  payment_method_id            :bigint
 #  mark_cancel_at_period_end_at :date
 #
 # Indexes

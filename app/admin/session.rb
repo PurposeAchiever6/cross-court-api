@@ -114,7 +114,8 @@ ActiveAdmin.register Session do
       f.input :default_coach, collection: User.coaches
       li do
         f.label 'Schedule'
-        f.select_recurring :recurring, nil,
+        f.select_recurring :recurring,
+                           nil,
                            { allow_blank: true },
                            data: { select2: false },
                            class: 'w-40 p-2 border-gray-300 rounded'

@@ -2,8 +2,8 @@
 #
 # Table name: payment_methods
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
+#  id         :bigint           not null, primary key
+#  user_id    :bigint           not null
 #  stripe_id  :string
 #  brand      :string
 #  exp_month  :integer

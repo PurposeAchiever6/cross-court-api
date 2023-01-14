@@ -2,7 +2,7 @@
 #
 # Table name: products
 #
-#  id                                     :integer          not null, primary key
+#  id                                     :bigint           not null, primary key
 #  credits                                :integer          default(0), not null
 #  name                                   :string           not null
 #  created_at                             :datetime         not null
@@ -18,8 +18,8 @@
 #  referral_cc_cash                       :decimal(, )      default(0.0)
 #  price_for_first_timers_no_free_session :decimal(10, 2)
 #  available_for                          :integer          default("everyone")
-#  max_rollover_credits                   :integer
 #  skill_session_credits                  :integer          default(0)
+#  max_rollover_credits                   :integer
 #  season_pass                            :boolean          default(FALSE)
 #  scouting                               :boolean          default(FALSE)
 #

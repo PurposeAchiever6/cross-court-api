@@ -2,14 +2,14 @@
 #
 # Table name: session_guests
 #
-#  id              :integer          not null, primary key
+#  id              :bigint           not null, primary key
 #  first_name      :string           not null
 #  last_name       :string           not null
 #  phone_number    :string           not null
 #  email           :string           not null
 #  access_code     :string           not null
 #  state           :integer          default("reserved"), not null
-#  user_session_id :integer
+#  user_session_id :bigint
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #

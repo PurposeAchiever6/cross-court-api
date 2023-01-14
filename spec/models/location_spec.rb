@@ -2,7 +2,7 @@
 #
 # Table name: locations
 #
-#  id                                :integer          not null, primary key
+#  id                                :bigint           not null, primary key
 #  name                              :string           not null
 #  address                           :string           not null
 #  lat                               :float            not null

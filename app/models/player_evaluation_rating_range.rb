@@ -2,7 +2,7 @@
 #
 # Table name: player_evaluation_rating_ranges
 #
-#  id        :integer          not null, primary key
+#  id        :bigint           not null, primary key
 #  min_score :float
 #  max_score :float
 #  rating    :float

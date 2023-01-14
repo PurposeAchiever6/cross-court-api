@@ -2,11 +2,11 @@
 #
 # Table name: player_evaluation_form_section_options
 #
-#  id                                :integer          not null, primary key
+#  id                                :bigint           not null, primary key
 #  title                             :string
 #  content                           :string
 #  score                             :float
-#  player_evaluation_form_section_id :integer
+#  player_evaluation_form_section_id :bigint
 #  created_at                        :datetime         not null
 #  updated_at                        :datetime         not null
 #

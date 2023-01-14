@@ -2,9 +2,9 @@
 #
 # Table name: subscription_cancellation_requests
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  reason     :text
-#  user_id    :integer
+#  user_id    :bigint
 #  status     :integer          default("pending")
 #  created_at :datetime
 #  updated_at :datetime

@@ -2,7 +2,7 @@
 #
 # Table name: session_survey_questions
 #
-#  id           :integer          not null, primary key
+#  id           :bigint           not null, primary key
 #  question     :string           not null
 #  is_enabled   :boolean          default(TRUE)
 #  is_mandatory :boolean          default(FALSE)

@@ -2,9 +2,9 @@
 #
 # Table name: employee_sessions
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  session_id :integer
+#  id         :bigint           not null, primary key
+#  user_id    :bigint           not null
+#  session_id :bigint
 #  date       :date             not null
 #  state      :integer          default("unconfirmed"), not null
 #  type       :string           not null
