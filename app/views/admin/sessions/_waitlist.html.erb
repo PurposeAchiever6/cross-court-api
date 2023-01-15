@@ -9,7 +9,7 @@
       <th>Image</th>
       <th>User</th>
       <th>Joined Waitlist At</th>
-      <th>Active Subscription</th>
+      <th>Membership</th>
       <th>First Timer</th>
     </tr>
     <% waitlist.each_with_index do |waitlist_item, index| %>
@@ -29,7 +29,7 @@
           <%= waitlist_item.created_at.in_time_zone(time_zone).strftime('%B %e, %Y %T') %>
         </td>
         <td class='align-middle'>
-          <%= status_tag !!user.active_subscription %>
+          <%= user.membership %>
         </td>
         <td class='align-middle'>
           <%= status_tag user.first_timer? %>

@@ -331,8 +331,8 @@ ActiveAdmin.register Session do
         waitlist = resource.waitlist(date)
                            .not_success
                            .includes(user: [:last_checked_in_user_session,
-                                            :active_subscription,
-                                            { image_attachment: :blob }])
+                                            { active_subscription: :product,
+                                              image_attachment: :blob }])
 
         render partial: 'waitlist', locals: { waitlist:, time_zone: session.time_zone }
       end

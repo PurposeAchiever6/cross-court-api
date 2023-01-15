@@ -35,7 +35,10 @@ class UserSessionWaitlist < ApplicationRecord
   scope :by_user, ->(user_id) { where(user_id:) }
 
   def self.sorted
-    joins(:user).left_outer_joins(user: :active_subscription)
-                .order(state: :asc, 'subscriptions.status': :asc, created_at: :asc)
+    joins(:user).left_outer_joins(user: { active_subscription: :product })
+                .order(state: :asc,
+                       'subscriptions.status': :asc,
+                       'products.price': :desc,
+                       created_at: :asc)
   end
 end
