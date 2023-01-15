@@ -186,13 +186,17 @@ en:
       no_session_booked: "You don’t have any session booked yet"
       today_reminder: >
         Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. Please
-        note the cancellation window closes %{cancellation_period_hours} hrs before your session
-        starts. If you need to cancel, you're able to at %{frontend_url} %{invite_friend}
+        note the cancellation window closes %{cancellation_period_hours} hrs before tip off and your
+        spot may be lost or given up if you arrive more than 10 minutes after session start time.
+        Please reach out if you are running late. If you need to cancel, you're able to
+        at %{frontend_url} %{invite_friend}
       today_reminder_first_timers: >
         Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. For the
         best first experience, please arrive at least 20 minutes prior to session start time. Also
-        note the cancellation window closes %{cancellation_period_hours} hrs before your session
-        starts. If you need to cancel, you're able to at %{frontend_url} %{invite_friend}
+        note the cancellation window closes %{cancellation_period_hours} hrs before tip off and your
+        spot may be lost or given up if you arrive more than 10 minutes after session start time.
+        Please reach out if you are running late. If you need to cancel, you're able to
+        at %{frontend_url} %{invite_friend}
       survey_reminder: >
         Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate
         your feedback. %{survey_link}
