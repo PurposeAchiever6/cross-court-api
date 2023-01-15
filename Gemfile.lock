@@ -303,6 +303,9 @@ GEM
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    paper_trail (14.0.0)
+      activerecord (>= 6.0)
+      request_store (~> 1.4)
     parallel (1.22.1)
     parser (3.1.3.0)
       ast (~> 2.4.1)
@@ -550,6 +553,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   listen
+  paper_trail
   pg
   premailer-rails
   pry-byebug

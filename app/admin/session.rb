@@ -216,6 +216,9 @@ ActiveAdmin.register Session do
       row :default_coach do |session|
         session.skill_session ? session.default_coach : 'N/A'
       end
+      row 'History' do
+        link_to 'Link to History', history_admin_session_path(session.id)
+      end
       row :created_at
       row :updated_at
     end
@@ -357,6 +360,11 @@ ActiveAdmin.register Session do
 
       redirect_to admin_sessions_path
     end
+  end
+
+  member_action :history do
+    versions = Session.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    render 'admin/shared/history', locals: { versions: }
   end
 
   member_action :assign_employees, method: :put do

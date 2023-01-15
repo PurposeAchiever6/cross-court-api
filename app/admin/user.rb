@@ -64,7 +64,6 @@ ActiveAdmin.register User do
                                            resource.subscription_skill_session_credits
                                          end
 
-    f.object.confirmed_at = Time.current
     f.inputs 'Details' do
       f.input :email
       f.input :first_name
@@ -215,6 +214,9 @@ ActiveAdmin.register User do
                   target: '_blank',
                   rel: 'noopener'
         end
+        row 'History' do
+          link_to 'Link to History', history_admin_user_path(user.id)
+        end
         row :created_at
         row :updated_at
       end
@@ -289,6 +291,11 @@ ActiveAdmin.register User do
       render partial: 'store_items_purchase',
              locals: { user:, store_items: StoreItem.sorted }
     end
+  end
+
+  member_action :history do
+    versions = User.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    render 'admin/shared/history', locals: { versions: }
   end
 
   member_action :purchase, method: :post do

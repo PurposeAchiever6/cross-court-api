@@ -40,7 +40,7 @@ RemoveEmptyHelpersCheck: {}
 #RemoveTabCheck: { }
 RemoveTrailingWhitespaceCheck: {}
 # RemoveUnusedMethodsInControllersCheck: { except_methods: []}
-RemoveUnusedMethodsInHelpersCheck: { except_methods: [] }
+# RemoveUnusedMethodsInHelpersCheck: { except_methods: [] }
 # RemoveUnusedMethodsInModelsCheck: { ignored_files: ['.*typeable\.rb'], except_methods: [] }
 ReplaceComplexCreationWithFactoryMethodCheck: { attribute_assignment_count: 2 }
 ReplaceInstanceVariableWithLocalVariableCheck:

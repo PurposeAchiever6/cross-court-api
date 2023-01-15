@@ -54,6 +54,7 @@ class Session < ApplicationRecord
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
 
   acts_as_paranoid
+  has_paper_trail
 
   serialize :recurring, Hash
 

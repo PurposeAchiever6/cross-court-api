@@ -49,6 +49,8 @@ Rails.application.configure do
   Delayed::Worker.delay_jobs = false
 
   config.after_initialize do
+    PaperTrail.enabled = false
+
     Bullet.enable = true
     Bullet.bullet_logger = true
     Bullet.raise = true # raise an error if n+1 query occurs
