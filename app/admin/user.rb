@@ -31,21 +31,26 @@ ActiveAdmin.register User do
   scope 'Members', :members
   scope 'Employees', :employees
 
-  action_item :resend_confirmation_email, only: [:show] do
+  action_item :create_player_evaluation, only: [:show], if: -> { user.confirmed? } do
+    link_to 'Create Evaluation',
+            new_admin_player_evaluation_path(user_id: user.id)
+  end
+
+  action_item :resend_confirmation_email, only: [:show], if: -> { !user.confirmed? } do
     link_to 'Resend Confirmation Email',
             resend_confirmation_email_admin_user_path(id: user.id),
             method: :post,
             data: { confirm: 'Are you sure you want to resend the confirmation email?' }
   end
 
-  action_item :verify_email, only: [:show] do
+  action_item :verify_email, only: [:show], if: -> { !user.confirmed? } do
     link_to 'Verify Email',
             verify_email_admin_user_path(id: user.id),
             method: :post,
             data: { confirm: "Are you sure you want to manually verify user's email?" }
   end
 
-  action_item :flag_user, only: [:show] do
+  action_item :flag_user, only: [:show], if: -> { user.confirmed? } do
     flagged = user.flagged
     link_to flagged ? 'Unflag User' : 'Flag User',
             flag_user_admin_user_path(id: user.id),

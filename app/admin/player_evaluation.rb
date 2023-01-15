@@ -40,4 +40,13 @@ ActiveAdmin.register PlayerEvaluation do
       row :created_at
     end
   end
+
+  controller do
+    def new
+      @player_evaluation = PlayerEvaluation.new(
+        user_id: params[:user_id],
+        date: Time.zone.today
+      )
+    end
+  end
 end
