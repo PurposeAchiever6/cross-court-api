@@ -130,6 +130,9 @@ Lint/UnmodifiedReduceAccumulator: # new in 1.1
 Lint/UselessRuby2Keywords: # new in 1.23
   Enabled: true
 
+Lint/UselessRescue: # new in 1.43
+  Enabled: true
+
 Metrics/BlockLength:
   CountComments: false # count full line comments?
   Max: 25
