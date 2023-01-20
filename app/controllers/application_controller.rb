@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_for_paper_trail
-    return "admin-#{current_admin_user.id}" if admin_request?
+    return "admin-#{current_admin_user.id}" if admin_request? && current_admin_user
 
     current_user ? "user-#{current_user.id}" : nil
   end
