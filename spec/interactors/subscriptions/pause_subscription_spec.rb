@@ -3,12 +3,12 @@ require 'rails_helper'
 describe Subscriptions::PauseSubscription do
   describe '.call' do
     let(:subscription_status) { 'active' }
-    let(:subscription) { create(:subscription, status: subscription_status) }
-    let(:months) { %w[1 2].sample }
+    let(:product) { create(:product, free_pauses_per_year: 2) }
+    let(:subscription) { create(:subscription, product:, status: subscription_status) }
+    let(:months) { 1 }
     let(:resumes_at) { (subscription.current_period_end - 1.day + months.to_i.months).to_i }
 
     before do
-      ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
       Timecop.freeze(Time.current)
       StripeMocker.new.pause_subscription(subscription.stripe_id, resumes_at)
       allow_any_instance_of(Slack::Notifier).to receive(:ping)
@@ -16,7 +16,7 @@ describe Subscriptions::PauseSubscription do
 
     after { Timecop.return }
 
-    subject { described_class.call(subscription:, months:) }
+    subject { described_class.call(subscription:) }
 
     it 'enques ::Subscriptions::PauseJob' do
       expect { subject }.to have_enqueued_job(
@@ -46,7 +46,6 @@ describe Subscriptions::PauseSubscription do
 
     context 'when the pause is paid' do
       before do
-        ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'] = '2'
         create_list(:subscription_pause, 2, subscription:, status: :finished)
       end
 
@@ -62,14 +61,6 @@ describe Subscriptions::PauseSubscription do
       let(:subscription_status) { 'paused' }
 
       it { expect { subject }.to raise_error(SubscriptionIsNotActiveException) }
-
-      it { expect { subject rescue nil }.not_to change { subscription.reload.status } }
-    end
-
-    context 'when months are not valid' do
-      let(:months) { '123' }
-
-      it { expect { subject }.to raise_error(SubscriptionInvalidPauseMonthsException) }
 
       it { expect { subject rescue nil }.not_to change { subscription.reload.status } }
     end

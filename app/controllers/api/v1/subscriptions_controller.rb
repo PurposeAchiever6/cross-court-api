@@ -80,7 +80,6 @@ module Api
       def pause
         result = Subscriptions::PauseSubscription.call(
           subscription:,
-          months: params[:months],
           reason: params[:reason]
         )
 

@@ -3,7 +3,8 @@ ActiveAdmin.register Product do
 
   permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
                 :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
-                :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting
+                :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
+                :free_pauses_per_year
 
   filter :name
   filter :product_type
@@ -32,6 +33,10 @@ ActiveAdmin.register Product do
     number_column :price, as: :currency
     number_column :price_for_members, as: :currency
     number_column :price_for_first_timers_no_free_session, as: :currency
+    column :free_pauses_per_year do |product|
+      product.recurring? ? product.free_pauses_per_year : 'N/A'
+    end
+    column :free_pauses_per_year
     number_column 'Referral CC Cash', :referral_cc_cash, as: :currency
     column :label
     column :order_number
@@ -96,6 +101,7 @@ ActiveAdmin.register Product do
       f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
       f.input :price_for_first_timers_no_free_session
+      f.input :free_pauses_per_year
       f.input :referral_cc_cash, label: 'Referral CC cash'
       f.input :label
       f.input :order_number
@@ -122,6 +128,9 @@ ActiveAdmin.register Product do
       number_row :price, as: :currency
       number_row :price_for_members, as: :currency if resource.one_time?
       number_row :price_for_first_timers_no_free_session, as: :currency if resource.one_time?
+      row :free_pauses_per_year do |product|
+        product.recurring? ? product.free_pauses_per_year : 'N/A'
+      end
       number_row :referral_cc_cash, as: :currency if resource.recurring?
       row :product_type do |product|
         product.product_type.humanize

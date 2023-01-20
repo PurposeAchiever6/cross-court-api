@@ -5,11 +5,10 @@ module Subscriptions
     def call
       subscription = context.subscription
       subscription_id = subscription.id
-      months = context.months.to_i
       reason = context.reason
+      months = 1
 
       raise SubscriptionIsNotActiveException unless subscription.active?
-      raise SubscriptionInvalidPauseMonthsException unless [1, 2].include?(months)
 
       paid = !subscription.can_free_pause?
       wait_until = subscription.current_period_end - 1.day
