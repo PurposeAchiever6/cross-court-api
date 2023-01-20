@@ -11,15 +11,16 @@ module UserSessions
                  .includes(:user)
                  .find_each do |user_session|
         user = user_session.user
+        no_show_up_fee = ENV['NO_SHOW_UP_FEE'].to_f
 
         if user_session.is_free_session
           UserSessions::ConfirmFreeSessionIntent.call(user_session:)
           create_not_show_free_session_deal(user)
-        elsif user.unlimited_credits?
+        elsif no_show_up_fee.positive?
           Users::Charge.call(
             user:,
-            amount: ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
-            description: 'Unlimited membership no show fee',
+            amount: no_show_up_fee,
+            description: 'No show up fee',
             notify_error: true,
             use_cc_cash: true,
             create_payment_on_failure: true

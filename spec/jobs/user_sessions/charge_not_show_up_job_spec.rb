@@ -12,19 +12,11 @@ describe UserSessions::ChargeNotShowUpJob do
 
     let(:la_time) { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
     let(:la_date) { la_time.to_date }
-    let(:unlimited_user_cc_cash) { 0 }
+    let(:user_cc_cash) { 0 }
 
     let!(:session) { create(:session) }
-
-    let!(:user) { create(:user) }
-    let!(:unlimited_user) do
-      create(:user, subscription_credits: Product::UNLIMITED, cc_cash: unlimited_user_cc_cash)
-    end
-
+    let!(:user) { create(:user, cc_cash: user_cc_cash) }
     let!(:user_payment_method) { create(:payment_method, user:, default: true) }
-    let!(:unlimited_user_payment_method) do
-      create(:payment_method, user: unlimited_user, default: true)
-    end
 
     let!(:user_session_1) do
       create(
@@ -41,7 +33,7 @@ describe UserSessions::ChargeNotShowUpJob do
     let!(:user_session_2) do
       create(
         :user_session,
-        user: unlimited_user,
+        user:,
         session:,
         checked_in: false,
         date: la_date.yesterday,
@@ -52,7 +44,7 @@ describe UserSessions::ChargeNotShowUpJob do
     let!(:user_session_3) do
       create(
         :user_session,
-        user: unlimited_user,
+        user:,
         session:,
         checked_in: true,
         date: la_date.tomorrow,
@@ -90,24 +82,26 @@ describe UserSessions::ChargeNotShowUpJob do
       end
     end
 
-    context 'when user has unlimited credits' do
+    context 'when we charge a no show up fee' do
+      let(:no_show_up_fee) { '10' }
+
+      before { ENV['NO_SHOW_UP_FEE'] = no_show_up_fee }
+
       it { expect { subject }.to change { user_session_2.reload.no_show_up_fee_charged }.to(true) }
 
       it 'calls Stripe service with correct params' do
         expect(StripeService).to receive(:charge).with(
-          unlimited_user,
-          unlimited_user_payment_method.stripe_id,
-          ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
-          'Unlimited membership no show fee'
-        )
+          user,
+          user_payment_method.stripe_id,
+          ENV['NO_SHOW_UP_FEE'].to_f,
+          'No show up fee'
+        ).once
 
         subject
       end
 
       context 'when user has cc cash' do
-        let(:unlimited_user_cc_cash) { 50 }
-
-        before { ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'] = '10' }
+        let(:user_cc_cash) { 50 }
 
         it 'does not call Stripe Service' do
           expect(StripeService).not_to receive(:charge)
@@ -115,20 +109,33 @@ describe UserSessions::ChargeNotShowUpJob do
         end
 
         context 'when user does not have enough cc cash to paid the totally of the fee' do
-          let(:unlimited_user_cc_cash) { 4.5 }
+          let(:user_cc_cash) { 4.5 }
 
-          it { expect { subject }.to change { unlimited_user.reload.cc_cash }.to(0) }
+          it { expect { subject }.to change { user.reload.cc_cash }.to(0) }
 
           it 'calls Stripe service with correct params' do
             expect(StripeService).to receive(:charge).with(
-              unlimited_user,
-              unlimited_user_payment_method.stripe_id,
+              user,
+              user_payment_method.stripe_id,
               5.5,
-              'Unlimited membership no show fee'
-            )
+              'No show up fee'
+            ).once
 
             subject
           end
+        end
+      end
+
+      context 'when we do not charge a fee on no show up' do
+        let(:no_show_up_fee) { '0' }
+
+        it 'updates no_show_up_fee_charged attribute' do
+          expect { subject }.to change { user_session_2.reload.no_show_up_fee_charged }.to(true)
+        end
+
+        it 'does not call Stripe Service' do
+          expect(StripeService).not_to receive(:charge)
+          subject
         end
       end
     end

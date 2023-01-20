@@ -3,6 +3,7 @@ require 'rails_helper'
 describe UserSessions::ChargeCanceledOutOfTime do
   describe '.call' do
     let!(:user) { create(:user) }
+    let!(:user_payment_method) { create(:payment_method, user:, default: true) }
     let!(:session) { create(:session, :daily, time: session_time) }
     let!(:user_session) do
       create(:user_session, user:, session:, is_free_session:)
@@ -12,15 +13,14 @@ describe UserSessions::ChargeCanceledOutOfTime do
       Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles'))
     end
     let(:free_session_amount_to_charge) { rand(1_000).to_s }
-    let(:unlimited_credits_amount_to_charge) { rand(1_000).to_s }
+    let(:late_cancel_fee) { '0' }
     let(:payment_intent_id) { rand(1_000) }
     let(:is_free_session) { false }
     let(:session_time) { los_angeles_time + Session::CANCELLATION_PERIOD - 1.minute }
 
     before do
       ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'] = free_session_amount_to_charge
-      ENV['UNLIMITED_CREDITS_CANCELED_OUT_OF_TIME_PRICE'] = unlimited_credits_amount_to_charge
-      create(:payment_method, user:, default: true)
+      ENV['CANCELED_OUT_OF_TIME_PRICE'] = late_cancel_fee
       allow(StripeService).to receive(:charge).and_return(double(id: payment_intent_id))
     end
 
@@ -53,6 +53,16 @@ describe UserSessions::ChargeCanceledOutOfTime do
         subject rescue nil
       end
 
+      it 'calls Stripe service' do
+        expect(StripeService).to receive(:charge).with(
+          user,
+          user_payment_method.stripe_id,
+          free_session_amount_to_charge.to_f,
+          'Session canceled out of time fee'
+        )
+        subject
+      end
+
       context 'when the fee is zero' do
         let(:free_session_amount_to_charge) { '0' }
 
@@ -76,16 +86,16 @@ describe UserSessions::ChargeCanceledOutOfTime do
       end
     end
 
-    context 'when user has unlimited credits' do
-      before { user.update!(subscription_credits: Product::UNLIMITED) }
+    context 'when we charge for late cancellations' do
+      let(:late_cancel_fee) { rand(1_000).to_s }
 
-      it { expect(subject.amount_charged).to eq(unlimited_credits_amount_to_charge.to_f) }
+      it { expect(subject.amount_charged).to eq(late_cancel_fee.to_f) }
       it { expect(subject.payment_intent_id).to eq(payment_intent_id) }
 
       it 'calls Users::Charge with right amount' do
         expect(Users::Charge).to receive(:call).with({
           user:,
-          amount: unlimited_credits_amount_to_charge.to_f,
+          amount: late_cancel_fee.to_f,
           description: 'Session canceled out of time fee',
           notify_error: true,
           use_cc_cash: true,
@@ -95,15 +105,14 @@ describe UserSessions::ChargeCanceledOutOfTime do
         subject rescue nil
       end
 
-      context 'when the fee is zero' do
-        let(:unlimited_credits_amount_to_charge) { '0' }
-
-        it { expect(subject.payment_intent_id).to eq(nil) }
-
-        it 'does not call Users::Charge' do
-          expect(Users::Charge).not_to receive(:call)
-          subject
-        end
+      it 'calls Stripe service' do
+        expect(StripeService).to receive(:charge).with(
+          user,
+          user_payment_method.stripe_id,
+          late_cancel_fee.to_f,
+          'Session canceled out of time fee'
+        )
+        subject
       end
 
       context 'when user session is not out of time for cancellation' do

@@ -63,10 +63,17 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
   end
 
   context 'when not in valid cancellation time' do
+    let(:late_cancel_fee) { rand(1..1_000).to_s }
     let(:session) do
       create(:session, :daily, time: los_angeles_time + Session::CANCELLATION_PERIOD - 1.minute)
     end
     let!(:user_session) { create(:user_session, user:, session:) }
+    let!(:user_payment_method) { create(:payment_method, user:, default: true) }
+
+    before do
+      ENV['CANCELED_OUT_OF_TIME_PRICE'] = late_cancel_fee
+      allow(StripeService).to receive(:charge).and_return(double(id: rand(1_000)))
+    end
 
     it 'returns success' do
       subject
@@ -79,6 +86,16 @@ describe 'PUT api/v1/user_sessions/:user_session_id/cancel' do
 
     it "doesn't reimburse the credit to the user" do
       expect { subject }.not_to change { user.reload.credits }
+    end
+
+    it 'calls Stripe service' do
+      expect(StripeService).to receive(:charge).with(
+        user,
+        user_payment_method.stripe_id,
+        late_cancel_fee.to_f,
+        'Session canceled out of time fee'
+      )
+      subject
     end
 
     it 'calls the slack service session_canceled_out_of_time method' do
