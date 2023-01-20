@@ -297,7 +297,8 @@ ActiveAdmin.register Session do
         render partial: 'checked_in_user_sessions', locals: {
           date:,
           user_sessions_by_team: user_sessions.group_by(&:assigned_team),
-          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil)
+          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil),
+          towel_rental_price: ENV.fetch('TOWEL_RENTAL_PRICE', nil)
         }
       end
 
@@ -316,7 +317,8 @@ ActiveAdmin.register Session do
         render partial: 'not_checked_in_user_sessions', locals: {
           date:,
           user_sessions:,
-          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil)
+          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil),
+          towel_rental_price: ENV.fetch('TOWEL_RENTAL_PRICE', nil)
         }
       end
 
@@ -399,6 +401,7 @@ ActiveAdmin.register Session do
       user_session_id = user_session_params[:id]
       checked_in = user_session_params[:checked_in] == 'true'
       jersey_rental = user_session_params[:jersey_rental] == 'true'
+      towel_rental = user_session_params[:towel_rental] == 'true'
       assigned_team = user_session_params[:assigned_team]
 
       user_session = UserSession.find(user_session_id)
@@ -406,6 +409,7 @@ ActiveAdmin.register Session do
 
       execute_checked_in_job = checked_in && !user_session.checked_in
       jersey_rental_payment_intent_id = user_session.jersey_rental_payment_intent_id
+      towel_rental_payment_intent_id = user_session.towel_rental_payment_intent_id
 
       if user_session.jersey_rental && !jersey_rental
         result = RefundPayment.call(payment_intent_id: jersey_rental_payment_intent_id)
@@ -431,10 +435,36 @@ ActiveAdmin.register Session do
         jersey_rental_payment_intent_id = result.payment_intent_id
       end
 
+      if user_session.towel_rental && !towel_rental
+        result = RefundPayment.call(payment_intent_id: towel_rental_payment_intent_id)
+
+        if result.failure?
+          warnings << "#{user.full_name.titleize}: #{result.message}"
+          next
+        end
+
+        towel_rental_payment_intent_id = nil
+      elsif !user_session.towel_rental && towel_rental
+        result = Users::Charge.call(
+          user:,
+          amount: ENV['TOWEL_RENTAL_PRICE'].to_f,
+          description: 'Towel rental'
+        )
+
+        if result.failure?
+          warnings << "#{user.full_name.titleize}: #{result.message}"
+          next
+        end
+
+        towel_rental_payment_intent_id = result.payment_intent_id
+      end
+
       user_session.update!(
         checked_in:,
         jersey_rental:,
         jersey_rental_payment_intent_id:,
+        towel_rental:,
+        towel_rental_payment_intent_id:,
         assigned_team:
       )
 

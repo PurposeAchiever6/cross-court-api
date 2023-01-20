@@ -23,6 +23,8 @@
 #  credit_used_type                :integer
 #  goal                            :string
 #  scouting                        :boolean          default(FALSE)
+#  towel_rental                    :boolean          default(FALSE)
+#  towel_rental_payment_intent_id  :string
 #
 # Indexes
 #
