@@ -249,6 +249,7 @@ en:
       created: "Product created successfully"
       destroyed: "Product deleted successfully"
       recover: "Product recovered successfully"
+      update_price: "Product price updated successfully"
     promo_codes:
       created: "%{type} created successfully"
       destroyed: "%{type} deleted successfully"

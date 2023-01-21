@@ -131,7 +131,7 @@ class User < ApplicationRecord
           dependent: :destroy
 
   has_one :active_subscription,
-          -> { where(status: %i[active paused]).recent },
+          -> { active_or_paused.recent },
           class_name: 'Subscription',
           inverse_of: :user,
           dependent: :destroy

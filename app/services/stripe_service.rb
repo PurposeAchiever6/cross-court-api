@@ -132,6 +132,17 @@ class StripeService
     Stripe::Subscription.update(subscription_stripe_id, subscription_params)
   end
 
+  def self.update_subscription_price(subscription, stripe_price_id)
+    Stripe::Subscription.update(
+      subscription.stripe_id,
+      items: [
+        { id: subscription.stripe_item_id, deleted: true },
+        { price: stripe_price_id }
+      ],
+      proration_behavior: 'none'
+    )
+  end
+
   def self.update_subscription_payment_method(subscription, payment_method)
     Stripe::Subscription.update(
       subscription.stripe_id,

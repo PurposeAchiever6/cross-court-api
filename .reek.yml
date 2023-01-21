@@ -4,7 +4,7 @@ detectors:
     exclude: []
   BooleanParameter:
     enabled: true
-    exclude: [PromoCode#validate!]
+    exclude: [PromoCode#validate!, Product#update_recurring_price]
   ClassVariable:
     enabled: false
     exclude: []

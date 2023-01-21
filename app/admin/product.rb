@@ -13,6 +13,11 @@ ActiveAdmin.register Product do
   scope :all, default: true
   scope 'Deleted', :only_deleted
 
+  action_item :new_price, only: :show, if: -> { product.recurring? } do
+    link_to 'Update Pricing',
+            new_price_admin_product_path(product.id)
+  end
+
   index do
     selectable_column
     id_column
@@ -192,5 +197,35 @@ ActiveAdmin.register Product do
     product.recover
 
     redirect_to admin_products_path, notice: I18n.t('admin.products.recover')
+  end
+
+  member_action :new_price do
+    @product = Product.find(params[:id])
+    @subscriptions_count = @product.subscriptions.active_or_paused.count
+  end
+
+  member_action :update_price, method: :post do
+    product = Product.find(params[:id])
+    new_price = params[:new_price]
+    update_existing_subscriptions = params[:update_existing_subscriptions] == '1'
+    error_msg = nil
+
+    error_msg = 'Product must be of the type recurring' if product.one_time?
+    error_msg = 'New price can\'t be empty' if new_price.blank?
+    if new_price.to_d == product.price.to_d
+      error_msg = 'New price is the same as the current product price'
+    end
+
+    if error_msg
+      flash[:error] = error_msg
+      return redirect_to new_price_admin_product_path(params[:id])
+    end
+
+    product.update_recurring_price(new_price, update_existing_subscriptions:)
+
+    redirect_to admin_product_path(params[:id]), notice: I18n.t('admin.products.update_price')
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to admin_product_path(params[:id])
   end
 end

@@ -60,10 +60,12 @@ class Subscription < ApplicationRecord
 
   validates :stripe_id, presence: true
 
+  scope :active_or_paused, -> { where(status: %i[active paused]) }
   scope :recent, -> { order('current_period_end DESC NULLS LAST') }
   scope :cancel_at_period_end, -> { where(cancel_at_period_end: true) }
   scope :not_cancel_at_period_end, -> { where(cancel_at_period_end: false) }
   scope :period_end_on_date, ->(date) { where(current_period_end: date.all_day) }
+  scope :for_product, ->(product) { where(product_id: product) }
 
   def assign_stripe_attrs(stripe_subscription)
     canceled_at =

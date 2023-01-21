@@ -75,6 +75,21 @@ class Product < ApplicationRecord
     super()
   end
 
+  def update_recurring_price(new_price, update_existing_subscriptions: true)
+    return if price == new_price || one_time?
+
+    stripe_price_id = StripeService.create_price(
+      name:,
+      product_type:,
+      price: new_price,
+      stripe_product_id:
+    ).id
+
+    update!(price: new_price, stripe_price_id:)
+
+    Products::UpdateExistingSubscriptionsPriceJob.perform_later(id) if update_existing_subscriptions
+  end
+
   private
 
   def apply_price_for_first_timers_no_free_session?(user)

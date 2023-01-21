@@ -23,7 +23,7 @@ class PaymentMethod < ApplicationRecord
 
   has_many :subscriptions, dependent: :nullify
   has_one :active_subscription,
-          -> { where(status: %i[active paused]).recent },
+          -> { active_or_paused.recent },
           class_name: 'Subscription',
           inverse_of: :payment_method,
           dependent: nil
