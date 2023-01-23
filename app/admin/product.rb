@@ -153,6 +153,11 @@ ActiveAdmin.register Product do
       row :image do |product|
         image_tag polymorphic_url(product.image), class: 'max-w-200' if product.image.attached?
       end
+      row 'History' do |product|
+        link_to 'Link to History', history_admin_product_path(product.id)
+      end
+      row :created_at
+      row :updated_at
     end
   end
 
@@ -227,5 +232,10 @@ ActiveAdmin.register Product do
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to admin_product_path(params[:id])
+  end
+
+  member_action :history do
+    versions = Product.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    render 'admin/shared/history', locals: { versions: }
   end
 end

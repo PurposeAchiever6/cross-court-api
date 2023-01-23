@@ -34,6 +34,7 @@ class Product < ApplicationRecord
   UNLIMITED = -1
 
   acts_as_paranoid
+  has_paper_trail
 
   enum product_type: { one_time: 0, recurring: 1 }
   enum available_for: { everyone: 0, reserve_team: 1 }
