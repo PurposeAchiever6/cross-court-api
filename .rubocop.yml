@@ -292,6 +292,9 @@ Style/Documentation:
 Style/ArgumentsForwarding: # new in 1.1
   Enabled: true
 
+Style/ComparableClamp: # new in 1.44
+  Enabled: true
+
 Style/ArrayIntersect: # new in 1.40
   Enabled: true
 
@@ -434,6 +437,9 @@ Gemspec/DeprecatedAttributeAssignment: # new in 1.30
   Enabled: true
 
 Gemspec/RequireMFA: # new in 1.23
+  Enabled: true
+
+Gemspec/DevelopmentDependencies: # new in 1.44
   Enabled: true
 
 Naming/BlockForwarding: # new in 1.24
