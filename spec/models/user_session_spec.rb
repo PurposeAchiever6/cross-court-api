@@ -2,9 +2,9 @@
 #
 # Table name: user_sessions
 #
-#  id                              :integer          not null, primary key
-#  user_id                         :integer          not null
-#  session_id                      :integer          not null
+#  id                              :bigint           not null, primary key
+#  user_id                         :bigint           not null
+#  session_id                      :bigint           not null
 #  state                           :integer          default("reserved"), not null
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
@@ -13,7 +13,7 @@
 #  is_free_session                 :boolean          default(FALSE), not null
 #  free_session_payment_intent     :string
 #  credit_reimbursed               :boolean          default(FALSE), not null
-#  referral_id                     :integer
+#  referral_id                     :bigint
 #  jersey_rental                   :boolean          default(FALSE)
 #  jersey_rental_payment_intent_id :string
 #  assigned_team                   :string
@@ -23,11 +23,14 @@
 #  credit_used_type                :integer
 #  goal                            :string
 #  scouting                        :boolean          default(FALSE)
+#  towel_rental                    :boolean          default(FALSE)
+#  towel_rental_payment_intent_id  :string
 #
 # Indexes
 #
-#  index_user_sessions_on_session_id  (session_id)
-#  index_user_sessions_on_user_id     (user_id)
+#  index_user_sessions_on_referral_id  (referral_id)
+#  index_user_sessions_on_session_id   (session_id)
+#  index_user_sessions_on_user_id      (user_id)
 #
 
 require 'rails_helper'
@@ -50,8 +53,8 @@ describe UserSession do
 
   describe 'date_when_format' do
     let!(:location) { create(:location) }
-    let!(:session) { create(:session, location: location) }
-    let!(:user_session) { create(:user_session, date: date, session: session) }
+    let!(:session) { create(:session, location:) }
+    let!(:user_session) { create(:user_session, date:, session:) }
 
     let(:time_zone) { location.time_zone }
     let(:date) { Time.current.in_time_zone(location.time_zone).to_date }

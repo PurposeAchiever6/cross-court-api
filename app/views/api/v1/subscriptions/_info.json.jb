@@ -10,8 +10,8 @@
   can_free_pause: subscription.can_free_pause?,
   will_pause: subscription.will_pause?,
   canceled_at: subscription&.canceled_at&.iso8601,
-  free_pauses_per_year: ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'],
-  paid_subscription_pause_price: ENV['PAID_SUBSCRIPTION_PAUSE_PRICE'],
+  free_pauses_per_year: subscription.product.free_pauses_per_year,
+  paid_subscription_pause_price: ENV.fetch('PAID_SUBSCRIPTION_PAUSE_PRICE', nil),
   this_year_subscription_pauses: render(
     partial: 'api/v1/subscription_pauses/info',
     collection: subscription.subscription_pauses.this_year,

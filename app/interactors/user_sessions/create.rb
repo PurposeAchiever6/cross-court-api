@@ -13,27 +13,27 @@ module UserSessions
       not_charge_user_credit = context.not_charge_user_credit || false
       from_waitlist = context.from_waitlist || false
 
-      UserSessions::InitialValidations.call(user: user, date: date, session: session)
+      UserSessions::InitialValidations.call(user:, date:, session:)
 
       user_session =
         if session.open_club?
           UserSessions::CreateOpenClub.call(
-            session: session,
-            user: user,
-            date: date,
-            goal: goal,
-            shooting_machine: shooting_machine,
-            from_waitlist: from_waitlist
+            session:,
+            user:,
+            date:,
+            goal:,
+            shooting_machine:,
+            from_waitlist:
           )
         else
           UserSessions::CreateNormal.call(
-            user: user,
-            session: session,
-            date: date,
-            referral_code: referral_code,
-            not_charge_user_credit: not_charge_user_credit,
-            from_waitlist: from_waitlist,
-            scouting: scouting
+            user:,
+            session:,
+            date:,
+            referral_code:,
+            not_charge_user_credit:,
+            from_waitlist:,
+            scouting:
           )
         end.user_session
 

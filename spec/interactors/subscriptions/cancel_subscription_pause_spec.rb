@@ -4,7 +4,7 @@ describe Subscriptions::CancelSubscriptionPause do
   describe '.call' do
     let(:subscription_status) { 'paused' }
     let!(:subscription) { create(:subscription, status: subscription_status) }
-    let!(:subscription_pause) { create(:subscription_pause, subscription: subscription) }
+    let!(:subscription_pause) { create(:subscription_pause, subscription:) }
 
     before do
       allow_any_instance_of(Slack::Notifier).to receive(:ping)
@@ -13,7 +13,7 @@ describe Subscriptions::CancelSubscriptionPause do
       ).to receive(:find_job).and_return(double(delete: true))
     end
 
-    subject { described_class.call(subscription: subscription) }
+    subject { described_class.call(subscription:) }
 
     it 'updates subscription_pause status' do
       expect { subject }.to change {

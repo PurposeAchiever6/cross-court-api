@@ -2,9 +2,9 @@
 #
 # Table name: products_promo_codes
 #
-#  id            :integer          not null, primary key
-#  product_id    :integer
-#  promo_code_id :integer
+#  id            :bigint           not null, primary key
+#  product_id    :bigint
+#  promo_code_id :bigint
 #
 # Indexes
 #

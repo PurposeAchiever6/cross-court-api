@@ -2,11 +2,11 @@
 #
 # Table name: user_update_requests
 #
-#  id                   :integer          not null, primary key
+#  id                   :bigint           not null, primary key
 #  status               :integer          default("pending")
-#  requested_attributes :json             default({})
+#  requested_attributes :json
 #  reason               :text
-#  user_id              :integer
+#  user_id              :bigint
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #

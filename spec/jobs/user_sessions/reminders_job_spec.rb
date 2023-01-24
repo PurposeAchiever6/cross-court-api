@@ -21,13 +21,13 @@ describe UserSessions::RemindersJob do
       let(:time_24)          { la_time.strftime(Session::TIME_FORMAT) }
       let(:s1)               { create(:session, :daily, time: time_24) }
       let!(:user_session1) do
-        create(:user_session, date: la_date.tomorrow, session: s1, user: user)
+        create(:user_session, date: la_date.tomorrow, session: s1, user:)
       end
 
       # In 8 hours
       let(:time_8)         { (la_time + 8.hours).strftime(Session::TIME_FORMAT) }
       let(:s2)             { create(:session, :daily, time: time_8) }
-      let!(:user_session2) { create(:user_session, date: la_date, session: s2, user: user) }
+      let!(:user_session2) { create(:user_session, date: la_date, session: s2, user:) }
 
       # In 6 hours
       let(:first_session)  { false }
@@ -38,8 +38,8 @@ describe UserSessions::RemindersJob do
           :user_session,
           date: la_date,
           session: s3,
-          user: user,
-          first_session: first_session
+          user:,
+          first_session:
         )
       end
       let(:message_6_hours) do
@@ -48,7 +48,7 @@ describe UserSessions::RemindersJob do
                time: time_6,
                location: user_session3.location.name,
                cancellation_period_hours: Session::CANCELLATION_PERIOD.to_i / 3600,
-               frontend_url: ENV['FRONTENT_URL'],
+               frontend_url: ENV.fetch('FRONTENT_URL', nil),
                invite_friend: I18n.t('notifier.sonar.invite_friend',
                                      link: user_session3.invite_link))
       end
@@ -67,7 +67,7 @@ describe UserSessions::RemindersJob do
                  time: time_6,
                  location: user_session3.location.name,
                  cancellation_period_hours: Session::CANCELLATION_PERIOD.to_i / 3600,
-                 frontend_url: ENV['FRONTENT_URL'],
+                 frontend_url: ENV.fetch('FRONTENT_URL', nil),
                  invite_friend: I18n.t('notifier.sonar.invite_friend',
                                        link: user_session3.invite_link))
         end

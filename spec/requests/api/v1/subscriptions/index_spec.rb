@@ -22,7 +22,7 @@ describe 'GET api/v1/subscriptions' do
   end
 
   context 'when the user has subscriptions' do
-    let!(:subscription) { create(:subscription, user: user) }
+    let!(:subscription) { create(:subscription, user:) }
 
     before do
       subject

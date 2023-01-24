@@ -37,7 +37,7 @@ class StripeService
       payment_method: payment_method_stripe_id,
       customer: user.stripe_id,
       confirm: true,
-      description: description,
+      description:,
       receipt_email: user.email
     )
   end
@@ -132,6 +132,17 @@ class StripeService
     Stripe::Subscription.update(subscription_stripe_id, subscription_params)
   end
 
+  def self.update_subscription_price(subscription, stripe_price_id)
+    Stripe::Subscription.update(
+      subscription.stripe_id,
+      items: [
+        { id: subscription.stripe_item_id, deleted: true },
+        { price: stripe_price_id }
+      ],
+      proration_behavior: 'none'
+    )
+  end
+
   def self.update_subscription_payment_method(subscription, payment_method)
     Stripe::Subscription.update(
       subscription.stripe_id,
@@ -144,7 +155,7 @@ class StripeService
       subscription.stripe_id,
       pause_collection: {
         behavior: 'mark_uncollectible',
-        resumes_at: resumes_at
+        resumes_at:
       }
     )
   end
@@ -164,7 +175,7 @@ class StripeService
   end
 
   def self.cancel_subscription(subscription)
-    Stripe::Subscription.delete(subscription.stripe_id)
+    Stripe::Subscription.cancel(subscription.stripe_id)
   end
 
   def self.cancel_subscription_at_period_end(subscription)
@@ -194,9 +205,9 @@ class StripeService
     duration_in_months = promo_code_attrs[:duration_in_months].presence
 
     coupon_attrs = {
-      duration: duration,
+      duration:,
       currency: 'usd',
-      duration_in_months: duration_in_months,
+      duration_in_months:,
       applies_to: { products: products.map(&:stripe_product_id) }
     }
 

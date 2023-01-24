@@ -23,7 +23,7 @@ module UserSessions
 
       if shooting_machine_reservation
         ShootingMachineReservations::Confirm.call(
-          shooting_machine_reservation: shooting_machine_reservation
+          shooting_machine_reservation:
         )
       end
 
@@ -63,10 +63,10 @@ module UserSessions
                          end
 
       I18n.t(i18n_message_key,
-             name: name,
-             time: time,
+             name:,
+             time:,
              location: location.name,
-             frontend_url: ENV['FRONTENT_URL'],
+             frontend_url: ENV.fetch('FRONTENT_URL', nil),
              invite_friend: invite_friend(user_session))
     end
   end

@@ -25,8 +25,8 @@ ActiveAdmin.register Location do
                     'sessions a user can book per day.'
       f.input :description
       f.latlng api_key_env: 'GOOGLE_API_KEY',
-               default_lat: ENV['DEFAULT_LATITUDE'],
-               default_lng: ENV['DEFAULT_LONGITUDE']
+               default_lat: ENV.fetch('DEFAULT_LATITUDE', nil),
+               default_lng: ENV.fetch('DEFAULT_LONGITUDE', nil)
     end
     f.actions
   end

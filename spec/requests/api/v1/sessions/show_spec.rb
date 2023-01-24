@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   let(:user)     { create(:user) }
   let(:location) { create(:location) }
-  let!(:session) { create(:session, location: location, time: la_time + 1.hour) }
+  let!(:session) { create(:session, location:, time: la_time + 1.hour) }
 
   let!(:la_time)  { Time.zone.local_to_utc(Time.current.in_time_zone('America/Los_Angeles')) }
   let!(:today)    { la_time.to_date }
@@ -37,7 +37,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
     let(:state) { :pending }
 
     let!(:user_session_waitlist) do
-      create(:user_session_waitlist, session: session, user: user, date: today, state: state)
+      create(:user_session_waitlist, session:, user:, date: today, state:)
     end
 
     it "returns the user is on the session's waitlist" do
@@ -58,9 +58,9 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   context 'when the session has employees assigned' do
     let(:referee)      { create(:user, :referee, :with_image) }
     let(:sem)          { create(:user, :referee, :with_image) }
-    let!(:sem_session) { create(:sem_session, session: session, user: sem, date: today) }
+    let!(:sem_session) { create(:sem_session, session:, user: sem, date: today) }
     let!(:referee_session) do
-      create(:referee_session, session: session, user: referee, date: today)
+      create(:referee_session, session:, user: referee, date: today)
     end
 
     it 'returns referee information' do
@@ -81,7 +81,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   end
 
   context 'when the user has a reservation for the same day' do
-    let!(:user_session) { create(:user_session, user: user, session: session, date: today) }
+    let!(:user_session) { create(:user_session, user:, session:, date: today) }
 
     it 'returns an user_session' do
       subject
@@ -101,7 +101,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   end
 
   context 'when the user has a reservation for another day' do
-    let!(:user_session) { create(:user_session, user: user, session: session, date: tomorrow) }
+    let!(:user_session) { create(:user_session, user:, session:, date: tomorrow) }
 
     subject do
       get api_v1_session_path(location_id: location.id, id: session.id, date: today),
@@ -138,7 +138,7 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   end
 
   context 'when the session is full' do
-    let!(:user_sessions) { create_list(:user_session, 15, session: session, date: today) }
+    let!(:user_sessions) { create_list(:user_session, 15, session:, date: today) }
 
     it 'returns full on true' do
       subject

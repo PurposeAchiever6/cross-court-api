@@ -7,7 +7,7 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
     create(
       :session,
       start_time: la_time.tomorrow,
-      all_skill_levels_allowed: all_skill_levels_allowed
+      all_skill_levels_allowed:
     )
   end
 
@@ -25,7 +25,7 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
   subject do
     post api_v1_session_waitlists_path(session_id: session.id),
          headers: request_headers,
-         params: params,
+         params:,
          as: :json
     response
   end
@@ -70,7 +70,7 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
   context 'when user is already in the waitlist' do
     include_context 'disable bullet'
 
-    before { create(:user_session_waitlist, session: session, user: user, date: date) }
+    before { create(:user_session_waitlist, session:, user:, date:) }
 
     it { is_expected.to have_http_status(:bad_request) }
     it { expect(response_body[:errors][:date]).to eq(['has already been taken']) }
@@ -80,7 +80,7 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
   context 'when user is already in the session' do
     include_context 'disable bullet'
 
-    before { create(:user_session, session: session, user: user, date: date) }
+    before { create(:user_session, session:, user:, date:) }
 
     it { is_expected.to have_http_status(:bad_request) }
     it { expect(response_body[:error]).to eq('You are already in for this session') }

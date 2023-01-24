@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Users::Charge do
   describe '.call' do
     let!(:user) { create(:user, cc_cash: user_cc_cash) }
-    let!(:default_payment_method) { create(:payment_method, user: user, default: true) }
+    let!(:default_payment_method) { create(:payment_method, user:, default: true) }
 
     let(:amount) { rand(10..100) }
     let(:description) { Faker::Lorem.word }
@@ -21,14 +21,14 @@ describe Users::Charge do
 
     subject do
       Users::Charge.call(
-        user: user,
-        amount: amount,
-        discount: discount,
-        description: description,
-        payment_method: payment_method,
-        notify_error: notify_error,
-        use_cc_cash: use_cc_cash,
-        create_payment_on_failure: create_payment_on_failure
+        user:,
+        amount:,
+        discount:,
+        description:,
+        payment_method:,
+        notify_error:,
+        use_cc_cash:,
+        create_payment_on_failure:
       )
     end
 
@@ -114,7 +114,7 @@ describe Users::Charge do
     end
 
     context 'when a payment method is passed as argument' do
-      let!(:payment_method) { create(:payment_method, user: user) }
+      let!(:payment_method) { create(:payment_method, user:) }
 
       it { expect(subject.payment_intent_id).to eq(payment_intent_id) }
 

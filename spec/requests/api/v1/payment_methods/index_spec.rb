@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'GET api/v1/payment_methods' do
   let(:user) { create(:user) }
-  let!(:payment_method) { create(:payment_method, user: user) }
+  let!(:payment_method) { create(:payment_method, user:) }
 
   subject do
     get api_v1_payment_methods_path, headers: auth_headers, as: :json

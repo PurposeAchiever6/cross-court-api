@@ -3,9 +3,9 @@ require 'rails_helper'
 describe 'PUT api/v1/subscriptions/:id/unpause' do
   let!(:user) { create(:user) }
   let!(:status) { 'paused' }
-  let!(:subscription) { create(:subscription, user: user, status: status) }
+  let!(:subscription) { create(:subscription, user:, status:) }
   let!(:subscription_pause) do
-    create(:subscription_pause, subscription: subscription, status: :finished)
+    create(:subscription_pause, subscription:, status: :finished)
   end
   let(:stripe_invoice_id) { 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr' }
 
@@ -30,7 +30,9 @@ describe 'PUT api/v1/subscriptions/:id/unpause' do
   it { is_expected.to be_successful }
 
   it 'calls Subscriptions::UnpauseSubscription' do
-    expect(Subscriptions::UnpauseSubscription).to receive(:call).with(subscription: subscription)
+    expect(Subscriptions::UnpauseSubscription).to receive(:call).with(
+      { subscription: }
+    )
 
     subject rescue nil
   end

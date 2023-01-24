@@ -12,7 +12,7 @@ module SubscriptionCancellationRequests
       user = subscription_cancellation_request.user
 
       Subscriptions::CancelSubscriptionAtPeriodEnd.call(
-        user: user,
+        user:,
         subscription: user.active_subscription
       )
 

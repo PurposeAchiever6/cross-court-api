@@ -7,13 +7,13 @@ describe Sessions::TimeoutWaitlistsJob do
     let!(:location) { create(:location) }
     let!(:session) { create(:session, time: session_time) }
     let!(:waitlist_item_1) do
-      create(:user_session_waitlist, user: user_1, session: session, date: date)
+      create(:user_session_waitlist, user: user_1, session:, date:)
     end
     let!(:waitlist_item_2) do
-      create(:user_session_waitlist, user: user_2, session: session, date: date)
+      create(:user_session_waitlist, user: user_2, session:, date:)
     end
     let!(:waitlist_item_3) do
-      create(:user_session_waitlist, user: user_1, session: session, date: date + 1.day)
+      create(:user_session_waitlist, user: user_1, session:, date: date + 1.day)
     end
 
     let(:current_time) { Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)) }

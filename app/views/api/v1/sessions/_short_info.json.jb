@@ -27,7 +27,11 @@ json = {
   spots_left: session.spots_left(session.start_time, current_user),
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
   skill_level: nil,
-  reservations_count: session.not_canceled_reservations(session.start_time).count
+  reservations_count: session.not_canceled_reservations(session.start_time).count,
+  allowed_products: render(
+    partial: 'api/v1/sessions/allowed_products/info',
+    locals: { session: }
+  )
 }
 
 if session.skill_level

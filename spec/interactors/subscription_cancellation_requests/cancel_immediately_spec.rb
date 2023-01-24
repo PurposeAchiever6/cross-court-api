@@ -7,7 +7,7 @@ describe SubscriptionCancellationRequests::CancelImmediately do
     let!(:subscription_cancellation_request) do
       create(
         :subscription_cancellation_request,
-        status: status
+        status:
       )
     end
 
@@ -15,7 +15,7 @@ describe SubscriptionCancellationRequests::CancelImmediately do
 
     subject do
       SubscriptionCancellationRequests::CancelImmediately.call(
-        subscription_cancellation_request: subscription_cancellation_request
+        subscription_cancellation_request:
       )
     end
 

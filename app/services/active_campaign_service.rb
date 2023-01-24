@@ -1,6 +1,6 @@
 class ActiveCampaignService
   include HTTParty
-  base_uri "#{ENV['ACTIVE_CAMPAING_API_URL']}/api/3"
+  base_uri "#{ENV.fetch('ACTIVE_CAMPAING_API_URL', nil)}/api/3"
 
   attr_reader :mapped_contact_fields, :mapped_deal_fields, :mapped_deal_stages, :pipeline_id,
               :mapped_deal_pipelines
@@ -23,7 +23,7 @@ class ActiveCampaignService
 
     if user.id && !user.active_campaign_id
       active_campaign_id = response['contact']['id'].to_i
-      user.update!(active_campaign_id: active_campaign_id)
+      user.update!(active_campaign_id:)
     end
 
     response
@@ -80,7 +80,7 @@ class ActiveCampaignService
       method,
       url,
       body: body.present? ? body.to_json : body,
-      headers: headers
+      headers:
     )
 
     response_code = response.code
@@ -97,7 +97,7 @@ class ActiveCampaignService
     @headers ||=
       {
         'Content-Type': 'application/json',
-        'Api-Token': ENV['ACTIVE_CAMPAING_API_KEY']
+        'Api-Token': ENV.fetch('ACTIVE_CAMPAING_API_KEY', nil)
       }
   end
 
@@ -111,27 +111,27 @@ class ActiveCampaignService
 
   def contact_fields_map
     @contact_fields_map ||=
-      contact_fields['fields'].map { |field| [field['title'], field['id']] }.to_h
+      contact_fields['fields'].to_h { |field| [field['title'], field['id']] }
   end
 
   def deal_fields_map
     @deal_fields_map ||=
-      deal_fields['dealCustomFieldMeta'].map { |field| [field['fieldLabel'], field['id']] }.to_h
+      deal_fields['dealCustomFieldMeta'].to_h { |field| [field['fieldLabel'], field['id']] }
   end
 
   def deal_stages_map
     @deal_stages_map ||=
-      deal_stages['dealStages'].map { |field| [field['title'], field['id']] }.to_h
+      deal_stages['dealStages'].to_h { |field| [field['title'], field['id']] }
   end
 
   def deal_pipelines_map
     @deal_pipelines_map ||=
-      deal_pipelines['dealGroups'].map { |field| [field['title'], field['id']] }.to_h
+      deal_pipelines['dealGroups'].to_h { |field| [field['title'], field['id']] }
   end
 
   def tags_map
     @tags_map ||=
-      tags['tags'].map { |field| [field['tag'], field['id']] }.to_h
+      tags['tags'].to_h { |field| [field['tag'], field['id']] }
   end
 
   def contact_payload(user)
@@ -200,7 +200,7 @@ class ActiveCampaignService
   end
 
   def custom_deal_fields(event_name, args)
-    front_end_url = ENV['FRONTENT_URL']
+    front_end_url = ENV.fetch('FRONTENT_URL', nil)
 
     fields =
       case event_name
@@ -213,15 +213,15 @@ class ActiveCampaignService
         [
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_PRICE],
-            fieldValue: format('%.2f', amount)
+            fieldValue: format('%<amount>.2f', amount:)
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_DISCOUNT],
-            fieldValue: format('%.2f', discount)
+            fieldValue: format('%<discount>.2f', discount:)
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::ORDER_FINAL_PRICE],
-            fieldValue: format('%.2f', final_price)
+            fieldValue: format('%<final_price>.2f', final_price:)
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::APPLY_DISCOUNT],
@@ -289,7 +289,7 @@ class ActiveCampaignService
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::CANCELLATION_PERIOD],
-            fieldValue: ENV['CANCELLATION_PERIOD']
+            fieldValue: ENV.fetch('CANCELLATION_PERIOD', nil)
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::AMOUNT_CHARGED],
@@ -319,7 +319,7 @@ class ActiveCampaignService
           },
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::CC_CASH_AWARDED],
-            fieldValue: format('%.2f', args[:cc_cash_awarded])
+            fieldValue: format('%<cc_cash>.2f', cc_cash: args[:cc_cash_awarded])
           }
         ]
       when ::ActiveCampaign::Deal::Event::STARTED_CHECKOUT

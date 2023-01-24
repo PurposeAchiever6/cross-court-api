@@ -15,7 +15,7 @@ module Subscriptions
           payment_method
         )
 
-        subscription.update!(payment_method_id: payment_method_id)
+        subscription.update!(payment_method_id:)
       end
 
       context.subscription = subscription

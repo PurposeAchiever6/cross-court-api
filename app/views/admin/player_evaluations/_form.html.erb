@@ -4,7 +4,7 @@
     <span class="block text-4xl">Form</span>
   </h1>
   <%= semantic_form_for([:admin, @player_evaluation], builder: ActiveAdmin::FormBuilder) do |f| %>
-    <%= f.semantic_errors *@player_evaluation.errors.keys %>
+    <%= f.semantic_errors *@player_evaluation.errors.attribute_names %>
     <div class="sm:flex mb-8">
       <div class="w-full">
         <div class="sm:mr-3 mb-4 sm:mb-0">
@@ -23,7 +23,7 @@
           <%= f.input :date,
                       label: false,
                       wrapper_html: { class: 'list-none' },
-                      input_html: { value: @player_evaluation.date || Time.zone.today,
+                      input_html: { value: @player_evaluation.date,
                                     class: '!w-full box-border' } %>
         </div>
       </div>

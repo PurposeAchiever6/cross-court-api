@@ -2,8 +2,8 @@
 #
 # Table name: shooting_machines
 #
-#  id         :integer          not null, primary key
-#  session_id :integer
+#  id         :bigint           not null, primary key
+#  session_id :bigint
 #  price      :float            default(15.0)
 #  start_time :time
 #  end_time   :time

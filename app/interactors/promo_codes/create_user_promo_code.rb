@@ -9,7 +9,7 @@ module PromoCodes
 
       return unless promo_code
 
-      user_promo_code = UserPromoCode.find_or_create_by!(user: user, promo_code: promo_code)
+      user_promo_code = UserPromoCode.find_or_create_by!(user:, promo_code:)
       user_promo_code.increment!(:times_used)
 
       product_referral_cc_cash = product.referral_cc_cash

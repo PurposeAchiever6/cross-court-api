@@ -3,14 +3,14 @@ module Api
     class SessionGuestsController < Api::V1::ApiUserController
       def create
         @session_guest = SessionGuests::Add.call(
-          user_session: user_session,
+          user_session:,
           guest_info: params[:guest_info]
         ).session_guest
       end
 
       def destroy
         SessionGuests::Remove.call(
-          user_session: user_session,
+          user_session:,
           session_guest_id: params[:id]
         )
 

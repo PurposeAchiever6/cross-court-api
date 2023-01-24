@@ -2,7 +2,7 @@
 #
 # Table name: products
 #
-#  id                                     :integer          not null, primary key
+#  id                                     :bigint           not null, primary key
 #  credits                                :integer          default(0), not null
 #  name                                   :string           not null
 #  created_at                             :datetime         not null
@@ -22,6 +22,7 @@
 #  skill_session_credits                  :integer          default(0)
 #  season_pass                            :boolean          default(FALSE)
 #  scouting                               :boolean          default(FALSE)
+#  free_pauses_per_year                   :integer          default(0)
 #
 # Indexes
 #
@@ -33,6 +34,7 @@ class Product < ApplicationRecord
   UNLIMITED = -1
 
   acts_as_paranoid
+  has_paper_trail
 
   enum product_type: { one_time: 0, recurring: 1 }
   enum available_for: { everyone: 0, reserve_team: 1 }
@@ -43,9 +45,14 @@ class Product < ApplicationRecord
   has_many :subscriptions
   has_many :products_promo_codes, dependent: :destroy
   has_many :promo_codes, through: :products_promo_codes
+  has_many :session_allowed_products, dependent: :destroy
 
   validates :name, :credits, :order_number, presence: true
   validates :skill_session_credits, presence: true, if: -> { recurring? }
+
+  def self.for_user(user)
+    user&.reserve_team ? Product.reserve_team.or(Product.one_time) : Product.everyone
+  end
 
   def unlimited?
     credits == UNLIMITED
@@ -69,8 +76,19 @@ class Product < ApplicationRecord
     super()
   end
 
-  def self.for_user(user)
-    user&.reserve_team ? Product.reserve_team.or(Product.one_time) : Product.everyone
+  def update_recurring_price(new_price, update_existing_subscriptions: true)
+    return if price == new_price || one_time?
+
+    stripe_price_id = StripeService.create_price(
+      name:,
+      product_type:,
+      price: new_price,
+      stripe_product_id:
+    ).id
+
+    update!(price: new_price, stripe_price_id:)
+
+    Products::UpdateExistingSubscriptionsPriceJob.perform_later(id) if update_existing_subscriptions
   end
 
   private

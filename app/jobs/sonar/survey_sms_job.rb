@@ -10,7 +10,7 @@ module Sonar
           I18n.t(
             'notifier.sonar.survey_reminder',
             name: user.first_name,
-            survey_link: "#{ENV['FRONTENT_URL']}?openSurvey=true"
+            survey_link: "#{ENV.fetch('FRONTENT_URL', nil)}?openSurvey=true"
           )
         )
       end

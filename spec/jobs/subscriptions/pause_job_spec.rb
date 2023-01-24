@@ -9,11 +9,11 @@ describe ::Subscriptions::PauseJob do
         subscription_skill_session_credits: rand(1..2)
       )
     end
-    let!(:subscription) { create(:subscription, user: user, status: subscription_status) }
-    let!(:subscription_pause) { create(:subscription_pause, subscription: subscription) }
+    let!(:subscription) { create(:subscription, user:, status: subscription_status) }
+    let!(:subscription_pause) { create(:subscription_pause, subscription:) }
 
     let(:subscription_status) { 'active' }
-    let(:resumes_at) { (Time.current + 1.month).to_i }
+    let(:resumes_at) { 1.month.from_now.to_i }
 
     before do
       Timecop.freeze(Time.current)

@@ -2,10 +2,10 @@
 #
 # Table name: user_session_votes
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  date       :date
-#  user_id    :integer
-#  session_id :integer
+#  user_id    :bigint
+#  session_id :bigint
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -22,6 +22,6 @@ class UserSessionVote < ApplicationRecord
 
   validates :date, presence: true, uniqueness: { scope: %i[session_id user_id] }
 
-  scope :by_date, ->(date) { where(date: date) }
-  scope :by_user, ->(user_id) { where(user_id: user_id) }
+  scope :by_date, ->(date) { where(date:) }
+  scope :by_user, ->(user_id) { where(user_id:) }
 end

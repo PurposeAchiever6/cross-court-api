@@ -2,7 +2,7 @@
 #
 # Table name: skill_levels
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  min         :decimal(2, 1)
 #  max         :decimal(2, 1)
 #  name        :string

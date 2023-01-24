@@ -7,17 +7,17 @@ describe Waitlists::RemoveUser do
     let!(:user_session_waitlist) do
       create(
         :user_session_waitlist,
-        session: session,
-        user: user,
+        session:,
+        user:,
         date: session.start_time,
-        state: state
+        state:
       )
     end
 
     let(:date) { session.start_time }
     let(:state) { :pending }
 
-    subject { Waitlists::RemoveUser.call(session: session, user: user, date: date) }
+    subject { Waitlists::RemoveUser.call(session:, user:, date:) }
 
     it { expect { subject }.to change(UserSessionWaitlist, :count).by(-1) }
 

@@ -2,14 +2,14 @@
 #
 # Table name: session_guests
 #
-#  id              :integer          not null, primary key
+#  id              :bigint           not null, primary key
 #  first_name      :string           not null
 #  last_name       :string           not null
 #  phone_number    :string           not null
 #  email           :string           not null
 #  access_code     :string           not null
 #  state           :integer          default("reserved"), not null
-#  user_session_id :integer
+#  user_session_id :bigint
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
@@ -27,8 +27,8 @@ class SessionGuest < ApplicationRecord
 
   before_validation :create_access_code
 
-  scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: date }) }
-  scope :for_phone, ->(phone_number) { where(phone_number: phone_number) }
+  scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: }) }
+  scope :for_phone, ->(phone_number) { where(phone_number:) }
 
   def full_name
     "#{first_name} #{last_name}"

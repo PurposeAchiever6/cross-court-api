@@ -25,9 +25,9 @@ module Sessions
       return unless waitlist_item
 
       UserSessions::Create.call(
-        session: session,
+        session:,
         user: waitlist_item.user,
-        date: date,
+        date:,
         from_waitlist: true
       )
 

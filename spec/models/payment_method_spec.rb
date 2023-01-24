@@ -2,8 +2,8 @@
 #
 # Table name: payment_methods
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
+#  id         :bigint           not null, primary key
+#  user_id    :bigint           not null
 #  stripe_id  :string
 #  brand      :string
 #  exp_month  :integer
@@ -24,7 +24,7 @@ describe PaymentMethod do
   describe 'validations' do
     subject { build(:payment_method) }
 
-    it { is_expected.to validate_presence_of(:user_id) }
+    it { is_expected.to belong_to(:user) }
     it { is_expected.to validate_presence_of(:stripe_id) }
     it { is_expected.to validate_uniqueness_of(:default).scoped_to(:user_id) }
   end

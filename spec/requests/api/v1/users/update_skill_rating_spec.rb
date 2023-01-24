@@ -13,7 +13,7 @@ describe 'PUT /api/v1/user/update_skill_rating' do
   subject do
     put update_skill_rating_api_v1_user_path,
         headers: request_headers,
-        params: params,
+        params:,
         as: :json
     response
   end

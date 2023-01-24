@@ -4,7 +4,7 @@ describe 'POST api/v1/subscriptions/:id/reactivate' do
   let(:user) { create(:user) }
   let(:cancel_at_period_end) { true }
   let(:subscription) do
-    create(:subscription, user: user, cancel_at_period_end: cancel_at_period_end)
+    create(:subscription, user:, cancel_at_period_end:)
   end
 
   let(:stripe_response) do

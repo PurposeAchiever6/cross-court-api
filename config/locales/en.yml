@@ -82,7 +82,7 @@ en:
         not_coming_soon: "The session should be a coming soon session"
         has_already_been_played: "The session has already been played"
         reserve_team_not_allowed: "The Reserve Team is not allowed to reserve"
-        only_for_members: "The session is only for members"
+        not_allowed_for_member: The session is only for members or is restricted for certain memberships
         user_already_in: "You are already in for this session"
         votes:
           user_did_not_vote: "The user did not vote for this session"
@@ -186,13 +186,17 @@ en:
       no_session_booked: "You don’t have any session booked yet"
       today_reminder: >
         Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. Please
-        note the cancellation window closes %{cancellation_period_hours} hrs before your session
-        starts. If you need to cancel, you're able to at %{frontend_url} %{invite_friend}
+        note the cancellation window closes %{cancellation_period_hours} hrs before tip off and your
+        spot may be lost or given up if you arrive more than 10 minutes after session start time.
+        Please reach out if you are running late. If you need to cancel, you're able to
+        at %{frontend_url} %{invite_friend}
       today_reminder_first_timers: >
         Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. For the
         best first experience, please arrive at least 20 minutes prior to session start time. Also
-        note the cancellation window closes %{cancellation_period_hours} hrs before your session
-        starts. If you need to cancel, you're able to at %{frontend_url} %{invite_friend}
+        note the cancellation window closes %{cancellation_period_hours} hrs before tip off and your
+        spot may be lost or given up if you arrive more than 10 minutes after session start time.
+        Please reach out if you are running late. If you need to cancel, you're able to
+        at %{frontend_url} %{invite_friend}
       survey_reminder: >
         Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate
         your feedback. %{survey_link}
@@ -245,6 +249,7 @@ en:
       created: "Product created successfully"
       destroyed: "Product deleted successfully"
       recover: "Product recovered successfully"
+      update_price: "Product price updated successfully"
     promo_codes:
       created: "%{type} created successfully"
       destroyed: "%{type} deleted successfully"

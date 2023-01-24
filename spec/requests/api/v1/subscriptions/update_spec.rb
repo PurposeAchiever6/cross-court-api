@@ -2,14 +2,14 @@ require 'rails_helper'
 
 describe 'PUT api/v1/subscriptions/:id' do
   let!(:user) { create(:user) }
-  let!(:payment_method) { create(:payment_method, user: user) }
+  let!(:payment_method) { create(:payment_method, user:) }
   let!(:product) { create(:product, price: 100, product_type: :recurring, credits: 4) }
   let!(:new_product) { create(:product, price: 120, product_type: :recurring, credits: 8) }
-  let!(:subscription) { create(:subscription, product: product, user: user) }
+  let!(:subscription) { create(:subscription, product:, user:) }
   let(:params) { { product_id: new_product.id, payment_method_id: payment_method.id } }
 
   subject do
-    put api_v1_subscription_path(subscription), params: params, headers: auth_headers, as: :json
+    put api_v1_subscription_path(subscription), params:, headers: auth_headers, as: :json
   end
 
   context 'when the transaction succeeds' do

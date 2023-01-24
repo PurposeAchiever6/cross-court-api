@@ -2,9 +2,9 @@
 #
 # Table name: employee_sessions
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  session_id :integer
+#  id         :bigint           not null, primary key
+#  user_id    :bigint           not null
+#  session_id :bigint
 #  date       :date             not null
 #  state      :integer          default("unconfirmed"), not null
 #  type       :string           not null
@@ -50,7 +50,7 @@ class EmployeeSession < ApplicationRecord
   def destroy_previous_assignment
     self.class
         .default_scoped
-        .where(session_id: session_id, date: date).where.not(id: id).destroy_all
+        .where(session_id:, date:).where.not(id:).destroy_all
   end
 
   def datetime

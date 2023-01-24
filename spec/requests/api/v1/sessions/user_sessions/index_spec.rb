@@ -3,19 +3,19 @@ require 'rails_helper'
 describe 'GET /api/v1/sessions/:session_id/user_sessions', type: :request do
   let(:user) { create(:user) }
   let!(:location) { create(:location) }
-  let!(:session) { create(:session, location: location) }
+  let!(:session) { create(:session, location:) }
 
   let!(:user_session1) do
-    create(:user_session, session: session, date: Time.zone.today, checked_in: true)
+    create(:user_session, session:, date: Time.zone.today, checked_in: true)
   end
   let!(:user_session2) do
-    create(:user_session, session: session, date: Time.zone.today, checked_in: true)
+    create(:user_session, session:, date: Time.zone.today, checked_in: true)
   end
   let!(:user_session3) do
-    create(:user_session, session: session, date: 2.days.from_now, checked_in: true)
+    create(:user_session, session:, date: 2.days.from_now, checked_in: true)
   end
   let!(:user_session4) do
-    create(:user_session, session: session, date: 2.days.from_now, checked_in: true)
+    create(:user_session, session:, date: 2.days.from_now, checked_in: true)
   end
 
   let(:params) { {} }
@@ -23,7 +23,7 @@ describe 'GET /api/v1/sessions/:session_id/user_sessions', type: :request do
   subject do
     get api_v1_session_user_sessions_path(session_id: session.id),
         headers: auth_headers,
-        params: params,
+        params:,
         as: :json
   end
 

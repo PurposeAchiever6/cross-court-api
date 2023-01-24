@@ -4,23 +4,134 @@ AllCops:
   Exclude:
     - db/schema.rb
 
-Style/Documentation:
-  Enabled: false
-
 Layout/ClassStructure:
+  Enabled: true
+
+Layout/LineContinuationLeadingSpace: # new in 1.31
+  Enabled: true
+
+Layout/LineContinuationSpacing: # new in 1.31
+  Enabled: true
+
+Layout/LineEndStringConcatenationIndentation: # new in 1.18
+  Enabled: true
+
+Layout/SpaceBeforeBrackets: # new in 1.7
   Enabled: true
 
 Layout/SpaceBeforeFirstArg:
   Exclude:
     - app/views/api/**/**/*
 
+Layout/FirstHashElementIndentation:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 100
+  # To make it possible to copy or click on URIs in the code, we allow lines
+  # containing a URI to be longer than Max.
+  AllowURI: true
+  Exclude:
+    - db/migrate/20161011184702_devise_create_admin_users.rb
+    - db/migrate/20161011151353_devise_create_users.rb
+    - db/migrate/20161027190856_create_delayed_jobs.rb
+    - db/migrate/20181102142200_create_active_storage_tables.active_storage.rb
+    - config/initializers/new_framework_defaults_7_0.rb
+  URISchemes:
+    - http
+    - https
+
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Exclude:
     - app/jobs/user_sessions/charge_not_show_up_job.rb
+
+Lint/AmbiguousAssignment: # new in 1.7
+  Enabled: true
+
+Lint/AmbiguousOperatorPrecedence: # new in 1.21
+  Enabled: true
+
+Lint/AmbiguousRange: # new in 1.19
+  Enabled: true
+
+Lint/ConstantOverwrittenInRescue: # new in 1.31
+  Enabled: true
+
+Lint/DeprecatedConstants: # new in 1.8
+  Enabled: true
+
+Lint/DuplicateBranch: # new in 1.3
+  Enabled: true
+
+Lint/DuplicateMagicComment: # new in 1.37
+  Enabled: true
+
+Lint/DuplicateRegexpCharacterClassElement: # new in 1.1
+  Enabled: true
+
+Lint/EmptyBlock: # new in 1.1
+  Enabled: true
+
+Lint/EmptyClass: # new in 1.3
+  Enabled: true
+
+Lint/EmptyInPattern: # new in 1.16
+  Enabled: true
+
+Lint/IncompatibleIoSelectWithFiberScheduler: # new in 1.21
+  Enabled: true
+
+Lint/LambdaWithoutLiteralBlock: # new in 1.8
+  Enabled: true
+
+Lint/NoReturnInBeginEndBlocks: # new in 1.2
+  Enabled: true
+
+Lint/NonAtomicFileOperation: # new in 1.31
+  Enabled: true
+
+Lint/NumberedParameterAssignment: # new in 1.9
+  Enabled: true
+
+Lint/OrAssignmentToConstant: # new in 1.9
+  Enabled: true
+
+Lint/RedundantDirGlobSort: # new in 1.8
+  Enabled: true
+
+Lint/RefinementImportMethods: # new in 1.27
+  Enabled: true
+
+Lint/RequireRangeParentheses: # new in 1.32
+  Enabled: true
+
+Lint/RequireRelativeSelfPath: # new in 1.22
+  Enabled: true
+
+Lint/SymbolConversion: # new in 1.9
+  Enabled: true
+
+Lint/ToEnumArguments: # new in 1.1
+  Enabled: true
+
+Lint/TripleQuotes: # new in 1.9
+  Enabled: true
+
+Lint/UnexpectedBlockArity: # new in 1.5
+  Enabled: true
+
+Lint/UnmodifiedReduceAccumulator: # new in 1.1
+  Enabled: true
+
+Lint/UselessRuby2Keywords: # new in 1.23
+  Enabled: true
+
+Lint/UselessRescue: # new in 1.43
+  Enabled: true
 
 Metrics/BlockLength:
   CountComments: false # count full line comments?
@@ -61,6 +172,7 @@ Metrics/CyclomaticComplexity:
     - app/jobs/sessions/assign_default_employees_job.rb
     - app/interactors/user_sessions/cancel.rb
     - app/models/subscription.rb
+    - app/interactors/session_guests/validations.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?
@@ -83,26 +195,13 @@ Metrics/ModuleLength:
   CountComments: false # count full line comments?
   Max: 200
 
-Metrics/LineLength:
-  Max: 100
-  # To make it possible to copy or click on URIs in the code, we allow lines
-  # containing a URI to be longer than Max.
-  AllowURI: true
-  Exclude:
-    - db/migrate/20161011184702_devise_create_admin_users.rb
-    - db/migrate/20161011151353_devise_create_users.rb
-    - db/migrate/20161027190856_create_delayed_jobs.rb
-    - db/migrate/20181102142200_create_active_storage_tables.active_storage.rb
-  URISchemes:
-    - http
-    - https
-
 Metrics/ParameterLists:
   Max: 5
   CountKeywordArgs: true
   Exclude:
     - spec/support/mocks/stripe_mocker.rb
     - app/interactors/users/charge.rb
+    - app/services/stripe_service.rb
 
 Metrics/PerceivedComplexity:
   Max: 40
@@ -145,6 +244,25 @@ Rails/NotNullColumn:
   Exclude:
     - db/migrate/20200508180924_add_expiration_date_to_promo_codes.rb
 
+Rails/UniqueValidationWithoutIndex:
+  Exclude:
+    - app/models/legal.rb
+    - app/models/session_exception.rb
+
+Style/MapToSet:
+  Enabled: true
+
+Style/GlobalVars:
+  Enabled: true
+  AllowedVariables:
+    - $redis
+
+Style/MinMaxComparison:
+  Enabled: true
+
+Style/YodaExpression:
+  Enabled: true
+
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining
 
@@ -168,6 +286,131 @@ Style/GuardClause:
     - app/jobs/sessions/assign_default_employees_job.rb
     - app/interactors/user_sessions/open_club_validations.rb
 
+Style/Documentation:
+  Enabled: false
+
+Style/ArgumentsForwarding: # new in 1.1
+  Enabled: true
+
+Style/ArrayIntersect: # new in 1.40
+  Enabled: true
+
+Style/CollectionCompact: # new in 1.2
+  Enabled: true
+
+Style/ConcatArrayLiterals: # new in 1.41
+  Enabled: true
+
+Style/DocumentDynamicEvalDefinition: # new in 1.1
+  Enabled: true
+
+Style/EmptyHeredoc: # new in 1.32
+  Enabled: true
+
+Style/EndlessMethod: # new in 1.8
+  Enabled: true
+
+Style/EnvHome: # new in 1.29
+  Enabled: true
+
+Style/FetchEnvVar: # new in 1.28
+  Enabled: true
+
+Style/FileRead: # new in 1.24
+  Enabled: true
+
+Style/FileWrite: # new in 1.24
+  Enabled: true
+
+Style/HashConversion: # new in 1.10
+  Enabled: true
+
+Style/HashExcept: # new in 1.7
+  Enabled: true
+
+Style/IfWithBooleanLiteralBranches: # new in 1.9
+  Enabled: true
+
+Style/InPatternThen: # new in 1.16
+  Enabled: true
+
+Style/MagicCommentFormat: # new in 1.35
+  Enabled: true
+
+Style/MapCompactWithConditionalBlock: # new in 1.30
+  Enabled: true
+
+Style/MapToHash: # new in 1.24
+  Enabled: true
+
+Style/MultilineInPatternThen: # new in 1.16
+  Enabled: true
+
+Style/NegatedIfElseCondition: # new in 1.2
+  Enabled: true
+
+Style/NestedFileDirname: # new in 1.26
+  Enabled: true
+
+Style/NilLambda: # new in 1.3
+  Enabled: true
+
+Style/NumberedParameters: # new in 1.22
+  Enabled: true
+
+Style/NumberedParametersLimit: # new in 1.22
+  Enabled: true
+
+Style/ObjectThen: # new in 1.28
+  Enabled: true
+
+Style/OpenStructUse: # new in 1.23
+  Enabled: true
+  Exclude:
+    - app/controllers/api/v1/active_campaign/contacts_controller.rb
+    - app/controllers/api/v1/active_campaign/deals_controller.rb
+
+Style/OperatorMethodCall: # new in 1.37
+  Enabled: true
+
+Style/QuotedSymbols: # new in 1.16
+  Enabled: true
+
+Style/RedundantArgument: # new in 1.4
+  Enabled: true
+
+Style/RedundantConstantBase: # new in 1.40
+  Enabled: false
+
+Style/RedundantDoubleSplatHashBraces: # new in 1.41
+  Enabled: true
+
+Style/RedundantEach: # new in 1.38
+  Enabled: true
+
+Style/RedundantInitialize: # new in 1.27
+  Enabled: true
+
+Style/RedundantSelfAssignmentBranch: # new in 1.19
+  Enabled: true
+
+Style/RedundantStringEscape: # new in 1.37
+  Enabled: true
+
+Style/SelectByRegexp: # new in 1.22
+  Enabled: true
+
+Style/StringChars: # new in 1.12
+  Enabled: true
+
+Style/SwapValues: # new in 1.1
+  Enabled: true
+
+Style/OptionalBooleanParameter:
+  Enabled: true
+  Exclude:
+    - app/models/promo_code.rb
+
 Style/IfUnlessModifier:
   Exclude:
     - app/models/promo_code.rb
@@ -183,3 +426,176 @@ Style/RescueModifier:
   Exclude:
     - spec/**/*
     - config/routes.rb
+
+Naming/VariableNumber:
+  Enabled: false
+
+Gemspec/DeprecatedAttributeAssignment: # new in 1.30
+  Enabled: true
+
+Gemspec/RequireMFA: # new in 1.23
+  Enabled: true
+
+Naming/BlockForwarding: # new in 1.24
+  Enabled: true
+
+Security/CompoundHash: # new in 1.28
+  Enabled: true
+
+Security/IoMethods: # new in 1.22
+  Enabled: true
+
+Rails/ActionControllerFlashBeforeRender: # new in 2.16
+  Enabled: true
+
+Rails/ActionControllerTestCase: # new in 2.14
+  Enabled: true
+
+Rails/ActionOrder: # new in 2.17
+  Enabled: true
+
+Rails/ActiveRecordCallbacksOrder: # new in 2.7
+  Enabled: true
+
+Rails/ActiveSupportOnLoad: # new in 2.16
+  Enabled: true
+
+Rails/AddColumnIndex: # new in 2.11
+  Enabled: true
+
+Rails/AfterCommitOverride: # new in 2.8
+  Enabled: true
+
+Rails/AttributeDefaultBlockValue: # new in 2.9
+  Enabled: true
+
+Rails/CompactBlank: # new in 2.13
+  Enabled: true
+
+Rails/DeprecatedActiveModelErrorsMethods: # new in 2.14
+  Enabled: true
+
+Rails/DotSeparatedKeys: # new in 2.15
+  Enabled: true
+
+Rails/DuplicateAssociation: # new in 2.14
+  Enabled: true
+
+Rails/DuplicateScope: # new in 2.14
+  Enabled: true
+
+Rails/DurationArithmetic: # new in 2.13
+  Enabled: true
+
+Rails/EagerEvaluationLogMessage: # new in 2.11
+  Enabled: true
+
+Rails/ExpandedDateRange: # new in 2.11
+  Enabled: true
+
+Rails/FindById: # new in 2.7
+  Enabled: true
+
+Rails/FreezeTime: # new in 2.16
+  Enabled: true
+
+Rails/I18nLazyLookup: # new in 2.14
+  Enabled: true
+
+Rails/I18nLocaleAssignment: # new in 2.11
+  Enabled: true
+
+Rails/I18nLocaleTexts: # new in 2.14
+  Enabled: false
+
+Rails/IgnoredColumnsAssignment: # new in 2.17
+  Enabled: true
+
+Rails/Inquiry: # new in 2.7
+  Enabled: true
+
+Rails/MailerName: # new in 2.7
+  Enabled: true
+
+Rails/MatchRoute: # new in 2.7
+  Enabled: true
+
+Rails/MigrationClassName: # new in 2.14
+  Enabled: true
+
+Rails/NegateInclude: # new in 2.7
+  Enabled: true
+
+Rails/Pluck: # new in 2.7
+  Enabled: true
+
+Rails/PluckInWhere: # new in 2.7
+  Enabled: true
+
+Rails/RedundantPresenceValidationOnBelongsTo: # new in 2.13
+  Enabled: true
+
+Rails/RedundantTravelBack: # new in 2.12
+  Enabled: true
+
+Rails/RenderInline: # new in 2.7
+  Enabled: true
+
+Rails/RenderPlainText: # new in 2.7
+  Enabled: true
+
+Rails/RootJoinChain: # new in 2.13
+  Enabled: true
+
+Rails/RootPathnameMethods: # new in 2.16
+  Enabled: true
+
+Rails/RootPublicPath: # new in 2.15
+  Enabled: true
+
+Rails/ShortI18n: # new in 2.7
+  Enabled: true
+
+Rails/SquishedSQLHeredocs: # new in 2.8
+  Enabled: true
+
+Rails/StripHeredoc: # new in 2.15
+  Enabled: true
+
+Rails/TimeZoneAssignment: # new in 2.10
+  Enabled: true
+
+Rails/ToFormattedS: # new in 2.15
+  Enabled: true
+
+Rails/ToSWithArgument: # new in 2.16
+  Enabled: true
+
+Rails/TopLevelHashWithIndifferentAccess: # new in 2.16
+  Enabled: true
+
+Rails/TransactionExitStatement: # new in 2.14
+  Enabled: true
+
+Rails/UnusedIgnoredColumns: # new in 2.11
+  Enabled: true
+
+Rails/WhereEquals: # new in 2.9
+  Enabled: true
+
+Rails/WhereExists: # new in 2.7
+  Enabled: true
+
+Rails/WhereMissing: # new in 2.16
+  Enabled: true
+
+Rails/WhereNot: # new in 2.8
+  Enabled: true
+
+Rails/WhereNotWithMultipleConditions: # new in 2.17
+  Enabled: true
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: true
+  Exclude:
+    - app/controllers/api/v1/devise_sessions_controller.rb

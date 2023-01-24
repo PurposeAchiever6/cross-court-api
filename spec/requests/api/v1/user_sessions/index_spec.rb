@@ -32,13 +32,13 @@ describe 'GET api/v1/user_sessions' do
       Timecop.return
     end
 
-    let(:s1)             { create(:session, time: Time.current - 1.hour) }
-    let(:s2)             { create(:session, time: Time.current + 1.hour) }
-    let!(:user_session1) { create(:user_session, session: s1, user: user, date: 2.days.ago) }
-    let!(:user_session2) { create(:user_session, session: s1, user: user, date: 1.day.ago) }
-    let!(:user_session3) { create(:user_session, session: s1, user: user, date: Date.current) }
-    let!(:user_session4) { create(:user_session, session: s2, user: user, date: Date.current) }
-    let!(:user_session5) { create(:user_session, session: s1, user: user, date: 1.day.from_now) }
+    let(:s1)             { create(:session, time: 1.hour.ago) }
+    let(:s2)             { create(:session, time: 1.hour.from_now) }
+    let!(:user_session1) { create(:user_session, session: s1, user:, date: 2.days.ago) }
+    let!(:user_session2) { create(:user_session, session: s1, user:, date: 1.day.ago) }
+    let!(:user_session3) { create(:user_session, session: s1, user:, date: Date.current) }
+    let!(:user_session4) { create(:user_session, session: s2, user:, date: Date.current) }
+    let!(:user_session5) { create(:user_session, session: s1, user:, date: 1.day.from_now) }
 
     it 'returns success' do
       subject
@@ -61,9 +61,9 @@ describe 'GET api/v1/user_sessions' do
     context 'when the session is not in starting time' do
       let(:s1)           { create(:session, :daily, time: los_angeles_time) }
       let(:s2)           { create(:session, :daily, time: los_angeles_time) }
-      let!(:sem_session) { create(:sem_session, session: s1, user: user, date: 2.days.from_now) }
+      let!(:sem_session) { create(:sem_session, session: s1, user:, date: 2.days.from_now) }
       let!(:referee_session1) do
-        create(:referee_session, session: s2, user: user, date: 2.days.from_now)
+        create(:referee_session, session: s2, user:, date: 2.days.from_now)
       end
 
       it 'returns sem_upcoming_sessions' do
@@ -78,7 +78,7 @@ describe 'GET api/v1/user_sessions' do
 
       context 'when the user is also the referee' do
         let!(:referee_session2) do
-          create(:referee_session, session: s1, user: user, date: 2.days.from_now)
+          create(:referee_session, session: s1, user:, date: 2.days.from_now)
         end
 
         it 'returns only two upcoming_sessions' do
@@ -90,7 +90,7 @@ describe 'GET api/v1/user_sessions' do
 
     context 'when the session is in the starting time' do
       let(:s1)           { create(:session, time: los_angeles_time) }
-      let!(:sem_session) { create(:sem_session, session: s1, user: user, date: Date.current) }
+      let!(:sem_session) { create(:sem_session, session: s1, user:, date: Date.current) }
 
       it 'returns sem_upcoming_sessions' do
         subject

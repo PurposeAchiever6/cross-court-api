@@ -22,22 +22,24 @@ module App
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-    config.load_defaults 6.0
+    config.load_defaults 7.0
     config.active_job.queue_adapter = :sidekiq
 
-    config.secret_key_base = ENV['SECRET_KEY_BASE']
+    config.secret_key_base = ENV.fetch('SECRET_KEY_BASE', nil)
 
     config.autoload_paths += %W[#{config.root}/lib]
+    config.eager_load_paths << Rails.root.join('extras')
+    config.action_controller.raise_on_open_redirects = false
 
     ActionMailer::Base.smtp_settings = {
       address: 'smtp.sendgrid.net',
       port: 25,
-      domain: ENV['SERVER_URL'],
+      domain: ENV.fetch('SERVER_URL', nil),
       authentication: :plain,
-      user_name: ENV['SENDGRID_USERNAME'],
-      password: ENV['SENDGRID_PASSWORD']
+      user_name: ENV.fetch('SENDGRID_USERNAME', nil),
+      password: ENV.fetch('SENDGRID_PASSWORD', nil)
     }
-    config.action_mailer.default_url_options = { host: ENV['SERVER_URL'] }
+    config.action_mailer.default_url_options = { host: ENV.fetch('SERVER_URL', nil) }
     config.action_mailer.default_options = {
       from: 'Crosscourt <no-reply@cross-court.com>'
     }

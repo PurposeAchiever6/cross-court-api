@@ -19,9 +19,9 @@ module Api
           session = Session.find(params[:session_id])
 
           ::Sessions::RemoveVote.call(
-            session: session,
+            session:,
             user: current_user,
-            date: date
+            date:
           )
 
           head :ok

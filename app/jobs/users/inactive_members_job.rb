@@ -18,12 +18,13 @@ module Users
                    name: user.first_name,
                    credits_left: user.subscription_credits,
                    end_date: user.active_subscription.current_period_end.strftime('%e of %B'),
-                   schedule_url: "#{ENV['FRONTENT_URL']}/locations")
+                   schedule_url: "#{ENV.fetch('FRONTENT_URL', nil)}/locations")
           )
         elsif send_book_reminder?(user)
           SonarService.send_message(user, I18n.t('notifier.sonar.active_subscription_book_reminder',
                                                  name: user.first_name,
-                                                 schedule_url: "#{ENV['FRONTENT_URL']}/locations"))
+                                                 schedule_url: "#{ENV.fetch('FRONTENT_URL',
+                                                                            nil)}/locations"))
         end
       end
     end

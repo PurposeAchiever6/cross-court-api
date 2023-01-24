@@ -7,10 +7,10 @@ describe UserSessions::ConfirmFreeSessionIntent do
     let!(:user_session) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         is_free_session: free_session,
-        free_session_payment_intent: free_session_payment_intent
+        free_session_payment_intent:
       )
     end
 
@@ -19,7 +19,7 @@ describe UserSessions::ConfirmFreeSessionIntent do
 
     before { allow(StripeService).to receive(:confirm_intent) }
 
-    subject { UserSessions::ConfirmFreeSessionIntent.call(user_session: user_session) }
+    subject { UserSessions::ConfirmFreeSessionIntent.call(user_session:) }
 
     it 'calls Stripe service' do
       expect(StripeService).to receive(:confirm_intent).with(free_session_payment_intent)

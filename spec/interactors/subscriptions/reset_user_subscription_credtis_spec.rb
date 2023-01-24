@@ -16,7 +16,7 @@ describe Subscriptions::ResetUserSubscriptionCredits do
     let(:user_subscription_skill_session_credits) { rand(1..10) }
 
     subject do
-      Subscriptions::ResetUserSubscriptionCredits.call(user: user)
+      Subscriptions::ResetUserSubscriptionCredits.call(user:)
     end
 
     it 'does not update user credits' do

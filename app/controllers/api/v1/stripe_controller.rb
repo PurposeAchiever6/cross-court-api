@@ -3,7 +3,7 @@ module Api
     class StripeController < ApplicationController
       skip_before_action :verify_authenticity_token
 
-      STRIPE_WEBHOOK_SECRET = ENV['STRIPE_WEBHOOK_SECRET']
+      STRIPE_WEBHOOK_SECRET = ENV.fetch('STRIPE_WEBHOOK_SECRET', nil)
       INVOICE_PAYMENT_FAILED = 'invoice.payment_failed'.freeze
       INVOICE_PAYMENT_SUCCEEDED = 'invoice.payment_succeeded'.freeze
       INVOICE_MARKED_UNCOLLECTIBLE = 'invoice.marked_uncollectible'.freeze
@@ -20,7 +20,7 @@ module Api
         begin
           event = Stripe::Webhook.construct_event(payload, sig_header, STRIPE_WEBHOOK_SECRET)
         rescue JSON::ParserError, Stripe::SignatureVerificationError
-          head 400
+          head :bad_request
           return
         end
 
@@ -29,7 +29,7 @@ module Api
         type = event.type
         user = User.find_by(stripe_id: object.customer)
 
-        return head 200 unless user
+        return head :ok unless user
 
         active_subscription = user.active_subscription
 
@@ -43,7 +43,7 @@ module Api
           stripe_charge = StripeService.retrieve_charge(stripe_charge_id) if stripe_charge_id
 
           create_payment(
-            subscription: subscription,
+            subscription:,
             description_reason: :renewal,
             stripe_invoice: object,
             status: :error,
@@ -53,7 +53,7 @@ module Api
           if !subscription.canceled? && !object.next_payment_attempt
             # next_payment_attempt will be nil on the latest attempt
             # in that case we can safely cancel the user subscription
-            Subscriptions::CancelSubscription.call(user: user, subscription: subscription)
+            Subscriptions::CancelSubscription.call(user:, subscription:)
           end
         when INVOICE_PAYMENT_SUCCEEDED
           if object.subscription
@@ -73,7 +73,7 @@ module Api
 
           if active_subscription && object.billing_reason == SUBSCRIPTION_CYCLE
             Subscriptions::RenewUserSubscriptionCredits.call(
-              user: user,
+              user:,
               subscription: active_subscription
             )
 
@@ -86,14 +86,14 @@ module Api
           end
         when CUSTOMER_SUBSCRIPTION_DELETED
           update_database_subscription(object)
-          Subscriptions::ResetUserSubscriptionCredits.call(user: user)
+          Subscriptions::ResetUserSubscriptionCredits.call(user:)
         when CUSTOMER_SUBSCRIPTION_UPDATED
           update_database_subscription(object)
         when INVOICE_MARKED_UNCOLLECTIBLE
           actual_subscription_pause = active_subscription.subscription_pauses.actual.last
           if active_subscription && actual_subscription_pause&.paid?
             Users::Charge.call(
-              user: user,
+              user:,
               amount: ENV['PAID_SUBSCRIPTION_PAUSE_PRICE'].to_f,
               description: 'Membership pause fee',
               chargeable: actual_subscription_pause,
@@ -106,7 +106,7 @@ module Api
           Rails.logger.info "Stripe webhooks - unhandled event: #{type}"
         end
 
-        head 200
+        head :ok
       end
 
       private
@@ -137,10 +137,10 @@ module Api
           amount: stripe_invoice.amount_due / 100.00,
           description: "#{subscription.name} (#{description_reason})",
           payment_method: subscription.payment_method,
-          payment_intent_id: payment_intent_id,
-          status: status,
+          payment_intent_id:,
+          status:,
           discount: discount_amount / 100.00,
-          error_message: error_message
+          error_message:
         )
       end
     end

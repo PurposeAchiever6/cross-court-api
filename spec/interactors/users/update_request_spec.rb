@@ -8,9 +8,9 @@ describe Users::UpdateRequest do
 
     subject do
       Users::UpdateRequest.call(
-        user: user,
-        requested_attributes: requested_attributes,
-        reason: reason
+        user:,
+        requested_attributes:,
+        reason:
       )
     end
 

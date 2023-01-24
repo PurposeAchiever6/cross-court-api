@@ -2,8 +2,8 @@
 #
 # Table name: shooting_machines
 #
-#  id         :integer          not null, primary key
-#  session_id :integer
+#  id         :bigint           not null, primary key
+#  session_id :bigint
 #  price      :float            default(15.0)
 #  start_time :time
 #  end_time   :time
@@ -24,12 +24,12 @@ class ShootingMachine < ApplicationRecord
 
   def start_time_str
     start_time_value = start_time
-    start_time_value ? start_time_value.strftime('%I:%M %p') : nil
+    start_time_value&.strftime('%I:%M %p')
   end
 
   def end_time_str
     end_time_value = end_time
-    end_time_value ? end_time_value.strftime('%I:%M %p') : nil
+    end_time_value&.strftime('%I:%M %p')
   end
 
   def reserved?(date)

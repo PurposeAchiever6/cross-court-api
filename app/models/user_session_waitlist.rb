@@ -2,10 +2,10 @@
 #
 # Table name: user_session_waitlists
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  date       :date
-#  user_id    :integer
-#  session_id :integer
+#  user_id    :bigint
+#  session_id :bigint
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  state      :integer          default("pending")
@@ -31,11 +31,14 @@ class UserSessionWaitlist < ApplicationRecord
 
   validates :date, presence: true, uniqueness: { scope: %i[session_id user_id] }
 
-  scope :by_date, ->(date) { where(date: date) }
-  scope :by_user, ->(user_id) { where(user_id: user_id) }
+  scope :by_date, ->(date) { where(date:) }
+  scope :by_user, ->(user_id) { where(user_id:) }
 
   def self.sorted
-    joins(:user).left_outer_joins(user: :active_subscription)
-                .order(state: :asc, 'subscriptions.status': :asc, created_at: :asc)
+    joins(:user).left_outer_joins(user: { active_subscription: :product })
+                .order(state: :asc,
+                       'subscriptions.status': :asc,
+                       'products.price': :desc,
+                       created_at: :asc)
   end
 end

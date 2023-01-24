@@ -2,7 +2,7 @@
 #
 # Table name: subscriptions
 #
-#  id                           :integer          not null, primary key
+#  id                           :bigint           not null, primary key
 #  stripe_id                    :string
 #  stripe_item_id               :string
 #  status                       :string
@@ -13,10 +13,10 @@
 #  canceled_at                  :datetime
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
-#  user_id                      :integer
-#  product_id                   :integer
-#  promo_code_id                :integer
-#  payment_method_id            :integer
+#  user_id                      :bigint
+#  product_id                   :bigint
+#  promo_code_id                :bigint
+#  payment_method_id            :bigint
 #  mark_cancel_at_period_end_at :date
 #
 # Indexes
@@ -39,12 +39,14 @@ class Subscription < ApplicationRecord
   has_one :upcoming_subscription_pause,
           -> { upcoming.order(created_at: :desc) },
           class_name: 'SubscriptionPause',
-          inverse_of: :subscription
+          inverse_of: :subscription,
+          dependent: nil
 
   has_one :upcoming_or_actual_subscription_pause,
           -> { upcoming_or_actual.order(created_at: :desc) },
           class_name: 'SubscriptionPause',
-          inverse_of: :subscription
+          inverse_of: :subscription,
+          dependent: nil
 
   delegate :credits, :skill_session_credits, :name, :unlimited?, to: :product, prefix: false
 
@@ -58,10 +60,12 @@ class Subscription < ApplicationRecord
 
   validates :stripe_id, presence: true
 
+  scope :active_or_paused, -> { where(status: %i[active paused]) }
   scope :recent, -> { order('current_period_end DESC NULLS LAST') }
   scope :cancel_at_period_end, -> { where(cancel_at_period_end: true) }
   scope :not_cancel_at_period_end, -> { where(cancel_at_period_end: false) }
   scope :period_end_on_date, ->(date) { where(current_period_end: date.all_day) }
+  scope :for_product, ->(product) { where(product_id: product) }
 
   def assign_stripe_attrs(stripe_subscription)
     canceled_at =
@@ -76,28 +80,27 @@ class Subscription < ApplicationRecord
     assign_attributes(
       stripe_id: stripe_subscription.id,
       stripe_item_id: stripe_subscription.items.data.first.id,
-      status: status,
+      status:,
       current_period_start: Time.zone.at(stripe_subscription.current_period_start),
       current_period_end: Time.zone.at(stripe_subscription.current_period_end),
       cancel_at: stripe_subscription.cancel_at ? Time.zone.at(stripe_subscription.cancel_at) : nil,
-      canceled_at: canceled_at,
+      canceled_at:,
       cancel_at_period_end: stripe_subscription.cancel_at_period_end
     )
 
     if subscription_pauses.actual.any?
       actual_subscription_pause = subscription_pauses.actual.last
       if pause_collection.nil? && stripe_subscription.status == 'active'
-        actual_subscription_pause.update(status: :finished)
+        actual_subscription_pause.update!(status: :finished)
       end
-      actual_subscription_pause.update(status: :canceled) if status == 'canceled'
+      actual_subscription_pause.update!(status: :canceled) if status == 'canceled'
     end
 
     self
   end
 
   def can_free_pause?
-    subscription_pauses.finished.free.this_year.count <
-      ENV['FREE_SUBSCRIPTION_PAUSES_PER_YEAR'].to_i
+    subscription_pauses.finished.free.this_year.count < product.free_pauses_per_year
   end
 
   def will_pause?

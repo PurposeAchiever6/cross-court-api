@@ -6,9 +6,9 @@ describe UserUpdateRequests::Approve do
     let!(:user_update_request) do
       create(
         :user_update_request,
-        user: user,
-        status: status,
-        requested_attributes: requested_attributes
+        user:,
+        status:,
+        requested_attributes:
       )
     end
 
@@ -20,7 +20,7 @@ describe UserUpdateRequests::Approve do
 
     before { allow(SendSonar).to receive(:message_customer) }
 
-    subject { UserUpdateRequests::Approve.call(user_update_request: user_update_request) }
+    subject { UserUpdateRequests::Approve.call(user_update_request:) }
 
     it 'updates user skill rating' do
       expect {

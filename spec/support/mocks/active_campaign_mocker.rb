@@ -5,7 +5,7 @@ class ActiveCampaignMocker
 
   def initialize(pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS)
     @pipeline_id = deal_pipelines_map[pipeline_name]
-    @base_url = "#{ENV['ACTIVE_CAMPAING_API_URL']}/api/3"
+    @base_url = "#{ENV.fetch('ACTIVE_CAMPAING_API_URL', nil)}/api/3"
   end
 
   def mock
@@ -90,7 +90,7 @@ class ActiveCampaignMocker
     WebMock.stub_request(method, "#{base_url}#{url_path}").with(
       headers: default_headers
     ).to_return(
-      status: status,
+      status:,
       body: response_body,
       headers: { 'Content-Type' => 'application/json' }
     )
@@ -99,7 +99,7 @@ class ActiveCampaignMocker
   def default_headers
     {
       'Content-Type': 'application/json',
-      'Api-Token': ENV['ACTIVE_CAMPAING_API_KEY']
+      'Api-Token': ENV.fetch('ACTIVE_CAMPAING_API_KEY', nil)
     }
   end
 
@@ -131,9 +131,9 @@ class ActiveCampaignMocker
 
   def deal_pipelines_map
     @deal_pipelines_map ||=
-      JSON.parse(deal_pipelines_response)['dealGroups'].map { |field|
+      JSON.parse(deal_pipelines_response)['dealGroups'].to_h do |field|
         [field['title'], field['id']]
-      }.to_h
+      end
   end
 
   def deal_pipelines_response

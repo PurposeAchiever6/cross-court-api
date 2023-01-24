@@ -5,13 +5,13 @@ describe 'PUT /api/v1/user/request_update' do
   let(:skill_rating) { rand(1..5) }
   let(:reason) { 'Some reason' }
 
-  let(:params) { { skill_rating: skill_rating, reason: reason } }
+  let(:params) { { skill_rating:, reason: } }
   let(:request_headers) { auth_headers }
 
   subject do
     post request_update_api_v1_user_path,
          headers: request_headers,
-         params: params,
+         params:,
          as: :json
     response
   end

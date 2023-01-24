@@ -7,7 +7,7 @@ module Waitlists
       user = context.user
       date = context.date
 
-      user_session_waitlist = session.waitlist(date).pending.find_by(user: user)
+      user_session_waitlist = session.waitlist(date).pending.find_by(user:)
 
       raise UserNotInWaitlistException unless user_session_waitlist
 

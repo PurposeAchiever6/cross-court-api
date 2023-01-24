@@ -2,8 +2,8 @@
 #
 # Table name: payment_methods
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
+#  id         :bigint           not null, primary key
+#  user_id    :bigint           not null
 #  stripe_id  :string
 #  brand      :string
 #  exp_month  :integer
@@ -23,12 +23,13 @@ class PaymentMethod < ApplicationRecord
 
   has_many :subscriptions, dependent: :nullify
   has_one :active_subscription,
-          -> { where(status: %i[active paused]).recent },
+          -> { active_or_paused.recent },
           class_name: 'Subscription',
-          inverse_of: :payment_method
+          inverse_of: :payment_method,
+          dependent: nil
 
   validates :default, uniqueness: { scope: :user_id }, if: :default
-  validates :user_id, :stripe_id, presence: true
+  validates :stripe_id, presence: true
 
   scope :sorted, -> { order(created_at: :desc) }
 end

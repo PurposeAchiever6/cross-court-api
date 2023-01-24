@@ -3,8 +3,8 @@ require 'rails_helper'
 describe Subscriptions::ChangePaymentMethod do
   describe '.call' do
     let!(:user) { create(:user) }
-    let!(:payment_method) { create(:payment_method, user: user) }
-    let!(:subscription) { create(:subscription, user: user, status: subscription_status) }
+    let!(:payment_method) { create(:payment_method, user:) }
+    let!(:subscription) { create(:subscription, user:, status: subscription_status) }
     let!(:old_payment_method) { subscription.payment_method }
 
     let(:subscription_status) { 'active' }
@@ -13,8 +13,8 @@ describe Subscriptions::ChangePaymentMethod do
 
     subject do
       Subscriptions::ChangePaymentMethod.call(
-        subscription: subscription,
-        payment_method: payment_method
+        subscription:,
+        payment_method:
       )
     end
 
@@ -29,7 +29,7 @@ describe Subscriptions::ChangePaymentMethod do
     it 'calls Stripe Service with correct params' do
       expect(Stripe::Subscription).to receive(:update).with(
         subscription.stripe_id,
-        default_payment_method: payment_method.stripe_id
+        { default_payment_method: payment_method.stripe_id }
       )
       subject
     end

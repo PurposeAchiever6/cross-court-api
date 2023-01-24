@@ -13,11 +13,11 @@ module UserSessions
         user = user_session.user
 
         if user_session.is_free_session
-          UserSessions::ConfirmFreeSessionIntent.call(user_session: user_session)
+          UserSessions::ConfirmFreeSessionIntent.call(user_session:)
           create_not_show_free_session_deal(user)
         elsif user.unlimited_credits?
           Users::Charge.call(
-            user: user,
+            user:,
             amount: ENV['UNLIMITED_CREDITS_NO_SHOW_UP_FEE'].to_f,
             description: 'Unlimited membership no show fee',
             notify_error: true,

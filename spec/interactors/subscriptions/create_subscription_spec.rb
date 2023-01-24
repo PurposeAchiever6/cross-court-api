@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe Subscriptions::CreateSubscription do
   describe '.call' do
-    let!(:user) { create(:user, reserve_team: reserve_team) }
-    let!(:payment_method) { create(:payment_method, user: user) }
-    let!(:product) { create(:product, available_for: available_for) }
+    let!(:user) { create(:user, reserve_team:) }
+    let!(:payment_method) { create(:payment_method, user:) }
+    let!(:product) { create(:product, available_for:) }
     let(:promo_code) { nil }
     let(:stripe_response_status) { 'active' }
     let(:stripe_invoice_id) { 'in_1Fin1BEbKIwsJiGZiMSDSLzw' }
@@ -17,7 +17,7 @@ describe Subscriptions::CreateSubscription do
         items: double(data: [double(id: 'stripe-subscription-item-id')]),
         status: stripe_response_status,
         current_period_start: Time.current.to_i,
-        current_period_end: (Time.current + 1.month).to_i,
+        current_period_end: 1.month.from_now.to_i,
         cancel_at: nil,
         canceled_at: nil,
         cancel_at_period_end: false,
@@ -33,10 +33,10 @@ describe Subscriptions::CreateSubscription do
 
     subject do
       Subscriptions::CreateSubscription.call(
-        user: user,
-        product: product,
-        payment_method: payment_method,
-        promo_code: promo_code,
+        user:,
+        product:,
+        payment_method:,
+        promo_code:,
         amount: product.price
       )
     end
@@ -56,7 +56,7 @@ describe Subscriptions::CreateSubscription do
     end
 
     context 'when user already has an active subscription' do
-      let!(:active_subscription) { create(:subscription, user: user, product: product) }
+      let!(:active_subscription) { create(:subscription, user:, product:) }
 
       it { expect(subject.success?).to eq(false) }
       it { expect { subject }.not_to change(Subscription, :count) }

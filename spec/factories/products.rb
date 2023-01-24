@@ -2,7 +2,7 @@
 #
 # Table name: products
 #
-#  id                                     :integer          not null, primary key
+#  id                                     :bigint           not null, primary key
 #  credits                                :integer          default(0), not null
 #  name                                   :string           not null
 #  created_at                             :datetime         not null
@@ -22,6 +22,7 @@
 #  skill_session_credits                  :integer          default(0)
 #  season_pass                            :boolean          default(FALSE)
 #  scouting                               :boolean          default(FALSE)
+#  free_pauses_per_year                   :integer          default(0)
 #
 # Indexes
 #
@@ -35,16 +36,17 @@ FactoryBot.define do
       "#{Faker::Lorem.unique}_#{n}"
     end
     name { Faker::Lorem.word }
-    credits { Faker::Number.between(1, 10) }
-    skill_session_credits { Faker::Number.between(1, 10) }
+    credits { Faker::Number.between(from: 1, to: 10) }
+    skill_session_credits { Faker::Number.between(from: 1, to: 10) }
     max_rollover_credits { credits / 2 }
-    order_number { Faker::Number.number(1) }
+    order_number { Faker::Number.number(digits: 1) }
     price { Faker::Commerce.price }
     referral_cc_cash { 0 }
     available_for { 'everyone' }
     product_type { 'one_time' }
     season_pass { false }
     scouting { false }
+    free_pauses_per_year { 0 }
   end
 
   trait :unlimited do

@@ -9,7 +9,7 @@ describe Users::UpdateSkillRating do
 
     before { ENV['SKILL_RATINGS_FOR_REVIEW'] = '4,5' }
 
-    subject { Users::UpdateSkillRating.call(user: user, skill_rating: new_skill_rating) }
+    subject { Users::UpdateSkillRating.call(user:, skill_rating: new_skill_rating) }
 
     it 'updates user skill rating' do
       expect {

@@ -26,7 +26,7 @@ class UsersQuery
                                                                                            .to_date
 
     relation.where(free_session_state: :not_claimed)
-            .where(free_session_expiration_date: free_session_expiration_date)
+            .where(free_session_expiration_date:)
   end
 
   def free_session_expires_in(in_time)

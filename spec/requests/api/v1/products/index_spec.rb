@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 describe 'GET api/v1/products' do
-  let(:user) { create(:user, reserve_team: reserve_team) }
+  let(:user) { create(:user, reserve_team:) }
   let(:reserve_team) { false }
   let(:headers) { {} }
 
-  subject { get api_v1_products_path, headers: headers, as: :json }
+  subject { get api_v1_products_path, headers:, as: :json }
 
   context 'when there are no products' do
     before { subject }

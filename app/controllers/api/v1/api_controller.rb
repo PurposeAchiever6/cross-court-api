@@ -34,11 +34,10 @@ module Api
       rescue_from SessionIsOutOfSkillLevelException,              with: :render_custom_exception
       rescue_from SubscriptionIsNotActiveException,               with: :render_custom_exception
       rescue_from SubscriptionAlreadyCanceledException,           with: :render_custom_exception
-      rescue_from SubscriptionInvalidPauseMonthsException,        with: :render_custom_exception
       rescue_from SubscriptionIsNotPausedException,               with: :render_custom_exception
       rescue_from ReserveTeamNotAllowedException,                 with: :render_custom_exception
       rescue_from ReserveTeamMismatchException,                   with: :render_custom_exception
-      rescue_from SessionOnlyForMembersException,                 with: :render_custom_exception
+      rescue_from SessionAllowedMembersException,                 with: :render_custom_exception
       rescue_from ChargeUserException,                            with: :render_custom_exception
       rescue_from ShootingMachineSessionMismatchException,        with: :render_custom_exception
       rescue_from ShootingMachineInvalidSessionException,         with: :render_custom_exception
@@ -56,7 +55,7 @@ module Api
       end
 
       def render_error(status, message)
-        render json: { error: message }, status: status
+        render json: { error: message }, status:
       end
 
       private

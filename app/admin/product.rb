@@ -3,7 +3,8 @@ ActiveAdmin.register Product do
 
   permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
                 :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
-                :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting
+                :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
+                :free_pauses_per_year
 
   filter :name
   filter :product_type
@@ -11,6 +12,11 @@ ActiveAdmin.register Product do
 
   scope :all, default: true
   scope 'Deleted', :only_deleted
+
+  action_item :new_price, only: :show, if: -> { product.recurring? } do
+    link_to 'Update Pricing',
+            new_price_admin_product_path(product.id)
+  end
 
   index do
     selectable_column
@@ -32,6 +38,10 @@ ActiveAdmin.register Product do
     number_column :price, as: :currency
     number_column :price_for_members, as: :currency
     number_column :price_for_first_timers_no_free_session, as: :currency
+    column :free_pauses_per_year do |product|
+      product.recurring? ? product.free_pauses_per_year : 'N/A'
+    end
+    column :free_pauses_per_year
     number_column 'Referral CC Cash', :referral_cc_cash, as: :currency
     column :label
     column :order_number
@@ -96,6 +106,7 @@ ActiveAdmin.register Product do
       f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
       f.input :price_for_first_timers_no_free_session
+      f.input :free_pauses_per_year
       f.input :referral_cc_cash, label: 'Referral CC cash'
       f.input :label
       f.input :order_number
@@ -122,6 +133,9 @@ ActiveAdmin.register Product do
       number_row :price, as: :currency
       number_row :price_for_members, as: :currency if resource.one_time?
       number_row :price_for_first_timers_no_free_session, as: :currency if resource.one_time?
+      row :free_pauses_per_year do |product|
+        product.recurring? ? product.free_pauses_per_year : 'N/A'
+      end
       number_row :referral_cc_cash, as: :currency if resource.recurring?
       row :product_type do |product|
         product.product_type.humanize
@@ -139,6 +153,11 @@ ActiveAdmin.register Product do
       row :image do |product|
         image_tag polymorphic_url(product.image), class: 'max-w-200' if product.image.attached?
       end
+      row 'History' do |product|
+        link_to 'Link to History', history_admin_product_path(product.id)
+      end
+      row :created_at
+      row :updated_at
     end
   end
 
@@ -151,7 +170,7 @@ ActiveAdmin.register Product do
       if @resource.valid?
         stripe_product_id = StripeService.create_product(product_params).id
         stripe_price_id = StripeService.create_price(
-          product_params.merge(stripe_product_id: stripe_product_id)
+          product_params.merge(stripe_product_id:)
         ).id
 
         @resource.stripe_product_id = stripe_product_id
@@ -183,5 +202,40 @@ ActiveAdmin.register Product do
     product.recover
 
     redirect_to admin_products_path, notice: I18n.t('admin.products.recover')
+  end
+
+  member_action :new_price do
+    @product = Product.find(params[:id])
+    @subscriptions_count = @product.subscriptions.active_or_paused.count
+  end
+
+  member_action :update_price, method: :post do
+    product = Product.find(params[:id])
+    new_price = params[:new_price]
+    update_existing_subscriptions = params[:update_existing_subscriptions] == '1'
+    error_msg = nil
+
+    error_msg = 'Product must be of the type recurring' if product.one_time?
+    error_msg = 'New price can\'t be empty' if new_price.blank?
+    if new_price.to_d == product.price.to_d
+      error_msg = 'New price is the same as the current product price'
+    end
+
+    if error_msg
+      flash[:error] = error_msg
+      return redirect_to new_price_admin_product_path(params[:id])
+    end
+
+    product.update_recurring_price(new_price, update_existing_subscriptions:)
+
+    redirect_to admin_product_path(params[:id]), notice: I18n.t('admin.products.update_price')
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to admin_product_path(params[:id])
+  end
+
+  member_action :history do
+    versions = Product.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    render 'admin/shared/history', locals: { versions: }
   end
 end

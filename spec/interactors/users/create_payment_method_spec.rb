@@ -19,7 +19,7 @@ describe Users::CreatePaymentMethod do
     subject do
       Users::CreatePaymentMethod.call(
         payment_method_stripe_id: payment_method_atts[:stripe_id],
-        user: user
+        user:
       )
     end
 
@@ -39,7 +39,7 @@ describe Users::CreatePaymentMethod do
     end
 
     context 'when there is already a default one' do
-      before { create(:payment_method, user: user, default: true) }
+      before { create(:payment_method, user:, default: true) }
 
       it 'does not assign the new one as default' do
         subject

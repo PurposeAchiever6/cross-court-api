@@ -4,8 +4,8 @@ require 'sidekiq/testing'
 describe 'PUT api/v1/subscriptions/:id/cancel_pause' do
   let!(:user) { create(:user) }
   let!(:status) { 'paused' }
-  let!(:subscription) { create(:subscription, user: user, status: status) }
-  let!(:subscription_pause) { create(:subscription_pause, subscription: subscription) }
+  let!(:subscription) { create(:subscription, user:, status:) }
+  let!(:subscription_pause) { create(:subscription_pause, subscription:) }
 
   subject do
     put cancel_pause_api_v1_subscription_path(subscription),

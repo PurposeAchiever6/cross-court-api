@@ -1,5 +1,5 @@
 class DeviseMailer < Devise::Mailer
-  default 'Message-ID' => -> { "<#{SecureRandom.uuid}@#{ENV['SERVER_URL']}>" }
+  default 'Message-ID' => -> { "<#{SecureRandom.uuid}@#{ENV.fetch('SERVER_URL', nil)}>" }
   default template_path: 'devise/mailer'
 
   def confirmation_instructions(record, token, options = {})

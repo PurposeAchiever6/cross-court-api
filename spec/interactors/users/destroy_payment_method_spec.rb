@@ -6,9 +6,9 @@ describe Users::DestroyPaymentMethod do
     let!(:payment_method) do
       create(
         :payment_method,
-        user: user,
-        stripe_id: stripe_id,
-        default: default
+        user:,
+        stripe_id:,
+        default:
       )
     end
 
@@ -17,7 +17,7 @@ describe Users::DestroyPaymentMethod do
     let(:payment_method_id) { payment_method.id }
     let(:payment_method_atts) do
       {
-        stripe_id: stripe_id,
+        stripe_id:,
         brand: 'visa',
         exp_month: 9,
         exp_year: 2200,
@@ -29,8 +29,8 @@ describe Users::DestroyPaymentMethod do
 
     subject do
       Users::DestroyPaymentMethod.call(
-        payment_method_id: payment_method_id,
-        user: user
+        payment_method_id:,
+        user:
       )
     end
 
@@ -38,8 +38,8 @@ describe Users::DestroyPaymentMethod do
 
     context 'when the deleted is the default' do
       let(:default) { true }
-      let!(:payment_method_2) { create(:payment_method, user: user) }
-      let!(:payment_method_3) { create(:payment_method, user: user) }
+      let!(:payment_method_2) { create(:payment_method, user:) }
+      let!(:payment_method_3) { create(:payment_method, user:) }
 
       it 'assign default to the next most recent one' do
         subject
@@ -50,14 +50,14 @@ describe Users::DestroyPaymentMethod do
     context 'when payment method is not found' do
       let(:payment_method_id) { -1 }
       let!(:other_user) { create(:user) }
-      let!(:payment_method) { create(:payment_method, user: other_user, stripe_id: stripe_id) }
+      let!(:payment_method) { create(:payment_method, user: other_user, stripe_id:) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
       it { expect { subject rescue nil }.not_to change(PaymentMethod, :count) }
     end
 
     context 'when payment method has an active subscription' do
-      let!(:subscription) { create(:subscription, user: user, payment_method: payment_method) }
+      let!(:subscription) { create(:subscription, user:, payment_method:) }
 
       it { expect { subject }.to raise_error(PaymentMethodHasActiveSubscriptionException) }
       it { expect { subject rescue nil }.not_to change(PaymentMethod, :count) }

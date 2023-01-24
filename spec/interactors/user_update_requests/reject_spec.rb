@@ -3,12 +3,12 @@ require 'rails_helper'
 describe UserUpdateRequests::Reject do
   describe '.call' do
     let!(:user) { create(:user) }
-    let!(:user_update_request) { create(:user_update_request, user: user, status: status) }
+    let!(:user_update_request) { create(:user_update_request, user:, status:) }
     let(:status) { :pending }
 
     before { allow(SendSonar).to receive(:message_customer) }
 
-    subject { UserUpdateRequests::Reject.call(user_update_request: user_update_request) }
+    subject { UserUpdateRequests::Reject.call(user_update_request:) }
 
     it { expect { subject }.to change { user_update_request.reload.status }.to('rejected') }
 
@@ -17,7 +17,7 @@ describe UserUpdateRequests::Reject do
         user,
         "Hey #{user.first_name}, unfortunately we are unable to complete your CC skill " \
         'level adjustment at this time. If you have any questions, feel free to email ' \
-        "us at #{ENV['CC_TEAM_EMAIL']}.\n"
+        "us at #{ENV.fetch('CC_TEAM_EMAIL', nil)}.\n"
       )
 
       subject

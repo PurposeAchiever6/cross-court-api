@@ -7,6 +7,7 @@ ActiveAdmin.register Session do
                 :theme_title, :theme_subheading, :theme_sweat_level, :theme_description,
                 :all_skill_levels_allowed, :cc_cash_earned, :default_referee_id, :default_sem_id,
                 :default_coach_id, :guests_allowed, :guests_allowed_per_user,
+                product_ids: [],
                 session_exceptions_attributes: %i[id date _destroy],
                 shooting_machines_attributes: %i[id start_time end_time price _destroy]
 
@@ -79,10 +80,15 @@ ActiveAdmin.register Session do
       f.input :is_open_club
       f.input :skill_session
       f.input :women_only
-      f.input :members_only
       f.input :all_skill_levels_allowed
       f.input :coming_soon
       f.input :is_private
+      f.input :members_only
+      f.input :products,
+              collection: Product.recurring.order(price: :asc),
+              label: 'Allowed Members',
+              hint: 'If not set, it means all members are allowed to book this session.',
+              input_html: { class: 'w-64' }
       f.input :start_time,
               as: :datepicker,
               datepicker_options: { min_date: Date.current },
@@ -98,7 +104,7 @@ ActiveAdmin.register Session do
               hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
                     'users who can book.'
       f.input :guests_allowed,
-              hint: 'Number of guests allowed per session. If not set, '\
+              hint: 'Number of guests allowed per session. If not set, ' \
                     'it means that guests are not allowed for this session.'
       f.input :guests_allowed_per_user,
               hint: 'Number of guests allowed per user for this session.'
@@ -108,7 +114,8 @@ ActiveAdmin.register Session do
       f.input :default_coach, collection: User.coaches
       li do
         f.label 'Schedule'
-        f.select_recurring :recurring, nil,
+        f.select_recurring :recurring,
+                           nil,
                            { allow_blank: true },
                            data: { select2: false },
                            class: 'w-40 p-2 border-gray-300 rounded'
@@ -178,6 +185,12 @@ ActiveAdmin.register Session do
       row :skill_session
       row :women_only
       row :members_only
+      if session.members_only
+        row :members_allowed do |session|
+          allowed_products = session.products
+          allowed_products.any? ? allowed_products.map(&:name).split(', ') : 'All members'
+        end
+      end
       row :all_skill_levels_allowed
       row :coming_soon
       row :is_private
@@ -202,6 +215,9 @@ ActiveAdmin.register Session do
       end
       row :default_coach do |session|
         session.skill_session ? session.default_coach : 'N/A'
+      end
+      row 'History' do
+        link_to 'Link to History', history_admin_session_path(session.id)
       end
       row :created_at
       row :updated_at
@@ -252,17 +268,17 @@ ActiveAdmin.register Session do
         if is_edit
           render partial: 'edit_employees', locals: {
             selected_session: resource,
-            date: date,
-            referee: referee,
-            sem: sem,
-            coach: coach
+            date:,
+            referee:,
+            sem:,
+            coach:
           }
         else
           render partial: 'show_employees', locals: {
-            date: date,
-            referee: referee,
-            sem: sem,
-            coach: coach
+            date:,
+            referee:,
+            sem:,
+            coach:
           }
         end
       end
@@ -279,9 +295,10 @@ ActiveAdmin.register Session do
                                 .order(assigned_team: :desc, updated_at: :asc)
 
         render partial: 'checked_in_user_sessions', locals: {
-          date: date,
+          date:,
           user_sessions_by_team: user_sessions.group_by(&:assigned_team),
-          jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
+          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil),
+          towel_rental_price: ENV.fetch('TOWEL_RENTAL_PRICE', nil)
         }
       end
 
@@ -298,16 +315,17 @@ ActiveAdmin.register Session do
                                 .order('LOWER(users.first_name) ASC, LOWER(users.last_name) ASC')
 
         render partial: 'not_checked_in_user_sessions', locals: {
-          date: date,
-          user_sessions: user_sessions,
-          jersey_rental_price: ENV['JERSEY_RENTAL_PRICE']
+          date:,
+          user_sessions:,
+          jersey_rental_price: ENV.fetch('JERSEY_RENTAL_PRICE', nil),
+          towel_rental_price: ENV.fetch('TOWEL_RENTAL_PRICE', nil)
         }
       end
 
       if resource.guests_allowed?
         panel 'Guests' do
           guests = resource.guests(date).not_canceled.includes(user_session: :user)
-          render partial: 'guests', locals: { guests: guests }
+          render partial: 'guests', locals: { guests: }
         end
       end
 
@@ -315,18 +333,18 @@ ActiveAdmin.register Session do
         waitlist = resource.waitlist(date)
                            .not_success
                            .includes(user: [:last_checked_in_user_session,
-                                            :active_subscription,
-                                            { image_attachment: :blob }])
+                                            { active_subscription: :product,
+                                              image_attachment: :blob }])
 
-        render partial: 'waitlist', locals: { waitlist: waitlist, time_zone: session.time_zone }
+        render partial: 'waitlist', locals: { waitlist:, time_zone: session.time_zone }
       end
 
       panel 'Create User Session Manually' do
         users_for_select = User.sorted_by_full_name.map { |user| [user.full_name, user.id] }
 
         render partial: 'create_user_session', locals: {
-          date: date,
-          users_for_select: users_for_select
+          date:,
+          users_for_select:
         }
       end
     end
@@ -346,23 +364,28 @@ ActiveAdmin.register Session do
     end
   end
 
+  member_action :history do
+    versions = Session.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    render 'admin/shared/history', locals: { versions: }
+  end
+
   member_action :assign_employees, method: :put do
     referee_id = params[:referee_id]
     sem_id = params[:sem_id]
     coach_id = params[:coach_id]
     date = params[:date]
 
-    coach_sessions = resource.coach_sessions.where(date: date)
+    coach_sessions = resource.coach_sessions.where(date:)
     coach_sessions.destroy_all if resource.skill_session && coach_sessions.any?
-    resource.coach_sessions.create!(user_id: coach_id, date: date) if coach_id.present?
+    resource.coach_sessions.create!(user_id: coach_id, date:) if coach_id.present?
 
-    referee_sessions = resource.referee_sessions.where(date: date)
+    referee_sessions = resource.referee_sessions.where(date:)
     referee_sessions.destroy_all if !resource.skill_session && referee_sessions.any?
-    resource.referee_sessions.create!(user_id: referee_id, date: date) if referee_id.present?
+    resource.referee_sessions.create!(user_id: referee_id, date:) if referee_id.present?
 
-    sem_sessions = resource.sem_sessions.where(date: date)
+    sem_sessions = resource.sem_sessions.where(date:)
     sem_sessions.destroy_all if !resource.skill_session && sem_sessions.any?
-    resource.sem_sessions.create!(user_id: sem_id, date: date) if sem_id.present?
+    resource.sem_sessions.create!(user_id: sem_id, date:) if sem_id.present?
 
     redirect_to admin_root_path, notice: 'Employees assigned successfully'
   end
@@ -378,6 +401,7 @@ ActiveAdmin.register Session do
       user_session_id = user_session_params[:id]
       checked_in = user_session_params[:checked_in] == 'true'
       jersey_rental = user_session_params[:jersey_rental] == 'true'
+      towel_rental = user_session_params[:towel_rental] == 'true'
       assigned_team = user_session_params[:assigned_team]
 
       user_session = UserSession.find(user_session_id)
@@ -385,6 +409,7 @@ ActiveAdmin.register Session do
 
       execute_checked_in_job = checked_in && !user_session.checked_in
       jersey_rental_payment_intent_id = user_session.jersey_rental_payment_intent_id
+      towel_rental_payment_intent_id = user_session.towel_rental_payment_intent_id
 
       if user_session.jersey_rental && !jersey_rental
         result = RefundPayment.call(payment_intent_id: jersey_rental_payment_intent_id)
@@ -397,7 +422,7 @@ ActiveAdmin.register Session do
         jersey_rental_payment_intent_id = nil
       elsif !user_session.jersey_rental && jersey_rental
         result = Users::Charge.call(
-          user: user,
+          user:,
           amount: ENV['JERSEY_RENTAL_PRICE'].to_f,
           description: 'Jersey rental'
         )
@@ -410,11 +435,37 @@ ActiveAdmin.register Session do
         jersey_rental_payment_intent_id = result.payment_intent_id
       end
 
+      if user_session.towel_rental && !towel_rental
+        result = RefundPayment.call(payment_intent_id: towel_rental_payment_intent_id)
+
+        if result.failure?
+          warnings << "#{user.full_name.titleize}: #{result.message}"
+          next
+        end
+
+        towel_rental_payment_intent_id = nil
+      elsif !user_session.towel_rental && towel_rental
+        result = Users::Charge.call(
+          user:,
+          amount: ENV['TOWEL_RENTAL_PRICE'].to_f,
+          description: 'Towel rental'
+        )
+
+        if result.failure?
+          warnings << "#{user.full_name.titleize}: #{result.message}"
+          next
+        end
+
+        towel_rental_payment_intent_id = result.payment_intent_id
+      end
+
       user_session.update!(
-        checked_in: checked_in,
-        jersey_rental: jersey_rental,
-        jersey_rental_payment_intent_id: jersey_rental_payment_intent_id,
-        assigned_team: assigned_team
+        checked_in:,
+        jersey_rental:,
+        jersey_rental_payment_intent_id:,
+        towel_rental:,
+        towel_rental_payment_intent_id:,
+        assigned_team:
       )
 
       checked_in_user_session_ids << user_session_id if execute_checked_in_job
@@ -434,7 +485,7 @@ ActiveAdmin.register Session do
       flash[:notice] = 'Users sessions updated successfully'
     end
 
-    redirect_to admin_session_path(id: session_id, date: date)
+    redirect_to admin_session_path(id: session_id, date:)
   end
 
   member_action :create_user_session, method: :post do
@@ -446,32 +497,32 @@ ActiveAdmin.register Session do
     session = Session.find(session_id)
     user = User.find(user_id)
 
-    if session.not_canceled_reservations(date).where(user_id: user_id).exists?
+    if session.not_canceled_reservations(date).exists?(user_id:)
       flash[:error] = 'The player is already in the session'
-      return redirect_to admin_session_path(id: session_id, date: date)
+      return redirect_to admin_session_path(id: session_id, date:)
     end
 
     if user_id.empty?
       flash[:error] = 'You need to select a player'
-      return redirect_to admin_session_path(id: session_id, date: date)
+      return redirect_to admin_session_path(id: session_id, date:)
     end
 
     ActiveRecord::Base.transaction do
-      Users::ClaimFreeSession.call(user: user)
+      Users::ClaimFreeSession.call(user:)
 
       UserSessions::Create.call(
-        session: session,
-        user: user,
-        date: date,
-        not_charge_user_credit: not_charge_user_credit
+        session:,
+        user:,
+        date:,
+        not_charge_user_credit:
       )
     end
 
-    redirect_to admin_session_path(id: session_id, date: date),
+    redirect_to admin_session_path(id: session_id, date:),
                 notice: 'User session created successfully'
   rescue StandardError => e
     flash[:error] = e.message
-    redirect_to admin_session_path(id: session_id, date: date)
+    redirect_to admin_session_path(id: session_id, date:)
   end
 
   member_action :cancel_user_session, method: :post do
@@ -479,13 +530,13 @@ ActiveAdmin.register Session do
     date = params[:date]
     user_session = UserSession.find(params[:user_session_id])
 
-    UserSessions::Cancel.call(user_session: user_session)
+    UserSessions::Cancel.call(user_session:)
 
-    redirect_to admin_session_path(id: session_id, date: date),
+    redirect_to admin_session_path(id: session_id, date:),
                 notice: 'User session canceled successfully'
   rescue StandardError => e
     flash[:error] = e.message
-    redirect_to admin_session_path(id: session_id, date: date)
+    redirect_to admin_session_path(id: session_id, date:)
   end
 
   member_action :cancel, method: :post do
@@ -493,8 +544,8 @@ ActiveAdmin.register Session do
     date = Date.parse(params[:date])
 
     Sessions::Cancel.call(
-      session: session,
-      date: date
+      session:,
+      date:
     )
 
     redirect_to admin_scheduler_path, notice: 'Session canceled successfully'

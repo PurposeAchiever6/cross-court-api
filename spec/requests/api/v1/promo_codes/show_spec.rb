@@ -2,18 +2,18 @@ require 'rails_helper'
 
 describe 'GET api/v1/promo_code' do
   let(:user)       { create(:user) }
-  let(:product)    { create(:product, price: price) }
+  let(:product)    { create(:product, price:) }
   let(:promo_code) do
     create(
       :promo_code,
       discount: 10,
       products: [promo_product],
-      expiration_date: expiration_date,
-      max_redemptions: max_redemptions,
-      max_redemptions_by_user: max_redemptions_by_user,
-      user_max_checked_in_sessions: user_max_checked_in_sessions,
-      times_used: times_used,
-      for_referral: for_referral,
+      expiration_date:,
+      max_redemptions:,
+      max_redemptions_by_user:,
+      user_max_checked_in_sessions:,
+      times_used:,
+      for_referral:,
       user: promo_code_user
     )
   end
@@ -31,7 +31,7 @@ describe 'GET api/v1/promo_code' do
 
   let(:params) { { promo_code: code, product_id: product.id } }
 
-  subject { get api_v1_promo_code_path, params: params, headers: auth_headers, as: :json }
+  subject { get api_v1_promo_code_path, params:, headers: auth_headers, as: :json }
 
   it 'returns the price with the promo code applied' do
     subject
@@ -79,7 +79,7 @@ describe 'GET api/v1/promo_code' do
     let(:user_times_used) { 1 }
     let(:max_redemptions_by_user) { 1 }
     let!(:user_promo_code) do
-      UserPromoCode.create!(user: user, promo_code: promo_code, times_used: user_times_used)
+      UserPromoCode.create!(user:, promo_code:, times_used: user_times_used)
     end
 
     it 'returns promo code already used error message' do
@@ -116,7 +116,7 @@ describe 'GET api/v1/promo_code' do
     end
 
     context 'when user is not a new member of crosscourt' do
-      let!(:subscription) { create(:subscription, user: user) }
+      let!(:subscription) { create(:subscription, user:) }
 
       it 'returns promo code no first subscription message' do
         subject
@@ -134,7 +134,7 @@ describe 'GET api/v1/promo_code' do
     end
 
     context 'when user has already attended to a session' do
-      let!(:user_session) { create(:user_session, user: user, checked_in: true) }
+      let!(:user_session) { create(:user_session, user:, checked_in: true) }
 
       it 'returns promo code no first subscription message' do
         subject

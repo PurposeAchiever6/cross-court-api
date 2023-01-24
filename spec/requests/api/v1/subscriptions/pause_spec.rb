@@ -3,15 +3,15 @@ require 'rails_helper'
 describe 'PUT api/v1/subscriptions/:id/pause' do
   let!(:user) { create(:user) }
   let!(:status) { 'active' }
-  let!(:subscription) { create(:subscription, user: user, status: status) }
-  let(:months) { [1, 2].sample.to_s }
+  let!(:subscription) { create(:subscription, user:, status:) }
+  let(:months) { 1 }
   let(:reason) { 'some reason' }
-  let(:params) { { months: months, reason: reason } }
+  let(:params) { { reason: } }
   let(:resumes_at) { subscription.current_period_end - 1.day + months.to_i.months }
 
   subject do
     put pause_api_v1_subscription_path(subscription),
-        params: params, headers: auth_headers, as: :json
+        params:, headers: auth_headers, as: :json
   end
 
   before do
@@ -25,11 +25,7 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
   end
 
   it 'calls Subscriptions::UnpauseSubscription' do
-    expect(Subscriptions::PauseSubscription).to receive(:call).with(
-      subscription: subscription,
-      months: months,
-      reason: reason
-    )
+    expect(Subscriptions::PauseSubscription).to receive(:call).with({ subscription:, reason: })
 
     subject rescue nil
   end
@@ -46,24 +42,6 @@ describe 'PUT api/v1/subscriptions/:id/pause' do
 
   context 'when the subscription is not active' do
     let!(:status) { 'paused' }
-
-    it 'returns bad request' do
-      subject
-      expect(response).to have_http_status(:bad_request)
-    end
-  end
-
-  context 'when months are not correct' do
-    let(:months) { 3 }
-
-    it 'returns bad request' do
-      subject
-      expect(response).to have_http_status(:bad_request)
-    end
-  end
-
-  context 'when months are not correct' do
-    let(:months) { 3 }
 
     it 'returns bad request' do
       subject

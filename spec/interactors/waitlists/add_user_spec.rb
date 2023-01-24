@@ -8,7 +8,7 @@ describe Waitlists::AddUser do
       create(
         :session,
         start_time: la_time.tomorrow,
-        all_skill_levels_allowed: all_skill_levels_allowed
+        all_skill_levels_allowed:
       )
     end
 
@@ -16,7 +16,7 @@ describe Waitlists::AddUser do
     let(:user_skill_rating) { 1 }
     let(:all_skill_levels_allowed) { true }
 
-    subject { Waitlists::AddUser.call(session: session, user: user, date: date) }
+    subject { Waitlists::AddUser.call(session:, user:, date:) }
 
     it { expect { subject }.to change(UserSessionWaitlist, :count).by(1) }
 
@@ -33,7 +33,7 @@ describe Waitlists::AddUser do
     end
 
     context 'when user is already in the waitlist' do
-      before { create(:user_session_waitlist, session: session, user: user, date: date) }
+      before { create(:user_session_waitlist, session:, user:, date:) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordInvalid) }
     end
@@ -41,7 +41,7 @@ describe Waitlists::AddUser do
     context 'when user is already in the session' do
       let(:state) { %i[reserved confirmed].sample }
 
-      before { create(:user_session, session: session, user: user, date: date, state: state) }
+      before { create(:user_session, session:, user:, date:, state:) }
 
       it { expect { subject }.to raise_error(UserAlreadyInSessionException) }
 

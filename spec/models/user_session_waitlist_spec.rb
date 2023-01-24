@@ -2,10 +2,10 @@
 #
 # Table name: user_session_waitlists
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  date       :date
-#  user_id    :integer
-#  session_id :integer
+#  user_id    :bigint
+#  session_id :bigint
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  state      :integer          default("pending")
@@ -34,12 +34,15 @@ describe UserSessionWaitlist do
 
   describe '.sorted' do
     let!(:session) { create(:session) }
-    let!(:user_1) { create(:user) }
-    let!(:user_2) { create(:user) }
+
+    let!(:user_1) { create(:user, active_subscription: subscription_1) }
+    let!(:user_2) { create(:user, active_subscription: subscription_2) }
+    let!(:user_3) { create(:user, active_subscription: subscription_3) }
+
     let!(:waitlist_item_1) do
       create(
         :user_session_waitlist,
-        session: session,
+        session:,
         user: user_1,
         state: state_1,
         created_at: created_at_1
@@ -48,55 +51,79 @@ describe UserSessionWaitlist do
     let!(:waitlist_item_2) do
       create(
         :user_session_waitlist,
-        session: session,
+        session:,
         user: user_2,
         state: state_2,
         created_at: created_at_2
       )
     end
+    let!(:waitlist_item_3) do
+      create(
+        :user_session_waitlist,
+        session:,
+        user: user_3,
+        state: state_3,
+        created_at: created_at_3
+      )
+    end
+
+    let(:subscription_1) { nil }
+    let(:subscription_2) { nil }
+    let(:subscription_3) { nil }
+
+    let(:state_1) { :pending }
+    let(:state_2) { :pending }
+    let(:state_3) { :pending }
 
     let(:created_at_1) { Time.zone.today - 2.days }
     let(:created_at_2) { created_at_1 + 5.minutes }
-    let(:state_1) { :pending }
-    let(:state_2) { :pending }
+    let(:created_at_3) { created_at_1 + 10.minutes }
 
     subject { UserSessionWaitlist.sorted }
 
-    it { is_expected.to eq([waitlist_item_1, waitlist_item_2]) }
+    it { is_expected.to eq([waitlist_item_1, waitlist_item_2, waitlist_item_3]) }
 
     context 'when waitlist_item_2 was created before' do
       let(:created_at_2) { created_at_1 - 5.minutes }
 
-      it { is_expected.to eq([waitlist_item_2, waitlist_item_1]) }
+      it { is_expected.to eq([waitlist_item_2, waitlist_item_1, waitlist_item_3]) }
     end
 
     context 'when waitlist_item_2 has already made it off the waitlist' do
       let(:state_2) { 'success' }
 
-      it { is_expected.to eq([waitlist_item_2, waitlist_item_1]) }
+      it { is_expected.to eq([waitlist_item_2, waitlist_item_1, waitlist_item_3]) }
     end
 
     context 'when waitlist_item_2 user is a member' do
-      let!(:user_2) { create(:user, :with_unlimited_subscription) }
+      let!(:subscription_2) { create(:subscription, product: product_2) }
+      let!(:product_2) { create(:product, price: 100) }
 
-      it { is_expected.to eq([waitlist_item_2, waitlist_item_1]) }
+      it { is_expected.to eq([waitlist_item_2, waitlist_item_1, waitlist_item_3]) }
 
-      context 'when there is another member' do
-        let!(:user_3) { create(:user, :with_unlimited_subscription) }
-        let!(:waitlist_item_3) do
-          create(
-            :user_session_waitlist,
-            session: session,
-            user: user_3,
-            state: state_3,
-            created_at: created_at_3
-          )
+      context 'when waitlist_item_3 is also a member' do
+        let!(:subscription_3) { create(:subscription, product: product_3) }
+        let!(:product_3) { create(:product, price: 100) }
+
+        it { is_expected.to eq([waitlist_item_2, waitlist_item_3, waitlist_item_1]) }
+
+        context 'when waitlist_item_3 membership is more important' do
+          let!(:product_3) { create(:product, price: 120) }
+
+          it { is_expected.to eq([waitlist_item_3, waitlist_item_2, waitlist_item_1]) }
         end
 
-        let(:created_at_3) { created_at_2 - 2.minutes }
-        let(:state_3) { :pending }
+        context 'when waitlist_item_3 was created before' do
+          let(:created_at_3) { created_at_2 - 2.minutes }
 
-        it { is_expected.to eq([waitlist_item_3, waitlist_item_2, waitlist_item_1]) }
+          it { is_expected.to eq([waitlist_item_3, waitlist_item_2, waitlist_item_1]) }
+
+          context 'when waitlist_item_3 has is less important' do
+            let!(:product_3) { create(:product, price: 80) }
+
+            it { is_expected.to eq([waitlist_item_2, waitlist_item_3, waitlist_item_1]) }
+          end
+        end
       end
     end
   end

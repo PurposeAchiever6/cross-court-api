@@ -9,8 +9,8 @@ describe Users::InactiveMembersJob do
     let!(:active_subscription) do
       create(
         :subscription,
-        user: user,
-        product: product,
+        user:,
+        product:,
         current_period_end: active_subscription_current_period_end
       )
     end
@@ -18,8 +18,8 @@ describe Users::InactiveMembersJob do
     let!(:last_checked_in_user_session) do
       create(
         :user_session,
-        user: user,
-        session: session,
+        user:,
+        session:,
         checked_in: true,
         date: Time.zone.today - date_ago_last_session
       )
@@ -35,7 +35,7 @@ describe Users::InactiveMembersJob do
         name: user.first_name,
         credits_left: user_subscription_credits,
         end_date: active_subscription_current_period_end.strftime('%e of %B'),
-        schedule_url: "#{ENV['FRONTENT_URL']}/locations"
+        schedule_url: "#{ENV.fetch('FRONTENT_URL', nil)}/locations"
       )
     end
 
@@ -43,7 +43,7 @@ describe Users::InactiveMembersJob do
       I18n.t(
         'notifier.sonar.active_subscription_book_reminder',
         name: user.first_name,
-        schedule_url: "#{ENV['FRONTENT_URL']}/locations"
+        schedule_url: "#{ENV.fetch('FRONTENT_URL', nil)}/locations"
       )
     end
 
@@ -77,8 +77,8 @@ describe Users::InactiveMembersJob do
       let!(:first_future_user_session) do
         create(
           :user_session,
-          user: user,
-          session: session,
+          user:,
+          session:,
           checked_in: false,
           date: Time.zone.today + rand(1..10).days
         )

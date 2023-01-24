@@ -2,7 +2,7 @@
 #
 # Table name: promo_codes
 #
-#  id                           :integer          not null, primary key
+#  id                           :bigint           not null, primary key
 #  discount                     :integer          default(0), not null
 #  code                         :string           not null
 #  type                         :string           not null
@@ -17,7 +17,7 @@
 #  max_redemptions_by_user      :integer
 #  times_used                   :integer          default(0)
 #  for_referral                 :boolean          default(FALSE)
-#  user_id                      :integer
+#  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
 #
 # Indexes
@@ -28,7 +28,7 @@
 
 FactoryBot.define do
   factory :promo_code, class: SpecificAmountDiscount do
-    discount { Faker::Number.number(2) }
+    discount { Faker::Number.number(digits: 2) }
     code { Faker::Lorem.word }
     expiration_date { 1.year.from_now }
     duration { 'repeating' }

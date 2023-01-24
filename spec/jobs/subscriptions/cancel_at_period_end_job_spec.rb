@@ -48,11 +48,11 @@ describe Subscriptions::CancelAtPeriodEndJob do
     it 'calls Subscriptions::CancelSubscriptionAtPeriodEnd' do
       expect(Subscriptions::CancelSubscriptionAtPeriodEnd).to receive(
         :call
-      ).with(user: subscription_1.user, subscription: subscription_1)
+      ).with({ user: subscription_1.user, subscription: subscription_1 })
 
       expect(Subscriptions::CancelSubscriptionAtPeriodEnd).to receive(
         :call
-      ).with(user: subscription_5.user, subscription: subscription_5)
+      ).with({ user: subscription_5.user, subscription: subscription_5 })
 
       subject
     end

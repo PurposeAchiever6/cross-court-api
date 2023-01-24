@@ -2,9 +2,9 @@
 #
 # Table name: user_sessions
 #
-#  id                              :integer          not null, primary key
-#  user_id                         :integer          not null
-#  session_id                      :integer          not null
+#  id                              :bigint           not null, primary key
+#  user_id                         :bigint           not null
+#  session_id                      :bigint           not null
 #  state                           :integer          default("reserved"), not null
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
@@ -13,7 +13,7 @@
 #  is_free_session                 :boolean          default(FALSE), not null
 #  free_session_payment_intent     :string
 #  credit_reimbursed               :boolean          default(FALSE), not null
-#  referral_id                     :integer
+#  referral_id                     :bigint
 #  jersey_rental                   :boolean          default(FALSE)
 #  jersey_rental_payment_intent_id :string
 #  assigned_team                   :string
@@ -23,11 +23,14 @@
 #  credit_used_type                :integer
 #  goal                            :string
 #  scouting                        :boolean          default(FALSE)
+#  towel_rental                    :boolean          default(FALSE)
+#  towel_rental_payment_intent_id  :string
 #
 # Indexes
 #
-#  index_user_sessions_on_session_id  (session_id)
-#  index_user_sessions_on_user_id     (user_id)
+#  index_user_sessions_on_referral_id  (referral_id)
+#  index_user_sessions_on_session_id   (session_id)
+#  index_user_sessions_on_user_id      (user_id)
 #
 
 class UserSession < ApplicationRecord
@@ -42,13 +45,12 @@ class UserSession < ApplicationRecord
   belongs_to :user
   belongs_to :session, -> { with_deleted }, inverse_of: :user_sessions
 
-  belongs_to :referral,
-             class_name: 'User',
-             foreign_key: :referral_id,
-             optional: true,
-             inverse_of: :user_sessions
+  belongs_to :referral, class_name: 'User', optional: true
 
-  has_one :shooting_machine_reservation, -> { not_canceled }, inverse_of: :user_session
+  has_one :shooting_machine_reservation,
+          -> { not_canceled },
+          inverse_of: :user_session,
+          dependent: nil
 
   has_many :session_survey_answers, dependent: :destroy
   has_many :session_guests, dependent: :destroy
@@ -89,9 +91,9 @@ class UserSession < ApplicationRecord
   end)
 
   scope :ordered_by_date, -> { order(:date) }
-  scope :by_user, ->(user_id) { where(user_id: user_id) }
-  scope :by_date, ->(date) { where(date: date) }
-  scope :by_session, ->(session_id) { where(session_id: session_id) }
+  scope :by_user, ->(user_id) { where(user_id:) }
+  scope :by_date, ->(date) { where(date:) }
+  scope :by_session, ->(session_id) { where(session_id:) }
   scope :checked_in, -> { where(checked_in: true) }
   scope :not_checked_in, -> { where(checked_in: false) }
   scope :first_sessions, -> { where(first_session: true) }
@@ -127,11 +129,11 @@ class UserSession < ApplicationRecord
     options = { 'CN' => 'Crosscourt' }
     organizer_property = RiCal::PropertyValue::CalAddress.new(
       nil,
-      value: "mailto:#{ENV['CC_TEAM_EMAIL']}",
+      value: "mailto:#{ENV.fetch('CC_TEAM_EMAIL', nil)}",
       params: options
     )
 
-    event = RiCal.Calendar do |cal|
+    RiCal.Calendar do |cal|
       cal.event do |calendar_event|
         calendar_event.summary = "Crosscourt - #{location_name}"
         calendar_event.description = location_description
@@ -141,12 +143,10 @@ class UserSession < ApplicationRecord
         calendar_event.organizer_property = organizer_property
       end
     end
-
-    event
   end
 
   def invite_link
-    front_end_url = ENV['FRONTENT_URL']
+    front_end_url = ENV.fetch('FRONTENT_URL', nil)
     formatted_date = date.strftime(Session::YEAR_MONTH_DAY)
     "#{front_end_url}/session/#{session.id}/#{formatted_date}"
   end

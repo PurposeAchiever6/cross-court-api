@@ -15,7 +15,7 @@ module UserUpdateRequests
         user,
         I18n.t('notifier.sonar.user_update_requests.reject',
                name: user.first_name,
-               cc_email: ENV['CC_TEAM_EMAIL'])
+               cc_email: ENV.fetch('CC_TEAM_EMAIL', nil))
       )
     end
   end

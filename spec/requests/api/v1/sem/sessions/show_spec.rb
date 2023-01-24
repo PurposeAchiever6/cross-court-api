@@ -4,15 +4,15 @@ describe 'GET api/v1/sem/sessions/:id' do
   let(:today)    { Date.current }
   let!(:session) { create(:session) }
   let!(:user_sessions) do
-    create_list(:user_session, 15, session: session, date: today, state: :confirmed)
+    create_list(:user_session, 15, session:, date: today, state: :confirmed)
   end
   let(:params) { { date: today.to_s } }
 
-  subject { get api_v1_sem_session_path(session), params: params, headers: auth_headers, as: :json }
+  subject { get api_v1_sem_session_path(session), params:, headers: auth_headers, as: :json }
 
   describe 'when the user is a sem' do
     let!(:user)        { create(:user, :sem) }
-    let!(:sem_session) { create(:sem_session, session: session, user: user) }
+    let!(:sem_session) { create(:sem_session, session:, user:) }
 
     it 'returns success' do
       subject

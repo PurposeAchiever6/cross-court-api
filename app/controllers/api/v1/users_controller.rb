@@ -27,7 +27,7 @@ module Api
         user_to_update = current_user || user
         skill_rating = skill_rating_params[:skill_rating]
 
-        Users::UpdateSkillRating.call(user: user_to_update, skill_rating: skill_rating)
+        Users::UpdateSkillRating.call(user: user_to_update, skill_rating:)
 
         head :ok
       end
@@ -35,7 +35,7 @@ module Api
       def update_personal_info
         personal_info = personal_info_params
 
-        Users::UpdatePersonalInfo.call(user: user, personal_info: personal_info)
+        Users::UpdatePersonalInfo.call(user:, personal_info:)
 
         head :ok
       end
@@ -46,8 +46,8 @@ module Api
 
         Users::UpdateRequest.call(
           user: current_user,
-          requested_attributes: requested_attributes,
-          reason: reason
+          requested_attributes:,
+          reason:
         )
 
         head :ok

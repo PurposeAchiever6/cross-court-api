@@ -3,16 +3,16 @@ require 'rails_helper'
 describe UserSessions::AutoConfirm do
   describe '.call' do
     let(:is_open_club) { false }
-    let!(:session) { create(:session, :daily, time: session_time, is_open_club: is_open_club) }
+    let!(:session) { create(:session, :daily, time: session_time, is_open_club:) }
     let!(:user) { create(:user) }
     let!(:user_session) do
       create(
         :user_session,
-        session: session,
-        user: user,
-        date: date,
-        reminder_sent_at: reminder_sent_at,
-        first_session: first_session
+        session:,
+        user:,
+        date:,
+        reminder_sent_at:,
+        first_session:
       )
     end
 
@@ -26,12 +26,12 @@ describe UserSessions::AutoConfirm do
              name: user.first_name,
              time: session.time.strftime(Session::TIME_FORMAT),
              location: user_session.location.name,
-             frontend_url: ENV['FRONTENT_URL'],
+             frontend_url: ENV.fetch('FRONTENT_URL', nil),
              invite_friend: I18n.t('notifier.sonar.invite_friend',
                                    link: user_session.invite_link))
     end
 
-    subject { UserSessions::AutoConfirm.call(user_session: user_session) }
+    subject { UserSessions::AutoConfirm.call(user_session:) }
 
     before do
       allow(SendSonar).to receive(:message_customer)
@@ -118,7 +118,7 @@ describe UserSessions::AutoConfirm do
                name: user.first_name,
                time: session.time.strftime(Session::TIME_FORMAT),
                location: user_session.location.name,
-               frontend_url: ENV['FRONTENT_URL'],
+               frontend_url: ENV.fetch('FRONTENT_URL', nil),
                invite_friend: I18n.t('notifier.sonar.invite_friend',
                                      link: user_session.invite_link))
       end
@@ -130,13 +130,13 @@ describe UserSessions::AutoConfirm do
     end
 
     context 'when user session has a shooting machine reservation' do
-      let!(:user_payment_method) { create(:payment_method, user: user, default: true) }
-      let!(:shooting_machine) { create(:shooting_machine, session: session) }
+      let!(:user_payment_method) { create(:payment_method, user:, default: true) }
+      let!(:shooting_machine) { create(:shooting_machine, session:) }
       let!(:shooting_machine_reservation) do
         create(
           :shooting_machine_reservation,
-          user_session: user_session,
-          shooting_machine: shooting_machine
+          user_session:,
+          shooting_machine:
         )
       end
 

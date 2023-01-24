@@ -16,7 +16,7 @@ module Subscriptions
           I18n.t('notifier.sonar.canceled_subscription_reminder',
                  name: user.first_name,
                  product_name: product.name,
-                 subscriptions_url: "#{ENV['FRONTENT_URL']}/memberships")
+                 subscriptions_url: "#{ENV.fetch('FRONTENT_URL', nil)}/memberships")
         )
       end
     end

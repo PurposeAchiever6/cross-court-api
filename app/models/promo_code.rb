@@ -2,7 +2,7 @@
 #
 # Table name: promo_codes
 #
-#  id                           :integer          not null, primary key
+#  id                           :bigint           not null, primary key
 #  discount                     :integer          default(0), not null
 #  code                         :string           not null
 #  type                         :string           not null
@@ -17,7 +17,7 @@
 #  max_redemptions_by_user      :integer
 #  times_used                   :integer          default(0)
 #  for_referral                 :boolean          default(FALSE)
-#  user_id                      :integer
+#  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
 #
 # Indexes
@@ -95,7 +95,7 @@ class PromoCode < ApplicationRecord
   def max_times_used_by_user?(user)
     return false if max_redemptions_by_user.nil?
 
-    user_promo_code_times_used = user_promo_codes.find_by(user: user)&.times_used || 0
+    user_promo_code_times_used = user_promo_codes.find_by(user:)&.times_used || 0
 
     user_promo_code_times_used >= max_redemptions_by_user
   end

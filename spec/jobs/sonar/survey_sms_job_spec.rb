@@ -21,7 +21,7 @@ describe ::Sonar::SurveySmsJob do
     let!(:user_session_1) do
       create(
         :user_session,
-        session: session,
+        session:,
         checked_in: true,
         first_session: true,
         date: los_angeles_date
@@ -30,7 +30,7 @@ describe ::Sonar::SurveySmsJob do
     let!(:user_session_2) do
       create(
         :user_session,
-        session: session,
+        session:,
         checked_in: true,
         first_session: true,
         date: los_angeles_date
@@ -39,7 +39,7 @@ describe ::Sonar::SurveySmsJob do
     let!(:user_session_3) do
       create(
         :user_session,
-        session: session,
+        session:,
         checked_in: true,
         first_session: true,
         date: los_angeles_date + 1.day
@@ -48,7 +48,7 @@ describe ::Sonar::SurveySmsJob do
     let!(:user_session_4) do
       create(
         :user_session,
-        session: session,
+        session:,
         checked_in: false,
         first_session: true,
         date: los_angeles_date
@@ -59,7 +59,7 @@ describe ::Sonar::SurveySmsJob do
       I18n.t(
         'notifier.sonar.survey_reminder',
         name: user_session_1.user.first_name,
-        survey_link: "#{ENV['FRONTENT_URL']}?openSurvey=true"
+        survey_link: "#{ENV.fetch('FRONTENT_URL', nil)}?openSurvey=true"
       )
     end
 
@@ -67,7 +67,7 @@ describe ::Sonar::SurveySmsJob do
       I18n.t(
         'notifier.sonar.survey_reminder',
         name: user_session_2.user.first_name,
-        survey_link: "#{ENV['FRONTENT_URL']}?openSurvey=true"
+        survey_link: "#{ENV.fetch('FRONTENT_URL', nil)}?openSurvey=true"
       )
     end
 

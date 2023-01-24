@@ -43,14 +43,14 @@
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
-#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
+#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  credits_without_expiration              :integer          default(0)
 #  bio                                     :string
+#  credits_without_expiration              :integer          default(0)
 #  scouting_credits                        :integer          default(0)
 #  weight                                  :integer
 #  height                                  :integer
@@ -69,6 +69,7 @@
 #  index_users_on_is_coach                      (is_coach)
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
+#  index_users_on_phone_number                  (phone_number) UNIQUE
 #  index_users_on_private_access                (private_access)
 #  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
@@ -83,6 +84,13 @@ class User < ApplicationRecord
 
   FREE_SESSION_EXPIRATION_DAYS = 30.days.freeze
   DROP_IN_EXPIRATION_DAYS = 30.days.freeze
+
+  has_paper_trail ignore: %i[sign_in_count
+                             current_sign_in_at
+                             last_sign_in_at
+                             current_sign_in_ip
+                             last_sign_in_ip
+                             tokens]
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -113,22 +121,26 @@ class User < ApplicationRecord
   has_one :last_checked_in_user_session,
           -> { checked_in.order(date: :desc) },
           class_name: 'UserSession',
-          inverse_of: :user
+          inverse_of: :user,
+          dependent: :destroy
 
   has_one :first_future_user_session,
           -> { future.not_canceled.order(date: :asc, 'sessions.time' => :asc) },
           class_name: 'UserSession',
-          inverse_of: :user
+          inverse_of: :user,
+          dependent: :destroy
 
   has_one :active_subscription,
-          -> { where(status: %i[active paused]).recent },
+          -> { active_or_paused.recent },
           class_name: 'Subscription',
-          inverse_of: :user
+          inverse_of: :user,
+          dependent: :destroy
 
   has_one :default_payment_method,
           -> { where(default: true) },
           class_name: 'PaymentMethod',
-          inverse_of: :user
+          inverse_of: :user,
+          dependent: :destroy
 
   has_one :referral_promo_code,
           class_name: 'PromoCode',
@@ -138,7 +150,8 @@ class User < ApplicationRecord
   has_one :last_player_evaluation,
           -> { order(date: :desc, created_at: :desc) },
           class_name: 'PlayerEvaluation',
-          inverse_of: :user
+          inverse_of: :user,
+          dependent: nil
 
   has_many :user_sessions, dependent: :destroy
   has_many :sem_sessions, dependent: :destroy
@@ -178,14 +191,14 @@ class User < ApplicationRecord
   scope :employees, -> { referees.or(sems).or(coaches) }
 
   before_validation :init_uid
-  after_create :create_referral_code
-  after_commit :update_external_records, on: :update
   before_save :normalize_instagram_username
+  after_create :create_referral_code
+  after_destroy :delete_stripe_customer,
+                :delete_stripe_promo_code
+  after_commit :update_external_records, on: :update
   after_rollback :delete_stripe_customer,
                  :delete_stripe_promo_code,
                  on: :create
-  after_destroy :delete_stripe_customer,
-                :delete_stripe_promo_code
 
   delegate :current_period_start,
            :current_period_end,
@@ -197,7 +210,7 @@ class User < ApplicationRecord
            to: :active_subscription, prefix: true
 
   def self.from_social_provider(provider, user_params)
-    where(provider: provider, uid: user_params['id']).first_or_create! do |user|
+    where(provider:, uid: user_params['id']).first_or_create! do |user|
       user.password = Devise.friendly_token[0, 20]
       user.assign_attributes user_params.except('id')
     end
@@ -292,7 +305,7 @@ class User < ApplicationRecord
   def instagram_profile
     return if instagram_username.blank?
 
-    "https://www.instagram.com/#{instagram_username[1..-1]}"
+    "https://www.instagram.com/#{instagram_username[1..]}"
   end
 
   def new_member?
@@ -323,7 +336,7 @@ class User < ApplicationRecord
 
   def create_referral_code
     referral_code = generate_referral_code
-    update!(referral_code: referral_code)
+    update!(referral_code:)
 
     recurring_products = Product.recurring
 
@@ -332,7 +345,7 @@ class User < ApplicationRecord
     promo_code_attrs = {
       type: PercentageDiscount.to_s,
       code: referral_code,
-      discount: ENV['REFERRAL_CODE_PERCENTAGE_DISCOUNT'],
+      discount: ENV.fetch('REFERRAL_CODE_PERCENTAGE_DISCOUNT', nil),
       for_referral: true,
       duration: :repeating,
       duration_in_months: 1,
@@ -359,7 +372,7 @@ class User < ApplicationRecord
     referral_code = base_referral_code
 
     loop do
-      break unless User.find_by(referral_code: referral_code)
+      break unless User.find_by(referral_code:)
 
       referral_code = "#{base_referral_code}#{position + 1}"
       position += 1

@@ -6,7 +6,7 @@ class SplitNameIntoFirstAndLast < ActiveRecord::Migration[6.0]
     end
 
     User.find_each do |user|
-      splitted_full_name = user.name.split(' ')
+      splitted_full_name = user.name.split
       user.first_name = splitted_full_name[0]
       user.last_name = splitted_full_name.drop(1).join(' ')
       user.save!

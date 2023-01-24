@@ -11,7 +11,7 @@ module Subscriptions
 
         Subscriptions::CancelSubscriptionAtPeriodEnd.call(
           user: subscription.user,
-          subscription: subscription
+          subscription:
         )
       end
     end

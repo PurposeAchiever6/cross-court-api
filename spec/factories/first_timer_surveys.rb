@@ -2,8 +2,8 @@
 #
 # Table name: first_timer_surveys
 #
-#  id                        :integer          not null, primary key
-#  user_id                   :integer
+#  id                        :bigint           not null, primary key
+#  user_id                   :bigint
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  how_did_you_hear_about_us :string

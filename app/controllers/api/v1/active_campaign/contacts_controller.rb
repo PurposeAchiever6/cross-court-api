@@ -15,7 +15,7 @@ module Api
             contact['id']
           )
 
-          render json: { contact: contact }
+          render json: { contact: }
         end
 
         private

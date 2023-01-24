@@ -10,23 +10,23 @@ describe Subscriptions::RenewUserSubscriptionCredits do
     let(:product) do
       create(
         :product,
-        credits: credits,
-        max_rollover_credits: max_rollover_credits,
+        credits:,
+        max_rollover_credits:,
         skill_session_credits: product_skill_session_credits
       )
     end
     let(:status) { :active }
-    let(:subscription) { create(:subscription, product: product, status: status) }
+    let(:subscription) { create(:subscription, product:, status:) }
     let(:user) do
       create(
         :user,
         active_subscription: subscription,
-        subscription_credits: subscription_credits,
+        subscription_credits:,
         subscription_skill_session_credits: user_subscription_skill_session_credits
       )
     end
 
-    subject { described_class.call(user: user, subscription: subscription) }
+    subject { described_class.call(user:, subscription:) }
 
     it 'renews user subscription_skill_session_credits' do
       expect { subject }.to change {

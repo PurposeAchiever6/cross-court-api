@@ -3,7 +3,7 @@ class SlackService
 
   def initialize(user, date = nil, time = nil, location = nil)
     @notifier = Slack::Notifier.new(
-      ENV['SLACK_WEBHOOK_URL'],
+      ENV.fetch('SLACK_WEBHOOK_URL', nil),
       username: 'Backend Notifier'
     )
 
@@ -111,49 +111,37 @@ class SlackService
         time: time.strftime(Session::TIME_FORMAT),
         location: location.name
       ),
-      channel: ENV['SLACK_CHANNEL_BOOKING']
+      channel: ENV.fetch('SLACK_CHANNEL_BOOKING', nil)
     )
   end
 
   def notify_inactive(i18n_message, options = {})
-    notify(
-      I18n.t(
-        i18n_message,
-        {
-          name: user.full_name,
-          phone: user.phone_number
-        }.merge(options)
-      ),
-      channel: ENV['SLACK_CHANNEL_CHURN']
-    )
+    options = {
+      name: user.full_name,
+      phone: user.phone_number
+    }.merge(options)
+
+    notify(I18n.t(i18n_message, **options), channel: ENV.fetch('SLACK_CHANNEL_CHURN', nil))
   end
 
   def notify_product(i18n_message, product, options = {})
-    notify(
-      I18n.t(
-        i18n_message,
-        {
-          name: user.full_name,
-          phone: user.phone_number,
-          product_name: product.name
-        }.merge(options)
-      ),
-      channel: ENV['SLACK_CHANNEL_PRODUCTS']
-    )
+    options = {
+      name: user.full_name,
+      phone: user.phone_number,
+      product_name: product.name
+    }.merge(options)
+
+    notify(I18n.t(i18n_message, **options), channel: ENV.fetch('SLACK_CHANNEL_PRODUCTS', nil))
   end
 
   def notify_subscription(i18n_message, subscription, options = {})
-    notify(
-      I18n.t(
-        i18n_message,
-        {
-          name: user.full_name,
-          phone: user.phone_number,
-          subscription_name: subscription.name
-        }.merge(options)
-      ),
-      channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
-    )
+    options = {
+      name: user.full_name,
+      phone: user.phone_number,
+      subscription_name: subscription.name
+    }.merge(options)
+
+    notify(I18n.t(i18n_message, **options), channel: ENV.fetch('SLACK_CHANNEL_SUBSCRIPTIONS', nil))
   end
 
   def notify_subscription_cancellation_request(i18n_message, subscription_cancellation_request)
@@ -163,7 +151,7 @@ class SlackService
         name: user.full_name,
         subscription_cancellation_request_url: subscription_cancellation_request.url
       ),
-      channel: ENV['SLACK_CHANNEL_SUBSCRIPTIONS']
+      channel: ENV.fetch('SLACK_CHANNEL_SUBSCRIPTIONS', nil)
     )
   end
 
@@ -171,11 +159,9 @@ class SlackService
     notify(
       I18n.t(
         i18n_message,
-        name: user.full_name,
-        description: description,
-        error_message: error_message
+        name: user.full_name, description:, error_message:
       ),
-      channel: ENV['SLACK_CHANNEL_CHARGE_ERROR']
+      channel: ENV.fetch('SLACK_CHANNEL_CHARGE_ERROR', nil)
     )
   end
 

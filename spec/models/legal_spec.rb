@@ -2,7 +2,7 @@
 #
 # Table name: legals
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  title      :string           not null
 #  text       :text             not null
 #  created_at :datetime         not null

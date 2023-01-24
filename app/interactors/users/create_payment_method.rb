@@ -10,7 +10,7 @@ module Users
       card_data = payment_method_data.card
 
       payment_method = PaymentMethod.create!(
-        user: user,
+        user:,
         stripe_id: payment_method_data.id,
         brand: card_data.brand,
         exp_month: card_data.exp_month,

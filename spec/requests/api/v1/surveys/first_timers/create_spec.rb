@@ -4,13 +4,13 @@ describe 'POST api/v1/surveys/first_timers' do
   let!(:user) { create(:user) }
   let(:how_did_you_hear_about_us) { 'Search Engine' }
 
-  let(:params) { { how_did_you_hear_about_us: how_did_you_hear_about_us } }
+  let(:params) { { how_did_you_hear_about_us: } }
   let(:request_headers) { auth_headers }
 
   subject do
     post api_v1_surveys_first_timers_path,
          headers: request_headers,
-         params: params,
+         params:,
          as: :json
     response
   end
@@ -27,7 +27,7 @@ describe 'POST api/v1/surveys/first_timers' do
   end
 
   context 'when the user already has a FirstTimerSurvey' do
-    let!(:first_timer_survey) { create(:first_timer_survey, user: user) }
+    let!(:first_timer_survey) { create(:first_timer_survey, user:) }
 
     it { expect { subject }.not_to change(FirstTimerSurvey, :count) }
   end

@@ -8,9 +8,9 @@ module Users
       reason = context.reason
 
       user_update_request = UserUpdateRequest.create!(
-        user: user,
-        requested_attributes: requested_attributes,
-        reason: reason
+        user:,
+        requested_attributes:,
+        reason:
       )
 
       UserMailer.with(user_update_request_id: user_update_request.id)

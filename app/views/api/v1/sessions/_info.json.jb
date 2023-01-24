@@ -18,11 +18,15 @@ json = {
   guests_allowed: session.guests_allowed,
   guests_allowed_per_user: session.guests_allowed_per_user,
   cc_cash_earned: session.cc_cash_earned,
-  full: full,
+  full:,
   reservations_count: session.reservations_count(date),
+  allowed_products: render(
+    partial: 'api/v1/sessions/allowed_products/info',
+    locals: { session: }
+  ),
   past: session.past?(date),
-  spots_left: spots_left,
-  on_waitlist: on_waitlist,
+  spots_left:,
+  on_waitlist:,
   referee: {
     full_name: referee&.full_name,
     first_name: referee&.first_name,
@@ -48,7 +52,7 @@ json = {
     partial: 'api/v1/shooting_machines/info',
     collection: session.shooting_machines,
     as: :shooting_machine,
-    locals: { date: date }
+    locals: { date: }
   ),
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
   skill_level: nil
@@ -61,7 +65,7 @@ json[:coach][:image_url] = polymorphic_url(coach.image) if coach&.image&.attache
 if user_session.present?
   json[:user_session] = render(
     partial: 'api/v1/user_sessions/short_info',
-    locals: { user_session: user_session }
+    locals: { user_session: }
   )
 end
 

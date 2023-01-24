@@ -16,21 +16,21 @@ describe RemoveOrphanSessions do
 
   let(:session) { create(:session, :daily) }
   let!(:yesterday_sem_session) do
-    create(:sem_session, session: session, date: los_angeles_date.yesterday)
+    create(:sem_session, session:, date: los_angeles_date.yesterday)
   end
   let!(:yesterday_ref_session) do
-    create(:referee_session, session: session, date: los_angeles_date.yesterday)
+    create(:referee_session, session:, date: los_angeles_date.yesterday)
   end
   let!(:yesterday_user_session) do
-    create(:user_session, session: session, date: los_angeles_date.yesterday)
+    create(:user_session, session:, date: los_angeles_date.yesterday)
   end
   let(:user) { create(:user) }
 
   before do
     8.times do |i|
-      create(:sem_session, session: session, date: los_angeles_date + i.days)
-      create(:referee_session, session: session, date: los_angeles_date + i.days)
-      create(:user_session, session: session, user: user, date: los_angeles_date + i.days)
+      create(:sem_session, session:, date: los_angeles_date + i.days)
+      create(:referee_session, session:, date: los_angeles_date + i.days)
+      create(:user_session, session:, user:, date: los_angeles_date + i.days)
     end
   end
 

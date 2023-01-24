@@ -11,7 +11,7 @@ module Waitlists
       raise SessionIsOutOfSkillLevelException unless session.at_session_level?(user)
       raise UserAlreadyInSessionException if user.not_canceled_user_session?(session, date)
 
-      UserSessionWaitlist.create!(session: session, user: user, date: date, state: :pending)
+      UserSessionWaitlist.create!(session:, user:, date:, state: :pending)
     end
   end
 end

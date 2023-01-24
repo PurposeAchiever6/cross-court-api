@@ -2,7 +2,7 @@
 #
 # Table name: subscriptions
 #
-#  id                           :integer          not null, primary key
+#  id                           :bigint           not null, primary key
 #  stripe_id                    :string
 #  stripe_item_id               :string
 #  status                       :string
@@ -13,10 +13,10 @@
 #  canceled_at                  :datetime
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
-#  user_id                      :integer
-#  product_id                   :integer
-#  promo_code_id                :integer
-#  payment_method_id            :integer
+#  user_id                      :bigint
+#  product_id                   :bigint
+#  promo_code_id                :bigint
+#  payment_method_id            :bigint
 #  mark_cancel_at_period_end_at :date
 #
 # Indexes
@@ -38,7 +38,7 @@ FactoryBot.define do
     stripe_item_id { 'stripe-subscription-item-id' }
     status { 'active' }
     current_period_start { Time.current }
-    current_period_end { Time.current + 1.month }
+    current_period_end { 1.month.from_now }
     cancel_at_period_end { false }
     cancel_at { nil }
     canceled_at { nil }

@@ -2,9 +2,9 @@
 #
 # Table name: player_evaluations
 #
-#  id          :integer          not null, primary key
-#  user_id     :integer
-#  evaluation  :json             default({})
+#  id          :bigint           not null, primary key
+#  user_id     :bigint
+#  evaluation  :json
 #  total_score :float
 #  date        :date
 #  created_at  :datetime         not null

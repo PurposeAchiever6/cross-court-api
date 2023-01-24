@@ -25,11 +25,11 @@ module Api
         response = {
           error: message
         }
-        render json: response, status: status
+        render json: response, status:
       end
 
       def request_content_type
-        request.content_type
+        request.headers['Content-Type']
       end
     end
   end

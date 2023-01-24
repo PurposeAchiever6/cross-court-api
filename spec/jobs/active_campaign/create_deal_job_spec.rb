@@ -8,7 +8,7 @@ describe ::ActiveCampaign::CreateDealJob do
       ::ActiveCampaign::Deal::Event.const_get(::ActiveCampaign::Deal::Event.constants.sample)
     end
 
-    before { ActiveCampaignMocker.new(pipeline_name: pipeline_name).mock }
+    before { ActiveCampaignMocker.new(pipeline_name:).mock }
 
     context 'when args and pipeline_name are not passed' do
       subject { described_class.perform_now(event, user.id) }
@@ -25,7 +25,7 @@ describe ::ActiveCampaign::CreateDealJob do
         expect(
           ActiveCampaignService
         ).to receive(:new)
-          .with(pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS).and_call_original
+          .with({ pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS }).and_call_original
 
         subject
       end
@@ -48,7 +48,7 @@ describe ::ActiveCampaign::CreateDealJob do
         expect(
           ActiveCampaignService
         ).to receive(:new)
-          .with(pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS).and_call_original
+          .with({ pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS }).and_call_original
 
         subject
       end
@@ -71,7 +71,7 @@ describe ::ActiveCampaign::CreateDealJob do
       it 'initialize the service with the correct pipeline' do
         expect(
           ActiveCampaignService
-        ).to receive(:new).with(pipeline_name: pipeline_name).and_call_original
+        ).to receive(:new).with({ pipeline_name: }).and_call_original
 
         subject
       end

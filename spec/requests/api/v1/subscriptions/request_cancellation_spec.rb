@@ -11,9 +11,9 @@ describe 'POST api/v1/subscriptions/request_cancellation' do
   let(:params) do
     {
       experiencie_rate: experience_rate,
-      service_rate: service_rate,
-      recommend_rate: recommend_rate,
-      reason: reason
+      service_rate:,
+      recommend_rate:,
+      reason:
     }
   end
 
@@ -24,7 +24,7 @@ describe 'POST api/v1/subscriptions/request_cancellation' do
   subject do
     post request_cancellation_api_v1_subscriptions_path,
          headers: request_headers,
-         params: params,
+         params:,
          as: :json
     response
   end

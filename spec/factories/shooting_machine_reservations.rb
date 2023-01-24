@@ -2,9 +2,9 @@
 #
 # Table name: shooting_machine_reservations
 #
-#  id                       :integer          not null, primary key
-#  shooting_machine_id      :integer
-#  user_session_id          :integer
+#  id                       :bigint           not null, primary key
+#  shooting_machine_id      :bigint
+#  user_session_id          :bigint
 #  status                   :integer          default("reserved")
 #  charge_payment_intent_id :string
 #  created_at               :datetime         not null

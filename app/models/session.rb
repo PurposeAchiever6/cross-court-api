@@ -2,15 +2,15 @@
 #
 # Table name: sessions
 #
-#  id                       :integer          not null, primary key
+#  id                       :bigint           not null, primary key
 #  start_time               :date             not null
 #  recurring                :text
 #  time                     :time             not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  location_id              :integer          not null
+#  location_id              :bigint           not null
 #  end_time                 :date
-#  skill_level_id           :integer
+#  skill_level_id           :bigint
 #  is_private               :boolean          default(FALSE)
 #  coming_soon              :boolean          default(FALSE)
 #  is_open_club             :boolean          default(FALSE)
@@ -54,6 +54,7 @@ class Session < ApplicationRecord
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
 
   acts_as_paranoid
+  has_paper_trail
 
   serialize :recurring, Hash
 
@@ -76,6 +77,8 @@ class Session < ApplicationRecord
            -> { order(:start_time, :end_time) },
            dependent: :destroy,
            inverse_of: :session
+  has_many :session_allowed_products, dependent: :destroy
+  has_many :products, through: :session_allowed_products
 
   validates :skill_level, presence: true, unless: -> { skill_session? || open_club? }
   validates :start_time, :time, :duration_minutes, presence: true
@@ -107,19 +110,19 @@ class Session < ApplicationRecord
   end)
 
   scope :by_location, (lambda do |location_id|
-    location_id.blank? ? all : where(location_id: location_id)
+    location_id.blank? ? all : where(location_id:)
   end)
 
   scope :in_next_minutes, (lambda do |minutes|
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     joins(:location).where(
       'to_char(time, :time_format) ' \
       'BETWEEN to_char(current_timestamp at time zone locations.time_zone, :time_format) AND ' \
       "to_char((current_timestamp + interval ':minutes minutes') at time zone locations.time_zone, :time_format)",
-      minutes: minutes,
+      minutes:,
       time_format: 'HH24MI'
     )
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
   end)
 
   def normal_session?
@@ -156,6 +159,7 @@ class Session < ApplicationRecord
 
         attributes[:location] = location if association_cached?(:location)
         attributes[:skill_level] = skill_level if association_cached?(:skill_level)
+        attributes[:products] = products if association_cached?(:products)
 
         Session.new(attributes)
       end
@@ -163,15 +167,15 @@ class Session < ApplicationRecord
   end
 
   def referee(date)
-    referee_sessions.find_by(date: date)&.referee
+    referee_sessions.find_by(date:)&.referee
   end
 
   def sem(date)
-    sem_sessions.find_by(date: date)&.sem
+    sem_sessions.find_by(date:)&.sem
   end
 
   def coach(date)
-    coach_sessions.find_by(date: date)&.coach
+    coach_sessions.find_by(date:)&.coach
   end
 
   def reservations_count(date)
@@ -189,10 +193,10 @@ class Session < ApplicationRecord
   def first_timer_reservations(date, user_sessions = nil)
     reservations = user_sessions || not_canceled_reservations(date)
 
-    ActiveRecord::Associations::Preloader.new.preload(
-      reservations,
-      user: :last_checked_in_user_session
-    )
+    ActiveRecord::Associations::Preloader.new(
+      records: reservations,
+      associations: { user: :last_checked_in_user_session }
+    ).call
 
     reservations.select { |reservation| reservation.user.first_timer? }
   end
@@ -314,6 +318,16 @@ class Session < ApplicationRecord
 
   def shooting_machines?
     open_club?
+  end
+
+  def allowed_for_member?(user)
+    return true unless members_only?
+
+    return false unless user.active_subscription
+
+    return true if session_allowed_products.empty?
+
+    session_allowed_products.pluck(:product_id).include?(user.active_subscription.product_id)
   end
 
   private

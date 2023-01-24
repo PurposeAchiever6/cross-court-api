@@ -7,7 +7,7 @@ module Sessions
       user = context.user
       date = context.date
 
-      user_session_vote = session.user_session_votes.by_date(date).find_by(user: user)
+      user_session_vote = session.user_session_votes.by_date(date).find_by(user:)
 
       raise UserDidNotVoteSessionException unless user_session_vote
 

@@ -38,7 +38,7 @@ class StripeMocker
       request_body: {
         pause_collection: {
           behavior: 'mark_uncollectible',
-          resumes_at: resumes_at
+          resumes_at:
         }
       },
       method: :post,
@@ -71,8 +71,8 @@ class StripeMocker
       url_path: '/invoices/upcoming',
       method: :get,
       response_body: invoice_response(
-        customer_id: customer_id,
-        subscription_id: subscription_id
+        customer_id:,
+        subscription_id:
       ),
       query: {
         subscription_items: items,
@@ -89,8 +89,8 @@ class StripeMocker
       url_path: "/invoices/#{stripe_invoice_id}",
       method: :get,
       response_body: invoice_response(
-        customer_id: customer_id,
-        stripe_invoice_id: stripe_invoice_id
+        customer_id:,
+        stripe_invoice_id:
       )
     )
   end
@@ -123,10 +123,10 @@ class StripeMocker
     status: 200
   )
     WebMock.stub_request(method, "#{base_url}#{url_path}").with(
-      query: query,
+      query:,
       body: request_body
     ).to_return(
-      status: status,
+      status:,
       body: response_body,
       headers: { 'Content-Type' => 'application/json' }
     )
@@ -151,16 +151,16 @@ class StripeMocker
                             pause_collection: nil,
                             cancel_at_period_end: false)
     {
-      id: id,
+      id:,
       latest_invoice: 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr',
       items: { data: [id: 'stripe-subscription-item-id'] },
-      status: status,
-      current_period_start: (Time.current - 2.weeks).to_i,
-      current_period_end: (Time.current + 2.weeks).to_i,
+      status:,
+      current_period_start: 2.weeks.ago.to_i,
+      current_period_end: 2.weeks.from_now.to_i,
       cancel_at: nil,
       canceled_at: Time.current.to_i,
-      cancel_at_period_end: cancel_at_period_end,
-      pause_collection: pause_collection
+      cancel_at_period_end:,
+      pause_collection:
     }.to_json
   end
 

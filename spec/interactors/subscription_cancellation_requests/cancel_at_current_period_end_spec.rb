@@ -7,7 +7,7 @@ describe SubscriptionCancellationRequests::CancelAtCurrentPeriodEnd do
     let!(:subscription_cancellation_request) do
       create(
         :subscription_cancellation_request,
-        status: status
+        status:
       )
     end
 
@@ -18,7 +18,7 @@ describe SubscriptionCancellationRequests::CancelAtCurrentPeriodEnd do
 
     subject do
       SubscriptionCancellationRequests::CancelAtCurrentPeriodEnd.call(
-        subscription_cancellation_request: subscription_cancellation_request
+        subscription_cancellation_request:
       )
     end
 

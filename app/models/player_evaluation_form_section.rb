@@ -2,7 +2,7 @@
 #
 # Table name: player_evaluation_form_sections
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  title      :string
 #  subtitle   :string
 #  order      :integer
@@ -24,7 +24,8 @@ class PlayerEvaluationFormSection < ApplicationRecord
   has_many :options,
            -> { order(score: :asc) },
            class_name: 'PlayerEvaluationFormSectionOption',
-           inverse_of: :player_evaluation_form_section
+           inverse_of: :player_evaluation_form_section,
+           dependent: nil
 
   accepts_nested_attributes_for :options, allow_destroy: true
 

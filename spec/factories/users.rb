@@ -69,6 +69,7 @@
 #  index_users_on_is_coach                      (is_coach)
 #  index_users_on_is_referee                    (is_referee)
 #  index_users_on_is_sem                        (is_sem)
+#  index_users_on_phone_number                  (phone_number) UNIQUE
 #  index_users_on_private_access                (private_access)
 #  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
@@ -79,10 +80,10 @@
 FactoryBot.define do
   factory :user do
     email { Faker::Internet.unique.email }
-    password { Faker::Internet.password(8) }
+    password { Faker::Internet.password(min_length: 8) }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    uid { Faker::Number.unique.number(10) }
+    uid { Faker::Number.unique.number(digits: 10) }
     zipcode { Faker::Address.zip_code[0..4] }
     free_session_expiration_date { Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS }
     drop_in_expiration_date { Time.zone.today + User::FREE_SESSION_EXPIRATION_DAYS }
@@ -107,15 +108,15 @@ FactoryBot.define do
     end
 
     trait :referee do
-      is_referee true
+      is_referee { true }
     end
 
     trait :sem do
-      is_sem true
+      is_sem { true }
     end
 
     trait :coach do
-      is_coach true
+      is_coach { true }
     end
 
     trait :with_image do
@@ -129,13 +130,13 @@ FactoryBot.define do
 
     trait :not_first_timer do
       after :create do |user|
-        create(:user_session, user: user, checked_in: true)
+        create(:user_session, user:, checked_in: true)
       end
     end
 
     trait :with_payment_method do
       after :create do |user|
-        create(:payment_method, user: user, default: true)
+        create(:payment_method, user:, default: true)
       end
     end
   end

@@ -19,7 +19,7 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
   config.public_file_server.headers = {
     'Cache-Control' => "public, max-age=#{1.year.to_i}",
-    'Expires' => 1.year.from_now.to_formatted_s(:rfc822)
+    'Expires' => 1.year.from_now.to_fs(:rfc822)
   }
 
   config.static_cache_control = "public, max-age=#{1.year.to_i}"
@@ -81,7 +81,7 @@ Rails.application.configure do
   config.active_storage.service = :amazon
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger           = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end

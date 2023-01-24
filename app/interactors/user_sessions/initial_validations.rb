@@ -11,7 +11,7 @@ module UserSessions
       raise UserFlaggedException if user.flagged?
       raise FullSessionException if session.full?(date, user)
       raise SubscriptionIsNotActiveException if user_active_subscription&.paused?
-      raise SessionOnlyForMembersException if session.members_only? && !user_active_subscription
+      raise SessionAllowedMembersException unless session.allowed_for_member?(user)
     end
   end
 end

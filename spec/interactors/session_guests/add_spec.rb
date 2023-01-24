@@ -19,14 +19,14 @@ describe SessionGuests::Add do
     let!(:session) do
       create(
         :session,
-        guests_allowed: guests_allowed,
-        guests_allowed_per_user: guests_allowed_per_user
+        guests_allowed:,
+        guests_allowed_per_user:
       )
     end
-    let!(:user_session) { create(:user_session, session: session) }
+    let!(:user_session) { create(:user_session, session:) }
 
     subject do
-      SessionGuests::Add.call(user_session: user_session, guest_info: guest_info)
+      SessionGuests::Add.call(user_session:, guest_info:)
     end
 
     it { expect { subject }.to change(SessionGuest, :count).by(1) }
@@ -60,7 +60,7 @@ describe SessionGuests::Add do
     end
 
     context 'when the session reaches the max guests' do
-      let!(:another_user_session) { create(:user_session, session: session) }
+      let!(:another_user_session) { create(:user_session, session:) }
       let!(:session_guest) { create(:session_guest, user_session: another_user_session) }
 
       it do
@@ -77,7 +77,7 @@ describe SessionGuests::Add do
 
     context 'when the user reaches the max guests' do
       let(:guests_allowed) { 2 }
-      let!(:session_guest) { create(:session_guest, user_session: user_session) }
+      let!(:session_guest) { create(:session_guest, user_session:) }
 
       it do
         expect {
@@ -94,7 +94,7 @@ describe SessionGuests::Add do
     context 'when the guest has already been invited' do
       let(:guests_allowed) { 2 }
       let(:state) { %i[reserved confirmed].sample }
-      let!(:session_guest) { create(:session_guest, phone_number: '+11342214334', state: state) }
+      let!(:session_guest) { create(:session_guest, phone_number: '+11342214334', state:) }
 
       it do
         expect {

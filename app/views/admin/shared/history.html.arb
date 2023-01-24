@@ -1,0 +1,9 @@
+panel 'Changes History' do
+  table_for versions do
+    column('Version ID', class: 'w-28', &:id)
+    column('Modified by', class: 'w-56') { |version| version_user(version) }
+    column('At', class: 'w-56', &:created_at)
+    column('Action', class: 'w-40', &:event)
+    column('Changes') { |version| changes_table(version, self) }
+  end
+end

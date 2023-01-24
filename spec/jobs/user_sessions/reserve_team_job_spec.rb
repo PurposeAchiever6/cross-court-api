@@ -17,15 +17,15 @@ describe UserSessions::ReserveTeamJob do
       let!(:la_date) { la_time.to_date }
       let(:date_when) { nil }
 
-      let(:session) { create(:session, :daily, time: time) }
+      let(:session) { create(:session, :daily, time:) }
 
       let(:message) do
         I18n.t(
           'notifier.sonar.reserve_team',
-          time: time,
+          time:,
           location: session.location.name,
           when: date_when,
-          link: "#{ENV['FRONTENT_URL']}/locations"
+          link: "#{ENV.fetch('FRONTENT_URL', nil)}/locations"
         )
       end
 
@@ -36,8 +36,8 @@ describe UserSessions::ReserveTeamJob do
             :user_session,
             5,
             date: la_date,
-            session: session,
-            user: user
+            session:,
+            user:
           )
         end
         let(:date_when) { user_sessions.first.date_when_format }
@@ -55,8 +55,8 @@ describe UserSessions::ReserveTeamJob do
           create(
             :user_session,
             date: la_date,
-            session: session,
-            user: user
+            session:,
+            user:
           )
         end
         let(:date_when) { user_session.date_when_format }
@@ -74,8 +74,8 @@ describe UserSessions::ReserveTeamJob do
           create(
             :user_session,
             date: la_date,
-            session: session,
-            user: user
+            session:,
+            user:
           )
         end
         let(:date_when) { user_session.date_when_format }

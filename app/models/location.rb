@@ -2,7 +2,7 @@
 #
 # Table name: locations
 #
-#  id                                :integer          not null, primary key
+#  id                                :bigint           not null, primary key
 #  name                              :string           not null
 #  address                           :string           not null
 #  lat                               :float            not null
@@ -47,6 +47,6 @@ class Location < ApplicationRecord
   end
 
   def google_maps_link
-    "#{GOOGLE_MAPS_BASE_URL}#{full_address}".split(' ').join('+')
+    "#{GOOGLE_MAPS_BASE_URL}#{full_address}".split.join('+')
   end
 end

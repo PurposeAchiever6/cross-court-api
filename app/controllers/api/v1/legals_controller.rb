@@ -2,7 +2,7 @@ module Api
   module V1
     class LegalsController < ApiController
       def show
-        legal = Legal.find_by(title: title)
+        legal = Legal.find_by(title:)
         render json: { text: legal.text }, status: :ok
       end
 

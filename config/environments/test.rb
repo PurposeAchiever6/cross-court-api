@@ -49,11 +49,16 @@ Rails.application.configure do
   Delayed::Worker.delay_jobs = false
 
   config.after_initialize do
+    PaperTrail.enabled = false
+
     Bullet.enable = true
     Bullet.bullet_logger = true
     Bullet.raise = true # raise an error if n+1 query occurs
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Session', association: :location
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Session',
-                         association: :session_exceptions
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session', association: :location
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session',
+                        association: :session_exceptions
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session',
+                        association: :session_allowed_products
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Session', association: :products
   end
 end

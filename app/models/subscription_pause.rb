@@ -2,10 +2,10 @@
 #
 # Table name: subscription_pauses
 #
-#  id              :integer          not null, primary key
+#  id              :bigint           not null, primary key
 #  paused_from     :datetime         not null
 #  paused_until    :datetime         not null
-#  subscription_id :integer
+#  subscription_id :bigint
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  job_id          :string
