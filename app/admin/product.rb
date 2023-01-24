@@ -41,7 +41,6 @@ ActiveAdmin.register Product do
     column :free_pauses_per_year do |product|
       product.recurring? ? product.free_pauses_per_year : 'N/A'
     end
-    column :free_pauses_per_year
     number_column 'Referral CC Cash', :referral_cc_cash, as: :currency
     column :label
     column :order_number
