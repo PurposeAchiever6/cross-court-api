@@ -4,7 +4,8 @@ ActiveAdmin.register Product do
   permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
                 :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
                 :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
-                :free_pauses_per_year
+                :free_pauses_per_year, :highlighted, :highlights, :free_jersey_rental,
+                :free_towel_rental, :description, :waitlist_priority
 
   filter :name
   filter :product_type
@@ -93,6 +94,10 @@ ActiveAdmin.register Product do
       f.input :available_for
       f.input :season_pass
       f.input :scouting
+      f.input :highlighted
+      f.input :highlights
+      f.input :free_jersey_rental
+      f.input :free_towel_rental
       f.input :name
       f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits
@@ -106,10 +111,12 @@ ActiveAdmin.register Product do
       f.input :price_for_members
       f.input :price_for_first_timers_no_free_session
       f.input :free_pauses_per_year
+      f.input :waitlist_priority
       f.input :referral_cc_cash, label: 'Referral CC cash'
       f.input :label
       f.input :order_number
       f.input :image, as: :file
+      f.input :description
     end
     f.actions
   end
@@ -144,6 +151,11 @@ ActiveAdmin.register Product do
       end
       row :season_pass
       row :scouting
+      row :highlighted
+      row :highlights
+      row :free_jersey_rental
+      row :free_towel_rental
+      row :waitlist_priority
       row :label
       row :order_number
       row :memberships_count do |product|
@@ -155,6 +167,7 @@ ActiveAdmin.register Product do
       row 'History' do |product|
         link_to 'Link to History', history_admin_product_path(product.id)
       end
+      row :description
       row :created_at
       row :updated_at
     end

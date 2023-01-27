@@ -12,7 +12,13 @@ json = {
   label: product.label,
   season_pass: product.season_pass,
   scouting: product.scouting,
-  free_pauses_per_year: product.free_pauses_per_year
+  free_pauses_per_year: product.free_pauses_per_year,
+  highlighted: product.highlighted,
+  highlights: product.highlights,
+  free_jersey_rental: product.free_jersey_rental,
+  free_towel_rental: product.free_towel_rental,
+  description: product.description,
+  waitlist_priority: product.waitlist_priority
 }
 
 json[:image_url] = polymorphic_url(product.image) if product.image.attached?

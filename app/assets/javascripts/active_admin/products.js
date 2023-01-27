@@ -41,6 +41,10 @@ $(document).ready(function () {
         $("#product-sessions-unlimited-container").show();
         $("#product_max_rollover_credits_input").show();
         $("#product_free_pauses_per_year_input").show();
+        $("#product_highlights_input").show();
+        $("#product_free_jersey_rental_input").show();
+        $("#product_free_towel_rental_input").show();
+        $("#product_waitlist_priority_input").show();
       } else {
         $("#product_season_pass_input").show();
         $("#product_price_for_members_input").show();
@@ -51,6 +55,10 @@ $(document).ready(function () {
         $("#product-sessions-unlimited-container").hide();
         $("#product_max_rollover_credits_input").hide();
         $("#product_free_pauses_per_year_input").hide();
+        $("#product_highlights_input").hide();
+        $("#product_free_jersey_rental_input").hide();
+        $("#product_free_towel_rental_input").hide();
+        $("#product_waitlist_priority_input").hide();
       }
     })
     .change();
