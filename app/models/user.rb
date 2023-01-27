@@ -282,6 +282,14 @@ class User < ApplicationRecord
     active_subscription ? active_subscription.product.name : 'Not a member'
   end
 
+  def free_jersey_rental?
+    active_subscription&.product&.free_jersey_rental?
+  end
+
+  def free_towel_rental?
+    active_subscription&.product&.free_towel_rental?
+  end
+
   def received_free_session?
     !free_session_not_apply?
   end

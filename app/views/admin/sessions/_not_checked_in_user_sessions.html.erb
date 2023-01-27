@@ -88,24 +88,32 @@
             </div>
           </td>
           <td class='align-middle'>
-            <div class='flex items-center mb-2'>
-              <%= check_box_tag 'user_sessions[][jersey_rental]',
-                                true,
-                                user_session.jersey_rental,
-                                id: "jersey_rental-#{user_session.id}",
-                                class: 'mr-1' %>
-              <%= label_tag "jersey_rental-#{user_session.id}",
-                            "Jersey Rental - (#{number_to_currency(jersey_rental_price)})" %>
-            </div>
-            <div class='flex items-center'>
-              <%= check_box_tag 'user_sessions[][towel_rental]',
-                                true,
-                                user_session.towel_rental,
-                                id: "towel_rental-#{user_session.id}",
-                                class: 'mr-1' %>
-              <%= label_tag "towel_rental-#{user_session.id}",
-                            "Towel Rental - (#{number_to_currency(towel_rental_price)})" %>
-            </div>
+            <% unless user.free_jersey_rental? %>
+              <div class='flex items-center mb-2'>
+                <%= check_box_tag 'user_sessions[][jersey_rental]',
+                                  true,
+                                  user_session.jersey_rental,
+                                  id: "jersey_rental-#{user_session.id}",
+                                  class: 'mr-1' %>
+                <%= label_tag "jersey_rental-#{user_session.id}",
+                              "Jersey Rental - (#{number_to_currency(jersey_rental_price)})" %>
+              </div>
+            <% else %>
+              <div>Has free jersey rental</div>
+            <% end %>
+            <% unless user.free_towel_rental? %>
+              <div class='flex items-center'>
+                <%= check_box_tag 'user_sessions[][towel_rental]',
+                                  true,
+                                  user_session.towel_rental,
+                                  id: "towel_rental-#{user_session.id}",
+                                  class: 'mr-1' %>
+                <%= label_tag "towel_rental-#{user_session.id}",
+                              "Towel Rental - (#{number_to_currency(towel_rental_price)})" %>
+              </div>
+            <% else %>
+              <div>Has free towel rental</div>
+            <% end %>
           </td>
           <td class='align-middle'>
             <div class='flex items-center'>
