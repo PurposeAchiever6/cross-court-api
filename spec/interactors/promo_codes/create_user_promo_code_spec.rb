@@ -6,7 +6,7 @@ describe PromoCodes::CreateUserPromoCode do
     let!(:product) { create(:product, referral_cc_cash:) }
     let!(:promo_code) { create(:promo_code, for_referral:, user: promo_code_user) }
 
-    let(:referral_cc_cash) { rand(1..100) }
+    let(:referral_cc_cash) { rand(1..100).to_f }
     let(:promo_code_user) { nil }
     let(:for_referral) { false }
 
@@ -67,7 +67,7 @@ describe PromoCodes::CreateUserPromoCode do
           ::ActiveCampaign::Deal::Event::PROMO_CODE_REFERRAL_SUCCESS,
           promo_code_user.id,
           referred_id: user.id,
-          cc_cash_awarded: referral_cc_cash
+          cc_cash_awarded: referral_cc_cash.to_s
         )
       end
 

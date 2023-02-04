@@ -22,7 +22,7 @@ module PromoCodes
           ActiveCampaign::Deal::Event::PROMO_CODE_REFERRAL_SUCCESS,
           referral_user.id,
           referred_id: user.id,
-          cc_cash_awarded: product_referral_cc_cash
+          cc_cash_awarded: product_referral_cc_cash.to_s
         )
       end
     end
