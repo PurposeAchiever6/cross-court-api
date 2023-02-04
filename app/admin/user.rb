@@ -382,6 +382,13 @@ ActiveAdmin.register User do
       return redirect_to admin_user_path(id: user.id)
     end
 
+    if promo_code&.for_referral
+      flash[:error] = "You can't manually select a referral promo code. If referral user is " \
+                      'selected and no promo code is entered, it will automatically use that ' \
+                      'user referral promo code'
+      return redirect_to admin_user_path(id: user.id)
+    end
+
     if params[:referral_user_id].present?
       referral_user = User.find(params[:referral_user_id])
       referral_promo_code = referral_user.referral_promo_code
@@ -393,11 +400,15 @@ ActiveAdmin.register User do
 
       referral_promo_code.validate!(user, product, true)
 
-      PromoCodes::CreateUserPromoCode.call(
-        user:,
-        promo_code: referral_promo_code,
-        product:
-      )
+      if promo_code
+        PromoCodes::CreateUserPromoCode.call(
+          user:,
+          promo_code: referral_promo_code,
+          product:
+        )
+      else
+        promo_code = referral_promo_code
+      end
     end
 
     case action_type
