@@ -1,7 +1,9 @@
 {
   id: payment.id,
   description: payment.description,
+  total_amount: payment.total_amount,
   amount: payment.amount,
+  amount_refunded: payment.amount_refunded,
   date: payment.created_at.iso8601,
   last_4: payment.last_4,
   discount: payment.discount,

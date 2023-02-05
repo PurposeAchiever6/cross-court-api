@@ -16,6 +16,7 @@
 #  cc_cash         :decimal(10, 2)   default(0.0)
 #  chargeable_type :string
 #  chargeable_id   :bigint
+#  amount_refunded :decimal(10, 2)   default(0.0)
 #
 # Indexes
 #
@@ -28,11 +29,15 @@ class Payment < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :chargeable, optional: true, polymorphic: true
 
-  enum status: { success: 0, error: 1 }
+  enum status: { success: 0, error: 1, refunded: 2, partially_refunded: 3 }
 
   validates :amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :description, presence: true
 
   delegate :email, :phone_number, to: :user, prefix: true
   delegate :name, to: :product, prefix: true
+
+  def total_amount
+    amount + discount + cc_cash
+  end
 end

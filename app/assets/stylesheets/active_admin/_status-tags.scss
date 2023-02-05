@@ -8,4 +8,10 @@
   &.confirmed, &.approved, &.success {
     background: #7ebe88;
   }
+  &.refunded {
+    background: #fde68a;
+  }
+  &.partially_refunded {
+    background: #fed7aa;
+  }
 }

@@ -11,6 +11,7 @@ module Api
       CUSTOMER_SUBSCRIPTION_DELETED = 'customer.subscription.deleted'.freeze
       SUBSCRIPTION_CYCLE = 'subscription_cycle'.freeze
       SUBSCRIPTION_UPDATE = 'subscription_update'.freeze
+      CHARGE_REFUNDED = 'charge.refunded'.freeze
 
       def webhook
         payload = request.body.read
@@ -100,6 +101,14 @@ module Api
               create_payment_on_failure: true,
               notify_error: true,
               raise_error: false
+            )
+          end
+        when CHARGE_REFUNDED
+          payment = Payment.find_by(stripe_id: object.payment_intent)
+          if payment
+            Payments::Refund.call(
+              payment:,
+              amount_refunded: object.amount_refunded
             )
           end
         else

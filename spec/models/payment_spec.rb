@@ -16,6 +16,7 @@
 #  cc_cash         :decimal(10, 2)   default(0.0)
 #  chargeable_type :string
 #  chargeable_id   :bigint
+#  amount_refunded :decimal(10, 2)   default(0.0)
 #
 # Indexes
 #

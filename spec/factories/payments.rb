@@ -16,6 +16,7 @@
 #  cc_cash         :decimal(10, 2)   default(0.0)
 #  chargeable_type :string
 #  chargeable_id   :bigint
+#  amount_refunded :decimal(10, 2)   default(0.0)
 #
 # Indexes
 #
@@ -26,9 +27,11 @@
 
 FactoryBot.define do
   factory :payment do
-    user
+    status { :success }
     amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
+    amount_refunded { 0 }
     description { Faker::Lorem.word }
+    user
 
     transient do
       chargeable { nil }

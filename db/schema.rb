@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_26_220409) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_05_000226) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -161,6 +161,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_220409) do
     t.decimal "cc_cash", precision: 10, scale: 2, default: "0.0"
     t.string "chargeable_type"
     t.bigint "chargeable_id"
+    t.decimal "amount_refunded", precision: 10, scale: 2, default: "0.0"
     t.index ["chargeable_type", "chargeable_id"], name: "index_payments_on_chargeable_type_and_chargeable_id"
     t.index ["status"], name: "index_payments_on_status"
     t.index ["user_id"], name: "index_payments_on_user_id"
