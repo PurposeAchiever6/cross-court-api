@@ -367,7 +367,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   context 'when user reserves a shooting machine' do
     let!(:shooting_machine) { create(:shooting_machine, session:) }
 
-    before { params[:shooting_machine_id] = shooting_machine.id }
+    before { params[:shooting_machine_ids] = [shooting_machine.id] }
 
     it 'returns success' do
       subject

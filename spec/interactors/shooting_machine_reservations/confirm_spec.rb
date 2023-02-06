@@ -23,7 +23,7 @@ describe ShootingMachineReservations::Confirm do
 
     subject do
       ShootingMachineReservations::Confirm.call(
-        shooting_machine_reservation:
+        shooting_machine_reservations: [shooting_machine_reservation]
       )
     end
 

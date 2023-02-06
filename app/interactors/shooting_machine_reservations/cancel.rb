@@ -3,8 +3,8 @@ module ShootingMachineReservations
     include Interactor
 
     def call
-      shooting_machine_reservation = context.shooting_machine_reservation
-      shooting_machine_reservation.canceled!
+      shooting_machine_reservations = context.shooting_machine_reservations
+      shooting_machine_reservations.each(&:canceled!)
     end
   end
 end

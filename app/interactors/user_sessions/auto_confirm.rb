@@ -10,7 +10,7 @@ module UserSessions
       user_session = context.user_session
       user = user_session.user
       session = user_session.session
-      shooting_machine_reservation = user_session.shooting_machine_reservation
+      shooting_machine_reservations = user_session.shooting_machine_reservations
 
       return if user_session.in_cancellation_time?
 
@@ -21,9 +21,9 @@ module UserSessions
         user_session.reminder_sent_at = Time.zone.now
       end
 
-      if shooting_machine_reservation
+      if shooting_machine_reservations.present?
         ShootingMachineReservations::Confirm.call(
-          shooting_machine_reservation:
+          shooting_machine_reservations:
         )
       end
 

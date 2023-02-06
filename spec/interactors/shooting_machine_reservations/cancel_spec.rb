@@ -6,7 +6,7 @@ describe ShootingMachineReservations::Cancel do
 
     subject do
       ShootingMachineReservations::Cancel.call(
-        shooting_machine_reservation:
+        shooting_machine_reservations: [shooting_machine_reservation]
       )
     end
 

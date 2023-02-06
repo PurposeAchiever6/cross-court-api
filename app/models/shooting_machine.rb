@@ -33,6 +33,6 @@ class ShootingMachine < ApplicationRecord
   end
 
   def reserved?(date)
-    shooting_machine_reservations.reserved.by_date(date).exists?
+    shooting_machine_reservations.not_canceled.by_date(date).exists?
   end
 end

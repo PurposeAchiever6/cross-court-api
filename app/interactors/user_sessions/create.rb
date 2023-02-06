@@ -5,7 +5,7 @@ module UserSessions
     def call
       user = context.user
       session = context.session
-      shooting_machine = context.shooting_machine
+      shooting_machines = context.shooting_machines
       date = context.date
       goal = context.goal
       scouting = context.scouting
@@ -22,7 +22,7 @@ module UserSessions
             user:,
             date:,
             goal:,
-            shooting_machine:,
+            shooting_machines:,
             from_waitlist:
           )
         else

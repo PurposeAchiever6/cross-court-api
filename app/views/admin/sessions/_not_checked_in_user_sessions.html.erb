@@ -24,7 +24,7 @@
       <% user_sessions.each do |user_session| %>
         <% user = user_session.user %>
         <% first_time = user_session.first_session || user.first_timer? %>
-        <% shooting_machine_reservation = user_session.shooting_machine_reservation %>
+        <% shooting_machine_reservations = user_session.shooting_machine_reservations %>
         <%= hidden_field_tag 'user_sessions[][id]', user_session.id %>
         <tr>
           <td class='align-middle'>
@@ -38,15 +38,17 @@
             <% if user_session.scouting %>
               <%= status_tag 'yes', label: 'Evaluation', class: 'inline-block mt-2' %>
             <% end %>
-            <% if shooting_machine_reservation %>
-              <%= status_tag shooting_machine_reservation.error_on_charge? ? 'error' : 'yes',
-                             label: "#{user_session.goal} " \
-                                    "#{shooting_machine_reservation.start_time_str}",
-                             class: 'inline-block mt-2'%>
-              <% if shooting_machine_reservation.error_on_charge? %>
-                <div class="max-w-200 italic mt-2">
-                  Shooting machine rental charge failed: <%= shooting_machine_reservation.error_on_charge %>
-                </div>
+            <% if shooting_machine_reservations.present? %>
+              <% shooting_machine_reservations.each do |shooting_machine_reservation| %>
+                <%= status_tag shooting_machine_reservation.error_on_charge? ? 'error' : 'yes',
+                              label: "#{user_session.goal} " \
+                                     "#{shooting_machine_reservation.start_time_str}",
+                              class: 'block mt-2'%>
+                <% if shooting_machine_reservation.error_on_charge? %>
+                  <div class="max-w-200 italic mt-2">
+                    Shooting machine rental charge failed: <%= shooting_machine_reservation.error_on_charge %>
+                  </div>
+                <% end %>
               <% end %>
             <% elsif user_session.goal  %>
               <%= status_tag 'no', label: user_session.goal, class: 'inline-block mt-2' %>
@@ -96,7 +98,8 @@
                                   id: "jersey_rental-#{user_session.id}",
                                   class: 'mr-1' %>
                 <%= label_tag "jersey_rental-#{user_session.id}",
-                              "Jersey Rental - (#{number_to_currency(jersey_rental_price)})" %>
+                              "Jersey Rental - (#{number_to_currency(jersey_rental_price)})",
+                              class: 'whitespace-nowrap' %>
               </div>
             <% else %>
               <div>Has free jersey rental</div>
@@ -109,7 +112,8 @@
                                   id: "towel_rental-#{user_session.id}",
                                   class: 'mr-1' %>
                 <%= label_tag "towel_rental-#{user_session.id}",
-                              "Towel Rental - (#{number_to_currency(towel_rental_price)})" %>
+                              "Towel Rental - (#{number_to_currency(towel_rental_price)})",
+                               class: 'whitespace-nowrap' %>
               </div>
             <% else %>
               <div>Has free towel rental</div>

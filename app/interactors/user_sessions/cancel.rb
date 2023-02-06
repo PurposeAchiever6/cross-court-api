@@ -10,7 +10,7 @@ module UserSessions
       is_free_session = user_session.is_free_session
       in_cancellation_time = user_session.in_cancellation_time?
       session = user_session.session
-      shooting_machine_reservation = user_session.shooting_machine_reservation
+      shooting_machine_reservations = user_session.shooting_machine_reservations
 
       user_session.state = :canceled
       user_session.save!
@@ -19,9 +19,9 @@ module UserSessions
         SessionGuests::Remove.call(user_session:, session_guest_id: session_guest.id)
       end
 
-      if shooting_machine_reservation
+      if shooting_machine_reservations.present?
         ShootingMachineReservations::Cancel.call(
-          shooting_machine_reservation:
+          shooting_machine_reservations:
         )
       end
 

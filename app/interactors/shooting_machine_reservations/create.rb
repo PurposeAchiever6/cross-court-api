@@ -3,24 +3,28 @@ module ShootingMachineReservations
     include Interactor
 
     def call
-      shooting_machine = context.shooting_machine
+      shooting_machines = context.shooting_machines
 
-      return unless shooting_machine
+      return if shooting_machines.blank?
 
       user_session = context.user_session
       session = user_session.session
       date = user_session.date
 
-      raise ShootingMachineSessionMismatchException if session.id != shooting_machine.session_id
-      raise ShootingMachineInvalidSessionException unless session.shooting_machines?
-      raise ShootingMachineAlreadyReservedException if shooting_machine.reserved?(date)
+      context.shooting_machine_reservations = []
 
-      shooting_machine_reservation = ShootingMachineReservation.create!(
-        shooting_machine:,
-        user_session:
-      )
+      shooting_machines.each do |shooting_machine|
+        raise ShootingMachineSessionMismatchException if session.id != shooting_machine.session_id
+        raise ShootingMachineInvalidSessionException unless session.shooting_machines?
+        raise ShootingMachineAlreadyReservedException if shooting_machine.reserved?(date)
 
-      context.shooting_machine_reservation = shooting_machine_reservation
+        shooting_machine_reservation = ShootingMachineReservation.create!(
+          shooting_machine:,
+          user_session:
+        )
+
+        context.shooting_machine_reservations << shooting_machine_reservation
+      end
     end
   end
 end

@@ -173,7 +173,7 @@ describe UserSessions::Create do
         let!(:shooting_machine) { create(:shooting_machine, session:) }
 
         before do
-          subject_args.merge!(shooting_machine:)
+          subject_args.merge!(shooting_machines: [shooting_machine])
           allow(StripeService).to receive(:charge).and_return(double(id: 'payment_intent'))
         end
 

@@ -18,7 +18,7 @@ module Api
             referral_code: params[:referral_code],
             session:,
             user: current_user,
-            shooting_machine:,
+            shooting_machines:,
             date: params[:date],
             goal: params[:goal],
             scouting: params[:scouting]
@@ -38,8 +38,8 @@ module Api
           Date.strptime(date, '%m/%d/%Y')
         end
 
-        def shooting_machine
-          ShootingMachine.find_by(id: params[:shooting_machine_id])
+        def shooting_machines
+          ShootingMachine.where(id: params[:shooting_machine_ids])
         end
       end
     end

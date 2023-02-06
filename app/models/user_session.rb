@@ -47,10 +47,10 @@ class UserSession < ApplicationRecord
 
   belongs_to :referral, class_name: 'User', optional: true
 
-  has_one :shooting_machine_reservation,
-          -> { not_canceled },
-          inverse_of: :user_session,
-          dependent: nil
+  has_many :shooting_machine_reservations,
+           -> { not_canceled },
+           inverse_of: :user_session,
+           dependent: nil
 
   has_many :session_survey_answers, dependent: :destroy
   has_many :session_guests, dependent: :destroy

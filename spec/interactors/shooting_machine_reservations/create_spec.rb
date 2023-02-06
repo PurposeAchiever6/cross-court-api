@@ -11,16 +11,16 @@ describe ShootingMachineReservations::Create do
 
     subject do
       ShootingMachineReservations::Create.call(
-        shooting_machine:,
+        shooting_machines: [shooting_machine],
         user_session:
       )
     end
 
     it { expect { subject }.to change(ShootingMachineReservation, :count).by(1) }
 
-    it { expect(subject.shooting_machine_reservation).to eq(ShootingMachineReservation.last) }
+    it { expect(subject.shooting_machine_reservations.last).to eq(ShootingMachineReservation.last) }
 
-    it { expect(subject.shooting_machine_reservation.status).to eq('reserved') }
+    it { expect(subject.shooting_machine_reservations.last.status).to eq('reserved') }
 
     context 'when the user session and the shooting machine are for different sessions' do
       before { shooting_machine.update!(session: create(:session)) }

@@ -288,7 +288,7 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .checked_in
-                                .includes(:shooting_machine_reservation,
+                                .includes(shooting_machine_reservations: :shooting_machine,
                                           user: [:last_checked_in_user_session,
                                                  { active_subscription: :product,
                                                    image_attachment: :blob }])
@@ -308,7 +308,7 @@ ActiveAdmin.register Session do
                                 .not_canceled
                                 .by_date(date)
                                 .not_checked_in
-                                .includes(:shooting_machine_reservation,
+                                .includes(shooting_machine_reservations: :shooting_machine,
                                           user: [:last_checked_in_user_session,
                                                  { active_subscription: :product,
                                                    image_attachment: :blob }])
