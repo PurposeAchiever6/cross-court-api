@@ -186,6 +186,7 @@ ActiveAdmin.register User do
         end
         row :membership
         number_row 'CC Cash', :cc_cash, as: :currency
+        row :apply_cc_cash_to_subscription
         row :free_session_state do
           user.free_session_state&.humanize
         end
@@ -382,7 +383,7 @@ ActiveAdmin.register User do
       return redirect_to admin_user_path(id: user.id)
     end
 
-    if promo_code&.for_referral
+    if promo_code&.referral?
       flash[:error] = "You can't manually select a referral promo code. If referral user is " \
                       'selected and no promo code is entered, it will automatically use that ' \
                       'user referral promo code'

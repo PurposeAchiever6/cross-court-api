@@ -16,13 +16,14 @@
 #  max_redemptions              :integer
 #  max_redemptions_by_user      :integer
 #  times_used                   :integer          default(0)
-#  for_referral                 :boolean          default(FALSE)
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
+#  use                          :string           default("general")
 #
 # Indexes
 #
 #  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_use      (use)
 #  index_promo_codes_on_user_id  (user_id)
 #
 
@@ -37,7 +38,7 @@ FactoryBot.define do
     max_redemptions_by_user { nil }
     user_max_checked_in_sessions { nil }
     times_used { 0 }
-    for_referral { false }
+    use { 'general' }
     user { nil }
     products { [create(:product)] }
   end

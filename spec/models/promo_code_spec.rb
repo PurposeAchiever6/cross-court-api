@@ -16,13 +16,14 @@
 #  max_redemptions              :integer
 #  max_redemptions_by_user      :integer
 #  times_used                   :integer          default(0)
-#  for_referral                 :boolean          default(FALSE)
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
+#  use                          :string           default("general")
 #
 # Indexes
 #
 #  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_use      (use)
 #  index_promo_codes_on_user_id  (user_id)
 #
 
@@ -37,7 +38,7 @@ describe UserPromoCode do
   let(:max_redemptions_by_user) { nil }
   let(:user_max_checked_in_sessions) { nil }
   let(:times_used) { 0 }
-  let(:for_referral) { false }
+  let(:use) { 'general' }
   let(:promo_code_user) { nil }
 
   let(:promo_code) do
@@ -49,7 +50,7 @@ describe UserPromoCode do
       max_redemptions_by_user:,
       user_max_checked_in_sessions:,
       times_used:,
-      for_referral:,
+      use:,
       user: promo_code_user
     )
   end
@@ -103,7 +104,7 @@ describe UserPromoCode do
 
     context 'when promo code is for referral' do
       let!(:promo_code_user) { create(:user) }
-      let(:for_referral) { true }
+      let(:use) { 'referral' }
 
       it { is_expected.to eq(true) }
 

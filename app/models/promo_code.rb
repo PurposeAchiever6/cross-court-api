@@ -16,13 +16,14 @@
 #  max_redemptions              :integer
 #  max_redemptions_by_user      :integer
 #  times_used                   :integer          default(0)
-#  for_referral                 :boolean          default(FALSE)
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
+#  use                          :string           default("general")
 #
 # Indexes
 #
 #  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_use      (use)
 #  index_promo_codes_on_user_id  (user_id)
 #
 
@@ -50,14 +51,18 @@ class PromoCode < ApplicationRecord
   validates :products, presence: true
 
   enum duration: {
+    once: 'once',
     forever: 'forever',
     repeating: 'repeating'
   }
 
-  belongs_to :user, optional: true
+  enum use: {
+    general: 'general',
+    referral: 'referral',
+    cc_cash: 'cc_cash'
+  }
 
-  scope :generals, -> { where(for_referral: false) }
-  scope :for_referrals, -> { where(for_referral: true) }
+  belongs_to :user, optional: true
 
   def to_s
     "#{code} (#{discount}#{percentage_discount? ? '% off' : '$ off'})"
@@ -134,7 +139,7 @@ class PromoCode < ApplicationRecord
       raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.own_usage')
     end
 
-    if for_referral && user.subscriptions.count.positive?
+    if referral? && user.subscriptions.count.positive?
       raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.no_first_subscription')
     end
   end

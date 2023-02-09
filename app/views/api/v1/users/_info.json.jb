@@ -57,7 +57,8 @@ json = {
   reserve_team: user.reserve_team,
   instagram_username: user.instagram_username,
   instagram_profile: user.instagram_profile,
-  gender: user.gender
+  gender: user.gender,
+  apply_cc_cash_to_subscription: user.apply_cc_cash_to_subscription
 }
 
 json[:image_url] = polymorphic_url(user.image) if user.image.attached?

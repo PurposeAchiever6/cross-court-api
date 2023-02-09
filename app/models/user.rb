@@ -59,6 +59,7 @@
 #  position                                :string
 #  goals                                   :string           is an Array
 #  main_goal                               :string
+#  apply_cc_cash_to_subscription           :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -354,7 +355,7 @@ class User < ApplicationRecord
       type: PercentageDiscount.to_s,
       code: referral_code,
       discount: ENV.fetch('REFERRAL_CODE_PERCENTAGE_DISCOUNT', nil),
-      for_referral: true,
+      use: 'referral',
       duration: :repeating,
       duration_in_months: 1,
       max_redemptions_by_user: 1,

@@ -75,7 +75,8 @@ module Api
           :phone_number,
           :instagram_username,
           :birthday,
-          :gender
+          :gender,
+          :apply_cc_cash_to_subscription
         )
       end
 

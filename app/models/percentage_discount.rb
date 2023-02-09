@@ -16,13 +16,14 @@
 #  max_redemptions              :integer
 #  max_redemptions_by_user      :integer
 #  times_used                   :integer          default(0)
-#  for_referral                 :boolean          default(FALSE)
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
+#  use                          :string           default("general")
 #
 # Indexes
 #
 #  index_promo_codes_on_code     (code) UNIQUE
+#  index_promo_codes_on_use      (use)
 #  index_promo_codes_on_user_id  (user_id)
 #
 

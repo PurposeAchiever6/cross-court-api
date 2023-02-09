@@ -59,6 +59,7 @@
 #  position                                :string
 #  goals                                   :string           is an Array
 #  main_goal                               :string
+#  apply_cc_cash_to_subscription           :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -176,7 +177,7 @@ describe User do
     let(:stripe_customer_id) { 'stripe-customer-id' }
     let!(:user) { create(:user, stripe_id: stripe_customer_id) }
     let!(:promo_code) do
-      create(:promo_code, for_referral: true, user:, stripe_coupon_id:)
+      create(:promo_code, use: 'referral', user:, stripe_coupon_id:)
     end
 
     before do

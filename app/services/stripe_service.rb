@@ -150,6 +150,10 @@ class StripeService
     )
   end
 
+  def self.apply_coupon_to_subscription(subscription, stripe_coupon_id)
+    Stripe::Subscription.update(subscription.stripe_id, coupon: stripe_coupon_id)
+  end
+
   def self.pause_subscription(subscription, resumes_at)
     Stripe::Subscription.update(
       subscription.stripe_id,

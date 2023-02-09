@@ -46,6 +46,25 @@ class StripeMocker
     )
   end
 
+  def retrieve_subscription(stripe_subscription_id, discount = nil)
+    mock_request(
+      url_path: "/subscriptions/#{stripe_subscription_id}",
+      method: :get,
+      response_body: subscription_response(id: stripe_subscription_id, discount:)
+    )
+  end
+
+  def update_subscription(stripe_subscription_id, coupon_id = nil)
+    mock_request(
+      url_path: "/subscriptions/#{stripe_subscription_id}",
+      request_body: {
+        coupon: coupon_id
+      },
+      method: :post,
+      response_body: subscription_response(id: stripe_subscription_id)
+    )
+  end
+
   def unpause_subscription(stripe_subscription_id)
     mock_request(
       url_path: "/subscriptions/#{stripe_subscription_id}",
@@ -146,10 +165,31 @@ class StripeMocker
     }.to_json
   end
 
+  def coupon_response
+    {
+      id: 'Z4OV52SU',
+      object: 'coupon',
+      amount_off: nil,
+      created: 1_675_979_976,
+      currency: 'usd',
+      duration: 'repeating',
+      duration_in_months: 3,
+      livemode: false,
+      max_redemptions: nil,
+      metadata: {},
+      name: '25.5% off',
+      percent_off: 25.5,
+      redeem_by: nil,
+      times_redeemed: 0,
+      valid: true
+    }.to_json
+  end
+
   def subscription_response(id:,
                             status: 'active',
                             pause_collection: nil,
-                            cancel_at_period_end: false)
+                            cancel_at_period_end: false,
+                            discount: nil)
     {
       id:,
       latest_invoice: 'il_1Kooo9EbKIwsJiGZ9Ip7Efqr',
@@ -160,7 +200,8 @@ class StripeMocker
       cancel_at: nil,
       canceled_at: Time.current.to_i,
       cancel_at_period_end:,
-      pause_collection:
+      pause_collection:,
+      discount:
     }.to_json
   end
 

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'GET api/v1/user/referrals' do
   let!(:user) { create(:user) }
-  let!(:referral_promo_code) { create(:promo_code, for_referral: true, user:) }
+  let!(:referral_promo_code) { create(:promo_code, use: 'referral', user:) }
   let!(:user_promo_codes) do
     create_list(:user_promo_code, amount_referrals, promo_code: referral_promo_code)
   end
@@ -31,7 +31,7 @@ describe 'GET api/v1/user/referrals' do
 
   context 'when the referrals are for another user' do
     let!(:another_user) { create(:user) }
-    let!(:referral_promo_code) { create(:promo_code, for_referral: true, user: another_user) }
+    let!(:referral_promo_code) { create(:promo_code, use: 'referral', user: another_user) }
 
     it { is_expected.to be_successful }
     it { expect(response_body[:referrals]).to eq([]) }

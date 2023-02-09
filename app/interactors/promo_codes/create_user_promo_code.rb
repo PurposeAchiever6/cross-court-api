@@ -14,7 +14,7 @@ module PromoCodes
 
       product_referral_cc_cash = product.referral_cc_cash
 
-      if promo_code.for_referral && product_referral_cc_cash.positive?
+      if promo_code.referral? && product_referral_cc_cash.positive?
         referral_user = promo_code.user
         referral_user.increment!(:cc_cash, product_referral_cc_cash)
 

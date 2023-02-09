@@ -13,7 +13,7 @@ describe 'GET api/v1/promo_code' do
       max_redemptions_by_user:,
       user_max_checked_in_sessions:,
       times_used:,
-      for_referral:,
+      use:,
       user: promo_code_user
     )
   end
@@ -25,7 +25,7 @@ describe 'GET api/v1/promo_code' do
   let(:max_redemptions_by_user) { nil }
   let(:user_max_checked_in_sessions) { nil }
   let(:times_used) { 0 }
-  let(:for_referral) { false }
+  let(:use) { 'general' }
   let(:promo_code_user) { nil }
   let(:price) { 100 }
 
@@ -99,7 +99,7 @@ describe 'GET api/v1/promo_code' do
 
   context 'when promo code is for referral' do
     let!(:promo_code_user) { create(:user) }
-    let(:for_referral) { true }
+    let(:use) { 'referral' }
 
     it 'returns the price with the promo_code applied' do
       subject

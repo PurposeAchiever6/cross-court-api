@@ -1,5 +1,5 @@
 ActiveAdmin.register UserPromoCode do
-  menu label: 'Used Promo Codes', parent: 'Products'
+  menu label: 'User Promo Codes', parent: 'Products'
   actions :index, :show
 
   includes :promo_code, :user

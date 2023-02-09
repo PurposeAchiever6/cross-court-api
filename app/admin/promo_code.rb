@@ -8,8 +8,9 @@ ActiveAdmin.register PromoCode do
 
   includes :products
 
-  scope 'Generals', :generals, default: true
-  scope 'Users Referrals', :for_referrals
+  scope 'Generals', :general, default: true
+  scope 'Users Referrals', :referral
+  scope 'CC Cash Applied to Memberships', :cc_cash
 
   index do
     id_column
@@ -86,6 +87,7 @@ ActiveAdmin.register PromoCode do
               input_html: { autocomplete: :off, disabled: }
       f.input :duration,
               as: :select,
+              collection: PromoCode.durations.keys.to_a.excluding('once'),
               input_html: { disabled: },
               hint: 'Only valid for recurring products.'
       f.input :duration_in_months, input_html: { disabled: }

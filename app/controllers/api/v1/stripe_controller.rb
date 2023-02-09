@@ -78,6 +78,8 @@ module Api
               subscription: active_subscription
             )
 
+            Subscriptions::ApplyCcCashJob.perform_later(user.id, active_subscription.id)
+
             create_payment(
               subscription: active_subscription,
               description_reason: :renewal,

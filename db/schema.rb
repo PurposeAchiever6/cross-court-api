@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_05_000226) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_10_205849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -219,8 +219,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_05_000226) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "skill_session_credits", default: 0
     t.integer "max_rollover_credits"
+    t.integer "skill_session_credits", default: 0
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.integer "free_pauses_per_year", default: 0
@@ -255,10 +255,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_05_000226) do
     t.integer "max_redemptions"
     t.integer "max_redemptions_by_user"
     t.integer "times_used", default: 0
-    t.boolean "for_referral", default: false
     t.bigint "user_id"
     t.integer "user_max_checked_in_sessions"
+    t.string "use", default: "general"
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
+    t.index ["use"], name: "index_promo_codes_on_use"
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
   end
 
@@ -548,14 +549,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_05_000226) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
-    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
+    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.integer "credits_without_expiration", default: 0
     t.string "bio"
+    t.integer "credits_without_expiration", default: 0
     t.integer "scouting_credits", default: 0
     t.integer "weight"
     t.integer "height"
@@ -564,6 +565,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_05_000226) do
     t.string "position"
     t.string "goals", array: true
     t.string "main_goal"
+    t.boolean "apply_cc_cash_to_subscription", default: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

@@ -4,11 +4,11 @@ describe PromoCodes::CreateUserPromoCode do
   describe '.call' do
     let!(:user) { create(:user) }
     let!(:product) { create(:product, referral_cc_cash:) }
-    let!(:promo_code) { create(:promo_code, for_referral:, user: promo_code_user) }
+    let!(:promo_code) { create(:promo_code, use:, user: promo_code_user) }
 
     let(:referral_cc_cash) { rand(1..100).to_f }
     let(:promo_code_user) { nil }
-    let(:for_referral) { false }
+    let(:use) { 'general' }
 
     subject do
       PromoCodes::CreateUserPromoCode.call(
@@ -51,7 +51,7 @@ describe PromoCodes::CreateUserPromoCode do
 
     context 'when the promo code is for referral' do
       let!(:promo_code_user) { create(:user, cc_cash:) }
-      let(:for_referral) { true }
+      let(:use) { 'referral' }
       let(:cc_cash) { 0 }
 
       it 'updates promo code user cc cash' do

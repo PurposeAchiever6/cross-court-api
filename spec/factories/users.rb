@@ -59,6 +59,7 @@
 #  position                                :string
 #  goals                                   :string           is an Array
 #  main_goal                               :string
+#  apply_cc_cash_to_subscription           :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -98,6 +99,7 @@ FactoryBot.define do
     flagged { false }
     gender { %i[male female].sample }
     scouting_credits { 0 }
+    apply_cc_cash_to_subscription { false }
 
     trait :confirmed do
       confirmed_at { Time.current }
