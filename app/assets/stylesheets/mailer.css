@@ -1,9 +1,10 @@
 .session-booked__body {
   padding: 2rem;
-  background-image: url("https://content.app-us1.com/OvYpm/2022/05/31/73d7a316-e846-461b-aab1-5922f37b394a.png");
+  background: #1a1a1a;
+  background-image: linear-gradient(#1a1a1a, #1a1a1a);
+  color: white;
   background-position: top center;
   background-repeat: no-repeat;
-  background-color: #1a1a1a;
   background-size: cover;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
 }

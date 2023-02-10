@@ -1,103 +1,196 @@
 <body class='session-booked__body'>
   <div style='margin:0 auto;'>
     <a href=<%= ENV['FRONTENT_URL'] %>>
-      <img class='session-booked__header-image' src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'>
+      <img
+        class='session-booked__header-image'
+        src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'
+      >
     </a>
 
     <div class='session-booked__title-section'>
       <table>
         <tr>
           <td style='width: 50%' class='session-booked__title-image'>
-            <img style='width: 90%; object-fit: cover;' src='https://content.app-us1.com/OvYpm/2022/06/02/1f334e1a-ab19-477a-88d1-c3744ca3c703.png'>
+            <img
+              style='width: 90%; object-fit: cover;'
+              src='https://content.app-us1.com/OvYpm/2022/06/02/1f334e1a-ab19-477a-88d1-c3744ca3c703.png'
+            >
           </td>
           <td style='width: 50%; vertical-align: middle;'>
             <% if @user_session.first_session %>
-              <img style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/06/02/7a570f53-6b93-47d1-8c93-9a487571b002.png'>
+              <img
+                style='width: 100%;'
+                src='https://content.app-us1.com/OvYpm/2022/06/02/7a570f53-6b93-47d1-8c93-9a487571b002.png'
+              >
             <% else %>
-              <img style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/05/31/6fbc411b-7982-44cd-9173-20e8a6714e8f.png'>
+              <img
+                style='width: 100%;'
+                src='https://content.app-us1.com/OvYpm/2022/05/31/6fbc411b-7982-44cd-9173-20e8a6714e8f.png'
+              >
             <% end %>
 
-            <p>Hey <%= @user.first_name.capitalize %>,</p>
-            <% if @user_session.first_session %>
-              <p>Your first session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is booked.</p>
-              <p style='color: #9999FF'>By joining the ccteam through one of our memberships, you're gaining access to community bonded by the power of team sport.</p>
-              <p style='margin: 0'>Please arrive 20 minutes early so we can give you a tour of the club and get you situated.</p>
-            <% else %>
-              <p>Your session at Crosscourt <%= @location.name %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is booked.</p>
-              <p>Just in case you forgot,  we've put together some helpful reminders below.</p>
-            <% end %>
+            <%#
+              For fixing gmail’s dark mode issues we followed this article:
+              https://www.hteumeuleu.com/2021/fixing-gmail-dark-mode-css-blend-modes/
+            %>
+            <div style="background:#1a1a1a; mix-blend-mode:screen;">
+              <div style="background:#1a1a1a; mix-blend-mode:difference;">
+                <p>Hey <%= @user.first_name.capitalize %>,</p>
+                <% if @user_session.first_session %>
+                  <p>
+                    Your first session at Crosscourt <%= @location.name %> on
+                    <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at
+                    <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %>
+                    is booked.
+                  </p>
+                  <p style='color: #9999FF'>
+                    By joining the ccteam through one of our memberships, you're gaining access
+                    to community bonded by the power of team sport.
+                  </p>
+                  <p style='margin: 0'>
+                    Please arrive 20 minutes early so we can give you a tour of the club and get
+                    you situated.
+                  </p>
+                <% else %>
+                  <p>
+                    Your session at Crosscourt <%= @location.name %> on
+                    <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %> at
+                    <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> is booked.
+                  </p>
+                  <p>
+                    Just in case you forgot,  we've put together some helpful reminders below.
+                  </p>
+                <% end %>
+              </div>
+            </div>
           </td>
         </tr>
       </table>
     </div>
 
     <div style='text-align: center; margin-bottom: 10px; margin-top: 5px;'>
-      <img style='width: 35px;' src='https://content.app-us1.com/OvYpm/2022/06/02/2cd3b3a4-89ca-49e6-bf99-fd2fcf3ef4dd.png'>
+      <img
+        style='width: 35px;'
+        src='https://content.app-us1.com/OvYpm/2022/06/02/2cd3b3a4-89ca-49e6-bf99-fd2fcf3ef4dd.png'
+      >
     </div>
     <div style='margin-left: 100px;' class='session-booked__divider'></div>
 
-    <img alt='What to bring' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/152b956f-0066-4c29-adf6-4dcac5148e4f.png'>
+    <img
+      alt='What to bring'
+      class='session-booked__title'
+      src='https://content.app-us1.com/OvYpm/2022/06/02/152b956f-0066-4c29-adf6-4dcac5148e4f.png'
+    >
 
-    <div class='session-booked__section'>
-      <p class='session-booked__item'>Required</p>
-      <p class='session-booked__item-description'>Athletic gear, basketball shoes</p>
-      <p class='session-booked__item'>Optional</p>
-      <p class='session-booked__item-description'>Towel & water</p>
-      <p class='session-booked__item'>Do not bring</p>
-      <p class='session-booked__item-description'>Basketball, colored beverages, food, headwear and guests</p>
+    <div style="background:#1a1a1a; mix-blend-mode:screen;">
+      <div style="background:#1a1a1a; mix-blend-mode:difference;">
+        <div class='session-booked__section'>
+          <p class='session-booked__item'>Required</p>
+          <p class='session-booked__item-description'>Athletic gear, basketball shoes</p>
+          <p class='session-booked__item'>Optional</p>
+          <p class='session-booked__item-description'>Towel & water</p>
+          <p class='session-booked__item'>Do not bring</p>
+          <p class='session-booked__item-description'>
+            Basketball, colored beverages, food, headwear and guests
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class='session-booked__divider' style='margin-top: 100px;'></div>
 
     <div style='text-align: center;'>
-      <img alt='What we provide' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/910d1174-b567-46ef-8b08-a6d3019458a9.png'>
+      <img
+        alt='What we provide'
+        class='session-booked__title'
+        src='https://content.app-us1.com/OvYpm/2022/06/02/910d1174-b567-46ef-8b08-a6d3019458a9.png'
+      >
     </div>
 
-    <div class='session-booked__section'>
-      <p class='session-booked__item' style='margin-bottom: 10px;'>Parking, jersey, lockers, restrooms, water filler, and good vibes!</p>
-      <p class='session-booked__item'>Available for purchase</p>
-      <p class='session-booked__item-description'>Water bottle, towels, jersey</p>
+    <div style="background:#1a1a1a; mix-blend-mode:screen;">
+      <div style="background:#1a1a1a; mix-blend-mode:difference;">
+        <div class='session-booked__section'>
+          <p class='session-booked__item' style='margin-bottom: 10px;'>
+            Parking, jersey, lockers, restrooms, water filler, and good vibes!
+          </p>
+          <p class='session-booked__item'>Available for purchase</p>
+          <p class='session-booked__item-description'>Water bottle, towels, jersey</p>
+        </div>
+      </div>
     </div>
 
     <div style='margin-right: 100px; margin-top: 100px;' class='session-booked__divider'></div>
 
     <div style='text-align: right;'>
-      <img alt='Where to park' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/b0a8aae1-286e-4d23-a14d-fd81fc13918b.png'>
+      <img
+        alt='Where to park' class='session-booked__title'
+        src='https://content.app-us1.com/OvYpm/2022/06/02/b0a8aae1-286e-4d23-a14d-fd81fc13918b.png'
+      >
     </div>
 
-    <div class='session-booked__section'>
-      <p class='session-booked__item'>There is a gated parking lot attached to the club. Please pull up all they way forward to avoid blocking the driveway</p>
-      <p class='session-booked__item' style='margin-top: 100px;'>Additional note</p>
-      <p class='session-booked__item-description'>5 hour session cancelling window</p>
-    </div>
-
-    <div class='session-booked__read-faq'>
-      <p style='margin: 0;'>“Feel free to check out our <a href="<%= ENV['FRONTENT_URL'] %>/faq">FAQ</a> for session format”</p>
+    <div style="background:#1a1a1a; mix-blend-mode:screen;">
+      <div style="background:#1a1a1a; mix-blend-mode:difference;">
+        <div class='session-booked__section'>
+          <p class='session-booked__item'>
+            There is a gated parking lot attached to the club. Please pull up all they way forward
+            to avoid blocking the driveway
+          </p>
+          <p class='session-booked__item' style='margin-top: 100px;'>Additional note</p>
+          <p class='session-booked__item-description'>5 hour session cancelling window</p>
+        </div>
+        <div class='session-booked__read-faq'>
+          <p style='margin: 0;'>
+            “Feel free to check out our <a href="<%= ENV['FRONTENT_URL'] %>/faq">FAQ</a>
+            for session format”
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class='session-booked__divider'></div>
 
     <div style='text-align: center;'>
-      <img alt='Where to park' class='session-booked__title' src='https://content.app-us1.com/OvYpm/2022/06/02/c59ba6b4-1f2a-4c00-98dc-7ac09995161f.png'>
+      <img
+        alt='Where to park' class='session-booked__title'
+        src='https://content.app-us1.com/OvYpm/2022/06/02/c59ba6b4-1f2a-4c00-98dc-7ac09995161f.png'
+      >
     </div>
 
     <a href=<%= "#{ENV['FRONTENT_URL']}/how-it-works" %>>
-      <img alt='What to Expect' style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/06/03/8a03aedb-6cbe-4f30-ae5c-fff8a22a95e3.png'>
+      <img
+        alt='What to Expect' style='width: 100%;'
+        src='https://content.app-us1.com/OvYpm/2022/06/03/8a03aedb-6cbe-4f30-ae5c-fff8a22a95e3.png'
+      >
     </a>
 
     <div style='text-align: center; margin-bottom: 10px; margin-top: 100px;'>
-      <img style='width: 35px;' src='https://content.app-us1.com/OvYpm/2022/06/02/2cd3b3a4-89ca-49e6-bf99-fd2fcf3ef4dd.png'>
+      <img
+        style='width: 35px;'
+        src='https://content.app-us1.com/OvYpm/2022/06/02/2cd3b3a4-89ca-49e6-bf99-fd2fcf3ef4dd.png'
+      >
     </div>
     <div style='margin-left: 100px;' class='session-booked__divider'></div>
 
     <div style='text-align: center;'>
-      <img alt='Where to park' class='session-booked__title' style='width: 80%;' src='https://content.app-us1.com/OvYpm/2022/06/02/0f6650c0-342c-4379-9bf7-359597fc2eee.png'>
+      <img
+        alt='Where to park'
+        class='session-booked__title'
+        style='width: 80%;'
+        src='https://content.app-us1.com/OvYpm/2022/06/02/0f6650c0-342c-4379-9bf7-359597fc2eee.png'
+      >
     </div>
 
-    <img style='width: 100%;' src='https://content.app-us1.com/OvYpm/2022/06/03/e07ebd52-08e2-42dd-a5b1-7d9873f00ae2.png'>
+    <img
+      style='width: 100%;'
+      src='https://content.app-us1.com/OvYpm/2022/06/03/e07ebd52-08e2-42dd-a5b1-7d9873f00ae2.png'
+    >
 
     <div style='margin: 30px 0px 0px 0px; text-align: center'>
-      <img alt="Let's Get It" style='width: 200px;' src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'>
+      <img
+        alt="Let's Get It"
+        style='width: 200px;'
+        src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'
+      >
     </div>
   </div>
 </body>
