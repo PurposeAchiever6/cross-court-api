@@ -1,5 +1,7 @@
 module ActiveAdmin
   module HistoryHelper
+    EXCLUDED_CHANGES_COLUMNS = %w[created_at updated_at].freeze
+
     def version_user(version)
       version_whodunnit = version.whodunnit
 
@@ -14,6 +16,8 @@ module ActiveAdmin
 
       abre_context.attributes_table_for version do
         changes.each do |attribute, values|
+          next if EXCLUDED_CHANGES_COLUMNS.include?(attribute)
+
           old_value, new_value = values
 
           abre_context.row(attribute) do
