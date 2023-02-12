@@ -17,6 +17,8 @@
 #
 
 class UserUpdateRequest < ApplicationRecord
+  has_paper_trail on: %i[update destroy]
+
   enum status: { pending: 0, approved: 1, rejected: 2, ignored: 3 }
 
   belongs_to :user

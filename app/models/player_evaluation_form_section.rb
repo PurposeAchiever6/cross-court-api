@@ -16,6 +16,8 @@
 #
 
 class PlayerEvaluationFormSection < ApplicationRecord
+  has_paper_trail
+
   validates :title, presence: true, uniqueness: true
   validates :order,
             presence: true,

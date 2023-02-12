@@ -11,6 +11,8 @@
 #
 
 class StoreItem < ApplicationRecord
+  has_paper_trail
+
   validates :name, :description, :price, presence: true
   validates :price, numericality: { greater_than: 0 }
 

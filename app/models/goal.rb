@@ -10,6 +10,8 @@
 #
 
 class Goal < ApplicationRecord
+  has_paper_trail
+
   enum category: { mental: 0, social: 1, physical: 2 }
 
   validates :category, :description, presence: true

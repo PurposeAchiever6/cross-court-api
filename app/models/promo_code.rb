@@ -30,6 +30,8 @@
 class PromoCode < ApplicationRecord
   TYPES = %w[SpecificAmountDiscount PercentageDiscount].freeze
 
+  has_paper_trail if: ->(promo_code) { promo_code.general? }
+
   has_many :user_promo_codes, dependent: :destroy
 
   has_many :products_promo_codes, dependent: :destroy

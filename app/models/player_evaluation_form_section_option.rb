@@ -16,6 +16,8 @@
 #
 
 class PlayerEvaluationFormSectionOption < ApplicationRecord
+  has_paper_trail
+
   validates :content, presence: true
   validates :score,
             presence: true,

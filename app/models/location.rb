@@ -33,7 +33,9 @@ class Location < ApplicationRecord
 
   GOOGLE_MAPS_BASE_URL = 'https://www.google.com/maps/search/?api=1&query='.freeze
 
+  has_paper_trail
   acts_as_paranoid
+
   has_many :sessions
   has_many_attached :images, dependent: :purge_now
 

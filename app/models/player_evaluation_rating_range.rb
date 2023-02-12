@@ -9,6 +9,8 @@
 #
 
 class PlayerEvaluationRatingRange < ApplicationRecord
+  has_paper_trail
+
   validates :min_score,
             :max_score,
             :rating,

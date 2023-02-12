@@ -18,6 +18,8 @@
 class PlayerEvaluation < ApplicationRecord
   EVALUATION_REQUIRED_KEYS = %w[ball-handling passing movement game-awareness shooting].freeze
 
+  has_paper_trail
+
   belongs_to :user
 
   validates :date, presence: true

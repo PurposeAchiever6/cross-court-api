@@ -16,6 +16,8 @@
 #
 
 class SubscriptionCancellationRequest < ApplicationRecord
+  has_paper_trail on: %i[update destroy]
+
   enum status: {
     pending: 0,
     ignored: 1,

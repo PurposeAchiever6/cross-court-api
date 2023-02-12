@@ -10,5 +10,7 @@
 #
 
 class SkillLevel < ApplicationRecord
+  has_paper_trail
+
   has_many :sessions
 end
