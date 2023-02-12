@@ -365,7 +365,13 @@ ActiveAdmin.register Session do
   end
 
   member_action :history do
-    versions = Session.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    session = Session.find(params[:id])
+    session_versions = session.versions
+    session_exception_versions = PaperTrail::Version.where(item_type: 'SessionException')
+                                                    .where_object_changes(session_id: session.id)
+
+    versions = session_versions.or(session_exception_versions).reorder(created_at: :desc).last(30)
+
     render 'admin/shared/history', locals: { versions: }
   end
 

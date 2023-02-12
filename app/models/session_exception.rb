@@ -15,6 +15,8 @@
 #
 
 class SessionException < ApplicationRecord
+  has_paper_trail
+
   belongs_to :session
 
   validates :date, presence: true, uniqueness: { scope: :session_id }

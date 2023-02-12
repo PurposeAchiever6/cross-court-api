@@ -3,6 +3,7 @@ panel 'Changes History' do
     column('Version ID', class: 'w-28', &:id)
     column('Modified by', class: 'w-56') { |version| version_user(version) }
     column('At', class: 'w-56', &:created_at)
+    column('Item', class: 'w-40', &:item_type)
     column('Action', class: 'w-40', &:event)
     column('Changes') { |version| changes_table(version, self) }
   end
