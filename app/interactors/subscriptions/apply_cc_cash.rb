@@ -16,7 +16,9 @@ module Subscriptions
       subscription_discount = StripeService.retrieve_subscription(subscription.stripe_id).discount
       return if subscription_discount.present? && !subscription.promo_code&.cc_cash?
 
-      discount = [user_cc_cash, product_price].min
+      max_discount = ENV.fetch('MAX_CC_CASH_SUBSCRIPTION_DISCOUNT', '15').to_i
+
+      discount = [user_cc_cash, max_discount, product_price].min
       code = "user_id:#{user.id}_subscription_id:#{subscription.id}_" \
              "product_id:#{product.id}_#{Time.current.to_i}"
 

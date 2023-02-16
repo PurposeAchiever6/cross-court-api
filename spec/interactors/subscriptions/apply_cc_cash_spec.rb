@@ -7,7 +7,7 @@ describe Subscriptions::ApplyCcCash do
     let(:status) { :active }
     let(:promo_code) { nil }
     let(:subscription) { create(:subscription, product:, status:, promo_code:) }
-    let(:cc_cash) { rand(100..200) }
+    let(:cc_cash) { rand(1..14) }
     let(:apply_cc_cash_to_subscription) { true }
     let(:user) do
       create(
@@ -23,13 +23,12 @@ describe Subscriptions::ApplyCcCash do
       stripe_mocker = StripeMocker.new
       stripe_mocker.retrieve_subscription(subscription.stripe_id, stripe_discount)
       stripe_mocker.update_subscription(subscription.stripe_id, 'coupon-id')
+      ENV['MAX_CC_CASH_SUBSCRIPTION_DISCOUNT'] = '15'
     end
 
     subject { Subscriptions::ApplyCcCash.call(user:, subscription:) }
 
-    it 'does updates user cc_cash' do
-      expect { subject }.to change { user.reload.cc_cash }.from(cc_cash).to(cc_cash - product.price)
-    end
+    it { expect { subject }.to change { user.reload.cc_cash }.from(cc_cash).to(0) }
 
     it { expect { subject }.to change(PromoCode, :count).by(1) }
 
@@ -39,6 +38,24 @@ describe Subscriptions::ApplyCcCash do
 
       expect(promo_code.use).to eq('cc_cash')
       expect(subscription.reload.promo_code.id).to eq(promo_code.id)
+    end
+
+    context 'when the user has more cc_cash than the max' do
+      let(:max) { ENV['MAX_CC_CASH_SUBSCRIPTION_DISCOUNT'].to_i }
+      let(:cc_cash) { max + rand(1..10) }
+
+      it { expect { subject }.to change { user.reload.cc_cash }.from(cc_cash).to(cc_cash - max) }
+
+      it { expect { subject }.to change(PromoCode, :count).by(1) }
+    end
+
+    context 'when the limit is more than the product price' do
+      before { ENV['MAX_CC_CASH_SUBSCRIPTION_DISCOUNT'] = (price + rand(5..10)).to_s }
+      let(:cc_cash) { price + rand(10..50) }
+
+      it { expect { subject }.to change { user.reload.cc_cash }.from(cc_cash).to(cc_cash - price) }
+
+      it { expect { subject }.to change(PromoCode, :count).by(1) }
     end
 
     context 'when the user has the setting disabled' do
