@@ -50,6 +50,7 @@ json = {
   free_session_expiration_date: user.free_session_expiration_date&.iso8601,
   referral_code: user.referral_code,
   cc_cash: user.cc_cash,
+  max_cc_cash_subscription_discount: ENV.fetch('MAX_CC_CASH_SUBSCRIPTION_DISCOUNT', '15'),
   active_subscription: user_active_subscription,
   last_checked_in_user_session:,
   image_url: nil,
