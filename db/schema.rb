@@ -42,6 +42,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "admin_user_roles", force: :cascade do |t|
+    t.bigint "role_id", null: false
+    t.bigint "admin_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_user_id"], name: "index_admin_user_roles_on_admin_user_id"
+    t.index ["role_id", "admin_user_id"], name: "index_admin_user_roles_on_role_id_and_admin_user_id", unique: true
+    t.index ["role_id"], name: "index_admin_user_roles_on_role_id"
+  end
+
   create_table "admin_users", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -167,6 +177,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
+  create_table "permissions", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "player_evaluation_form_section_options", force: :cascade do |t|
     t.string "title"
     t.string "content"
@@ -261,6 +277,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["use"], name: "index_promo_codes_on_use"
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
+  end
+
+  create_table "role_permissions", force: :cascade do |t|
+    t.bigint "role_id", null: false
+    t.bigint "permission_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["permission_id"], name: "index_role_permissions_on_permission_id"
+    t.index ["role_id", "permission_id"], name: "index_role_permissions_on_role_id_and_permission_id", unique: true
+    t.index ["role_id"], name: "index_role_permissions_on_role_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_roles_on_name", unique: true
   end
 
   create_table "session_allowed_products", force: :cascade do |t|

@@ -1,4 +1,8 @@
-<% if pending_subscription_cancellation_requests > 0 || pending_user_update_requests > 0 %>
+<%
+  if current_admin_user.can?(
+    Permission.ability_resource_name(Permission::MANAGE, SubscriptionCancellationRequest.name)
+  ) && (pending_subscription_cancellation_requests > 0 || pending_user_update_requests > 0)
+%>
   <div class='mb-6'>
     <% if pending_subscription_cancellation_requests > 0 %>
       <div class='flash flash_warning'>

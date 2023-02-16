@@ -27,4 +27,17 @@ class AdminUser < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  has_many :admin_user_roles, dependent: :destroy
+
+  def to_s
+    email
+  end
+
+  def can?(permission_name)
+    role_ids = admin_user_roles.joins(:role).pluck(:role_id)
+    permissions_names = RolePermission.where(role_id: role_ids).joins(:permission).pluck(:name)
+
+    permissions_names.include?(permission_name)
+  end
 end

@@ -28,7 +28,11 @@
 
       <% filtered_events.each do |event| %>
         <div>
-          <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
+          <% if current_admin_user.can?(Permission.ability_resource_name(Permission::MANAGE, Session.name)) %>
+            <%= link_to event.title(date), admin_session_path(event.id, date: date) %>
+          <% else %>
+            <%= event.title(date) %>
+          <% end %>
         </div>
       <% end %>
     </div>
