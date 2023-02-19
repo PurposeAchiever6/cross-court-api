@@ -18,6 +18,7 @@ json = {
   guests_allowed_per_user: session.guests_allowed_per_user,
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
+  cost_credits: session.cost_credits,
   cc_cash_earned: session.cc_cash_earned,
   votes: session.votes(session.start_time),
   reserved: user_sessions.values_at([session.id, session.start_time]).compact.present?,

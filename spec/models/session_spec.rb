@@ -32,6 +32,7 @@
 #  theme_subheading         :string
 #  theme_sweat_level        :integer
 #  theme_description        :text
+#  cost_credits             :integer          default(1)
 #
 # Indexes
 #

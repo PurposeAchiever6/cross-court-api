@@ -12,6 +12,7 @@ module Sessions
 
       return if current_time > session_time - UserSessionWaitlist::MINUTES_TOLERANCE
 
+      session_cost_credits = session.cost_credits
       skill_session = session.skill_session?
 
       waitlist_item = session.waitlist(date).pending.includes(:user).find do |current|
@@ -19,7 +20,11 @@ module Sessions
 
         next if session.full?(date, current_user)
 
-        skill_session ? current_user.skill_session_credits? : current_user.credits?
+        if skill_session
+          current_user.skill_session_credits?(session_cost_credits)
+        else
+          current_user.credits?(session_cost_credits)
+        end
       end
 
       return unless waitlist_item

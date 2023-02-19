@@ -225,10 +225,10 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def credits?
-    credits.positive? \
-      || credits_without_expiration.positive? \
-        || subscription_credits.positive? \
+  def credits?(amount = 1)
+    credits >= amount \
+      || credits_without_expiration >= amount \
+        || subscription_credits >= amount \
           || unlimited_credits?
   end
 
@@ -236,8 +236,10 @@ class User < ApplicationRecord
     subscription_credits == Product::UNLIMITED
   end
 
-  def skill_session_credits?
-    subscription_skill_session_credits.positive? || unlimited_skill_session_credits? || credits?
+  def skill_session_credits?(amount = 1)
+    subscription_skill_session_credits >= amount \
+      || unlimited_skill_session_credits? \
+        || credits?(amount)
   end
 
   def unlimited_skill_session_credits?

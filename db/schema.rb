@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_10_205849) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -340,6 +340,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_10_205849) do
     t.string "theme_subheading"
     t.integer "theme_sweat_level"
     t.text "theme_description"
+    t.integer "cost_credits", default: 1
     t.index ["default_coach_id"], name: "index_sessions_on_default_coach_id"
     t.index ["default_referee_id"], name: "index_sessions_on_default_referee_id"
     t.index ["default_sem_id"], name: "index_sessions_on_default_sem_id"

@@ -19,7 +19,8 @@ describe UserSessions::Create do
         skill_session:,
         max_first_timers:,
         all_skill_levels_allowed:,
-        members_only:
+        members_only:,
+        cost_credits:
       )
     end
     let!(:user) do
@@ -51,6 +52,7 @@ describe UserSessions::Create do
     let(:all_skill_levels_allowed) { true }
     let(:members_only) { false }
     let(:is_open_club) { false }
+    let(:cost_credits) { 1 }
     let(:credits) { 1 }
     let(:credits_without_expiration) { 0 }
     let(:subscription_credits) { 0 }
@@ -98,6 +100,36 @@ describe UserSessions::Create do
       expect { subject }.to have_enqueued_job(
         ActionMailer::MailDeliveryJob
       ).with('SessionMailer', 'session_booked', anything, anything)
+    end
+
+    context 'when the session costs 0 credits' do
+      let(:cost_credits) { 0 }
+      let(:credits) { 0 }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect(subject.user_session.credit_used_type).to eq('credits') }
+    end
+
+    context 'when the session costs 2 credits' do
+      let(:cost_credits) { 2 }
+
+      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+      it 'raises NotEnoughCreditsException' do
+        expect { subject }.to raise_error(
+          NotEnoughCreditsException,
+          'Not enough credits. Please buy more.'
+        )
+      end
+
+      context 'when user has enough credits for the session' do
+        let(:credits) { 2 }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+        it { expect { subject }.to change { user.reload.credits }.by(-2) }
+        it { expect(subject.user_session.credit_used_type).to eq('credits') }
+      end
     end
 
     context 'when user does not have credits but has season pass credits' do
@@ -516,8 +548,40 @@ describe UserSessions::Create do
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.to change { user.reload.subscription_skill_session_credits }.by(-1) }
+
       it 'sets the correct user session credit_used_type' do
         expect(subject.user_session.credit_used_type).to eq('subscription_skill_session_credits')
+      end
+
+      context 'when the session costs 2 credits' do
+        let(:cost_credits) { 2 }
+
+        it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+        it 'raises NotEnoughCreditsException' do
+          expect { subject }.to raise_error(
+            NotEnoughCreditsException,
+            'Not enough credits. Please buy more.'
+          )
+        end
+
+        context 'when user has enough credits for the session' do
+          let(:subscription_skill_session_credits) { 2 }
+
+          it { expect { subject }.to change(UserSession, :count).by(1) }
+          it { expect { subject }.not_to change { user.reload.credits } }
+          it { expect { subject }.not_to change { user.reload.subscription_credits } }
+
+          it 'decrements the correct credits to user' do
+            expect { subject }.to change { user.reload.subscription_skill_session_credits }.by(-2)
+          end
+
+          it 'sets the correct user session credit_used_type' do
+            expect(
+              subject.user_session.credit_used_type
+            ).to eq('subscription_skill_session_credits')
+          end
+        end
       end
 
       context 'when user has unlimited skill session credits' do
@@ -533,22 +597,22 @@ describe UserSessions::Create do
         let(:subscription_skill_session_credits) { 0 }
 
         it { expect { subject }.to change(UserSession, :count).by(1) }
-        it { expect { subject }.not_to change { user.reload.credits } }
-        it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
+        it { expect { subject }.to change { user.reload.credits }.by(-1) }
+        it { expect { subject }.not_to change { user.reload.subscription_credits } }
         it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
-        it { expect(subject.user_session.credit_used_type).to eq('subscription_credits') }
+        it { expect(subject.user_session.credit_used_type).to eq('credits') }
 
-        context 'when user does not have any subscription credit' do
-          let(:subscription_credits) { 0 }
+        context 'when user does not have credit' do
+          let(:credits) { 0 }
 
           it { expect { subject }.to change(UserSession, :count).by(1) }
-          it { expect { subject }.to change { user.reload.credits }.by(-1) }
-          it { expect { subject }.not_to change { user.reload.subscription_credits } }
+          it { expect { subject }.not_to change { user.reload.credits } }
+          it { expect { subject }.to change { user.reload.subscription_credits }.by(-1) }
           it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
-          it { expect(subject.user_session.credit_used_type).to eq('credits') }
+          it { expect(subject.user_session.credit_used_type).to eq('subscription_credits') }
 
-          context 'when user does not have any credit' do
-            let(:credits) { 0 }
+          context 'when user does not have any subscription credit' do
+            let(:subscription_credits) { 0 }
 
             it { expect { subject rescue nil }.not_to change(UserSession, :count) }
 

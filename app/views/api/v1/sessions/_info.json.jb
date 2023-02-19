@@ -3,6 +3,7 @@ json = {
   start_time: session.start_time.iso8601,
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
+  cost_credits: session.cost_credits,
   theme_title: session.theme_title,
   theme_subheading: session.theme_subheading,
   theme_sweat_level: session.theme_sweat_level,
@@ -63,6 +64,7 @@ json[:sem][:image_url] = polymorphic_url(sem.image) if sem&.image&.attached?
 json[:coach][:image_url] = polymorphic_url(coach.image) if coach&.image&.attached?
 
 if user_session.present?
+  json[:reserved] = true
   json[:user_session] = render(
     partial: 'api/v1/user_sessions/short_info',
     locals: { user_session: }

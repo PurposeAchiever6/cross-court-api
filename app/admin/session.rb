@@ -6,7 +6,7 @@ ActiveAdmin.register Session do
                 :members_only, :duration_minutes, :max_capacity, :max_first_timers,
                 :theme_title, :theme_subheading, :theme_sweat_level, :theme_description,
                 :all_skill_levels_allowed, :cc_cash_earned, :default_referee_id, :default_sem_id,
-                :default_coach_id, :guests_allowed, :guests_allowed_per_user,
+                :default_coach_id, :guests_allowed, :guests_allowed_per_user, :cost_credits,
                 product_ids: [],
                 session_exceptions_attributes: %i[id date _destroy],
                 shooting_machines_attributes: %i[id start_time end_time price _destroy]
@@ -55,6 +55,9 @@ ActiveAdmin.register Session do
     column :duration do |session|
       "#{session.duration_minutes} mins"
     end
+    column :cost_credits do |session|
+      session.open_club? ? 'N/A' : session.cost_credits
+    end
     column :max_capacity do |session|
       session.max_capacity || 'N/A'
     end
@@ -99,6 +102,7 @@ ActiveAdmin.register Session do
               input_html: { autocomplete: :off }
       f.input :time
       f.input :duration_minutes
+      f.input :cost_credits
       f.input :max_capacity
       f.input :max_first_timers,
               hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
@@ -168,6 +172,7 @@ ActiveAdmin.register Session do
       row :duration do |session|
         "#{session.duration_minutes} mins"
       end
+      row :cost_credits
       row :max_capacity do |session|
         session.max_capacity || 'N/A'
       end

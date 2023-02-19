@@ -10,5 +10,6 @@
   coming_soon: session.coming_soon,
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
+  cost_credits: session.cost_credits,
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location })
 }

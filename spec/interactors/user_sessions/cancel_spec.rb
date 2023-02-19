@@ -3,9 +3,8 @@ require 'rails_helper'
 describe UserSessions::Cancel do
   describe '.call' do
     let!(:location) { create(:location) }
-    let(:is_open_club) { false }
     let!(:session) do
-      create(:session, :daily, location:, time: session_time, is_open_club:)
+      create(:session, :daily, location:, time: session_time, is_open_club:, cost_credits:)
     end
     let!(:payment_method) { create(:payment_method, user:, default: true) }
     let!(:user) do
@@ -27,6 +26,8 @@ describe UserSessions::Cancel do
       )
     end
 
+    let(:cost_credits) { 1 }
+    let(:is_open_club) { false }
     let(:subscription_credits) { 0 }
     let(:subscription_skill_session_credits) { 0 }
     let(:free_session) { false }
@@ -68,6 +69,22 @@ describe UserSessions::Cancel do
         user.id,
         user_session_id: user_session.id
       )
+    end
+
+    context 'when the session costs 0 credits' do
+      let(:cost_credits) { 0 }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user_session.reload.credit_reimbursed }.to(true) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+    end
+
+    context 'when the session costs 2 credits' do
+      let(:cost_credits) { 2 }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.to change { user_session.reload.credit_reimbursed }.to(true) }
+      it { expect { subject }.to change { user.reload.credits }.by(2) }
     end
 
     context 'when is free session' do

@@ -24,9 +24,9 @@ module UserSessions
 
       unless not_charge_user_credit
         if session.skill_session?
-          decrement_user_skill_session_credit(user, user_session)
+          decrement_user_skill_session_credit(user, session, user_session)
         else
-          decrement_user_session_credit(user, user_session)
+          decrement_user_session_credit(user, session, user_session)
         end
       end
 
@@ -41,37 +41,40 @@ module UserSessions
     def user_has_credits?(user, session, not_charge_user_credit)
       return true if not_charge_user_credit
 
-      return user.skill_session_credits? if session.skill_session?
+      session_cost_credits = session.cost_credits
 
-      user.credits?
+      return user.skill_session_credits?(session_cost_credits) if session.skill_session?
+
+      user.credits?(session_cost_credits)
     end
 
-    def decrement_user_skill_session_credit(user, user_session)
-      if user.subscription_skill_session_credits.zero?
-        if user.subscription_credits.zero?
-          user.decrement(:credits)
-          user_session.credit_used_type = :credits
-        else
-          user.decrement(:subscription_credits) unless user.unlimited_credits?
-          user_session.credit_used_type = :subscription_credits
-        end
-      else
-        unless user.unlimited_skill_session_credits?
-          user.decrement(:subscription_skill_session_credits)
+    def decrement_user_skill_session_credit(user, session, user_session)
+      session_cost_credits = session.cost_credits
+      user_unlimited_skill_session_credits = user.unlimited_skill_session_credits?
+      user_skill_credits = user.subscription_skill_session_credits >= session_cost_credits \
+                           || user_unlimited_skill_session_credits
+
+      if user_skill_credits
+        unless user_unlimited_skill_session_credits
+          user.decrement(:subscription_skill_session_credits, session_cost_credits)
         end
         user_session.credit_used_type = :subscription_skill_session_credits
+      else
+        decrement_user_session_credit(user, session, user_session)
       end
     end
 
-    def decrement_user_session_credit(user, user_session)
-      if user.credits.positive?
-        user.decrement(:credits)
+    def decrement_user_session_credit(user, session, user_session)
+      session_cost_credits = session.cost_credits
+
+      if user.credits >= session_cost_credits
+        user.decrement(:credits, session_cost_credits)
         user_session.credit_used_type = :credits
-      elsif user.credits_without_expiration.positive?
-        user.decrement(:credits_without_expiration)
+      elsif user.credits_without_expiration >= session_cost_credits
+        user.decrement(:credits_without_expiration, session_cost_credits)
         user_session.credit_used_type = :credits_without_expiration
       else
-        user.decrement(:subscription_credits) unless user.unlimited_credits?
+        user.decrement(:subscription_credits, session_cost_credits) unless user.unlimited_credits?
         user_session.credit_used_type = :subscription_credits
       end
     end
