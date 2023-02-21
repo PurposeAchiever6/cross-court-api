@@ -5,6 +5,7 @@ module UserSessions
     def call
       user_session = context.user_session
       from_session_canceled = context.from_session_canceled
+      canceled_with_open_club = context.canceled_with_open_club
 
       user = user_session.user
       is_free_session = user_session.is_free_session
@@ -38,7 +39,7 @@ module UserSessions
       end
 
       if from_session_canceled
-        cancel_session_actions(user_session)
+        cancel_session_actions(user_session, canceled_with_open_club)
       else
         if in_cancellation_time
           cancel_in_time_actions(user_session)
@@ -52,7 +53,7 @@ module UserSessions
 
     private
 
-    def cancel_session_actions(user_session)
+    def cancel_session_actions(user_session, canceled_with_open_club)
       user = user_session.user
       location = user_session.location
       session_time = user_session.time
@@ -64,10 +65,16 @@ module UserSessions
         location
       ).session_canceled
 
+      sms_text_identifier = if canceled_with_open_club
+                              'notifier.sonar.session_canceled_with_open_club'
+                            else
+                              'notifier.sonar.session_canceled'
+                            end
+
       SonarService.send_message(
         user,
         I18n.t(
-          'notifier.sonar.session_canceled',
+          sms_text_identifier,
           name: user.first_name,
           when: user_session.date_when_format,
           time: session_time.strftime(Session::TIME_FORMAT),

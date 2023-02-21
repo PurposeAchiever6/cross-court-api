@@ -39,6 +39,18 @@ ActiveAdmin.register Session do
                              'It will also make the session unavailable for this date.' }
   end
 
+  action_item :cancel, only: :show, priority: 1, if: -> { params[:date].present? } do
+    link_to 'Cancel Session With Open Club',
+            cancel_admin_session_path(session.id, date: params[:date], with_open_club: true),
+            method: :post,
+            data: { disable_with: 'Loading...',
+                    confirm: 'Are you sure you want to cancel this session? This will make ' \
+                             'this session unavailable for this date but instead create ' \
+                             'an open club session for this same date and time. It will also ' \
+                             'refund all signed up users their credits back, and notify them ' \
+                             'via SMS.' }
+  end
+
   index do
     selectable_column
     id_column
@@ -553,13 +565,21 @@ ActiveAdmin.register Session do
   member_action :cancel, method: :post do
     session = Session.find(params[:id])
     date = Date.parse(params[:date])
+    with_open_club = params[:with_open_club] == 'true'
 
     Sessions::Cancel.call(
       session:,
-      date:
+      date:,
+      with_open_club:
     )
 
-    redirect_to admin_scheduler_path, notice: 'Session canceled successfully'
+    notice = if with_open_club
+               'Session canceled and open club created successfully'
+             else
+               'Session canceled successfully'
+             end
+
+    redirect_to admin_scheduler_path, notice:
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to admin_session_path(id: params[:id], date: params[:date])
