@@ -8,7 +8,7 @@ module Api
       before_action :log_user
 
       def index
-        @user_sessions = UserSession.future.not_canceled.by_user(current_user)
+        @user_sessions = UserSession.future.reserved_or_confirmed.by_user(current_user)
                                     .group(:session_id, :date).count
 
         @user_sessions_waitlists = UserSessionWaitlist.pending
@@ -32,7 +32,7 @@ module Api
         @user_session = selected_session.user_sessions
                                         .by_user(current_user)
                                         .by_date(date)
-                                        .not_canceled
+                                        .reserved_or_confirmed
                                         .first
 
         @on_waitlist = selected_session.waitlist(date).pending.by_user(current_user).exists?

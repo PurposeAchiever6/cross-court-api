@@ -132,6 +132,8 @@ en:
         %{name} *canceled in time* the reservation for %{date} at %{time} on %{location}
       session_canceled_out_of_time: >
         %{name} *canceled out of time* the reservation for %{date} at %{time} on %{location}
+      no_show: >
+        The reservation for %{name}, %{date} at %{time} on %{location} was *marked as no show*
       inactive_user: >
         %{name} (phone: %{phone}) has played his *last session 1 month ago* and doesn't have an
         active membership or a future session reserved.
@@ -240,6 +242,11 @@ en:
       new_member_welcome: >
         Hey %{name}, welcome to the ccteam! Did you have any questions?
         Schedule a quick new member AMA call with one of our membership managers %{link}
+      no_show: >
+        Hey %{name}. You have been designated as a no show participant in the %{time} session at
+        %{location} due to not checking in by the 10 minute mark following your session start time.
+        Your spot has been given away to someone on the waitlist. We recommend showing up at least
+        10 minutes early to avoid any complications. Thanks.
       session_guests:
         added: >
           Hey %{guest_name}! %{user_first_name} %{user_last_name} has invited you to join their

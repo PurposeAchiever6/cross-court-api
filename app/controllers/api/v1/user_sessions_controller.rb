@@ -3,7 +3,7 @@ module Api
     class UserSessionsController < Api::V1::ApiUserController
       def index
         @previous_sessions = user_sessions.past
-                                          .not_canceled
+                                          .reserved_or_confirmed
                                           .order(date: :desc)
                                           .includes(
                                             :session_survey_answers,
@@ -11,7 +11,7 @@ module Api
                                           )
                                           .take(3)
         @upcoming_sessions = user_sessions.future
-                                          .not_canceled
+                                          .reserved_or_confirmed
                                           .order(:date)
                                           .includes(
                                             :session_survey_answers,

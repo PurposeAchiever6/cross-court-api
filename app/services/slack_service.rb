@@ -29,6 +29,10 @@ class SlackService
     notify_booking('notifier.slack.session_canceled_out_of_time')
   end
 
+  def no_show
+    notify_booking('notifier.slack.no_show')
+  end
+
   def session_confirmed
     notify_booking('notifier.slack.session_confirmed')
   end

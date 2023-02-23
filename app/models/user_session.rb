@@ -34,7 +34,7 @@
 #
 
 class UserSession < ApplicationRecord
-  enum state: { reserved: 0, canceled: 1, confirmed: 2 }
+  enum state: { reserved: 0, canceled: 1, confirmed: 2, no_show: 3 }
   enum credit_used_type: { credits: 0,
                            subscription_credits: 1,
                            subscription_skill_session_credits: 2,
@@ -104,6 +104,7 @@ class UserSession < ApplicationRecord
   scope :skill_sessions, -> { joins(:session).where(sessions: { skill_session: true }) }
   scope :not_skill_sessions, -> { joins(:session).where(sessions: { skill_session: false }) }
   scope :not_open_club, -> { joins(:session).where(sessions: { is_open_club: false }) }
+  scope :reserved_or_confirmed, -> { where(state: %i[reserved confirmed]) }
 
   def in_cancellation_time?
     remaining_time > Session::CANCELLATION_PERIOD

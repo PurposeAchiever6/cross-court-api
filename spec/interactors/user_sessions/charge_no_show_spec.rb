@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe UserSessions::ChargeNotShowUpJob do
-  describe '#perform' do
+describe UserSessions::ChargeNoShow do
+  describe '.call' do
     before do
       ActiveCampaignMocker.new(
         pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
@@ -18,7 +18,9 @@ describe UserSessions::ChargeNotShowUpJob do
     let!(:user) { create(:user, cc_cash: user_cc_cash) }
     let!(:user_payment_method) { create(:payment_method, user:, default: true) }
 
-    let!(:user_session_1) do
+    let(:is_free_session) { false }
+
+    let!(:user_session) do
       create(
         :user_session,
         user:,
@@ -26,55 +28,17 @@ describe UserSessions::ChargeNotShowUpJob do
         checked_in: false,
         date: la_date.yesterday,
         state: :confirmed,
-        is_free_session: true,
+        is_free_session:,
         free_session_payment_intent: rand(1_000)
       )
     end
-    let!(:user_session_2) do
-      create(
-        :user_session,
-        user:,
-        session:,
-        checked_in: false,
-        date: la_date.yesterday,
-        state: :confirmed,
-        is_free_session: false
-      )
-    end
-    let!(:user_session_3) do
-      create(
-        :user_session,
-        user:,
-        session:,
-        checked_in: true,
-        date: la_date.tomorrow,
-        state: :confirmed,
-        is_free_session: false
-      )
-    end
-    let!(:user_session_4) do
-      create(
-        :user_session,
-        user:,
-        session:,
-        checked_in: false,
-        date: la_date.yesterday,
-        state: :confirmed,
-        is_free_session: true,
-        free_session_payment_intent: rand(1_000),
-        no_show_up_fee_charged: true
-      )
-    end
 
-    subject { described_class.perform_now }
-
-    it { expect { subject }.to change { user_session_1.reload.state }.to('no_show') }
-    it { expect { subject }.to change { user_session_2.reload.state }.to('no_show') }
-    it { expect { subject }.not_to change { user_session_3.reload.state } }
-    it { expect { subject }.not_to change { user_session_4.reload.state } }
+    subject { described_class.call(user_session:) }
 
     context 'when is free session' do
-      it { expect { subject }.to change { user_session_1.reload.no_show_up_fee_charged }.to(true) }
+      let(:is_free_session) { true }
+
+      it { expect { subject }.to change { user_session.reload.no_show_up_fee_charged }.to(true) }
 
       it 'calls ActiveCampaign service' do
         expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).once
@@ -92,7 +56,7 @@ describe UserSessions::ChargeNotShowUpJob do
 
       before { ENV['NO_SHOW_UP_FEE'] = no_show_up_fee }
 
-      it { expect { subject }.to change { user_session_2.reload.no_show_up_fee_charged }.to(true) }
+      it { expect { subject }.to change { user_session.reload.no_show_up_fee_charged }.to(true) }
 
       it 'calls Stripe service with correct params' do
         expect(StripeService).to receive(:charge).with(
@@ -135,7 +99,7 @@ describe UserSessions::ChargeNotShowUpJob do
         let(:no_show_up_fee) { '0' }
 
         it 'updates no_show_up_fee_charged attribute' do
-          expect { subject }.to change { user_session_2.reload.no_show_up_fee_charged }.to(true)
+          expect { subject }.to change { user_session.reload.no_show_up_fee_charged }.to(true)
         end
 
         it 'does not call Stripe Service' do

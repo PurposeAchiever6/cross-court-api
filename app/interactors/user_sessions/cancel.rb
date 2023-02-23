@@ -53,17 +53,16 @@ module UserSessions
 
     private
 
+    def slack_service(user, user_session)
+      SlackService.new(user, user_session.date, user_session.time, user_session.location)
+    end
+
     def cancel_session_actions(user_session, canceled_with_open_club)
       user = user_session.user
       location = user_session.location
       session_time = user_session.time
 
-      SlackService.new(
-        user,
-        user_session.date,
-        session_time,
-        location
-      ).session_canceled
+      slack_service(user, user_session).session_canceled
 
       sms_text_identifier = if canceled_with_open_club
                               'notifier.sonar.session_canceled_with_open_club'
@@ -87,12 +86,7 @@ module UserSessions
     def cancel_in_time_actions(user_session)
       user = user_session.user
 
-      SlackService.new(
-        user,
-        user_session.date,
-        user_session.time,
-        user_session.location
-      ).session_canceled_in_time
+      slack_service(user, user_session).session_canceled_in_time
 
       ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_IN_TIME,
@@ -108,12 +102,7 @@ module UserSessions
         user_session:
       ).amount_charged
 
-      SlackService.new(
-        user,
-        user_session.date,
-        user_session.time,
-        user_session.location
-      ).session_canceled_out_of_time
+      slack_service(user, user_session).session_canceled_out_of_time
 
       ::ActiveCampaign::CreateDealJob.perform_later(
         ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,

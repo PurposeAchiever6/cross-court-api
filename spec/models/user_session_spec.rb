@@ -41,7 +41,9 @@ describe UserSession do
 
     it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:date) }
-    it { is_expected.to define_enum_for(:state).with_values(%i[reserved canceled confirmed]) }
+    it {
+      is_expected.to define_enum_for(:state).with_values(%i[reserved canceled confirmed no_show])
+    }
   end
 
   describe 'associations' do

@@ -18,7 +18,7 @@ module UserSessions
         user_session.is_free_session = true
         user_session.free_session_payment_intent = user.free_session_payment_intent
         user.free_session_state = :used
-      elsif user.user_sessions.not_canceled.count == 1
+      elsif user.user_sessions.reserved_or_confirmed.count == 1
         user_session.first_session = true
       end
 

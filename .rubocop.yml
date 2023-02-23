@@ -47,7 +47,7 @@ Lint/AmbiguousBlockAssociation:
 
 Lint/SuppressedException:
   Exclude:
-    - app/jobs/user_sessions/charge_not_show_up_job.rb
+    - app/interactors/user_sessions/charge_no_show.rb
 
 Lint/AmbiguousAssignment: # new in 1.7
   Enabled: true

@@ -302,7 +302,7 @@ ActiveAdmin.register Session do
 
       panel 'Arrived Users' do
         user_sessions = resource.user_sessions
-                                .not_canceled
+                                .reserved_or_confirmed
                                 .by_date(date)
                                 .checked_in
                                 .includes(shooting_machine_reservations: :shooting_machine,
@@ -322,7 +322,7 @@ ActiveAdmin.register Session do
       panel 'Yet to Arrive Users' do
         user_sessions = resource.user_sessions
                                 .joins(:user)
-                                .not_canceled
+                                .reserved_or_confirmed
                                 .by_date(date)
                                 .not_checked_in
                                 .includes(shooting_machine_reservations: :shooting_machine,
@@ -557,6 +557,20 @@ ActiveAdmin.register Session do
 
     redirect_to admin_session_path(id: session_id, date:),
                 notice: 'User session canceled successfully'
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to admin_session_path(id: session_id, date:)
+  end
+
+  member_action :no_show_user_session, method: :post do
+    session_id = params[:id]
+    date = params[:date]
+    user_session = UserSession.find(params[:user_session_id])
+
+    UserSessions::NoShow.call(user_session:)
+
+    redirect_to admin_session_path(id: session_id, date:),
+                notice: 'User session marked as no show successfully'
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to admin_session_path(id: session_id, date:)

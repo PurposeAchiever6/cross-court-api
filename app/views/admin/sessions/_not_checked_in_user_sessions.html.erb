@@ -129,13 +129,25 @@
             </div>
           </td>
           <td class='align-middle'>
-            <%= link_to 'Cancel',
-                        cancel_user_session_admin_session_path(id: resource.id,
-                                                               date: date,
-                                                               user_session_id: user_session.id),
-                        method: :post,
-                        data: { confirm: 'This will cancel the user session. Are you sure?' },
-                        class: 'ml-2' %>
+            <div class='mb-2'>
+              <%= link_to 'Cancel',
+                          cancel_user_session_admin_session_path(id: resource.id,
+                                                                 date: date,
+                                                                 user_session_id: user_session.id),
+                          method: :post,
+                          data: { confirm: 'This will cancel the user session. Are you sure?' },
+                          class: 'ml-2' %>
+            </div>
+            <div>
+              <%= link_to 'No Show',
+                          no_show_user_session_admin_session_path(id: resource.id,
+                                                                  date: date,
+                                                                  user_session_id: user_session.id,
+                                                                  no_show: true),
+                          method: :post,
+                          data: { confirm: 'This will mark the user as no show. Are you sure?' },
+                          class: 'ml-2' %>
+            </div>
           </td>
         </tr>
       <% end %>

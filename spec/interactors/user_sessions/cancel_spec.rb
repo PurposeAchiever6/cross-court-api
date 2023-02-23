@@ -7,11 +7,14 @@ describe UserSessions::Cancel do
       create(:session, :daily, location:, time: session_time, is_open_club:, cost_credits:)
     end
     let!(:payment_method) { create(:payment_method, user:, default: true) }
+    let(:cc_cash) { 0 }
+    let(:free_session_payment_intent) { nil }
     let!(:user) do
       create(
         :user,
         subscription_credits:,
-        subscription_skill_session_credits:
+        subscription_skill_session_credits:,
+        cc_cash:
       )
     end
     let!(:user_session) do
@@ -22,7 +25,8 @@ describe UserSessions::Cancel do
         date:,
         is_free_session: free_session,
         credit_used_type:,
-        scouting:
+        scouting:,
+        free_session_payment_intent:
       )
     end
 

@@ -184,7 +184,7 @@ class Session < ApplicationRecord
   end
 
   def not_canceled_reservations(date)
-    user_sessions.not_canceled.by_date(date)
+    user_sessions.reserved_or_confirmed.by_date(date)
   end
 
   def waitlist_count(date)
@@ -303,12 +303,13 @@ class Session < ApplicationRecord
     if skill_session
       return false unless location_max_skill_sessions_booked_per_day
 
-      booked_sessions = user.user_sessions.skill_sessions.not_canceled.by_date(date).count
+      booked_sessions = user.user_sessions.skill_sessions.reserved_or_confirmed.by_date(date).count
       booked_sessions >= location_max_skill_sessions_booked_per_day
     else
       return false unless location_max_sessions_booked_per_day
 
-      booked_sessions = user.user_sessions.not_skill_sessions.not_canceled.by_date(date).count
+      booked_sessions =
+        user.user_sessions.not_skill_sessions.reserved_or_confirmed.by_date(date).count
       booked_sessions >= location_max_sessions_booked_per_day
     end
   end
@@ -340,7 +341,7 @@ class Session < ApplicationRecord
   end
 
   def check_for_future_user_sessions
-    if user_sessions.future.not_canceled.exists?
+    if user_sessions.future.reserved_or_confirmed.exists?
       errors.add(:base, 'The session has future user sessions reservations')
       throw(:abort)
     else

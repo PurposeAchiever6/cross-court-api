@@ -126,7 +126,7 @@ class User < ApplicationRecord
           dependent: :destroy
 
   has_one :first_future_user_session,
-          -> { future.not_canceled.order(date: :asc, 'sessions.time' => :asc) },
+          -> { future.reserved_or_confirmed.order(date: :asc, 'sessions.time' => :asc) },
           class_name: 'UserSession',
           inverse_of: :user,
           dependent: :destroy
@@ -310,7 +310,7 @@ class User < ApplicationRecord
   end
 
   def not_canceled_user_session?(session, date)
-    user_sessions.not_canceled.by_session(session).by_date(date).any?
+    user_sessions.reserved_or_confirmed.by_session(session).by_date(date).any?
   end
 
   def instagram_profile

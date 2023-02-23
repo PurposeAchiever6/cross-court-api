@@ -1,11 +1,19 @@
 .status_tag {
-  &.reserved, &.pending {
+  &.reserved,
+  &.pending {
     background: #b1b8b2;
   }
-  &.canceled, &.rejected, &.error {
+  &.canceled,
+  &.rejected,
+  &.error {
     background: #d1847c;
   }
-  &.confirmed, &.approved, &.success {
+  &.no_show {
+    background: #d2cd82;
+  }
+  &.confirmed,
+  &.approved,
+  &.success {
     background: #7ebe88;
   }
   &.refunded {

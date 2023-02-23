@@ -46,7 +46,7 @@ module SonarService
   end
 
   def handle_user_confirmation(user)
-    if user.user_sessions.future.not_canceled.empty?
+    if user.user_sessions.future.reserved_or_confirmed.empty?
       send_message(user, I18n.t('notifier.sonar.no_session_booked'))
     else
       send_message(user, I18n.t('notifier.sonar.no_more_sonar_confirmation'))
@@ -54,7 +54,7 @@ module SonarService
   end
 
   def handle_user_cancellation(user)
-    if user.user_sessions.future.not_canceled.empty?
+    if user.user_sessions.future.reserved_or_confirmed.empty?
       send_message(user, I18n.t('notifier.sonar.no_session_booked'))
     else
       send_message(user, I18n.t('notifier.sonar.no_more_sonar_cancellation',
