@@ -2,7 +2,7 @@ module Sessions
   class CheckInUsersJob < ApplicationJob
     queue_as :default
 
-    def perform(user_session_ids)
+    def perform(user_session_ids, checked_in_at)
       active_campaign_service = ActiveCampaignService.new
 
       UserSession.where(id: user_session_ids)
@@ -14,6 +14,11 @@ module Sessions
         cc_cash_earned = session.cc_cash_earned
 
         user.increment!(:cc_cash, cc_cash_earned) if cc_cash_earned.positive?
+
+        UserSessions::LateArrival.call(
+          user_session:,
+          checked_in_time: Time.zone.at(checked_in_at)
+        )
 
         event = if user_session.first_session
                   ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN

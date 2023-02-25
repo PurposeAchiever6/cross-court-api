@@ -89,7 +89,14 @@ class Session < ApplicationRecord
             absence: { message: 'must be blank if session is not recurring' },
             if: -> { single_occurrence? }
 
-  delegate :name, :description, :time_zone, to: :location, prefix: true
+  delegate :name,
+           :description,
+           :time_zone,
+           :allowed_late_arrivals,
+           :late_arrival_minutes,
+           :late_arrival_fee,
+           to: :location,
+           prefix: true
   delegate :address, :time_zone, to: :location
   delegate :name, to: :skill_level, prefix: true, allow_nil: true
   delegate :max_sessions_booked_per_day,

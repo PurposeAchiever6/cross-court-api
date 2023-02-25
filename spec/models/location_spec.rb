@@ -18,6 +18,9 @@
 #  free_session_miles_radius         :decimal(, )
 #  max_sessions_booked_per_day       :integer
 #  max_skill_sessions_booked_per_day :integer
+#  late_arrival_minutes              :integer          default(10)
+#  late_arrival_fee                  :integer          default(10)
+#  allowed_late_arrivals             :integer          default(2)
 #
 # Indexes
 #

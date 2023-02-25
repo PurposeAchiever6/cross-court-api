@@ -497,7 +497,8 @@ ActiveAdmin.register Session do
     if checked_in_user_session_ids.present?
       # Perform in 15 minutes in case front desk guy checked in wrong user by accident
       ::Sessions::CheckInUsersJob.set(wait: 15.minutes)
-                                 .perform_later(checked_in_user_session_ids)
+                                 .perform_later(checked_in_user_session_ids,
+                                                checked_in_at: Time.now.to_i)
       ::Sonar::FirstSessionSmsJob.set(wait: 15.minutes)
                                  .perform_later(checked_in_user_session_ids)
     end

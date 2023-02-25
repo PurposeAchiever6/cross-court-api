@@ -77,4 +77,31 @@ describe UserSession do
       it { is_expected.to eq('Saturday January 1') }
     end
   end
+
+  describe 'late_arrival?' do
+    let!(:session) { create(:session, :daily, location:, time: session_time) }
+    let!(:user_session) { create(:user_session, session:, date:) }
+    let!(:location) { create(:location, late_arrival_minutes:) }
+
+    let(:checked_in_time) { ActiveSupport::TimeZone[location.time_zone].parse('12:20:00') }
+    let(:session_time) { Time.parse('12:00:00 UTC') }
+    let(:date) { Time.current.in_time_zone(location.time_zone).to_date }
+    let(:late_arrival_minutes) { 30 }
+
+    subject { user_session.late_arrival?(checked_in_time) }
+
+    it { is_expected.to eq(false) }
+
+    context 'when the user checked in late' do
+      let(:checked_in_time) { ActiveSupport::TimeZone[location.time_zone].parse('12:31:00') }
+
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when the location late_arrival_minutes is zero' do
+      let(:late_arrival_minutes) { 0 }
+
+      it { is_expected.to eq(true) }
+    end
+  end
 end

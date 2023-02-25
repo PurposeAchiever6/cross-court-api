@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_22_215727) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -117,6 +117,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "late_arrivals", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "user_session_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "user_session_id"], name: "index_late_arrivals_on_user_id_and_user_session_id", unique: true
+    t.index ["user_id"], name: "index_late_arrivals_on_user_id"
+    t.index ["user_session_id"], name: "index_late_arrivals_on_user_session_id"
+  end
+
   create_table "legals", force: :cascade do |t|
     t.string "title", null: false
     t.text "text", null: false
@@ -141,6 +151,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
     t.decimal "free_session_miles_radius"
     t.integer "max_sessions_booked_per_day"
     t.integer "max_skill_sessions_booked_per_day"
+    t.integer "late_arrival_minutes", default: 10
+    t.integer "late_arrival_fee", default: 10
+    t.integer "allowed_late_arrivals", default: 2
     t.index ["deleted_at"], name: "index_locations_on_deleted_at"
   end
 
@@ -235,8 +248,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "max_rollover_credits"
     t.integer "skill_session_credits", default: 0
+    t.integer "max_rollover_credits"
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.integer "free_pauses_per_year", default: 0
@@ -583,14 +596,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_145821) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
+    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
-    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.string "bio"
     t.integer "credits_without_expiration", default: 0
+    t.string "bio"
     t.integer "scouting_credits", default: 0
     t.integer "weight"
     t.integer "height"

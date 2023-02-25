@@ -165,6 +165,7 @@ class User < ApplicationRecord
   has_many :payment_methods, dependent: :destroy
   has_many :player_evaluations, dependent: :destroy
   has_many :user_update_requests, dependent: :destroy
+  has_many :late_arrivals, dependent: :destroy
 
   has_one_attached :image, dependent: :destroy
 

@@ -55,6 +55,8 @@ class UserSession < ApplicationRecord
   has_many :session_survey_answers, dependent: :destroy
   has_many :session_guests, dependent: :destroy
 
+  has_one :late_arrival, dependent: :destroy
+
   validates :state, :date, presence: true
   validate :user_valid_age
 
@@ -63,6 +65,9 @@ class UserSession < ApplicationRecord
            :location,
            :location_name,
            :location_description,
+           :location_allowed_late_arrivals,
+           :location_late_arrival_minutes,
+           :location_late_arrival_fee,
            :skill_session,
            to: :session
   delegate :phone_number, :email, :full_name,
@@ -112,6 +117,14 @@ class UserSession < ApplicationRecord
 
   def in_confirmation_time?
     remaining_time.between?(Session::CANCELLATION_PERIOD, 24.hours)
+  end
+
+  def late_arrival?(checked_in_time)
+    remaining_time = remaining_time(checked_in_time)
+
+    return false if remaining_time.positive?
+
+    remaining_time.abs > location_late_arrival_minutes.minutes
   end
 
   def create_ics_event
@@ -179,9 +192,9 @@ class UserSession < ApplicationRecord
     errors.add(:user_age, "can't be under 18 years old") if user_age < 18
   end
 
-  def remaining_time
-    current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))
+  def remaining_time(remaining_from_time = Time.current)
+    from_time = Time.zone.local_to_utc(remaining_from_time.in_time_zone(time_zone))
     session_time = "#{date} #{time}".to_datetime
-    session_time.to_i - current_time.to_i
+    session_time.to_i - from_time.to_i
   end
 end
