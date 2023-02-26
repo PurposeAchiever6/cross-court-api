@@ -117,6 +117,7 @@ en:
         time: "Date: %{date}, Time: %{time}"
     subscription:
       cancellation_request: New request for subscription cancellation
+      first_month_survey: Crosscourt new member survey
     user:
       update_request: User %{name} has requested to update his information
   notifier:

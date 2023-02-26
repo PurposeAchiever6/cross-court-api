@@ -34,6 +34,9 @@ module Subscriptions
 
       subscription.save!
 
+      wait_until = subscription.current_period_end - 3.days
+      ::Subscriptions::FirstMonthSurveyEmailJob.set(wait_until:).perform_later(subscription.id)
+
       payment_intent_id = StripeService.retrieve_invoice(
         stripe_subscription.latest_invoice
       ).payment_intent

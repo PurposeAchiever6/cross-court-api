@@ -55,6 +55,12 @@ describe Subscriptions::CreateSubscription do
       subject
     end
 
+    it 'enques Subscriptions::FirstMonthSurveyEmailJob' do
+      expect { subject }.to have_enqueued_job(
+        ::Subscriptions::FirstMonthSurveyEmailJob
+      ).once.with { |subscription_id| subscription_id == Subscription.last.id }
+    end
+
     context 'when user already has an active subscription' do
       let!(:active_subscription) { create(:subscription, user:, product:) }
 

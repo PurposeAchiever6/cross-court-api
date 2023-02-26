@@ -103,6 +103,8 @@ FactoryBot.define do
 
     trait :confirmed do
       confirmed_at { Time.current }
+      confirmation_sent_at { Time.zone.now }
+      confirmation_token { SecureRandom.hex(10) }
     end
 
     trait :unconfirmed do
