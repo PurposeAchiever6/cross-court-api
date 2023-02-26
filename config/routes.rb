@@ -59,10 +59,6 @@ Rails.application.routes.draw do
         namespace :sem do
           resources :sessions, only: :show
         end
-        resources :session_surveys, only: [] do
-          get :questions, on: :collection
-          post :answers, on: :collection
-        end
         resources :session_guests, only: %i[create destroy]
         resources :subscriptions, except: %i[show new edit] do
           member do
