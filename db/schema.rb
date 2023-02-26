@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_22_215727) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_26_142502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -338,22 +338,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_215727) do
     t.index ["user_session_id"], name: "index_session_guests_on_user_session_id"
   end
 
-  create_table "session_survey_answers", force: :cascade do |t|
-    t.string "answer"
-    t.bigint "session_survey_question_id"
+  create_table "session_surveys", force: :cascade do |t|
+    t.integer "rate"
+    t.text "feedback"
+    t.bigint "user_id"
     t.bigint "user_session_id"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["session_survey_question_id"], name: "index_session_survey_answers_on_session_survey_question_id"
-    t.index ["user_session_id"], name: "index_session_survey_answers_on_user_session_id"
-  end
-
-  create_table "session_survey_questions", force: :cascade do |t|
-    t.string "question", null: false
-    t.boolean "is_enabled", default: true
-    t.boolean "is_mandatory", default: false
-    t.integer "type"
-    t.index ["type"], name: "index_session_survey_questions_on_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_session_surveys_on_user_id"
+    t.index ["user_session_id"], name: "index_session_surveys_on_user_session_id"
   end
 
   create_table "sessions", force: :cascade do |t|

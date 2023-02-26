@@ -52,10 +52,10 @@ class UserSession < ApplicationRecord
            inverse_of: :user_session,
            dependent: nil
 
-  has_many :session_survey_answers, dependent: :destroy
   has_many :session_guests, dependent: :destroy
 
   has_one :late_arrival, dependent: :destroy
+  has_one :session_survey, dependent: :nullify
 
   validates :state, :date, presence: true
   validate :user_valid_age

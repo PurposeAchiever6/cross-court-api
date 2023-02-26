@@ -6,7 +6,7 @@ module Api
                                           .reserved_or_confirmed
                                           .order(date: :desc)
                                           .includes(
-                                            :session_survey_answers,
+                                            :session_survey,
                                             session: [location: [images_attachments: :blob]]
                                           )
                                           .take(3)
@@ -14,7 +14,7 @@ module Api
                                           .reserved_or_confirmed
                                           .order(:date)
                                           .includes(
-                                            :session_survey_answers,
+                                            :session_survey,
                                             session: [location: [images_attachments: :blob]]
                                           )
         @employee_upcoming_sessions = EmployeeSessionsQuery.new(current_user).sorted_future_sessions

@@ -83,6 +83,7 @@ Rails.application.routes.draw do
         end
         namespace :surveys do
           resources :first_timers, only: %i[create]
+          resources :sessions, only: %i[create]
         end
       end
     end

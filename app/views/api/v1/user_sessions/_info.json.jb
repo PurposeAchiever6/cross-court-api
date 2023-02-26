@@ -13,5 +13,5 @@
   scouting: user_session.scouting,
   is_first_session: user_session.first_session,
   is_free_session: user_session.is_free_session,
-  survey_answers: user_session.session_survey_answers
+  survey_answered: user_session.session_survey.present?
 }

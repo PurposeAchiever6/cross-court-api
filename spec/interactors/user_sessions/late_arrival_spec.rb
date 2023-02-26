@@ -27,7 +27,7 @@ describe UserSessions::LateArrival do
         user,
         "Hey #{user.first_name}. You were checked into Crosscourt beyond 30 minutes after " \
         'session start time. This is considered a late arrival. We know things happen so we ' \
-        'allow 2 unpenalized late arrivals. After your 3rd late arrival, you will be charged ' \
+        'allow 2 unpenalized late arrivals. On your 3rd late arrival, you will be charged ' \
         "a $20 late arrival fee for each occurrence thereafter. Thanks.\n"
       )
 

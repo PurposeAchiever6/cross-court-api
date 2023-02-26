@@ -23,7 +23,7 @@ describe 'POST api/v1/surveys/first_timers' do
     let(:request_headers) { nil }
 
     it { is_expected.to be_unauthorized }
-    it { expect { subject }.not_to change(UserSessionWaitlist, :count) }
+    it { expect { subject }.not_to change(FirstTimerSurvey, :count) }
   end
 
   context 'when the user already has a FirstTimerSurvey' do

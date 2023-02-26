@@ -204,28 +204,6 @@ Represents a legal document to be displayed in the web.
 - **title** (Text: `'terms_and_conditions' or 'cancelation_policy'`)
 - **text** (Text: The complete text of the document)
 
-### Session Survey Question
-
-Represents a survey question for after the session
-
-#### Attributes
-
-- **id** (Number: unique)
-- **question** (Text: The question)
-- **is_enabled** (Boolean)
-- **is_mandatory** (Boolean)
-
-### Session Survey Answer
-
-Represents a survey question for after the session
-
-#### Attributes
-
-- **id** (Number: unique)
-- **answer** (Text: The question)
-- **session_survey_question_id** (Number: id of the session survey question)
-- **user_session_id** (Number: id of the user session)
-
 ---
 
 ## Integrations
