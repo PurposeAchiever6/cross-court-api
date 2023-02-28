@@ -321,6 +321,10 @@ class User < ApplicationRecord
     "https://www.instagram.com/#{instagram_username[1..]}"
   end
 
+  def first_subscription?
+    subscriptions.count == 1
+  end
+
   def new_member?
     subscriptions.count == 1 &&
       (1.month.ago.beginning_of_day..Time.zone.today.end_of_day)

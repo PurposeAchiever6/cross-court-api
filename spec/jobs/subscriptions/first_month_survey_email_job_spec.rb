@@ -15,5 +15,11 @@ describe Subscriptions::FirstMonthSurveyEmailJob do
 
       it { expect { subject }.not_to change { ActionMailer::Base.deliveries.count } }
     end
+
+    context 'when is not the first subscription' do
+      before { create(:subscription, status: :canceled, user:) }
+
+      it { expect { subject }.not_to change { ActionMailer::Base.deliveries.count } }
+    end
   end
 end

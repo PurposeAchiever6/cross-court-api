@@ -14,12 +14,6 @@
   margin: 0 auto;
 }
 
-@media only screen and (max-width: 768px) {
-  .session-booked__header-image {
-    width: 100% !important;
-  }
-}
-
 .session-booked__title-section {
   text-align: left;
   color: white;
@@ -32,22 +26,10 @@
   text-align: justify;
 }
 
-@media only screen and (max-width: 768px) {
-  .session-booked__title-section {
-    font-size: 1rem !important;
-  }
-}
-
 .session-booked__section {
   color: white;
   font-weight: bold;
   font-size: 1.5rem;
-}
-
-@media only screen and (max-width: 768px) {
-  .session-booked__section {
-    font-size: 1rem !important;
-  }
 }
 
 .session-booked__divider {
@@ -72,22 +54,9 @@
   margin-bottom: 100px;
 }
 
-@media only screen and (max-width: 768px) {
-  .session-booked__read-faq {
-    font-size: 1rem !important;
-  }
-}
-
 .session-booked__title {
   width: 55%;
   margin: 200px 0 50px 0;
-}
-
-@media only screen and (max-width: 768px) {
-  .session-booked__title {
-    width: 100% !important;
-    margin: 80px 0 20px 0 !important;
-  }
 }
 
 .session-booked__item-description {
@@ -98,30 +67,12 @@
   margin-bottom: 10px;
 }
 
-@media only screen and (max-width: 768px) {
-  .session-booked__item-description {
-    font-size: 0.5rem !important;
-  }
-}
-
 .session-booked__title-image {
   display: table-cell;
 }
 
-@media only screen and (max-width: 768px) {
-  .session-booked__title-image {
-    display: none !important;
-  }
-}
-
 .first_month_survey__text {
   font-size: 16px !important;
-}
-
-@media only screen and (max-width: 768px) {
-  .first_month_survey__text {
-    font-size: 24px !important;
-  }
 }
 
 .first_month_survey__btn {
@@ -135,8 +86,41 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .session-booked__header-image {
+    width: 100% !important;
+  }
+
+  .session-booked__title-section {
+    font-size: 1rem !important;
+  }
+
+  .session-booked__section {
+    font-size: 1rem !important;
+  }
+
+  .session-booked__read-faq {
+    font-size: 1rem !important;
+  }
+
+  .session-booked__title {
+    width: 100% !important;
+    margin: 80px 0 20px 0 !important;
+  }
+
+  .session-booked__item-description {
+    font-size: 0.5rem !important;
+  }
+
+  .session-booked__title-image {
+    display: none !important;
+  }
+
+  .first_month_survey__text {
+    font-size: 14px !important;
+  }
+
   .first_month_survey__btn,
   .first_month_survey__img {
-    width: 100%;
+    width: 100% !important;
   }
 }

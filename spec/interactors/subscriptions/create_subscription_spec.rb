@@ -61,6 +61,12 @@ describe Subscriptions::CreateSubscription do
       ).once.with { |subscription_id| subscription_id == Subscription.last.id }
     end
 
+    context 'when is not the first subscription' do
+      before { create(:subscription, status: :canceled, user:) }
+
+      it { expect { subject }.not_to have_enqueued_job(::Subscriptions::FirstMonthSurveyEmailJob) }
+    end
+
     context 'when user already has an active subscription' do
       let!(:active_subscription) { create(:subscription, user:, product:) }
 
