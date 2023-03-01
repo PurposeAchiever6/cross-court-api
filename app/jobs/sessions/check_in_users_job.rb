@@ -2,7 +2,7 @@ module Sessions
   class CheckInUsersJob < ApplicationJob
     queue_as :default
 
-    def perform(user_session_ids, checked_in_at)
+    def perform(user_session_ids, checked_in_at:)
       active_campaign_service = ActiveCampaignService.new
 
       UserSession.where(id: user_session_ids)

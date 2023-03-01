@@ -42,7 +42,7 @@ describe ::Sessions::CheckInUsersJob do
       allow(instance).to receive(:create_deal)
     end
 
-    subject { described_class.perform_now(user_session_id, checked_in_at) }
+    subject { described_class.perform_now(user_session_id, checked_in_at:) }
 
     it { expect { subject }.to change { user.reload.cc_cash }.by(cc_cash_earned) }
 
