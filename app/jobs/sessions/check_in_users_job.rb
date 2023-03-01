@@ -7,7 +7,7 @@ module Sessions
 
       UserSession.where(id: user_session_ids)
                  .checked_in
-                 .includes(user: :active_subscription)
+                 .includes(:session, user: :active_subscription)
                  .each do |user_session|
         user = user_session.user
         session = user_session.session

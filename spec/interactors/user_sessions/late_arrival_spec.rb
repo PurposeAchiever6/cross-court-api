@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UserSessions::LateArrival do
   describe '.call' do
     let!(:user) { create(:user) }
-    let!(:session) { create(:session, :daily, location:, time: session_time) }
+    let!(:session) { create(:session, :daily, location:, is_open_club:, time: session_time) }
     let!(:user_session) { create(:user_session, user:, session:, date:) }
     let!(:location) do
       create(:location, late_arrival_minutes:, late_arrival_fee:, allowed_late_arrivals:)
@@ -12,6 +12,7 @@ describe UserSessions::LateArrival do
     let(:checked_in_time) { ActiveSupport::TimeZone[location.time_zone].parse('12:31:00') }
     let(:session_time) { Time.parse('12:00:00 UTC') }
     let(:date) { Time.current.in_time_zone(location.time_zone).to_date }
+    let(:is_open_club) { false }
     let(:late_arrival_minutes) { 30 }
     let(:late_arrival_fee) { 20 }
     let(:allowed_late_arrivals) { 2 }
@@ -95,6 +96,22 @@ describe UserSessions::LateArrival do
 
     context 'when the user session already has a late arrival association' do
       let!(:late_arrival) { create(:late_arrival, user_session:, user:) }
+
+      it { expect { subject }.not_to change(LateArrival, :count) }
+
+      it 'does not call Stripe service' do
+        expect(StripeService).not_to receive(:charge)
+        subject
+      end
+
+      it 'does not call Sonar service' do
+        expect(SonarService).not_to receive(:send_message)
+        subject
+      end
+    end
+
+    context 'when is an open club session' do
+      let!(:is_open_club) { true }
 
       it { expect { subject }.not_to change(LateArrival, :count) }
 

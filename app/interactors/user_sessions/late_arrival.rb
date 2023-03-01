@@ -42,9 +42,12 @@ module UserSessions
     private
 
     def run_late_arrival_logic?(user_session, checked_in_time)
-      user_session.late_arrival?(checked_in_time) \
-        && user_session.location_late_arrival_fee.positive? \
-          && user_session.late_arrival.blank?
+      session = user_session.session
+
+      !session.open_club? && \
+        user_session.late_arrival?(checked_in_time) \
+          && user_session.location_late_arrival_fee.positive? \
+            && user_session.late_arrival.blank?
     end
   end
 end
