@@ -9,7 +9,15 @@ ActiveAdmin.register GalleryPhoto do
 
   form do |f|
     f.inputs 'Images' do
-      f.input :image, label: 'Images', as: :file, input_html: { multiple: true, accept: 'image/*' }
+      f.input :image,
+              label: 'Images',
+              as: :file,
+              input_html: {
+                include_hidden: false,
+                multipart: true,
+                multiple: true,
+                accept: 'image/*'
+              }
     end
 
     f.actions do
