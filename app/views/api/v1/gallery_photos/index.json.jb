@@ -1,3 +1,4 @@
 {
-  gallery_photos: render(partial: 'info', collection: @gallery_photos, as: :gallery_photo)
+  gallery_photos: render(partial: 'info', collection: @gallery_photos, as: :gallery_photo),
+  pagination: render(partial: 'api/v1/pagination', locals: { records: @gallery_photos })
 }

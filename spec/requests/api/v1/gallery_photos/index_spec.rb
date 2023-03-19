@@ -16,7 +16,7 @@ describe 'GET api/v1/gallery_photos' do
   describe 'the gallery photo' do
     subject { json[:gallery_photos].first }
 
-    it { expect(subject[:id]).to eq(gallery_photos.first.id) }
-    it { expect(subject[:image_url]).to eq(polymorphic_url(gallery_photos.first.image)) }
+    it { expect(subject[:id]).to eq(gallery_photos.last.id) }
+    it { expect(subject[:image_url]).to eq(polymorphic_url(gallery_photos.last.image)) }
   end
 end
