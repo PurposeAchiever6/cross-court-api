@@ -2,37 +2,38 @@
 #
 # Table name: sessions
 #
-#  id                       :bigint           not null, primary key
-#  start_time               :date             not null
-#  recurring                :text
-#  time                     :time             not null
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  location_id              :bigint           not null
-#  end_time                 :date
-#  skill_level_id           :bigint
-#  is_private               :boolean          default(FALSE)
-#  coming_soon              :boolean          default(FALSE)
-#  is_open_club             :boolean          default(FALSE)
-#  duration_minutes         :integer          default(60)
-#  deleted_at               :datetime
-#  max_first_timers         :integer
-#  women_only               :boolean          default(FALSE)
-#  all_skill_levels_allowed :boolean          default(TRUE)
-#  max_capacity             :integer          default(15)
-#  skill_session            :boolean          default(FALSE)
-#  cc_cash_earned           :decimal(, )      default(0.0)
-#  default_referee_id       :integer
-#  default_sem_id           :integer
-#  default_coach_id         :integer
-#  guests_allowed           :integer
-#  guests_allowed_per_user  :integer
-#  members_only             :boolean          default(FALSE)
-#  theme_title              :string
-#  theme_subheading         :string
-#  theme_sweat_level        :integer
-#  theme_description        :text
-#  cost_credits             :integer          default(1)
+#  id                              :bigint           not null, primary key
+#  start_time                      :date             not null
+#  recurring                       :text
+#  time                            :time             not null
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  location_id                     :bigint           not null
+#  end_time                        :date
+#  skill_level_id                  :bigint
+#  is_private                      :boolean          default(FALSE)
+#  coming_soon                     :boolean          default(FALSE)
+#  is_open_club                    :boolean          default(FALSE)
+#  duration_minutes                :integer          default(60)
+#  deleted_at                      :datetime
+#  max_first_timers                :integer
+#  women_only                      :boolean          default(FALSE)
+#  all_skill_levels_allowed        :boolean          default(TRUE)
+#  max_capacity                    :integer          default(15)
+#  skill_session                   :boolean          default(FALSE)
+#  cc_cash_earned                  :decimal(, )      default(0.0)
+#  default_referee_id              :integer
+#  default_sem_id                  :integer
+#  default_coach_id                :integer
+#  guests_allowed                  :integer
+#  guests_allowed_per_user         :integer
+#  members_only                    :boolean          default(FALSE)
+#  theme_title                     :string
+#  theme_subheading                :string
+#  theme_sweat_level               :integer
+#  theme_description               :text
+#  cost_credits                    :integer          default(1)
+#  allow_back_to_back_reservations :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -577,6 +578,53 @@ describe Session do
 
         it { is_expected.to eq(true) }
       end
+    end
+  end
+
+  describe '#back_to_back_sessions' do
+    let(:current_time) { Time.zone.now }
+    let(:duration_minutes) { 55 }
+
+    let!(:location) { create(:location) }
+    let!(:session) do
+      create(:session, :daily, time: current_time, location:, duration_minutes:)
+    end
+    let!(:before_session) do
+      create(:session, :daily, time: current_time - 1.hour, location:, duration_minutes:)
+    end
+    let!(:after_session) do
+      create(:session, :daily, time: current_time + 1.hour, location:, duration_minutes:)
+    end
+
+    subject { session.back_to_back_sessions(current_time.to_date) }
+
+    it { is_expected.to match_array([before_session, after_session]) }
+
+    context 'when before session time is too early' do
+      before { before_session.update!(time: current_time - 1.hour - 15.minutes) }
+
+      it { is_expected.to eq([after_session]) }
+    end
+
+    context 'when after session time is too late' do
+      before { after_session.update!(time: current_time + 1.hour + 15.minutes) }
+
+      it { is_expected.to eq([before_session]) }
+    end
+
+    context 'when before session duration is too short' do
+      before { before_session.update!(duration_minutes: 45) }
+
+      it { is_expected.to eq([after_session]) }
+    end
+
+    context 'when session does not have any back to back sessions' do
+      before do
+        before_session.update!(duration_minutes: 45)
+        after_session.update!(time: current_time + 1.hour + 15.minutes)
+      end
+
+      it { is_expected.to eq([]) }
     end
   end
 end

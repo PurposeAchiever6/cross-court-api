@@ -20,7 +20,8 @@ describe UserSessions::Create do
         max_first_timers:,
         all_skill_levels_allowed:,
         members_only:,
-        cost_credits:
+        cost_credits:,
+        allow_back_to_back_reservations:
       )
     end
     let!(:user) do
@@ -50,6 +51,7 @@ describe UserSessions::Create do
     let(:skill_session) { false }
     let(:max_first_timers) { nil }
     let(:all_skill_levels_allowed) { true }
+    let(:allow_back_to_back_reservations) { true }
     let(:members_only) { false }
     let(:is_open_club) { false }
     let(:cost_credits) { 1 }
@@ -725,6 +727,65 @@ describe UserSessions::Create do
             )
           end
         end
+      end
+    end
+
+    context 'when session does not allow back to back sessions' do
+      let(:allow_back_to_back_reservations) { false }
+      let(:before_session_allow_back_to_back_reservations) { false }
+
+      let!(:before_session) do
+        create(
+          :session,
+          :daily,
+          location:,
+          time: session_time - 1.hour,
+          duration_minutes: 55,
+          allow_back_to_back_reservations: before_session_allow_back_to_back_reservations
+        )
+      end
+      let!(:user_session) do
+        create(
+          :user_session,
+          session: before_session,
+          user:,
+          date:
+        )
+      end
+
+      it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+      it 'raises BackToBackSessionReservationException' do
+        expect { subject }.to raise_error(
+          BackToBackSessionReservationException,
+          "This session doesn't allow back to back reservations"
+        )
+      end
+
+      context 'when session allows back to back reservations' do
+        let(:allow_back_to_back_reservations) { true }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
+
+      context 'when before session allows back to back reservations' do
+        let(:before_session_allow_back_to_back_reservations) { true }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
+
+      context 'when the user canceled the before session' do
+        before { user_session.update!(state: :canceled) }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+      end
+
+      context 'when is inside reservation window for back to back sessions' do
+        let(:session_time) { time_now + 2.hours - 1.minute }
+
+        before { allow(SonarService).to receive(:send_message) }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
       end
     end
   end

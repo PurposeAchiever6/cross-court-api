@@ -20,7 +20,8 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       is_open_club:,
       skill_session:,
       all_skill_levels_allowed:,
-      members_only:
+      members_only:,
+      allow_back_to_back_reservations:
     )
   end
 
@@ -32,6 +33,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   let(:skill_session) { false }
   let(:all_skill_levels_allowed) { true }
   let(:members_only) { false }
+  let(:allow_back_to_back_reservations) { true }
   let(:params) { { date: date.strftime(Session::DATE_FORMAT) } }
   let(:active_subscription) { nil }
   let(:scouting_credits) { rand(1..5) }
@@ -505,6 +507,56 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
       end
 
       it { expect { subject }.not_to change { user.reload.scouting_credits } }
+    end
+  end
+
+  context 'when session does not allow back to back sessions' do
+    let(:allow_back_to_back_reservations) { false }
+
+    let!(:before_session) do
+      create(
+        :session,
+        :daily,
+        location:,
+        time: session.time - 1.hour,
+        allow_back_to_back_reservations: false
+      )
+    end
+    let!(:user_session) do
+      create(
+        :user_session,
+        session: before_session,
+        user:,
+        date:
+      )
+    end
+
+    it 'returns bad request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns correct error message' do
+      subject
+      expect(json[:error]).to eq("This session doesn't allow back to back reservations")
+    end
+
+    context 'when session allows back to back reservations' do
+      let(:allow_back_to_back_reservations) { true }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
+    end
+
+    context 'when the user canceled the before session' do
+      before { user_session.update!(state: :canceled) }
+
+      it 'returns success' do
+        subject
+        expect(response).to be_successful
+      end
     end
   end
 end

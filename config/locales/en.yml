@@ -86,6 +86,7 @@ en:
         reserve_team_not_allowed: "The Reserve Team is not allowed to reserve"
         not_allowed_for_member: The session is only for members or is restricted for certain memberships
         user_already_in: "You are already in for this session"
+        back_to_back_reservation: This session doesn't allow back to back reservations
         votes:
           user_did_not_vote: "The user did not vote for this session"
       waitlists:

@@ -119,6 +119,10 @@ class UserSession < ApplicationRecord
     remaining_time.between?(Session::CANCELLATION_PERIOD, 24.hours)
   end
 
+  def in_back_to_back_allowed_time?
+    remaining_time < Session::BACK_TO_BACK_RESERVATION_WINDOW_MINUTES
+  end
+
   def late_arrival?(checked_in_time)
     remaining_time = remaining_time(checked_in_time)
 

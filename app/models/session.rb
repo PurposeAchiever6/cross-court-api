@@ -2,37 +2,38 @@
 #
 # Table name: sessions
 #
-#  id                       :bigint           not null, primary key
-#  start_time               :date             not null
-#  recurring                :text
-#  time                     :time             not null
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  location_id              :bigint           not null
-#  end_time                 :date
-#  skill_level_id           :bigint
-#  is_private               :boolean          default(FALSE)
-#  coming_soon              :boolean          default(FALSE)
-#  is_open_club             :boolean          default(FALSE)
-#  duration_minutes         :integer          default(60)
-#  deleted_at               :datetime
-#  max_first_timers         :integer
-#  women_only               :boolean          default(FALSE)
-#  all_skill_levels_allowed :boolean          default(TRUE)
-#  max_capacity             :integer          default(15)
-#  skill_session            :boolean          default(FALSE)
-#  cc_cash_earned           :decimal(, )      default(0.0)
-#  default_referee_id       :integer
-#  default_sem_id           :integer
-#  default_coach_id         :integer
-#  guests_allowed           :integer
-#  guests_allowed_per_user  :integer
-#  members_only             :boolean          default(FALSE)
-#  theme_title              :string
-#  theme_subheading         :string
-#  theme_sweat_level        :integer
-#  theme_description        :text
-#  cost_credits             :integer          default(1)
+#  id                              :bigint           not null, primary key
+#  start_time                      :date             not null
+#  recurring                       :text
+#  time                            :time             not null
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  location_id                     :bigint           not null
+#  end_time                        :date
+#  skill_level_id                  :bigint
+#  is_private                      :boolean          default(FALSE)
+#  coming_soon                     :boolean          default(FALSE)
+#  is_open_club                    :boolean          default(FALSE)
+#  duration_minutes                :integer          default(60)
+#  deleted_at                      :datetime
+#  max_first_timers                :integer
+#  women_only                      :boolean          default(FALSE)
+#  all_skill_levels_allowed        :boolean          default(TRUE)
+#  max_capacity                    :integer          default(15)
+#  skill_session                   :boolean          default(FALSE)
+#  cc_cash_earned                  :decimal(, )      default(0.0)
+#  default_referee_id              :integer
+#  default_sem_id                  :integer
+#  default_coach_id                :integer
+#  guests_allowed                  :integer
+#  guests_allowed_per_user         :integer
+#  members_only                    :boolean          default(FALSE)
+#  theme_title                     :string
+#  theme_subheading                :string
+#  theme_sweat_level               :integer
+#  theme_description               :text
+#  cost_credits                    :integer          default(1)
+#  allow_back_to_back_reservations :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -53,6 +54,10 @@ class Session < ApplicationRecord
   TIME_FORMAT = '%l:%M %P'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
+  BACK_TO_BACK_TOLERANCE_MINUTES = ENV['BACK_TO_BACK_TOLERANCE_MINUTES'].to_i.minutes.freeze
+  BACK_TO_BACK_RESERVATION_WINDOW_MINUTES = ENV['BACK_TO_BACK_RESERVATION_WINDOW_MINUTES'].to_i
+                                                                                          .minutes
+                                                                                          .freeze
 
   acts_as_paranoid
   has_paper_trail
@@ -337,6 +342,28 @@ class Session < ApplicationRecord
     return true if session_allowed_products.empty?
 
     session_allowed_products.pluck(:product_id).include?(user.active_subscription.product_id)
+  end
+
+  def back_to_back_sessions(date)
+    today_sessions = Session.includes(:session_exceptions)
+                            .by_location(location)
+                            .for_range(date, date)
+                            .flat_map do |session_event|
+                              session_event.calendar_events(date, date)
+                            end
+
+    today_sessions.filter do |session|
+      next if session.id == id
+
+      start_time = time
+      end_time = start_time + duration_minutes.minutes
+
+      current_start_time = session.time
+      current_end_time = current_start_time + session.duration_minutes.minutes
+
+      current_end_time.between?(start_time - BACK_TO_BACK_TOLERANCE_MINUTES, start_time) \
+        || current_start_time.between?(end_time, end_time + BACK_TO_BACK_TOLERANCE_MINUTES)
+    end
   end
 
   private

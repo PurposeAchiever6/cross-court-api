@@ -47,6 +47,7 @@ module Api
       rescue_from UserAlreadyInSessionException,                  with: :render_custom_exception
       rescue_from NotEnoughScoutingCreditsException,              with: :render_custom_exception
       rescue_from InvalidSessionForScoutingException,             with: :render_custom_exception
+      rescue_from BackToBackSessionReservationException,          with: :render_custom_exception
       rescue_from Stripe::StripeError,                            with: :render_custom_exception
       rescue_from SessionGuestsException,                         with: :render_custom_exception
 

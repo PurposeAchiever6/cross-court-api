@@ -38,6 +38,7 @@ module UserSessions
     end
 
     organize UserSessions::ValidateDate,
+             UserSessions::ValidateBackToBack,
              UserSessions::ConsumeCredit,
              UserSessions::ConsumeScoutingCredit,
              UserSessions::SlackNotification,

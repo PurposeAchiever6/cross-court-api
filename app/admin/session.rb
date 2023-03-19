@@ -5,8 +5,9 @@ ActiveAdmin.register Session do
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
                 :members_only, :duration_minutes, :max_capacity, :max_first_timers,
                 :theme_title, :theme_subheading, :theme_sweat_level, :theme_description,
-                :all_skill_levels_allowed, :cc_cash_earned, :default_referee_id, :default_sem_id,
-                :default_coach_id, :guests_allowed, :guests_allowed_per_user, :cost_credits,
+                :all_skill_levels_allowed, :allow_back_to_back_reservations, :cc_cash_earned,
+                :default_referee_id, :default_sem_id, :default_coach_id, :guests_allowed,
+                :guests_allowed_per_user, :cost_credits,
                 product_ids: [],
                 session_exceptions_attributes: %i[id date _destroy],
                 shooting_machines_attributes: %i[id start_time end_time price _destroy]
@@ -96,6 +97,7 @@ ActiveAdmin.register Session do
       f.input :skill_session
       f.input :women_only
       f.input :all_skill_levels_allowed
+      f.input :allow_back_to_back_reservations
       f.input :coming_soon
       f.input :is_private
       f.input :members_only
@@ -209,6 +211,7 @@ ActiveAdmin.register Session do
         end
       end
       row :all_skill_levels_allowed
+      row :allow_back_to_back_reservations
       row :coming_soon
       row :is_private
       row :guests_allowed
