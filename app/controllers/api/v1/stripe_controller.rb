@@ -110,7 +110,7 @@ module Api
           if payment
             Payments::Refund.call(
               payment:,
-              amount_refunded: object.amount_refunded
+              amount_refunded: object.amount_refunded / 100.00
             )
           end
         else

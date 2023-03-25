@@ -21,6 +21,7 @@ json = {
   cc_cash_earned: session.cc_cash_earned,
   full:,
   reservations_count: session.reservations_count(date),
+  back_to_back_restricted: session.back_to_back_restricted?(date, current_user),
   allowed_products: render(
     partial: 'api/v1/sessions/allowed_products/info',
     locals: { session: }

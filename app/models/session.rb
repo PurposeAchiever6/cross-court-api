@@ -58,6 +58,8 @@ class Session < ApplicationRecord
   BACK_TO_BACK_RESERVATION_WINDOW_MINUTES = ENV['BACK_TO_BACK_RESERVATION_WINDOW_MINUTES'].to_i
                                                                                           .minutes
                                                                                           .freeze
+  BACK_TO_BACK_MAX_RESERVATIONS_TO_DISABLE = ENV['BACK_TO_BACK_MAX_RESERVATIONS_TO_DISABLE'].to_i
+                                                                                            .freeze
 
   acts_as_paranoid
   has_paper_trail
@@ -366,7 +368,38 @@ class Session < ApplicationRecord
     end
   end
 
+  def back_to_back_restricted?(date, user)
+    return false if !user || allow_back_to_back_reservations?(date)
+
+    back_to_back_sessions(date).any? do |back_to_back_session|
+      not_allowed_back_to_back = !back_to_back_session.allow_back_to_back_reservations
+      user_reserved_back_to_back = user.not_canceled_user_session?(back_to_back_session, date)
+
+      not_allowed_back_to_back && user_reserved_back_to_back
+    end
+  end
+
+  def allow_back_to_back_reservations?(date)
+    return true if allow_back_to_back_reservations
+
+    back_to_back_allowed_reservations_count?(date) && back_to_back_allowed_time?(date)
+  end
+
+  def back_to_back_allowed_reservations_count?(date)
+    reservations_count(date) <= BACK_TO_BACK_MAX_RESERVATIONS_TO_DISABLE
+  end
+
+  def back_to_back_allowed_time?(date)
+    remaining_time(date) < BACK_TO_BACK_RESERVATION_WINDOW_MINUTES
+  end
+
   private
+
+  def remaining_time(date)
+    current_time = Time.zone.local_to_utc(Time.current.in_time_zone(time_zone))
+    session_time = "#{date} #{time}".to_datetime
+    session_time.to_i - current_time.to_i
+  end
 
   def remove_orphan_sessions
     return unless saved_change_to_recurring? || saved_change_to_end_time?

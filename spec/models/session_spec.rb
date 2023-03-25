@@ -582,7 +582,7 @@ describe Session do
   end
 
   describe '#back_to_back_sessions' do
-    let(:current_time) { Time.zone.now }
+    let(:current_time) { Time.zone.now.change(hour: 12) }
     let(:duration_minutes) { 55 }
 
     let!(:location) { create(:location) }

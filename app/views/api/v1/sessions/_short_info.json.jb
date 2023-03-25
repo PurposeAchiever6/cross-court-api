@@ -29,6 +29,7 @@ json = {
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
   skill_level: nil,
   reservations_count: session.not_canceled_reservations(session.start_time).count,
+  back_to_back_restricted: session.back_to_back_restricted?(session.start_time, current_user),
   allowed_products: render(
     partial: 'api/v1/sessions/allowed_products/info',
     locals: { session: }

@@ -781,11 +781,29 @@ describe UserSessions::Create do
       end
 
       context 'when is inside reservation window for back to back sessions' do
+        let!(:session_reservations) do
+          create_list(:user_session, session_reservations_count, session:, date:)
+        end
+
+        let(:session_reservations_count) { 9 }
         let(:session_time) { time_now + 2.hours - 1.minute }
 
         before { allow(SonarService).to receive(:send_message) }
 
         it { expect { subject }.to change(UserSession, :count).by(1) }
+
+        context 'when session has more reservations than the max allowed for back to back' do
+          let(:session_reservations_count) { 10 }
+
+          it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+
+          it 'raises BackToBackSessionReservationException' do
+            expect { subject }.to raise_error(
+              BackToBackSessionReservationException,
+              "This session doesn't allow back to back reservations"
+            )
+          end
+        end
       end
     end
   end
