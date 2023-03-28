@@ -102,6 +102,7 @@ class Session < ApplicationRecord
            :allowed_late_arrivals,
            :late_arrival_minutes,
            :late_arrival_fee,
+           :sklz_late_arrival_fee,
            to: :location,
            prefix: true
   delegate :address, :time_zone, to: :location
@@ -391,6 +392,12 @@ class Session < ApplicationRecord
 
   def back_to_back_allowed_time?(date)
     remaining_time(date) < BACK_TO_BACK_RESERVATION_WINDOW_MINUTES
+  end
+
+  def late_arrival_fee
+    return 0 if open_club?
+
+    skill_session? ? location_sklz_late_arrival_fee : location_late_arrival_fee
   end
 
   private

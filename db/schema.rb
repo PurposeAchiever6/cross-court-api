@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_19_134217) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_28_163710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -154,6 +154,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_19_134217) do
     t.integer "late_arrival_minutes", default: 10
     t.integer "late_arrival_fee", default: 10
     t.integer "allowed_late_arrivals", default: 2
+    t.integer "sklz_late_arrival_fee", default: 0
     t.index ["deleted_at"], name: "index_locations_on_deleted_at"
   end
 

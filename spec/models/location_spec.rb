@@ -21,6 +21,7 @@
 #  late_arrival_minutes              :integer          default(10)
 #  late_arrival_fee                  :integer          default(10)
 #  allowed_late_arrivals             :integer          default(2)
+#  sklz_late_arrival_fee             :integer          default(0)
 #
 # Indexes
 #

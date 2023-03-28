@@ -67,7 +67,7 @@ class UserSession < ApplicationRecord
            :location_description,
            :location_allowed_late_arrivals,
            :location_late_arrival_minutes,
-           :location_late_arrival_fee,
+           :late_arrival_fee,
            :skill_session,
            to: :session
   delegate :phone_number, :email, :full_name,

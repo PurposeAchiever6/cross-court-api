@@ -8,10 +8,10 @@ module UserSessions
       user = user_session.user
 
       allowed_late_arrivals = user_session.location_allowed_late_arrivals
-      late_arrival_fee = user_session.location_late_arrival_fee
       late_arrival_minutes = user_session.location_late_arrival_minutes
+      late_arrival_fee = user_session.late_arrival_fee
 
-      return unless run_late_arrival_logic?(user_session, checked_in_time)
+      return unless run_late_arrival_logic?(user_session, checked_in_time, late_arrival_fee)
 
       if user.late_arrivals.count >= allowed_late_arrivals
         Users::Charge.call(
@@ -41,13 +41,10 @@ module UserSessions
 
     private
 
-    def run_late_arrival_logic?(user_session, checked_in_time)
-      session = user_session.session
-
-      !session.open_club? && \
-        user_session.late_arrival?(checked_in_time) \
-          && user_session.location_late_arrival_fee.positive? \
-            && user_session.late_arrival.blank?
+    def run_late_arrival_logic?(user_session, checked_in_time, late_arrival_fee)
+      user_session.late_arrival?(checked_in_time) \
+        && late_arrival_fee.positive? \
+          && user_session.late_arrival.blank?
     end
   end
 end

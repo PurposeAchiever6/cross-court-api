@@ -21,6 +21,7 @@
 #  late_arrival_minutes              :integer          default(10)
 #  late_arrival_fee                  :integer          default(10)
 #  allowed_late_arrivals             :integer          default(2)
+#  sklz_late_arrival_fee             :integer          default(0)
 #
 # Indexes
 #
@@ -43,7 +44,8 @@ class Location < ApplicationRecord
   has_many_attached :images, dependent: :purge_now
 
   validates :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state,
-            :free_session_miles_radius, presence: true
+            :free_session_miles_radius, :late_arrival_fee, :sklz_late_arrival_fee,
+            :late_arrival_minutes, :allowed_late_arrivals, presence: true
 
   reverse_geocoded_by :lat, :lng
 
