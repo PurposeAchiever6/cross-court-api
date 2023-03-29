@@ -37,6 +37,8 @@ module UserSessions
           )
         end.user_session
 
+      user_session.update!(user_subscription_name: user.active_subscription&.name&.titleize)
+
       context.user_session = user_session
     end
   end

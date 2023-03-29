@@ -82,6 +82,13 @@ describe UserSessions::Create do
     it { expect(subject.user_session.first_session).to eq(true) }
     it { expect(subject.user_session.is_free_session).to eq(false) }
     it { expect(subject.user_session.state).to eq('reserved') }
+    it { expect(subject.user_session.user_subscription_name).to eq(product.name.titleize) }
+
+    context 'when user does not have an active subscription' do
+      let(:active_subscription) { nil }
+
+      it { expect(subject.user_session.user_subscription_name).to eq(nil) }
+    end
 
     it 'calls Slack service' do
       expect_any_instance_of(SlackService).to receive(:session_booked)

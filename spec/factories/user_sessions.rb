@@ -25,6 +25,7 @@
 #  scouting                        :boolean          default(FALSE)
 #  towel_rental                    :boolean          default(FALSE)
 #  towel_rental_payment_intent_id  :string
+#  user_subscription_name          :string
 #
 # Indexes
 #
