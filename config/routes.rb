@@ -55,6 +55,7 @@ Rails.application.routes.draw do
           put :update_personal_info
           post :request_update
           get :referrals
+          post :send_membership_handbook
         end
         namespace :sem do
           resources :sessions, only: :show

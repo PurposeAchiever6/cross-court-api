@@ -120,7 +120,9 @@ en:
       cancellation_request: New request for subscription cancellation
       first_month_survey: Crosscourt new member survey
     user:
-      update_request: User %{name} has requested to update his information
+      subjects:
+        membership_handbook: Get an inside look into membership at Crosscourt
+        update_request: User %{name} has requested to update his information
   notifier:
     slack:
       session_booked: "%{name} made a *reservation* for %{date} at %{time} on %{location}"

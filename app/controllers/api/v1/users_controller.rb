@@ -6,6 +6,7 @@ module Api
                            resend_confirmation_instructions
                            update_skill_rating
                            update_personal_info
+                           send_membership_handbook
                          ]
 
       def show; end
@@ -60,6 +61,14 @@ module Api
 
       def referrals
         @referrals = Users::GetReferrals.call(user: current_user).list
+      end
+
+      def send_membership_handbook
+        email = params[:email]
+
+        UserMailer.with(email:).membership_handbook.deliver_later
+
+        head :ok
       end
 
       private
