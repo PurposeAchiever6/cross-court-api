@@ -496,7 +496,29 @@ describe Session do
         it { is_expected.to eq(false) }
       end
 
-      context 'when the user_session is for a skill session' do
+      context 'when the user has reserved another session that is open club' do
+        let!(:another_session) do
+          create(
+            :session,
+            :daily,
+            location:,
+            is_open_club: true
+          )
+        end
+        let!(:user_session) do
+          create(
+            :user_session,
+            user:,
+            session: another_session,
+            date: user_session_date,
+            state:
+          )
+        end
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'when the user has reserved session that is a skill session' do
         let!(:another_session) do
           create(
             :session,

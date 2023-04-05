@@ -111,6 +111,7 @@ class UserSession < ApplicationRecord
   scope :not_skill_sessions, -> { joins(:session).where(sessions: { skill_session: false }) }
   scope :not_open_club, -> { joins(:session).where(sessions: { is_open_club: false }) }
   scope :reserved_or_confirmed, -> { where(state: %i[reserved confirmed]) }
+  scope :normal_sessions, -> { not_open_club.not_skill_sessions }
 
   def in_cancellation_time?
     remaining_time > Session::CANCELLATION_PERIOD

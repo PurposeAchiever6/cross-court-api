@@ -323,8 +323,12 @@ class Session < ApplicationRecord
     else
       return false unless location_max_sessions_booked_per_day
 
-      booked_sessions =
-        user.user_sessions.not_skill_sessions.reserved_or_confirmed.by_date(date).count
+      booked_sessions = user.user_sessions
+                            .normal_sessions
+                            .reserved_or_confirmed
+                            .by_date(date)
+                            .count
+
       booked_sessions >= location_max_sessions_booked_per_day
     end
   end
