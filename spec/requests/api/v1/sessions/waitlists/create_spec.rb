@@ -32,7 +32,7 @@ describe 'POST api/v1/sessions/:session_id/waitlists' do
 
   it { is_expected.to be_successful }
   it { expect { subject }.to change(UserSessionWaitlist, :count).by(1) }
-  it { expect(response_body[:session][:waitlist][0][:id]).to eq(UserSessionWaitlist.last.id) }
+  it { expect(response_body[:waitlist_placement]).to eq(1) }
 
   context 'when user is not logged in' do
     let(:request_headers) { nil }

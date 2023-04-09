@@ -2,6 +2,8 @@ module Api
   module V1
     module Sessions
       class UserSessionsController < Api::V1::ApiUserController
+        skip_before_action :authenticate_user!, only: :index
+
         def index
           @user_sessions =
             Session.find(params[:session_id])

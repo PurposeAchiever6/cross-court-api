@@ -29,6 +29,7 @@ json = {
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
   skill_level: nil,
   reservations_count: session.not_canceled_reservations(session.start_time).count,
+  allow_back_to_back_reservations: session.allow_back_to_back_reservations,
   back_to_back_restricted: session.back_to_back_restricted?(session.start_time, current_user),
   allowed_products: render(
     partial: 'api/v1/sessions/allowed_products/info',
@@ -44,8 +45,7 @@ if session.skill_level
 end
 
 if json[:on_waitlist]
-  waitlist_index = session.waitlist(session.start_time).pending.map(&:user_id).index(user_id)
-  json[:waitlist_placement] = waitlist_index + 1
+  json[:waitlist_placement] = session.waitlist_placement(session.start_time, current_user)
 end
 
 json

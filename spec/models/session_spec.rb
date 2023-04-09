@@ -426,9 +426,8 @@ describe Session do
 
       context 'when the session is open club' do
         let(:open_club) { true }
-        let(:max_capacity) { nil }
 
-        it { is_expected.to eq(0) }
+        it { is_expected.to be_nil }
       end
     end
   end
