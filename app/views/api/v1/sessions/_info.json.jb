@@ -6,7 +6,6 @@ json = {
   cost_credits: session.cost_credits,
   theme_title: session.theme_title,
   theme_subheading: session.theme_subheading,
-  theme_sweat_level: session.theme_sweat_level,
   theme_description: session.theme_description,
   is_private: session.is_private,
   coming_soon: session.coming_soon,

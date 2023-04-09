@@ -11,7 +11,6 @@ json = {
   skill_session: session.skill_session,
   theme_title: session.theme_title,
   theme_subheading: session.theme_subheading,
-  theme_sweat_level: session.theme_sweat_level,
   theme_description: session.theme_description,
   all_skill_levels_allowed: session.all_skill_levels_allowed,
   guests_allowed: session.guests_allowed,

@@ -4,7 +4,7 @@ ActiveAdmin.register Session do
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
                 :members_only, :duration_minutes, :max_capacity, :max_first_timers,
-                :theme_title, :theme_subheading, :theme_sweat_level, :theme_description,
+                :theme_title, :theme_subheading, :theme_description,
                 :all_skill_levels_allowed, :allow_back_to_back_reservations, :cc_cash_earned,
                 :default_referee_id, :default_sem_id, :default_coach_id, :guests_allowed,
                 :guests_allowed_per_user, :cost_credits,
@@ -149,7 +149,6 @@ ActiveAdmin.register Session do
     f.inputs 'Extra information' do
       f.input :theme_title
       f.input :theme_subheading
-      f.input :theme_sweat_level
       f.input :theme_description
     end
 
@@ -254,7 +253,6 @@ ActiveAdmin.register Session do
       table_for session do
         column :theme_title
         column :theme_subheading
-        column :theme_sweat_level
         column :theme_description
       end
     end
