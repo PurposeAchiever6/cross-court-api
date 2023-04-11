@@ -1,4 +1,4 @@
-{
+json = {
   id: session.id,
   start_time: session.start_time.iso8601,
   is_private: session.is_private,
@@ -11,5 +11,17 @@
   time: session.time.iso8601,
   duration_minutes: session.duration_minutes,
   cost_credits: session.cost_credits,
-  location: render(partial: 'api/v1/locations/info', locals: { location: session.location })
+  location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
+  skill_level: nil,
+  theme_title: session.theme_title,
+  theme_description: session.theme_description
 }
+
+if session.skill_level
+  json[:skill_level] = render(
+    partial: 'api/v1/skill_levels/info',
+    locals: { skill_level: session.skill_level }
+  )
+end
+
+json

@@ -191,7 +191,7 @@ ActiveAdmin.register User do
           user.free_session_state&.humanize
         end
         row :skill_rating
-        row :bio if user.employee?
+        row :bio
         row :competitive_basketball_activity
         row :current_basketball_activity
         row :position do

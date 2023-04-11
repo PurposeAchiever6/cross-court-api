@@ -20,5 +20,6 @@
   product: render(
     partial: 'api/v1/products/info',
     locals: { product: subscription.product }
-  )
+  ),
+  created_at: subscription.created_at.iso8601
 }
