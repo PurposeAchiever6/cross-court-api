@@ -37,7 +37,7 @@ module Api
           date = params[:date]
           return Time.zone.today unless date
 
-          Date.strptime(date, '%m/%d/%Y')
+          Date.strptime(date, '%d/%m/%Y')
         end
 
         def shooting_machines
