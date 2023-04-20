@@ -249,8 +249,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_09_232540) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "skill_session_credits", default: 0
     t.integer "max_rollover_credits"
+    t.integer "skill_session_credits", default: 0
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.integer "free_pauses_per_year", default: 0
@@ -591,14 +591,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_09_232540) do
     t.decimal "cc_cash", default: "0.0"
     t.string "source"
     t.boolean "reserve_team", default: false
-    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
+    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.integer "credits_without_expiration", default: 0
     t.string "bio"
+    t.integer "credits_without_expiration", default: 0
     t.integer "scouting_credits", default: 0
     t.integer "weight"
     t.integer "height"
