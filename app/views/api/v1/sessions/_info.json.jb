@@ -80,4 +80,6 @@ if session.skill_level
   )
 end
 
+json[:waitlist_placement] = session.waitlist_placement(date, current_user) if json[:on_waitlist]
+
 json
