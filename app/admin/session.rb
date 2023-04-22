@@ -119,13 +119,14 @@ ActiveAdmin.register Session do
       f.input :cost_credits
       f.input :max_capacity
       f.input :max_first_timers,
-              hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
-                    'users who can book.'
+              hint: 'Number of first timers users allowed to book this session. If not set, ' \
+                    'it means there\'s no restriction.'
       f.input :guests_allowed,
               hint: 'Number of guests allowed per session. If not set, ' \
                     'it means that guests are not allowed for this session.'
       f.input :guests_allowed_per_user,
-              hint: 'Number of guests allowed per user for this session.'
+              hint: 'Number of guests allowed per user for this session. If not set, ' \
+                    'it means there\'s no restriction.'
       f.input :cc_cash_earned
       f.input :default_referee, collection: User.referees
       f.input :default_sem, collection: User.sems

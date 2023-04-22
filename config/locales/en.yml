@@ -258,7 +258,7 @@ en:
           When you arrive, please show this access code to our Experience Manager behind the desk:
           %{access_code}.
         removed: >
-          Hey %{guest_name} %{user_first_name} %{user_last_name} has removed you as a guest for
+          Hey %{guest_name}, %{user_first_name} %{user_last_name} has removed you as a guest for
           their Crosscourt session at %{location} %{date} at %{time}.
       late_arrival_warning: >
         Hey %{name}. You were checked into Crosscourt beyond %{late_arrival_minutes} minutes after
