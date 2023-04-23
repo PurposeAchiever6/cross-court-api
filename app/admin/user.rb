@@ -112,7 +112,7 @@ ActiveAdmin.register User do
       f.input :private_access
       f.input :reserve_team
       f.input :flagged
-      f.input :bio
+      f.input :bio, as: :text
       f.input :weight
       f.input :height
       f.input :competitive_basketball_activity
