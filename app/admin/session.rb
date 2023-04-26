@@ -359,7 +359,9 @@ ActiveAdmin.register Session do
       end
 
       panel 'Create User Session Manually' do
-        users_for_select = User.sorted_by_full_name.map { |user| [user.full_name, user.id] }
+        users_for_select = User.not_signup_state_created
+                               .sorted_by_full_name
+                               .map { |user| [user.full_name, user.id] }
 
         render partial: 'create_user_session', locals: {
           date:,

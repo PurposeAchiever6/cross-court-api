@@ -81,7 +81,10 @@ module Api
         params.require(:user).permit(
           :first_name,
           :last_name,
+          :password,
+          :password_confirmation,
           :phone_number,
+          :zipcode,
           :instagram_username,
           :birthday,
           :gender,

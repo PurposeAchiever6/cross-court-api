@@ -62,7 +62,8 @@ json = {
   apply_cc_cash_to_subscription: user.apply_cc_cash_to_subscription,
   new_member: user.new_member?,
   bio: user.bio,
-  age: user.age
+  age: user.age,
+  signup_state: user.signup_state
 }
 
 json[:image_url] = polymorphic_url(user.image) if user.image.attached?

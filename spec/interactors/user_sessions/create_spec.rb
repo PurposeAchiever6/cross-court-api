@@ -390,7 +390,7 @@ describe UserSessions::Create do
     end
 
     context 'when reservation has a referral' do
-      let!(:referral_user) { create(:user) }
+      let!(:referral_user) { create(:user, referral_code: 'REFERRALCODE') }
 
       before { subject_args.merge!(referral_code: referral_user.referral_code) }
 

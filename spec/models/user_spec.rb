@@ -43,14 +43,14 @@
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
-#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  bio                                     :string
 #  credits_without_expiration              :integer          default(0)
+#  bio                                     :string
 #  scouting_credits                        :integer          default(0)
 #  weight                                  :integer
 #  height                                  :integer
@@ -60,6 +60,7 @@
 #  goals                                   :string           is an Array
 #  main_goal                               :string
 #  apply_cc_cash_to_subscription           :boolean          default(FALSE)
+#  signup_state                            :integer          default("created")
 #
 # Indexes
 #
@@ -99,50 +100,35 @@ describe User do
   end
 
   describe '#create' do
-    let(:first_name) { 'John' }
-    let(:last_name) { 'Travolta' }
-    let(:user_params) { { first_name:, last_name: } }
+    let(:email) { 'email@sample.com' }
+    let(:user_params) { { email: } }
 
-    subject { create(:user, user_params) }
+    subject { User.create!(user_params) }
 
-    it { expect(subject.referral_code).to eq('JOHNTRAVOLTA') }
+    it { expect(subject.persisted?).to eq(true) }
+    it { expect(subject.signup_state).to eq('created') }
 
-    it { expect { subject.referral_code }.not_to change(PromoCode, :count) }
+    context 'when a failure occurs and needs to rollback' do
+      let(:stripe_id) { 'stripe-id' }
+      let(:user_params) { { email:, stripe_id: } }
 
-    context 'when already exists a user with same full name' do
-      before { create(:user, user_params) }
-
-      it { expect(subject.referral_code).to eq('JOHNTRAVOLTA1') }
-
-      context 'when exists another user with same full name' do
-        before { create(:user, user_params) }
-
-        it { expect(subject.referral_code).to eq('JOHNTRAVOLTA2') }
+      subject do
+        ActiveRecord::Base.transaction do
+          User.create!(user_params)
+          raise 'error'
+        end
       end
-    end
 
-    context 'when exists at least one recurring product in the system' do
-      let!(:product) { create(:product, product_type: :recurring) }
+      it 'calls Stripe for deleting customer' do
+        expect(Stripe::Customer).to receive(:delete)
+        subject rescue nil
+      end
 
-      it { expect { subject.referral_code }.to change(PromoCode, :count).by(1) }
+      context 'when user does not have a stripe id associated' do
+        let(:stripe_id) { nil }
 
-      context 'when a failure occurs and needs to rollback' do
-        before do
-          allow(Stripe::Customer).to receive(:delete)
-          allow(Stripe::Coupon).to receive(:delete)
-        end
-
-        subject do
-          ActiveRecord::Base.transaction do
-            create(:user, user_params)
-            raise 'error'
-          end
-        end
-
-        it { expect { subject.referral_code rescue nil }.not_to change(PromoCode, :count) }
-
-        it 'calls Stripe for deleting coupon' do
-          expect(Stripe::Coupon).to receive(:delete)
+        it 'does not call Stripe for deleting customer' do
+          expect(Stripe::Customer).not_to receive(:delete)
           subject rescue nil
         end
       end
@@ -150,25 +136,53 @@ describe User do
   end
 
   describe '#update' do
-    let(:user) { create(:user) }
-    let(:update_params) { {} }
+    let!(:user) { create(:user, referral_code:) }
+
+    let!(:referral_code) { nil }
+    let(:first_name) { 'John' }
+    let(:last_name) { 'Travolta' }
+    let(:update_params) { { first_name:, last_name: } }
 
     subject { user.update(update_params) }
 
-    context 'when updating any sonar or active campaign attribute' do
-      let(:update_params) { { first_name: 'Other' } }
+    it { expect { subject }.to change { user.reload.referral_code }.to('JOHNTRAVOLTA') }
 
-      it 'enques ActiveCampaign CreateUpdateContactJob' do
-        expect {
-          subject
-        }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactJob).on_queue('default')
-      end
+    it { expect { subject }.not_to change(PromoCode, :count) }
 
-      it 'enques Sonar CreateUpdateCustomerJob' do
-        expect {
-          subject
-        }.to have_enqueued_job(::Sonar::CreateUpdateCustomerJob).on_queue('default')
+    it 'enques ActiveCampaign CreateUpdateContactJob' do
+      expect {
+        subject
+      }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactJob).on_queue('default')
+    end
+
+    it 'enques Sonar CreateUpdateCustomerJob' do
+      expect {
+        subject
+      }.to have_enqueued_job(::Sonar::CreateUpdateCustomerJob).on_queue('default')
+    end
+
+    context 'when user already has a referral_code' do
+      let!(:referral_code) { 'REFERRALCODE' }
+
+      it { expect { subject }.not_to change { user.reload.referral_code } }
+    end
+
+    context 'when already exists a user with same referral_code' do
+      before { create(:user, referral_code: 'JOHNTRAVOLTA') }
+
+      it { expect { subject }.to change { user.reload.referral_code }.to('JOHNTRAVOLTA1') }
+
+      context 'when exists another user with same referral_code' do
+        before { create(:user, referral_code: 'JOHNTRAVOLTA1') }
+
+        it { expect { subject }.to change { user.reload.referral_code }.to('JOHNTRAVOLTA2') }
       end
+    end
+
+    context 'when exists at least one recurring product in the system' do
+      let!(:product) { create(:product, product_type: :recurring) }
+
+      it { expect { subject }.to change(PromoCode, :count).by(1) }
     end
   end
 
@@ -241,13 +255,15 @@ describe User do
 
     it { is_expected.to eq('ELONMUSK') }
 
-    context 'when already exists a user with the same full name' do
-      let!(:other_user) { create(:user, first_name:, last_name:) }
+    context 'when already exists a user with the same referral_code' do
+      let!(:other_user) { create(:user, referral_code: 'ELONMUSK') }
 
       it { is_expected.to eq('ELONMUSK1') }
 
-      context 'when already exists multiple users with the same full name' do
-        let!(:other_users) { create_list(:user, 5, first_name:, last_name:) }
+      context 'when already exists multiple users with consecutive referral_codes' do
+        5.times do |i|
+          let!("user_#{i + 1}") { create(:user, referral_code: "ELONMUSK#{i + 1}") }
+        end
 
         it { is_expected.to eq('ELONMUSK6') }
       end

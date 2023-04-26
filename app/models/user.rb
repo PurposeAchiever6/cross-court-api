@@ -43,14 +43,14 @@
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
-#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  bio                                     :string
 #  credits_without_expiration              :integer          default(0)
+#  bio                                     :string
 #  scouting_credits                        :integer          default(0)
 #  weight                                  :integer
 #  height                                  :integer
@@ -60,6 +60,7 @@
 #  goals                                   :string           is an Array
 #  main_goal                               :string
 #  apply_cc_cash_to_subscription           :boolean          default(FALSE)
+#  signup_state                            :integer          default("created")
 #
 # Indexes
 #
@@ -96,6 +97,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable
+
+  enum signup_state: {
+    created: 0,
+    personal_details: 1,
+    completed: 2
+  }, _prefix: true
 
   enum free_session_state: {
     not_claimed: 0,
@@ -171,18 +178,31 @@ class User < ApplicationRecord
   has_one_attached :image, dependent: :destroy
 
   validates :uid, uniqueness: { scope: :provider }
+  validates :password, confirmation: true
   validates :credits, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :subscription_credits, presence: true, numericality: { only_integer: true }
   validates :subscription_skill_session_credits,
             presence: true,
             numericality: { only_integer: true }
   validates :free_session_state, presence: true
-  validates :zipcode, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
-  validates :phone_number, uniqueness: true
+  validates :first_name,
+            presence: true,
+            unless: :signup_state_created?
+  validates :last_name,
+            presence: true,
+            unless: :signup_state_created?
+  validates :phone_number,
+            presence: true,
+            uniqueness: true,
+            unless: :signup_state_created?
+  validates :zipcode,
+            presence: true,
+            length: { maximum: 5 },
+            numericality: { only_integer: true },
+            unless: :signup_state_created?
   validates :skill_rating,
             numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5 },
             allow_nil: true
-  validates :gender, presence: true, on: :create
 
   scope :referees, -> { where(is_referee: true) }
   scope :sems, -> { where(is_sem: true) }
@@ -195,13 +215,10 @@ class User < ApplicationRecord
 
   before_validation :init_uid
   before_save :normalize_instagram_username
-  after_create :create_referral_code
+  after_update :update_external_records, :create_referral_code
   after_destroy :delete_stripe_customer,
                 :delete_stripe_promo_code
-  after_commit :update_external_records, on: :update
-  after_rollback :delete_stripe_customer,
-                 :delete_stripe_promo_code,
-                 on: :create
+  after_rollback :delete_stripe_customer, on: :create
 
   delegate :current_period_start,
            :current_period_end,
@@ -343,6 +360,10 @@ class User < ApplicationRecord
 
   private
 
+  def password_required?
+    false # overwrite devise requirement
+  end
+
   def uses_email?
     provider == 'email' || email.present?
   end
@@ -351,7 +372,13 @@ class User < ApplicationRecord
     self.uid = email if uid.blank? && provider == 'email'
   end
 
+  def create_referral_code?
+    !signup_state_created? && !referral_code
+  end
+
   def create_referral_code
+    return unless create_referral_code?
+
     referral_code = generate_referral_code
     update!(referral_code:)
 
@@ -400,7 +427,6 @@ class User < ApplicationRecord
 
   def update_external_records
     saved_changes_keys = saved_changes.keys
-    return unless persisted?
 
     if ActiveCampaignService::CONTACT_ATTRS.any? { |a| saved_changes_keys.include?(a) }
       ::ActiveCampaign::CreateUpdateContactJob.perform_later(id)
