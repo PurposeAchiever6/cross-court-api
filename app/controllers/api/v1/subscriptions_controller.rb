@@ -117,7 +117,7 @@ module Api
       end
 
       def subscription_cancellation_request_params
-        params.permit(:experiencie_rate, :service_rate, :recommend_rate, :reason)
+        params.permit(:reason)
       end
     end
   end
