@@ -191,9 +191,9 @@ class User < ApplicationRecord
   validates :last_name,
             presence: true,
             unless: :signup_state_created?
+  validates :phone_number, uniqueness: true, allow_nil: true
   validates :phone_number,
             presence: true,
-            uniqueness: true,
             unless: :signup_state_created?
   validates :zipcode,
             presence: true,

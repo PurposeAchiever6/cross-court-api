@@ -79,7 +79,9 @@ module Api
 
       def render_record_invalid(exception)
         logger.info(exception) # for logging
-        render json: { errors: exception.record.errors.as_json }, status: :bad_request
+        errors = exception.record.errors
+        render json: { errors: { full_messages: errors.full_messages }.merge(errors.to_hash) },
+               status: :bad_request
       end
 
       def render_parameter_missing(exception)

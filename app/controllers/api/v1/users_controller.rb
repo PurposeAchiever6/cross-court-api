@@ -89,7 +89,8 @@ module Api
           :birthday,
           :gender,
           :apply_cc_cash_to_subscription,
-          :bio
+          :bio,
+          :signup_state
         )
       end
 
