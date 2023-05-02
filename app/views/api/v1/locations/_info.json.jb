@@ -8,7 +8,8 @@ json = {
   zipcode: location.zipcode,
   description: location.description,
   state: location.state,
-  time_zone: location.time_zone
+  time_zone: location.time_zone,
+  late_arrival_minutes: location.late_arrival_minutes
 }
 
 if location.images.attached?
