@@ -33,7 +33,7 @@ module Api
       private
 
       def sign_up_params
-        params.require(:user).permit(:email)
+        params.require(:user).permit(:email, :source)
       end
 
       def render_create_success
