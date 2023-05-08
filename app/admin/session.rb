@@ -19,7 +19,7 @@ ActiveAdmin.register Session do
   filter :start_time
   filter :end_time
   filter :is_private
-  filter :is_open_club
+  filter :is_open_club, label: 'Is Office Hours'
   filter :coming_soon
   filter :women_only
   filter :skill_session
@@ -41,13 +41,13 @@ ActiveAdmin.register Session do
   end
 
   action_item :cancel, only: :show, priority: 1, if: -> { params[:date].present? } do
-    link_to 'Cancel Session With Open Club',
+    link_to 'Cancel Session With Office Hours',
             cancel_admin_session_path(session.id, date: params[:date], with_open_club: true),
             method: :post,
             data: { disable_with: 'Loading...',
                     confirm: 'Are you sure you want to cancel this session? This will make ' \
                              'this session unavailable for this date but instead create ' \
-                             'an open club session for this same date and time. It will also ' \
+                             'an office hours session for this same date and time. It will also ' \
                              'refund all signed up users their credits back, and notify them ' \
                              'via SMS.' }
   end
@@ -79,7 +79,7 @@ ActiveAdmin.register Session do
     end
     number_column :cc_cash_earned, as: :currency
     column :active, &:active?
-    toggle_bool_column :is_open_club
+    toggle_bool_column 'Is Office Hours', :is_open_club
     toggle_bool_column :skill_session
     toggle_bool_column :women_only
     toggle_bool_column :members_only
@@ -93,7 +93,7 @@ ActiveAdmin.register Session do
     f.inputs 'Session Details' do
       f.input :location
       f.input :skill_level
-      f.input :is_open_club
+      f.input :is_open_club, label: 'Is Office Hours'
       f.input :skill_session
       f.input :women_only
       f.input :all_skill_levels_allowed
@@ -200,7 +200,7 @@ ActiveAdmin.register Session do
         session.skill_level_name || 'N/A'
       end
 
-      row :is_open_club
+      row 'Is Office Hours', &:is_open_club
       row :skill_session
       row :women_only
       row :members_only
@@ -593,7 +593,7 @@ ActiveAdmin.register Session do
     )
 
     notice = if with_open_club
-               'Session canceled and open club created successfully'
+               'Session canceled and office hours created successfully'
              else
                'Session canceled successfully'
              end
