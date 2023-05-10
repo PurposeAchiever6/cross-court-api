@@ -32,8 +32,11 @@ class PromoCode < ApplicationRecord
 
   has_paper_trail if: ->(promo_code) { promo_code.general? }
 
-  has_many :user_promo_codes, dependent: :destroy
+  belongs_to :user, optional: true
 
+  has_one :product, dependent: :nullify
+
+  has_many :user_promo_codes, dependent: :destroy
   has_many :products_promo_codes, dependent: :destroy
   has_many :products, through: :products_promo_codes
 
@@ -64,7 +67,9 @@ class PromoCode < ApplicationRecord
     cc_cash: 'cc_cash'
   }
 
-  belongs_to :user, optional: true
+  scope :for_product, (lambda do |product|
+    joins(:products_promo_codes).where(products_promo_codes: { product: })
+  end)
 
   def to_s
     "#{code} (#{discount}#{percentage_discount? ? '% off' : '$ off'})"

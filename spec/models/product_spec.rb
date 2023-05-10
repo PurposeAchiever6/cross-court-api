@@ -29,11 +29,13 @@
 #  free_towel_rental                      :boolean          default(FALSE)
 #  description                            :text
 #  waitlist_priority                      :string
+#  promo_code_id                          :bigint
 #
 # Indexes
 #
-#  index_products_on_deleted_at    (deleted_at)
-#  index_products_on_product_type  (product_type)
+#  index_products_on_deleted_at     (deleted_at)
+#  index_products_on_product_type   (product_type)
+#  index_products_on_promo_code_id  (promo_code_id)
 #
 
 require 'rails_helper'

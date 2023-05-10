@@ -29,11 +29,13 @@
 #  free_towel_rental                      :boolean          default(FALSE)
 #  description                            :text
 #  waitlist_priority                      :string
+#  promo_code_id                          :bigint
 #
 # Indexes
 #
-#  index_products_on_deleted_at    (deleted_at)
-#  index_products_on_product_type  (product_type)
+#  index_products_on_deleted_at     (deleted_at)
+#  index_products_on_product_type   (product_type)
+#  index_products_on_promo_code_id  (promo_code_id)
 #
 
 class Product < ApplicationRecord
@@ -44,6 +46,8 @@ class Product < ApplicationRecord
 
   enum product_type: { one_time: 0, recurring: 1 }
   enum available_for: { everyone: 0, reserve_team: 1 }
+
+  belongs_to :promo_code, optional: true
 
   has_one_attached :image
   has_many :payments, as: :chargeable, dependent: :nullify

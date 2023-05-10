@@ -5,7 +5,7 @@ ActiveAdmin.register Product do
                 :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
                 :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
                 :free_pauses_per_year, :highlighted, :highlights, :free_jersey_rental,
-                :free_towel_rental, :description, :waitlist_priority
+                :free_towel_rental, :description, :waitlist_priority, :promo_code_id
 
   filter :name
   filter :product_type
@@ -13,6 +13,8 @@ ActiveAdmin.register Product do
 
   scope :all, default: true
   scope 'Deleted', :only_deleted
+
+  includes :promo_code
 
   action_item :new_price, only: :show, if: -> { product.recurring? } do
     link_to 'Update Pricing',
@@ -47,6 +49,9 @@ ActiveAdmin.register Product do
     column :order_number
     column :product_type do |product|
       product.product_type.humanize
+    end
+    column :promo_code do |product|
+      product.recurring? ? product.promo_code : 'N/A'
     end
     tag_column :season_pass
     tag_column :scouting
@@ -115,6 +120,13 @@ ActiveAdmin.register Product do
       f.input :referral_cc_cash, label: 'Referral CC cash'
       f.input :label
       f.input :order_number
+
+      if persisted
+        f.input :promo_code,
+                collection: PromoCode.general.for_product(product).order(:code),
+                hint: 'Promo code used for the signup onboarding flow'
+      end
+
       f.input :image, as: :file
       f.input :description
     end
@@ -160,6 +172,9 @@ ActiveAdmin.register Product do
       row :order_number
       row :memberships_count do |product|
         product.recurring? ? product.memberships_count : 'N/A'
+      end
+      row :promo_code do |product|
+        product.recurring? ? product.promo_code : 'N/A'
       end
       row :image do |product|
         image_tag polymorphic_url(product.image), class: 'max-w-200' if product.image.attached?

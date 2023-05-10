@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_25_194722) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_09_191137) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -260,8 +260,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_194722) do
     t.boolean "free_towel_rental", default: false
     t.text "description"
     t.string "waitlist_priority"
+    t.bigint "promo_code_id"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
+    t.index ["promo_code_id"], name: "index_products_on_promo_code_id"
   end
 
   create_table "products_promo_codes", force: :cascade do |t|

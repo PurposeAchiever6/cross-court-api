@@ -4,7 +4,7 @@ module Api
       before_action :check_promo_code
 
       def show
-        render json: { price: promo_code.apply_discount(price) }, status: :ok
+        @discounted_price = promo_code.apply_discount(price)
       end
 
       private

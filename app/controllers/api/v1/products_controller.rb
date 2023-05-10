@@ -4,7 +4,7 @@ module Api
       def index
         @products = Product.for_user(current_user)
                            .order(:order_number)
-                           .includes(image_attachment: :blob)
+                           .includes(:promo_code, image_attachment: :blob)
       end
     end
   end

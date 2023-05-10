@@ -9,6 +9,7 @@ module UserSessions
         date = context.date
         from_waitlist = context.from_waitlist
         scouting = context.scouting
+        referral_code = context.referral_code
 
         raise SessionIsOutOfSkillLevelException unless session.at_session_level?(user)
 
@@ -20,7 +21,7 @@ module UserSessions
           raise ReserveTeamNotAllowedException
         end
 
-        referral = User.find_by(referral_code: context.referral_code)
+        referral = User.find_by(referral_code:) if referral_code
 
         user_session = UserSession.create!(
           session:,

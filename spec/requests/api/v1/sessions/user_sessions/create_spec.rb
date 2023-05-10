@@ -266,7 +266,7 @@ describe 'POST api/v1/sessions/:session_id/user_sessions' do
   end
 
   context 'when user has been referred by other user' do
-    let!(:other_user) { create(:user) }
+    let!(:other_user) { create(:user, referral_code: 'other-user-referral-code') }
 
     before { params[:referral_code] = other_user.referral_code }
 

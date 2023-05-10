@@ -1,0 +1,9 @@
+{
+  id: promo_code.id,
+  type: promo_code.type,
+  code: promo_code.code,
+  discount: promo_code.discount,
+  duration: promo_code.duration,
+  duration_in_months: promo_code.duration_in_months,
+  discounted_price:
+}

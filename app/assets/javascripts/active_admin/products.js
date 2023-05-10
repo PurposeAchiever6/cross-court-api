@@ -45,6 +45,7 @@ $(document).ready(function () {
         $("#product_free_jersey_rental_input").show();
         $("#product_free_towel_rental_input").show();
         $("#product_waitlist_priority_input").show();
+        $("#product_promo_code_input").show();
       } else {
         $("#product_season_pass_input").show();
         $("#product_price_for_members_input").show();
@@ -59,6 +60,7 @@ $(document).ready(function () {
         $("#product_free_jersey_rental_input").hide();
         $("#product_free_towel_rental_input").hide();
         $("#product_waitlist_priority_input").hide();
+        $("#product_promo_code_input").hide();
       }
     })
     .change();
