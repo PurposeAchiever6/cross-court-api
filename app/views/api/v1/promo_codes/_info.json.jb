@@ -5,5 +5,8 @@
   discount: promo_code.discount,
   duration: promo_code.duration,
   duration_in_months: promo_code.duration_in_months,
-  discounted_price:
+  only_for_new_members: promo_code.only_for_new_members,
+  user_max_checked_in_sessions: promo_code.user_max_checked_in_sessions,
+  discounted_price:,
+  valid_for_user:
 }

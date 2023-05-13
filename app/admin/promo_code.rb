@@ -4,7 +4,7 @@ ActiveAdmin.register PromoCode do
   config.batch_actions = false
   permit_params :type, :code, :discount, :expiration_date, :duration,
                 :duration_in_months, :max_redemptions, :max_redemptions_by_user,
-                :user_max_checked_in_sessions, product_ids: []
+                :user_max_checked_in_sessions, :only_for_new_members, product_ids: []
 
   includes :products
 
@@ -28,6 +28,7 @@ ActiveAdmin.register PromoCode do
     column :max_redemptions
     column :max_redemptions_by_user
     column :user_max_checked_in_sessions
+    column :only_for_new_members
 
     actions
   end
@@ -49,6 +50,7 @@ ActiveAdmin.register PromoCode do
       row :max_redemptions
       row :max_redemptions_by_user
       row :user_max_checked_in_sessions
+      row :only_for_new_members
       row :stripe_coupon_id
       row :stripe_promo_code_id
     end
@@ -71,6 +73,11 @@ ActiveAdmin.register PromoCode do
               input_html: { disabled: }
       f.input :code, input_html: { disabled: }
       f.input :discount, input_html: { disabled: }
+      f.input :only_for_new_members,
+              as: :select,
+              label: 'Only valid for new members',
+              hint: 'If true, this promo code will only be valid for those ' \
+                    'users that have never been a Crosscourt member before.'
       f.input :max_redemptions,
               hint: 'Number of times the code can be used across all users before it’s no longer ' \
                     'valid. If not set, it can be used with no restrictions.'

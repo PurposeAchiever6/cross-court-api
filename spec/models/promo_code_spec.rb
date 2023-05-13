@@ -19,6 +19,7 @@
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
 #  use                          :string           default("general")
+#  only_for_new_members         :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -40,6 +41,7 @@ describe UserPromoCode do
   let(:times_used) { 0 }
   let(:use) { 'general' }
   let(:promo_code_user) { nil }
+  let(:only_for_new_members) { false }
 
   let(:promo_code) do
     create(
@@ -51,7 +53,8 @@ describe UserPromoCode do
       user_max_checked_in_sessions:,
       times_used:,
       use:,
-      user: promo_code_user
+      user: promo_code_user,
+      only_for_new_members:
     )
   end
 
@@ -113,12 +116,6 @@ describe UserPromoCode do
 
         it { is_expected.to eq(false) }
       end
-
-      context 'when user is not a new member of crosscourt' do
-        let!(:subscription) { create(:subscription, user:) }
-
-        it { is_expected.to eq(false) }
-      end
     end
 
     context 'when promo code has a restriction on user checked in sessions' do
@@ -130,6 +127,24 @@ describe UserPromoCode do
         let!(:user_session) { create(:user_session, user:, checked_in: true) }
 
         it { is_expected.to eq(false) }
+      end
+    end
+
+    context 'when promo code is only valid for new members' do
+      let(:only_for_new_members) { true }
+
+      it { is_expected.to eq(true) }
+
+      context 'when user is a member' do
+        let!(:subscription) { create(:subscription, user:) }
+
+        it { is_expected.to eq(false) }
+
+        context 'when the user is not a member but has been' do
+          let!(:subscription) { create(:subscription, user:, status: :canceled) }
+
+          it { is_expected.to eq(false) }
+        end
       end
     end
   end

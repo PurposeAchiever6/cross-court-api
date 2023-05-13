@@ -183,6 +183,13 @@ describe User do
       let!(:product) { create(:product, product_type: :recurring) }
 
       it { expect { subject }.to change(PromoCode, :count).by(1) }
+
+      it 'Creates the referral promo code with right data' do
+        subject
+        expect(PromoCode.last.use).to eq('referral')
+        expect(PromoCode.last.code).to eq('JOHNTRAVOLTA')
+        expect(PromoCode.last.only_for_new_members).to eq(true)
+      end
     end
   end
 

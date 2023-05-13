@@ -19,6 +19,7 @@
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
 #  use                          :string           default("general")
+#  only_for_new_members         :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -84,6 +85,8 @@ class PromoCode < ApplicationRecord
   end
 
   def still_valid?(user, product)
+    return false unless user
+
     validate!(user, product)
     true
   rescue PromoCodeInvalidException
@@ -146,7 +149,7 @@ class PromoCode < ApplicationRecord
       raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.own_usage')
     end
 
-    if referral? && user.subscriptions.count.positive?
+    if only_for_new_members? && !user.never_been_a_member?
       raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.no_first_subscription')
     end
   end

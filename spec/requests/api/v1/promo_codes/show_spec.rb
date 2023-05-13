@@ -14,7 +14,8 @@ describe 'GET api/v1/promo_code' do
       user_max_checked_in_sessions:,
       times_used:,
       use:,
-      user: promo_code_user
+      user: promo_code_user,
+      only_for_new_members:
     )
   end
 
@@ -27,6 +28,7 @@ describe 'GET api/v1/promo_code' do
   let(:times_used) { 0 }
   let(:use) { 'general' }
   let(:promo_code_user) { nil }
+  let(:only_for_new_members) { false }
   let(:price) { 100 }
 
   let(:params) { { promo_code: code, product_id: product.id } }
@@ -117,14 +119,6 @@ describe 'GET api/v1/promo_code' do
         expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.own_usage'))
       end
     end
-
-    context 'when user is not a new member of crosscourt' do
-      let!(:subscription) { create(:subscription, user:) }
-
-      it 'returns promo code no first subscription message' do
-        expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.no_first_subscription'))
-      end
-    end
   end
 
   context 'when promo code has a restriction on user checked in sessions' do
@@ -146,6 +140,32 @@ describe 'GET api/v1/promo_code' do
             user_max_checked_in_sessions: (user_max_checked_in_sessions + 1).ordinalize
           )
         )
+      end
+    end
+  end
+
+  context 'when promo code is only valid for new members' do
+    let(:only_for_new_members) { true }
+
+    it 'returns the price with the promo_code applied' do
+      expect(
+        response_body[:promo_code][:discounted_price].to_i
+      ).to eq(promo_code.apply_discount(price))
+    end
+
+    context 'when user is a member' do
+      let!(:subscription) { create(:subscription, user:) }
+
+      it 'returns promo code no first subscription error message' do
+        expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.no_first_subscription'))
+      end
+
+      context 'when the user is not a member but has been' do
+        let!(:subscription) { create(:subscription, user:, status: :canceled) }
+
+        it 'returns promo code no first subscription error message' do
+          expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.no_first_subscription'))
+        end
       end
     end
   end

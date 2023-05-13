@@ -1,6 +1,6 @@
 {
   promo_code: render(
     partial: 'info',
-    locals: { promo_code: @promo_code, discounted_price: @discounted_price }
+    locals: { promo_code: @promo_code, discounted_price: @discounted_price, valid_for_user: true }
   )
 }

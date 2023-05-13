@@ -338,6 +338,10 @@ class User < ApplicationRecord
     "https://www.instagram.com/#{instagram_username[1..]}"
   end
 
+  def never_been_a_member?
+    subscriptions.count.zero?
+  end
+
   def first_subscription?
     subscriptions.count == 1
   end
@@ -394,7 +398,7 @@ class User < ApplicationRecord
       duration: :repeating,
       duration_in_months: 1,
       max_redemptions_by_user: 1,
-      user_max_checked_in_sessions: 0,
+      only_for_new_members: true,
       products: recurring_products
     }
 

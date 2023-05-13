@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_09_191137) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_11_223939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -290,6 +290,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_09_191137) do
     t.bigint "user_id"
     t.integer "user_max_checked_in_sessions"
     t.string "use", default: "general"
+    t.boolean "only_for_new_members", default: false
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["use"], name: "index_promo_codes_on_use"
     t.index ["user_id"], name: "index_promo_codes_on_user_id"

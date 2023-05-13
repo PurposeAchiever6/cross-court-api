@@ -30,7 +30,8 @@ if promo_code
   json[:promo_code] = render(
     partial: 'api/v1/promo_codes/info',
     locals: { promo_code:,
-              discounted_price: promo_code.apply_discount(price_for_user) }
+              discounted_price: promo_code.apply_discount(price_for_user),
+              valid_for_user: promo_code.still_valid?(current_user, product) }
   )
 end
 
