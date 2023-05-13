@@ -16,6 +16,7 @@ module ActiveCampaign
       ORDER_PRICE = 'Order Price'.freeze
       PRODUCT_NAME = 'Product Name'.freeze
       PURCHASE_NAME = 'Purchase Name'.freeze
+      RECURRING = 'Recurring'.freeze
       REFERRED_FULL_NAME = 'Referred Full Name'.freeze
       SESSION_DATE = 'Session Date'.freeze
       SESSION_LOCATION_ADDRESS = 'Session Location Address'.freeze

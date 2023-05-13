@@ -56,7 +56,7 @@ class ActiveCampaignService
     execute_request(:get, url)
   end
 
-  def create_deal(event, user, args = [])
+  def create_deal(event, user, args = {})
     payload = deal_payload(event, user, args)
     execute_request(:post, '/deals', payload)
   end
@@ -230,6 +230,10 @@ class ActiveCampaignService
           {
             customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::PURCHASE_NAME],
             fieldValue: payment.description
+          },
+          {
+            customFieldId: mapped_deal_fields[::ActiveCampaign::Deal::Field::RECURRING],
+            fieldValue: payment.chargeable&.recurring?&.to_s || 'true'
           }
         ]
       when ::ActiveCampaign::Deal::Event::CANCELLED_MEMBERSHIP
