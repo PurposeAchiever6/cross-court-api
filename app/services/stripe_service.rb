@@ -268,7 +268,7 @@ class StripeService
       subscription_billing_cycle_anchor: 'now'
     }.compact
 
-    params[:coupon] = promo_code.stripe_coupon_id if promo_code
+    params[:coupon] = promo_code ? promo_code.stripe_coupon_id : ''
 
     Stripe::Invoice.upcoming(params)
   end

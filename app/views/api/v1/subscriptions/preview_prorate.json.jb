@@ -1,4 +1,6 @@
-render(
-  partial: '/api/v1/invoices/prorate',
-  locals: { invoice: @invoice, proration_date: @proration_date }
-)
+{
+  prorate: render(
+    partial: '/api/v1/invoices/prorate',
+    locals: { invoice: @invoice, proration_date: @proration_date }
+  )
+}
