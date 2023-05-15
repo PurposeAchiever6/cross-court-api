@@ -194,7 +194,6 @@ class StripeService
     Stripe::Product.create(
       name: product_attrs[:name],
       metadata: {
-        credits: product_attrs[:credits],
         product_type: product_attrs[:product_type]
       }
     )

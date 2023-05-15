@@ -77,20 +77,18 @@ ActiveAdmin.register Product do
     unlimited_sessions_checkbox = []
     unlimited_sessions_checkbox << label_tag('Unlimited Sessions')
     unlimited_sessions_checkbox << check_box_tag(
-      'unlimited',
+      :unlimited_credits,
       '1',
       resource.unlimited?,
-      disabled: persisted,
       id: 'product-sessions-unlimited'
     )
 
     unlimited_skill_sessions_checkbox = []
     unlimited_skill_sessions_checkbox << label_tag('Unlimited Skill Sessions')
     unlimited_skill_sessions_checkbox << check_box_tag(
-      'unlimited',
+      :unlimited_skill_session_credits,
       '1',
       resource.skill_session_unlimited?,
-      disabled: persisted,
       id: 'product-skill-sessions-unlimited'
     )
 
@@ -106,12 +104,11 @@ ActiveAdmin.register Product do
       f.input :name
       f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits
-      f.li unlimited_skill_sessions_checkbox, id: 'product-skill-sessions-unlimited-container'
-      f.input :skill_session_credits
       f.input :max_rollover_credits,
-              input_html: { disabled: resource.unlimited? },
               hint: 'Max amount of rolled-over credits. If not set, ' \
                     'all pack credits will be rolled over'
+      f.li unlimited_skill_sessions_checkbox, id: 'product-skill-sessions-unlimited-container'
+      f.input :skill_session_credits
       f.input :price, input_html: { disabled: persisted && resource.recurring? }
       f.input :price_for_members
       f.input :price_for_first_timers_no_free_session
