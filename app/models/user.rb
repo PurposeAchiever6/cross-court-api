@@ -43,14 +43,14 @@
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
-#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
+#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  credits_without_expiration              :integer          default(0)
 #  bio                                     :string
+#  credits_without_expiration              :integer          default(0)
 #  scouting_credits                        :integer          default(0)
 #  weight                                  :integer
 #  height                                  :integer
@@ -61,6 +61,10 @@
 #  main_goal                               :string
 #  apply_cc_cash_to_subscription           :boolean          default(FALSE)
 #  signup_state                            :integer          default("created")
+#  work_occupation                         :string
+#  work_company                            :string
+#  work_industry                           :string
+#  links                                   :string           default([]), is an Array
 #
 # Indexes
 #
@@ -234,6 +238,28 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.assign_attributes user_params.except('id')
     end
+  end
+
+  def links_raw
+    links&.join(',')
+  end
+
+  def links_raw=(values)
+    if values.blank?
+      self.links = nil
+      return
+    end
+
+    new_links = values.split(',').map do |value|
+      new_value = value.strip
+      if new_value.starts_with?('http://') || new_value.starts_with?('https://')
+        new_value
+      else
+        "https://#{new_value}"
+      end
+    end
+
+    self.links = new_links
   end
 
   def employee?

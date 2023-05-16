@@ -88,7 +88,11 @@ module Api
           :gender,
           :apply_cc_cash_to_subscription,
           :bio,
-          :signup_state
+          :signup_state,
+          :work_occupation,
+          :work_company,
+          :work_industry,
+          links: []
         )
       end
 

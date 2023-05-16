@@ -64,7 +64,11 @@ json = {
   new_member: user.new_member?,
   bio: user.bio,
   age: user.age,
-  signup_state: user.signup_state
+  signup_state: user.signup_state,
+  work_occupation: user.work_occupation,
+  work_company: user.work_company,
+  work_industry: user.work_industry,
+  links: user.links
 }
 
 json[:image_url] = polymorphic_url(user.image) if user.image.attached?

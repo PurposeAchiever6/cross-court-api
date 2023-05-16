@@ -9,6 +9,10 @@ describe 'PUT api/v1/user/', type: :request do
   let(:zipcode) { '12345' }
   let(:birthday) { Time.zone.today - 25.years }
   let(:gender) { 'female' }
+  let(:work_occupation) { 'Manager' }
+  let(:work_company) { 'Nestle' }
+  let(:work_industry) { 'Food' }
+  let(:links) { ['www.fb.com/123', 'www.twitter.com/123'] }
 
   let(:params) do
     {
@@ -18,7 +22,11 @@ describe 'PUT api/v1/user/', type: :request do
         phone_number:,
         zipcode:,
         birthday:,
-        gender:
+        gender:,
+        work_occupation:,
+        work_company:,
+        work_industry:,
+        links:
       }
     }
   end
@@ -40,6 +48,10 @@ describe 'PUT api/v1/user/', type: :request do
   it { expect { subject }.to change { user.reload.zipcode }.to(zipcode) }
   it { expect { subject }.to change { user.reload.birthday }.to(birthday) }
   it { expect { subject }.to change { user.reload.gender }.to(gender) }
+  it { expect { subject }.to change { user.reload.work_occupation }.to(work_occupation) }
+  it { expect { subject }.to change { user.reload.work_company }.to(work_company) }
+  it { expect { subject }.to change { user.reload.work_industry }.to(work_industry) }
+  it { expect { subject }.to change { user.reload.links }.to(links) }
 
   it { expect(response_body[:user][:id]).to eq(user.id) }
 
