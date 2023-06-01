@@ -24,8 +24,13 @@ describe 'GET api/v1/subscriptions/preview_prorate' do
     { product_id: new_product.id, promo_code: promo_code.code }
   end
 
+  let(:response_body) do
+    JSON.parse(subject.body).with_indifferent_access
+  end
+
   subject do
     get preview_prorate_api_v1_subscriptions_path, params:, headers: auth_headers, as: :json
+    response
   end
 
   before do
@@ -37,17 +42,16 @@ describe 'GET api/v1/subscriptions/preview_prorate' do
       proration_date,
       promo_code
     )
-    subject
   end
 
   after { Timecop.return }
 
   it 'returns success' do
-    expect(response).to be_successful
+    is_expected.to be_successful
   end
 
   it 'returns no subscriptions' do
-    expect(json).to include_json(
+    expect(response_body[:prorate]).to include_json(
       subtotal: 12.39,
       tax: nil,
       tax_percent: nil,

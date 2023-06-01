@@ -32,7 +32,7 @@ ActiveAdmin.register_page 'Scheduler' do
       br
       text_node 'EM - Employee Missing (not assigned)'
       br
-      text_node 'OC - Open Club'
+      text_node 'OH - Office Hours'
       br
       text_node 'CS - Coming Soon'
       br

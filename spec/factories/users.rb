@@ -60,6 +60,11 @@
 #  goals                                   :string           is an Array
 #  main_goal                               :string
 #  apply_cc_cash_to_subscription           :boolean          default(FALSE)
+#  signup_state                            :integer          default("created")
+#  work_occupation                         :string
+#  work_company                            :string
+#  work_industry                           :string
+#  links                                   :string           default([]), is an Array
 #
 # Indexes
 #
@@ -100,6 +105,7 @@ FactoryBot.define do
     gender { %i[male female].sample }
     scouting_credits { 0 }
     apply_cc_cash_to_subscription { false }
+    signup_state { :completed }
 
     trait :confirmed do
       confirmed_at { Time.current }

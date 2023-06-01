@@ -7,7 +7,8 @@ ActiveAdmin.register User do
                 :credits_without_expiration, :subscription_skill_session_credits, :private_access,
                 :birthday, :cc_cash, :source, :reserve_team, :instagram_username, :flagged,
                 :is_coach, :gender, :bio, :weight, :height, :competitive_basketball_activity,
-                :current_basketball_activity, :position
+                :current_basketball_activity, :position, :work_occupation, :work_company,
+                :work_industry, :links_raw
 
   includes active_subscription: :product
 
@@ -75,6 +76,7 @@ ActiveAdmin.register User do
       f.input :last_name
       f.input :gender
       f.input :instagram_username
+      f.input :links_raw, label: 'Links', hint: 'Separate links with commas'
       f.input :phone_number
       f.input :credits, label: 'Drop in credits'
       f.input :credits_without_expiration
@@ -112,12 +114,15 @@ ActiveAdmin.register User do
       f.input :private_access
       f.input :reserve_team
       f.input :flagged
-      f.input :bio
+      f.input :bio, as: :text
       f.input :weight
       f.input :height
       f.input :competitive_basketball_activity
       f.input :current_basketball_activity
       f.input :position
+      f.input :work_occupation
+      f.input :work_company
+      f.input :work_industry
 
       if f.object.new_record?
         f.input :password
@@ -181,6 +186,15 @@ ActiveAdmin.register User do
                     rel: 'noopener'
           end
         end
+        row :links do
+          if user.links
+            ul class: 'm-0 p-0 ml-4' do
+              user.links.each do |link|
+                li link_to(link, link, target: '_blank', rel: 'noopener')
+              end
+            end
+          end
+        end
         row :image do
           image_tag url_for(user.image), class: 'max-w-200' if user.image.attached?
         end
@@ -191,7 +205,7 @@ ActiveAdmin.register User do
           user.free_session_state&.humanize
         end
         row :skill_rating
-        row :bio if user.employee?
+        row :bio
         row :competitive_basketball_activity
         row :current_basketball_activity
         row :position do
@@ -225,6 +239,14 @@ ActiveAdmin.register User do
         end
         row :created_at
         row :updated_at
+      end
+    end
+
+    panel 'Work' do
+      attributes_table_for user do
+        row :work_occupation
+        row :work_company
+        row :work_industry
       end
     end
 

@@ -4,14 +4,15 @@ module Api
       class WaitlistsController < Api::V1::ApiUserController
         def create
           @date = date
-          @session = Session.includes(location: { images_attachments: :blob })
-                            .find(params[:session_id])
+          @session = Session.find(params[:session_id])
 
           Waitlists::AddUser.call(
             session: @session,
             user: current_user,
             date: @date
           )
+
+          @waitlist_placement = @session.waitlist_placement(date, current_user)
         end
 
         def destroy

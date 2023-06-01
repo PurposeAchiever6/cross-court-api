@@ -40,7 +40,7 @@ describe 'GET /api/v1/sessions/:session_id/user_sessions', type: :request do
   end
 
   context 'when date is passed' do
-    let(:params) { { date: 2.days.from_now.strftime('%m/%d/%Y') } }
+    let(:params) { { date: 2.days.from_now.strftime('%d/%m/%Y') } }
 
     it 'returns the users_sessions for that day' do
       subject

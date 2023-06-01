@@ -8,7 +8,7 @@ class SessionDecorator < Draper::Decorator
 
     text += " - #{reservations_count(date)}#{max_capacity ? "/#{max_capacity}" : ''}"
 
-    return text += ' - (OC)' if open_club?
+    return text += ' - (OH)' if open_club?
 
     text += " W/#{waitlist_count(date)}"
 

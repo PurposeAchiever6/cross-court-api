@@ -4,7 +4,7 @@ ActiveAdmin.register Session do
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,
                 :members_only, :duration_minutes, :max_capacity, :max_first_timers,
-                :theme_title, :theme_subheading, :theme_sweat_level, :theme_description,
+                :theme_title, :theme_subheading, :theme_description,
                 :all_skill_levels_allowed, :allow_back_to_back_reservations, :cc_cash_earned,
                 :default_referee_id, :default_sem_id, :default_coach_id, :guests_allowed,
                 :guests_allowed_per_user, :cost_credits,
@@ -19,7 +19,7 @@ ActiveAdmin.register Session do
   filter :start_time
   filter :end_time
   filter :is_private
-  filter :is_open_club
+  filter :is_open_club, label: 'Is Office Hours'
   filter :coming_soon
   filter :women_only
   filter :skill_session
@@ -41,13 +41,13 @@ ActiveAdmin.register Session do
   end
 
   action_item :cancel, only: :show, priority: 1, if: -> { params[:date].present? } do
-    link_to 'Cancel Session With Open Club',
+    link_to 'Cancel Session With Office Hours',
             cancel_admin_session_path(session.id, date: params[:date], with_open_club: true),
             method: :post,
             data: { disable_with: 'Loading...',
                     confirm: 'Are you sure you want to cancel this session? This will make ' \
                              'this session unavailable for this date but instead create ' \
-                             'an open club session for this same date and time. It will also ' \
+                             'an office hours session for this same date and time. It will also ' \
                              'refund all signed up users their credits back, and notify them ' \
                              'via SMS.' }
   end
@@ -79,7 +79,7 @@ ActiveAdmin.register Session do
     end
     number_column :cc_cash_earned, as: :currency
     column :active, &:active?
-    toggle_bool_column :is_open_club
+    toggle_bool_column 'Is Office Hours', :is_open_club
     toggle_bool_column :skill_session
     toggle_bool_column :women_only
     toggle_bool_column :members_only
@@ -93,7 +93,7 @@ ActiveAdmin.register Session do
     f.inputs 'Session Details' do
       f.input :location
       f.input :skill_level
-      f.input :is_open_club
+      f.input :is_open_club, label: 'Is Office Hours'
       f.input :skill_session
       f.input :women_only
       f.input :all_skill_levels_allowed
@@ -119,13 +119,14 @@ ActiveAdmin.register Session do
       f.input :cost_credits
       f.input :max_capacity
       f.input :max_first_timers,
-              hint: 'If not set, it means there\'s no restriction on the amount of first timers ' \
-                    'users who can book.'
+              hint: 'Number of first timers users allowed to book this session. If not set, ' \
+                    'it means there\'s no restriction.'
       f.input :guests_allowed,
               hint: 'Number of guests allowed per session. If not set, ' \
                     'it means that guests are not allowed for this session.'
       f.input :guests_allowed_per_user,
-              hint: 'Number of guests allowed per user for this session.'
+              hint: 'Number of guests allowed per user for this session. If not set, ' \
+                    'it means there\'s no restriction.'
       f.input :cc_cash_earned
       f.input :default_referee, collection: User.referees
       f.input :default_sem, collection: User.sems
@@ -149,7 +150,6 @@ ActiveAdmin.register Session do
     f.inputs 'Extra information' do
       f.input :theme_title
       f.input :theme_subheading
-      f.input :theme_sweat_level
       f.input :theme_description
     end
 
@@ -200,7 +200,7 @@ ActiveAdmin.register Session do
         session.skill_level_name || 'N/A'
       end
 
-      row :is_open_club
+      row 'Is Office Hours', &:is_open_club
       row :skill_session
       row :women_only
       row :members_only
@@ -254,7 +254,6 @@ ActiveAdmin.register Session do
       table_for session do
         column :theme_title
         column :theme_subheading
-        column :theme_sweat_level
         column :theme_description
       end
     end
@@ -360,7 +359,9 @@ ActiveAdmin.register Session do
       end
 
       panel 'Create User Session Manually' do
-        users_for_select = User.sorted_by_full_name.map { |user| [user.full_name, user.id] }
+        users_for_select = User.not_signup_state_created
+                               .sorted_by_full_name
+                               .map { |user| [user.full_name, user.id] }
 
         render partial: 'create_user_session', locals: {
           date:,
@@ -592,7 +593,7 @@ ActiveAdmin.register Session do
     )
 
     notice = if with_open_club
-               'Session canceled and open club created successfully'
+               'Session canceled and office hours created successfully'
              else
                'Session canceled successfully'
              end

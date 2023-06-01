@@ -14,30 +14,7 @@ describe 'POST api/v1/users', type: :request do
 
   describe 'POST create' do
     let(:email) { 'test@test.com' }
-    let(:password) { '12345678' }
-    let(:password_confirmation) { '12345678' }
-    let(:first_name) { 'Johnny' }
-    let(:last_name) { 'Doe' }
-    let(:phone_number) { '1234567' }
-    let(:zipcode) { '12345' }
-    let(:birthday) { Time.zone.today - 20.years }
-    let(:gender) { %w[male female].sample }
-
-    let(:params) do
-      {
-        user: {
-          first_name:,
-          last_name:,
-          email:,
-          birthday:,
-          password:,
-          password_confirmation:,
-          phone_number:,
-          zipcode:,
-          gender:
-        }
-      }
-    end
+    let(:params) { { user: { email: } } }
 
     subject { post user_registration_path, params:, as: :json }
 
@@ -55,13 +32,6 @@ describe 'POST api/v1/users', type: :request do
 
       expect(json[:user][:id]).to eq(user.id)
       expect(json[:user][:email]).to eq(user.email)
-      expect(json[:user][:uid]).to eq(user.uid)
-      expect(json[:user][:provider]).to eq('email')
-      expect(json[:user][:first_name]).to eq(user.first_name)
-      expect(json[:user][:last_name]).to eq(user.last_name)
-      expect(json[:user][:phone_number]).to eq(user.phone_number)
-      expect(json[:user][:zipcode]).to eq(user.zipcode)
-      expect(json[:user][:birthday]).to eq(user.birthday.iso8601)
     end
 
     it 'calls the active campaign service' do
@@ -84,47 +54,6 @@ describe 'POST api/v1/users', type: :request do
       it 'does not create a user' do
         expect { subject }.not_to change { User.count }
       end
-
-      it 'does not return a successful response' do
-        subject
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
-
-    context 'when the password is incorrect' do
-      let(:password)              { 'short' }
-      let(:password_confirmation) { 'short' }
-      let(:new_user)              { User.find_by(email:) }
-
-      it 'does not create a user' do
-        subject
-        expect(new_user).to be_nil
-      end
-
-      it 'does not return a successful response' do
-        subject
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
-
-    context 'when passwords don\'t match' do
-      let(:password)              { 'shouldmatch' }
-      let(:password_confirmation) { 'dontmatch' }
-      let(:new_user)              { User.find_by(email:) }
-
-      it 'does not create a user' do
-        subject
-        expect(new_user).to be_nil
-      end
-
-      it 'does not return a successful response' do
-        subject
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
-
-    context 'when the gender is not present' do
-      let(:gender) { nil }
 
       it 'does not return a successful response' do
         subject

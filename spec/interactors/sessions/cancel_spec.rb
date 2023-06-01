@@ -101,7 +101,7 @@ describe Sessions::Cancel do
       it 'calls Sonar service' do
         expect(SonarService).to receive(:send_message).twice.with(
           instance_of(User),
-          /We are still hosting Open Club and your credit is refunded. Use the shooting machine/
+          /We are still hosting Office Hours and your credit is refunded. Use the shooting machine/
         )
 
         subject

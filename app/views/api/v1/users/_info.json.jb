@@ -28,6 +28,7 @@ json = {
   email: user.email,
   first_name: user.first_name,
   last_name: user.last_name,
+  zipcode: user.zipcode,
   birthday: user.birthday&.iso8601,
   phone_number: user.phone_number,
   skill_rating: number_with_precision(
@@ -59,7 +60,15 @@ json = {
   instagram_username: user.instagram_username,
   instagram_profile: user.instagram_profile,
   gender: user.gender,
-  apply_cc_cash_to_subscription: user.apply_cc_cash_to_subscription
+  apply_cc_cash_to_subscription: user.apply_cc_cash_to_subscription,
+  new_member: user.new_member?,
+  bio: user.bio,
+  age: user.age,
+  signup_state: user.signup_state,
+  work_occupation: user.work_occupation,
+  work_company: user.work_company,
+  work_industry: user.work_industry,
+  links: user.links
 }
 
 json[:image_url] = polymorphic_url(user.image) if user.image.attached?

@@ -2,6 +2,8 @@ module Api
   module V1
     module Sessions
       class UserSessionsController < Api::V1::ApiUserController
+        skip_before_action :authenticate_user!, only: :index
+
         def index
           @user_sessions =
             Session.find(params[:session_id])
@@ -35,7 +37,7 @@ module Api
           date = params[:date]
           return Time.zone.today unless date
 
-          Date.strptime(date, '%m/%d/%Y')
+          Date.strptime(date, '%d/%m/%Y')
         end
 
         def shooting_machines

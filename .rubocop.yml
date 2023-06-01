@@ -135,7 +135,7 @@ Lint/UselessRescue: # new in 1.43
 
 Metrics/BlockLength:
   CountComments: false # count full line comments?
-  Max: 25
+  Max: 30
   Exclude:
     - config/**/*
     - spec/**/*

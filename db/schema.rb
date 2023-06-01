@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_29_195218) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_16_172737) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -260,8 +260,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_29_195218) do
     t.boolean "free_towel_rental", default: false
     t.text "description"
     t.string "waitlist_priority"
+    t.bigint "promo_code_id"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
+    t.index ["promo_code_id"], name: "index_products_on_promo_code_id"
   end
 
   create_table "products_promo_codes", force: :cascade do |t|
@@ -288,6 +290,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_29_195218) do
     t.bigint "user_id"
     t.integer "user_max_checked_in_sessions"
     t.string "use", default: "general"
+    t.boolean "only_for_new_members", default: false
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["use"], name: "index_promo_codes_on_use"
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
@@ -378,7 +381,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_29_195218) do
     t.boolean "members_only", default: false
     t.string "theme_title"
     t.string "theme_subheading"
-    t.integer "theme_sweat_level"
     t.text "theme_description"
     t.integer "cost_credits", default: 1
     t.boolean "allow_back_to_back_reservations", default: true
@@ -609,6 +611,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_29_195218) do
     t.string "goals", array: true
     t.string "main_goal"
     t.boolean "apply_cc_cash_to_subscription", default: false
+    t.integer "signup_state", default: 0
+    t.string "work_occupation"
+    t.string "work_company"
+    t.string "work_industry"
+    t.string "links", default: [], array: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

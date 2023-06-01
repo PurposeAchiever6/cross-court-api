@@ -4,7 +4,6 @@ module Api
       skip_before_action :authenticate_user!,
                          only: %i[
                            resend_confirmation_instructions
-                           update_skill_rating
                            update_personal_info
                            send_membership_handbook
                          ]
@@ -25,10 +24,9 @@ module Api
       end
 
       def update_skill_rating
-        user_to_update = current_user || user
         skill_rating = skill_rating_params[:skill_rating]
 
-        Users::UpdateSkillRating.call(user: user_to_update, skill_rating:)
+        Users::UpdateSkillRating.call(user: current_user, skill_rating:)
 
         head :ok
       end
@@ -81,11 +79,20 @@ module Api
         params.require(:user).permit(
           :first_name,
           :last_name,
+          :password,
+          :password_confirmation,
           :phone_number,
+          :zipcode,
           :instagram_username,
           :birthday,
           :gender,
-          :apply_cc_cash_to_subscription
+          :apply_cc_cash_to_subscription,
+          :bio,
+          :signup_state,
+          :work_occupation,
+          :work_company,
+          :work_industry,
+          links: []
         )
       end
 

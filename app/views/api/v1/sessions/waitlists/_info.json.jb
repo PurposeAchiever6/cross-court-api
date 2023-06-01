@@ -1,6 +1,0 @@
-{
-  id: waitlist_item.id,
-  date: waitlist_item.date.iso8601,
-  session_id: waitlist_item.session_id,
-  user_id: waitlist_item.user_id
-}

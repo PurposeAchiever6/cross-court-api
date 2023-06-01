@@ -6,7 +6,6 @@ json = {
   cost_credits: session.cost_credits,
   theme_title: session.theme_title,
   theme_subheading: session.theme_subheading,
-  theme_sweat_level: session.theme_sweat_level,
   theme_description: session.theme_description,
   is_private: session.is_private,
   coming_soon: session.coming_soon,
@@ -21,6 +20,7 @@ json = {
   cc_cash_earned: session.cc_cash_earned,
   full:,
   reservations_count: session.reservations_count(date),
+  allow_back_to_back_reservations: session.allow_back_to_back_reservations,
   back_to_back_restricted: session.back_to_back_restricted?(date, current_user),
   allowed_products: render(
     partial: 'api/v1/sessions/allowed_products/info',
@@ -28,6 +28,7 @@ json = {
   ),
   past: session.past?(date),
   spots_left:,
+  max_capacity: session.max_capacity,
   on_waitlist:,
   referee: {
     full_name: referee&.full_name,
@@ -78,5 +79,7 @@ if session.skill_level
     locals: { skill_level: session.skill_level }
   )
 end
+
+json[:waitlist_placement] = session.waitlist_placement(date, current_user) if json[:on_waitlist]
 
 json

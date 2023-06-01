@@ -9,7 +9,7 @@ module SessionGuests
 
       guests_allowed = session.guests_allowed
       guests_allowed_per_user = session.guests_allowed_per_user
-      max_redemptions_by_guest = ENV['MAX_REDEMPTIONS_BY_GUEST']&.to_i
+      max_redemptions_by_guest = ENV.fetch('MAX_REDEMPTIONS_BY_GUEST', nil)
 
       unless guests_allowed&.positive?
         raise SessionGuestsException, I18n.t('api.errors.session_guests.guests_not_allowed')
@@ -20,24 +20,26 @@ module SessionGuests
         user_session_id: user_sessions_ids
       ).not_canceled.count
 
-      if guests_allowed && sessions_guests_count >= guests_allowed
+      if sessions_guests_count >= guests_allowed
         raise SessionGuestsException,
               I18n.t('api.errors.session_guests.max_guests_reached_for_session')
       end
 
-      if guests_allowed_per_user &&
-         user_session.session_guests.not_canceled.count >= guests_allowed_per_user
+      if guests_allowed_per_user \
+         && user_session.session_guests.not_canceled.count >= guests_allowed_per_user
         raise SessionGuestsException,
               I18n.t('api.errors.session_guests.max_guests_reached_for_user')
       end
 
       phone_number = guest_info[:phone_number].strip
 
-      times_invited_count = SessionGuest.not_canceled.for_phone(phone_number).count
+      if max_redemptions_by_guest
+        times_invited_count = SessionGuest.not_canceled.for_phone(phone_number).count
 
-      if max_redemptions_by_guest && times_invited_count >= max_redemptions_by_guest
-        raise SessionGuestsException,
-              I18n.t('api.errors.session_guests.max_redemptions_by_guest_reached')
+        if times_invited_count >= max_redemptions_by_guest.to_i
+          raise SessionGuestsException,
+                I18n.t('api.errors.session_guests.max_redemptions_by_guest_reached')
+        end
       end
 
       context.phone_number = phone_number

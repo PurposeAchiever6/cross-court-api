@@ -78,7 +78,7 @@ en:
         not_pending: The cancellation request status should be pending
       sessions:
         full: "Session is full"
-        is_open_club: "Can not reserve session for open club"
+        is_open_club: "Can not reserve session for Office Hours"
         is_out_of_skill_level: "Can not reserve this session if it's outside user's skill level"
         invalid_date: "The date is not valid for the requested session"
         not_coming_soon: "The session should be a coming soon session"
@@ -229,7 +229,7 @@ en:
         Don't worry, we refunded your credit. Want to schedule different session? %{schedule_url}
       session_canceled_with_open_club: >
         Hey %{name}. We are sorry, but %{when}’s %{time} session at CC%{location} has been canceled.
-        We are still hosting Open Club and your credit is refunded. Use the shooting machine,
+        We are still hosting Office Hours and your credit is refunded. Use the shooting machine,
         work on your handles, hit the weights, invite guests to get pickup going, or hang out!
       reserve_team: >
         Crosscourt %{when}'s %{time} session at CC%{location} is now available for Reserve Team booking.
@@ -258,7 +258,7 @@ en:
           When you arrive, please show this access code to our Experience Manager behind the desk:
           %{access_code}.
         removed: >
-          Hey %{guest_name} %{user_first_name} %{user_last_name} has removed you as a guest for
+          Hey %{guest_name}, %{user_first_name} %{user_last_name} has removed you as a guest for
           their Crosscourt session at %{location} %{date} at %{time}.
       late_arrival_warning: >
         Hey %{name}. You were checked into Crosscourt beyond %{late_arrival_minutes} minutes after

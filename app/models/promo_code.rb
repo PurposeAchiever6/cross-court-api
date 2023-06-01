@@ -19,6 +19,7 @@
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
 #  use                          :string           default("general")
+#  only_for_new_members         :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -32,8 +33,11 @@ class PromoCode < ApplicationRecord
 
   has_paper_trail if: ->(promo_code) { promo_code.general? }
 
-  has_many :user_promo_codes, dependent: :destroy
+  belongs_to :user, optional: true
 
+  has_one :product, dependent: :nullify
+
+  has_many :user_promo_codes, dependent: :destroy
   has_many :products_promo_codes, dependent: :destroy
   has_many :products, through: :products_promo_codes
 
@@ -64,7 +68,9 @@ class PromoCode < ApplicationRecord
     cc_cash: 'cc_cash'
   }
 
-  belongs_to :user, optional: true
+  scope :for_product, (lambda do |product|
+    joins(:products_promo_codes).where(products_promo_codes: { product: })
+  end)
 
   def to_s
     "#{code} (#{discount}#{percentage_discount? ? '% off' : '$ off'})"
@@ -79,6 +85,8 @@ class PromoCode < ApplicationRecord
   end
 
   def still_valid?(user, product)
+    return false unless user
+
     validate!(user, product)
     true
   rescue PromoCodeInvalidException
@@ -141,7 +149,7 @@ class PromoCode < ApplicationRecord
       raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.own_usage')
     end
 
-    if referral? && user.subscriptions.count.positive?
+    if only_for_new_members? && !user.never_been_a_member?
       raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.no_first_subscription')
     end
   end

@@ -30,7 +30,6 @@
 #  members_only                    :boolean          default(FALSE)
 #  theme_title                     :string
 #  theme_subheading                :string
-#  theme_sweat_level               :integer
 #  theme_description               :text
 #  cost_credits                    :integer          default(1)
 #  allow_back_to_back_reservations :boolean          default(TRUE)
@@ -206,6 +205,18 @@ class Session < ApplicationRecord
     user_session_waitlists.by_date(date).pending.count
   end
 
+  def on_waitlist?(date, user)
+    waitlist(date).pending.by_user(user).exists?
+  end
+
+  def waitlist_placement(date, user)
+    waitlist_index = waitlist(date).pending.map(&:user_id).index(user.id)
+
+    return unless waitlist_index
+
+    waitlist_index + 1
+  end
+
   def first_timer_reservations(date, user_sessions = nil)
     reservations = user_sessions || not_canceled_reservations(date)
 
@@ -231,7 +242,7 @@ class Session < ApplicationRecord
   end
 
   def spots_left(date, user = nil)
-    return 0 if open_club?
+    return if open_club?
 
     reservations = not_canceled_reservations(date)
     total_spots_left = max_capacity - reservations.length

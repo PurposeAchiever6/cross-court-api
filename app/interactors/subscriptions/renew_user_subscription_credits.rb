@@ -15,7 +15,7 @@ module Subscriptions
         user.subscription_credits = subscription_credits
       else
         max_rollover_credits = product.max_rollover_credits
-        rollover_credits = user.subscription_credits
+        rollover_credits = user.unlimited_credits? ? 0 : user.subscription_credits
 
         if max_rollover_credits && rollover_credits > max_rollover_credits
           rollover_credits = max_rollover_credits

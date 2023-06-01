@@ -30,7 +30,6 @@
 #  members_only                    :boolean          default(FALSE)
 #  theme_title                     :string
 #  theme_subheading                :string
-#  theme_sweat_level               :integer
 #  theme_description               :text
 #  cost_credits                    :integer          default(1)
 #  allow_back_to_back_reservations :boolean          default(TRUE)
@@ -426,9 +425,8 @@ describe Session do
 
       context 'when the session is open club' do
         let(:open_club) { true }
-        let(:max_capacity) { nil }
 
-        it { is_expected.to eq(0) }
+        it { is_expected.to be_nil }
       end
     end
   end

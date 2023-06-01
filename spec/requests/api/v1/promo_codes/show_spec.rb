@@ -14,7 +14,8 @@ describe 'GET api/v1/promo_code' do
       user_max_checked_in_sessions:,
       times_used:,
       use:,
-      user: promo_code_user
+      user: promo_code_user,
+      only_for_new_members:
     )
   end
 
@@ -27,23 +28,30 @@ describe 'GET api/v1/promo_code' do
   let(:times_used) { 0 }
   let(:use) { 'general' }
   let(:promo_code_user) { nil }
+  let(:only_for_new_members) { false }
   let(:price) { 100 }
 
   let(:params) { { promo_code: code, product_id: product.id } }
+  let(:response_body) do
+    JSON.parse(subject.body).with_indifferent_access
+  end
 
-  subject { get api_v1_promo_code_path, params:, headers: auth_headers, as: :json }
+  subject do
+    get api_v1_promo_code_path, params:, headers: auth_headers, as: :json
+    response
+  end
 
   it 'returns the price with the promo code applied' do
-    subject
-    expect(json[:price].to_i).to eq(promo_code.apply_discount(price))
+    expect(
+      response_body[:promo_code][:discounted_price].to_i
+    ).to eq(promo_code.apply_discount(price))
   end
 
   context "when the promo code doesn't exists" do
     let(:code) { '12345678' }
 
     it 'returns promo code invalid error message' do
-      subject
-      expect(json[:error]).to eq(I18n.t('api.errors.promo_code.invalid'))
+      expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.invalid'))
     end
   end
 
@@ -51,8 +59,7 @@ describe 'GET api/v1/promo_code' do
     let(:promo_product) { create(:product) }
 
     it 'returns promo code invalid error message' do
-      subject
-      expect(json[:error]).to eq(I18n.t('api.errors.promo_code.invalid'))
+      expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.invalid'))
     end
   end
 
@@ -60,8 +67,7 @@ describe 'GET api/v1/promo_code' do
     let!(:expiration_date) { Date.yesterday }
 
     it 'returns promo code no longer valid error message' do
-      subject
-      expect(json[:error]).to eq(I18n.t('api.errors.promo_code.no_longer_valid'))
+      expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.no_longer_valid'))
     end
   end
 
@@ -70,8 +76,7 @@ describe 'GET api/v1/promo_code' do
     let(:times_used) { 2 }
 
     it 'returns promo code no longer valid error message' do
-      subject
-      expect(json[:error]).to eq(I18n.t('api.errors.promo_code.no_longer_valid'))
+      expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.no_longer_valid'))
     end
   end
 
@@ -83,16 +88,16 @@ describe 'GET api/v1/promo_code' do
     end
 
     it 'returns promo code already used error message' do
-      subject
-      expect(json[:error]).to eq(I18n.t('api.errors.promo_code.already_used'))
+      expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.already_used'))
     end
 
     context 'when it can be used more than once' do
       let(:max_redemptions_by_user) { 2 }
 
       it 'returns the price with the promo code applied' do
-        subject
-        expect(json[:price].to_i).to eq(promo_code.apply_discount(price))
+        expect(
+          response_body[:promo_code][:discounted_price].to_i
+        ).to eq(promo_code.apply_discount(price))
       end
     end
   end
@@ -102,25 +107,16 @@ describe 'GET api/v1/promo_code' do
     let(:use) { 'referral' }
 
     it 'returns the price with the promo_code applied' do
-      subject
-      expect(json[:price].to_i).to eq(promo_code.apply_discount(price))
+      expect(
+        response_body[:promo_code][:discounted_price].to_i
+      ).to eq(promo_code.apply_discount(price))
     end
 
     context 'when owner of the promo code is the current user' do
       let(:promo_code_user) { user }
 
       it 'returns promo code own usage error message' do
-        subject
-        expect(json[:error]).to eq(I18n.t('api.errors.promo_code.own_usage'))
-      end
-    end
-
-    context 'when user is not a new member of crosscourt' do
-      let!(:subscription) { create(:subscription, user:) }
-
-      it 'returns promo code no first subscription message' do
-        subject
-        expect(json[:error]).to eq(I18n.t('api.errors.promo_code.no_first_subscription'))
+        expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.own_usage'))
       end
     end
   end
@@ -129,21 +125,47 @@ describe 'GET api/v1/promo_code' do
     let(:user_max_checked_in_sessions) { 0 }
 
     it 'returns the price with the promo_code applied' do
-      subject
-      expect(json[:price].to_i).to eq(promo_code.apply_discount(price))
+      expect(
+        response_body[:promo_code][:discounted_price].to_i
+      ).to eq(promo_code.apply_discount(price))
     end
 
     context 'when user has already attended to a session' do
       let!(:user_session) { create(:user_session, user:, checked_in: true) }
 
       it 'returns promo code no first subscription message' do
-        subject
-        expect(json[:error]).to eq(
+        expect(response_body[:error]).to eq(
           I18n.t(
             'api.errors.promo_code.max_checked_in_sessions',
             user_max_checked_in_sessions: (user_max_checked_in_sessions + 1).ordinalize
           )
         )
+      end
+    end
+  end
+
+  context 'when promo code is only valid for new members' do
+    let(:only_for_new_members) { true }
+
+    it 'returns the price with the promo_code applied' do
+      expect(
+        response_body[:promo_code][:discounted_price].to_i
+      ).to eq(promo_code.apply_discount(price))
+    end
+
+    context 'when user is a member' do
+      let!(:subscription) { create(:subscription, user:) }
+
+      it 'returns promo code no first subscription error message' do
+        expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.no_first_subscription'))
+      end
+
+      context 'when the user is not a member but has been' do
+        let!(:subscription) { create(:subscription, user:, status: :canceled) }
+
+        it 'returns promo code no first subscription error message' do
+          expect(response_body[:error]).to eq(I18n.t('api.errors.promo_code.no_first_subscription'))
+        end
       end
     end
   end

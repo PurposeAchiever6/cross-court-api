@@ -19,6 +19,7 @@
 #  user_id                      :bigint
 #  user_max_checked_in_sessions :integer
 #  use                          :string           default("general")
+#  only_for_new_members         :boolean          default(FALSE)
 #
 # Indexes
 #

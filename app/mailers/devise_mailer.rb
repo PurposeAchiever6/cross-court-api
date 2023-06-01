@@ -1,15 +1,5 @@
 class DeviseMailer < Devise::Mailer
-  default 'Message-ID' => -> { "<#{SecureRandom.uuid}@#{ENV.fetch('SERVER_URL', nil)}>" }
+  default from: 'Crosscourt <no-reply@cross-court.com>'
+
   default template_path: 'devise/mailer'
-
-  def confirmation_instructions(record, token, options = {})
-    options[:template_name] =
-      if record.confirmation_sent_at.to_date <= Date.yesterday
-        're_confirmation_instructions'
-      else
-        'confirmation_instructions'
-      end
-
-    super
-  end
 end
