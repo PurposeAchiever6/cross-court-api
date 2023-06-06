@@ -246,7 +246,7 @@ class User < ApplicationRecord
 
   def links_raw=(values)
     if values.blank?
-      self.links = nil
+      self.links = []
       return
     end
 
