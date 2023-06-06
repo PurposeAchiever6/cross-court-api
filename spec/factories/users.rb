@@ -41,7 +41,6 @@
 #  active_campaign_id                      :integer
 #  birthday                                :date
 #  cc_cash                                 :decimal(, )      default(0.0)
-#  source                                  :string
 #  reserve_team                            :boolean          default(FALSE)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
@@ -65,6 +64,11 @@
 #  work_company                            :string
 #  work_industry                           :string
 #  links                                   :string           default([]), is an Array
+#  utm_source                              :string
+#  utm_medium                              :string
+#  utm_campaign                            :string
+#  utm_term                                :string
+#  utm_content                             :string
 #
 # Indexes
 #
@@ -79,8 +83,12 @@
 #  index_users_on_private_access                (private_access)
 #  index_users_on_referral_code                 (referral_code) UNIQUE
 #  index_users_on_reset_password_token          (reset_password_token) UNIQUE
-#  index_users_on_source                        (source)
 #  index_users_on_uid_and_provider              (uid,provider) UNIQUE
+#  index_users_on_utm_campaign                  (utm_campaign)
+#  index_users_on_utm_content                   (utm_content)
+#  index_users_on_utm_medium                    (utm_medium)
+#  index_users_on_utm_source                    (utm_source)
+#  index_users_on_utm_term                      (utm_term)
 #
 
 FactoryBot.define do

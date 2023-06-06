@@ -5,7 +5,7 @@ ActiveAdmin.register User do
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits, :scouting_credits,
                 :credits_without_expiration, :subscription_skill_session_credits, :private_access,
-                :birthday, :cc_cash, :source, :reserve_team, :instagram_username, :flagged,
+                :birthday, :cc_cash, :reserve_team, :instagram_username, :flagged,
                 :is_coach, :gender, :bio, :weight, :height, :competitive_basketball_activity,
                 :current_basketball_activity, :position, :work_occupation, :work_company,
                 :work_industry, :links_raw
@@ -25,7 +25,11 @@ ActiveAdmin.register User do
   filter :private_access
   filter :skill_rating
   filter :main_goal, as: :select, collection: Goal.pluck(:description)
-  filter :source
+  filter :utm_source
+  filter :utm_medium
+  filter :utm_campaign
+  filter :utm_term
+  filter :utm_content
   filter :created_at
 
   scope 'All', :all, default: true
@@ -106,7 +110,6 @@ ActiveAdmin.register User do
       f.input :confirmed_at, as: :hidden
       f.input :zipcode
       f.input :skill_rating
-      f.input :source
       f.input :image, as: :file
       f.input :is_referee
       f.input :is_sem
@@ -150,7 +153,7 @@ ActiveAdmin.register User do
     number_column 'CC Cash', :cc_cash, as: :currency
     column :skill_rating
     column :zipcode
-    column :source
+    column :utm_source
     column :private_access
     column :reserve_team
     column :email_confirmed, &:confirmed?
@@ -239,6 +242,16 @@ ActiveAdmin.register User do
         end
         row :created_at
         row :updated_at
+      end
+    end
+
+    panel 'UTM' do
+      attributes_table_for user do
+        row :utm_source
+        row :utm_medium
+        row :utm_campaign
+        row :utm_term
+        row :utm_content
       end
     end
 

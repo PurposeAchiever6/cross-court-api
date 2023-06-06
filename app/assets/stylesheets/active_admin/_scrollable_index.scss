@@ -1,0 +1,11 @@
+body.index.active_admin {
+  #wrapper {
+    display: block;
+  }
+  .index_content {
+    .index_as_table {
+      width: 100%;
+      overflow-x: auto;
+    }
+  }
+}

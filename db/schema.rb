@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_16_172737) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_06_223939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -592,7 +592,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_172737) do
     t.integer "active_campaign_id"
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
-    t.string "source"
     t.boolean "reserve_team", default: false
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
@@ -616,6 +615,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_172737) do
     t.string "work_company"
     t.string "work_industry"
     t.string "links", default: [], array: true
+    t.string "utm_source"
+    t.string "utm_medium"
+    t.string "utm_campaign"
+    t.string "utm_term"
+    t.string "utm_content"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -627,8 +631,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_172737) do
     t.index ["private_access"], name: "index_users_on_private_access"
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["source"], name: "index_users_on_source"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
+    t.index ["utm_campaign"], name: "index_users_on_utm_campaign"
+    t.index ["utm_content"], name: "index_users_on_utm_content"
+    t.index ["utm_medium"], name: "index_users_on_utm_medium"
+    t.index ["utm_source"], name: "index_users_on_utm_source"
+    t.index ["utm_term"], name: "index_users_on_utm_term"
   end
 
   create_table "versions", force: :cascade do |t|
