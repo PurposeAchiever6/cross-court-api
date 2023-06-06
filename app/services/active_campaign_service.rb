@@ -187,7 +187,7 @@ class ActiveCampaignService
   def deal_payload(event, user, args)
     {
       deal: {
-        title: user.full_name || user.email,
+        title: user.full_name.presence || user.email,
         contact: user.active_campaign_id,
         currency: 'usd',
         status: 0,
