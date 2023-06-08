@@ -241,18 +241,13 @@ class Session < ApplicationRecord
     first_timer_reservations.length >= max_first_timers
   end
 
-  def spots_left(date, user = nil)
+  def spots_left(date)
     return if open_club?
 
     reservations = not_canceled_reservations(date)
     total_spots_left = max_capacity - reservations.length
 
-    return 0 unless total_spots_left.positive?
-    return total_spots_left unless max_first_timers && user&.first_timer?
-
-    first_timer_reservations = first_timer_reservations(date, reservations)
-    first_timers_spots_left = max_first_timers - first_timer_reservations.length
-    first_timers_spots_left.positive? ? first_timers_spots_left : 0
+    total_spots_left.positive? ? total_spots_left : 0
   end
 
   def waitlist(date)

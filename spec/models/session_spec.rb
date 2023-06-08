@@ -341,15 +341,14 @@ describe Session do
       create(
         :session,
         max_capacity:,
-        max_first_timers:,
         is_open_club: open_club
       )
     end
 
-    let!(:user_1) { create(:user, :not_first_timer) }
-    let!(:user_2) { create(:user, :not_first_timer) }
-    let!(:user_3) { create(:user, :not_first_timer) }
-    let!(:user_4) { create(:user, :not_first_timer) }
+    let!(:user_1) { create(:user) }
+    let!(:user_2) { create(:user) }
+    let!(:user_3) { create(:user) }
+    let!(:user_4) { create(:user) }
 
     let!(:user_session_1) do
       create(
@@ -381,19 +380,18 @@ describe Session do
     let!(:user_session_4) do
       create(
         :user_session,
+        user: user_4,
         date:,
         session:,
         state: :canceled
       )
     end
 
-    let(:user) { nil }
     let(:open_club) { false }
     let(:date) { Date.current + 2.days }
     let(:max_capacity) { 3 }
-    let(:max_first_timers) { nil }
 
-    subject { session.spots_left(date, user) }
+    subject { session.spots_left(date) }
 
     it { is_expected.to eq(0) }
 
@@ -404,24 +402,6 @@ describe Session do
       end
 
       it { is_expected.to eq(2) }
-
-      context 'when user is passed as argument' do
-        let!(:user) { create(:user) }
-
-        it { is_expected.to eq(2) }
-
-        context 'when max_first_timers is 1' do
-          let(:max_first_timers) { 1 }
-
-          it { is_expected.to eq(1) }
-
-          context 'when there is already a first timer reservation' do
-            let!(:user_3) { create(:user) }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-      end
 
       context 'when the session is open club' do
         let(:open_club) { true }

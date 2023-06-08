@@ -24,7 +24,7 @@ json = {
   on_waitlist: user_sessions_waitlists.values_at([session.id, session.start_time]).compact.present?,
   voted: user_sessions_votes.values_at([session.id, session.start_time]).compact.present?,
   full: session.full?(session.start_time, current_user),
-  spots_left: session.spots_left(session.start_time, current_user),
+  spots_left: session.spots_left(session.start_time),
   location: render(partial: 'api/v1/locations/short_info', locals: { location: session.location }),
   skill_level: nil,
   reservations_count: session.not_canceled_reservations(session.start_time).count,
