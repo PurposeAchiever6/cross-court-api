@@ -37,7 +37,7 @@ detectors:
         "UserSessions::Create#call",
         "UserSessions::Cancel#call",
         "Session#allowed_for_member?",
-        "AdminUserAuthorizationAdapter#authorized?"
+        "AdminUserAuthorizationAdapter#authorized?",
       ]
     max_calls: 1
     allow_calls: ["render :new"]
@@ -76,7 +76,7 @@ detectors:
     exclude: []
   NestedIterators:
     enabled: true
-    exclude: ["Sessions::TimeoutWaitlistsJob#perform"]
+    exclude: ["Sessions::TimeoutWaitlistsJob#perform", "Sessions::SendNoChargeSessionJob#perform"]
     max_allowed_nesting: 2
     ignore_iterators: []
   NilCheck:

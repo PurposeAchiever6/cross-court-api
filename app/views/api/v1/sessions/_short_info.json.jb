@@ -30,6 +30,7 @@ json = {
   reservations_count: session.not_canceled_reservations(session.start_time).count,
   allow_back_to_back_reservations: session.allow_back_to_back_reservations,
   back_to_back_restricted: session.back_to_back_restricted?(session.start_time, current_user),
+  allow_free_booking: session.allow_free_booking?(session.start_time, current_user),
   allowed_products: render(
     partial: 'api/v1/sessions/allowed_products/info',
     locals: { session: }

@@ -8,6 +8,9 @@ module UserSessions
 
       user = user_session.user
       session = user_session.session
+      date = user_session.date
+
+      not_charge_user_credit ||= session.allow_free_booking?(date, user)
 
       unless user_has_credits?(user, session, not_charge_user_credit)
         raise NotEnoughCreditsException, I18n.t('api.errors.user_sessions.not_enough_credits')

@@ -162,9 +162,7 @@ class UserSession < ApplicationRecord
   end
 
   def invite_link
-    front_end_url = ENV.fetch('FRONTENT_URL', nil)
-    formatted_date = date.strftime(Session::YEAR_MONTH_DAY)
-    "#{front_end_url}/session/#{session.id}/#{formatted_date}"
+    session.frontend_details_url(date)
   end
 
   def date_when_format

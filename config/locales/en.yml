@@ -116,6 +116,8 @@ en:
         subject: "Session confirmation"
         confirmation: "The session was booked successfully"
         time: "Date: %{date}, Time: %{time}"
+      no_charge_session:
+        subject: Book session with no credit required!
     subscription:
       cancellation_request: New request for subscription cancellation
       first_month_survey: Crosscourt new member survey

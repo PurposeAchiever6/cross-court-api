@@ -1,0 +1,51 @@
+<body class='session-booked__body'>
+  <div style='margin:0 auto;'>
+    <a href=<%= ENV['FRONTENT_URL'] %>>
+      <img
+        class='session-booked__header-image'
+        src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'
+      >
+    </a>
+    <br />
+    <br />
+    <p>
+      Dear <%= @user.first_name %>,
+      <br />
+      <br />
+      We noticed that the session scheduled on <%= @date.strftime(Session::DAY_MONTH_NAME_FORMAT) %>
+      at <%= @session.time.strftime(Session::TIME_FORMAT) %> at <%= @session.location_name %> could
+      use a couple more players. As a result, we are offering you an exclusive opportunity
+      to book this session with no credit required.
+      <br />
+      <br />
+      Please note: we kindly request that the intensity level requirements when booking this
+      particular session are met.
+      <br />
+      <br />
+      To take advantage of this exclusive offer, please click the link below:
+      <br />
+      <br />
+      <%= link_to 'Link to session reservation',
+                  @session.frontend_details_url(@date),
+                  target: '_blank',
+                  rel: 'noreferrer',
+                  style: 'color: #9999FF;' %>
+      <br />
+      <br />
+      Please note that this offer is valid for a limited time only, and bookings are subject to
+      availability. We encourage you to secure your spot as soon as possible to avoid
+      disappointment.
+      <br />
+      <br />
+      We appreciate your continued support as a <%= @user.active_subscription.name %> member and
+      look forward to seeing you at the session. If you have any questions or require further
+      assistance, please don't hesitate to reach out to our dedicated customer support team.
+      <br />
+      <br />
+      Trust the progress,
+      <br />
+      <br />
+      The Crosscourt Team.
+    </p>
+  </div>
+</body>

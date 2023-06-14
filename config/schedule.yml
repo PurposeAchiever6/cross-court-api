@@ -57,3 +57,8 @@ assign_default_session_employees:
   cron: "0 8 * * 1" # 8 AM UTC on Monday
   class: "Sessions::AssignDefaultEmployeesJob"
   queue: default
+
+send_no_charge_session:
+  cron: "10 * * * *" # Every hour at minute 10
+  class: "Sessions::SendNoChargeSessionJob"
+  queue: default

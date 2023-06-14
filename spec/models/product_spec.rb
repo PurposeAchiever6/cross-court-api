@@ -2,34 +2,35 @@
 #
 # Table name: products
 #
-#  id                                     :bigint           not null, primary key
-#  credits                                :integer          default(0), not null
-#  name                                   :string           not null
-#  created_at                             :datetime         not null
-#  updated_at                             :datetime         not null
-#  price                                  :decimal(10, 2)   default(0.0), not null
-#  order_number                           :integer          default(0), not null
-#  product_type                           :integer          default("one_time")
-#  stripe_price_id                        :string
-#  label                                  :string
-#  deleted_at                             :datetime
-#  price_for_members                      :decimal(10, 2)
-#  stripe_product_id                      :string
-#  referral_cc_cash                       :decimal(, )      default(0.0)
-#  price_for_first_timers_no_free_session :decimal(10, 2)
-#  available_for                          :integer          default("everyone")
-#  skill_session_credits                  :integer          default(0)
-#  max_rollover_credits                   :integer
-#  season_pass                            :boolean          default(FALSE)
-#  scouting                               :boolean          default(FALSE)
-#  free_pauses_per_year                   :integer          default(0)
-#  highlighted                            :boolean          default(FALSE)
-#  highlights                             :boolean          default(FALSE)
-#  free_jersey_rental                     :boolean          default(FALSE)
-#  free_towel_rental                      :boolean          default(FALSE)
-#  description                            :text
-#  waitlist_priority                      :string
-#  promo_code_id                          :bigint
+#  id                                          :bigint           not null, primary key
+#  credits                                     :integer          default(0), not null
+#  name                                        :string           not null
+#  created_at                                  :datetime         not null
+#  updated_at                                  :datetime         not null
+#  price                                       :decimal(10, 2)   default(0.0), not null
+#  order_number                                :integer          default(0), not null
+#  product_type                                :integer          default("one_time")
+#  stripe_price_id                             :string
+#  label                                       :string
+#  deleted_at                                  :datetime
+#  price_for_members                           :decimal(10, 2)
+#  stripe_product_id                           :string
+#  referral_cc_cash                            :decimal(, )      default(0.0)
+#  price_for_first_timers_no_free_session      :decimal(10, 2)
+#  available_for                               :integer          default("everyone")
+#  skill_session_credits                       :integer          default(0)
+#  max_rollover_credits                        :integer
+#  season_pass                                 :boolean          default(FALSE)
+#  scouting                                    :boolean          default(FALSE)
+#  free_pauses_per_year                        :integer          default(0)
+#  highlighted                                 :boolean          default(FALSE)
+#  highlights                                  :boolean          default(FALSE)
+#  free_jersey_rental                          :boolean          default(FALSE)
+#  free_towel_rental                           :boolean          default(FALSE)
+#  description                                 :text
+#  waitlist_priority                           :string
+#  promo_code_id                               :bigint
+#  no_booking_charge_after_cancellation_window :boolean          default(FALSE)
 #
 # Indexes
 #

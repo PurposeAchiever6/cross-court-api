@@ -627,4 +627,52 @@ describe Session do
       it { is_expected.to eq([]) }
     end
   end
+
+  describe '#allow_free_booking?' do
+    let!(:location) { create(:location) }
+    let!(:user) { create(:user) }
+    let!(:session) { create(:session, :daily, time: session_time, location:) }
+    let!(:user_subscription) { create(:subscription, user:, product:) }
+    let!(:product) { create(:product, no_booking_charge_after_cancellation_window: free_charge) }
+
+    let(:current_time) { Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)) }
+    let(:session_time) { current_time + Session::CANCELLATION_PERIOD - 1.minute }
+    let(:date) { current_time.to_date }
+    let(:free_charge) { true }
+
+    subject { session.allow_free_booking?(date, user) }
+
+    it { is_expected.to eq(true) }
+
+    context 'when user is nil' do
+      let!(:user) { nil }
+      let!(:user_subscription) { nil }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when user does not have a subscription' do
+      let!(:user_subscription) { nil }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when product does not allow to book with no charge' do
+      let!(:free_charge) { false }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when is outside window cancellation' do
+      let(:session_time) { current_time + Session::CANCELLATION_PERIOD + 1.minute }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when there are already more than 11 reservations for that session' do
+      let!(:reservations) { create_list(:user_session, 12, session:, date:) }
+
+      it { is_expected.to be_falsey }
+    end
+  end
 end

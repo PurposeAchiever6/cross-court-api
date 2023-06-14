@@ -52,6 +52,7 @@ class Session < ApplicationRecord
   DAY_MONTH_NAME_FORMAT = '%A %B %-e'.freeze
   TIME_FORMAT = '%l:%M %P'.freeze
   QUERY_TIME_FORMAT = 'HH24:MI'.freeze
+  RESERVATIONS_LIMIT_FOR_NO_CHARGE = ENV['RESERVATIONS_LIMIT_FOR_NO_CHARGE'].to_i
   CANCELLATION_PERIOD = ENV['CANCELLATION_PERIOD'].to_i.hours.freeze
   BACK_TO_BACK_TOLERANCE_MINUTES = ENV['BACK_TO_BACK_TOLERANCE_MINUTES'].to_i.minutes.freeze
   BACK_TO_BACK_RESERVATION_WINDOW_MINUTES = ENV['BACK_TO_BACK_RESERVATION_WINDOW_MINUTES'].to_i
@@ -138,6 +139,15 @@ class Session < ApplicationRecord
       time_format: 'HH24MI'
     )
     # rubocop:enable Layout/LineLength
+  end)
+
+  scope :in_hours, (lambda do |hours|
+    joins(:location).where(
+      "to_char(current_timestamp at time zone locations.time_zone, :time_format) =
+       to_char(time - interval ':hours hour', :time_format)",
+      hours:,
+      time_format: 'HH24'
+    )
   end)
 
   def normal_session?
@@ -408,6 +418,18 @@ class Session < ApplicationRecord
     return 0 if open_club?
 
     skill_session? ? location_sklz_late_arrival_fee : location_late_arrival_fee
+  end
+
+  def allow_free_booking?(date, user)
+    user&.active_subscription&.product&.no_booking_charge_after_cancellation_window \
+      && remaining_time(date) < CANCELLATION_PERIOD \
+        && reservations_count(date) <= RESERVATIONS_LIMIT_FOR_NO_CHARGE
+  end
+
+  def frontend_details_url(date)
+    front_end_url = ENV.fetch('FRONTENT_URL', nil)
+    formatted_date = date.strftime(Session::YEAR_MONTH_DAY)
+    "#{front_end_url}/session/#{id}/#{formatted_date}"
   end
 
   private

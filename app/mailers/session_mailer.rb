@@ -23,4 +23,12 @@ class SessionMailer < ApplicationMailer
                       number_of_sessions: @number_of_sessions)
     )
   end
+
+  def no_charge_session
+    @session = Session.find(params[:session_id])
+    @user = User.find(params[:user_id])
+    @date = params[:date]
+
+    mail(to: @user.email, subject: I18n.t('mailer.session.no_charge_session.subject'))
+  end
 end

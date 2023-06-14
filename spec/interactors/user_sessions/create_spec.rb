@@ -338,6 +338,7 @@ describe UserSessions::Create do
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect(subject.user_session.credit_used_type).to eq(nil) }
 
       context 'when user does not have any credit' do
         let(:credits) { 0 }
@@ -345,6 +346,35 @@ describe UserSessions::Create do
         it { expect { subject }.to change(UserSession, :count).by(1) }
         it { expect { subject }.not_to change { user.reload.credits } }
         it { expect { subject }.not_to change { user.reload.subscription_credits } }
+        it { expect(subject.user_session.credit_used_type).to eq(nil) }
+      end
+    end
+
+    context 'when the session allows free booking' do
+      let(:session_time) { time_now + Session::CANCELLATION_PERIOD - 1.minute }
+
+      let!(:product) do
+        create(
+          :product,
+          product_type: :recurring,
+          no_booking_charge_after_cancellation_window: true
+        )
+      end
+
+      before { allow(SonarService).to receive(:send_message) }
+
+      it { expect { subject }.to change(UserSession, :count).by(1) }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect(subject.user_session.credit_used_type).to eq(nil) }
+
+      context 'when user does not have any credit' do
+        let(:credits) { 0 }
+
+        it { expect { subject }.to change(UserSession, :count).by(1) }
+        it { expect { subject }.not_to change { user.reload.credits } }
+        it { expect { subject }.not_to change { user.reload.subscription_credits } }
+        it { expect(subject.user_session.credit_used_type).to eq(nil) }
       end
     end
 
