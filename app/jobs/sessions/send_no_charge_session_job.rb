@@ -11,6 +11,7 @@ module Sessions
                            .includes(:session_exceptions)
                            .for_range(date, date)
                            .in_hours(cancellation_period_hours)
+                           .normal_sessions
                            .flat_map { |session| session.calendar_events(date, date) }
 
         sessions.each do |session|

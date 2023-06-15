@@ -119,6 +119,9 @@ class Session < ApplicationRecord
   alias_attribute :open_club?, :is_open_club
 
   scope :visible_for, ->(user) { where(is_private: false) unless user&.private_access }
+  scope :not_open_club, -> { where(is_open_club: false) }
+  scope :not_skill_sessions, -> { where(skill_session: false) }
+  scope :normal_sessions, -> { not_open_club.not_skill_sessions }
 
   scope :for_range, (lambda do |start_date, end_date|
     where('start_time >= ? AND start_time <= ?', start_date, end_date)
@@ -421,9 +424,10 @@ class Session < ApplicationRecord
   end
 
   def allow_free_booking?(date, user)
-    user&.active_subscription&.product&.no_booking_charge_after_cancellation_window \
-      && remaining_time(date) < CANCELLATION_PERIOD \
-        && reservations_count(date) <= RESERVATIONS_LIMIT_FOR_NO_CHARGE
+    normal_session? \
+      && user&.active_subscription&.product&.no_booking_charge_after_cancellation_window \
+        && remaining_time(date) < CANCELLATION_PERIOD \
+          && reservations_count(date) <= RESERVATIONS_LIMIT_FOR_NO_CHARGE
   end
 
   def frontend_details_url(date)

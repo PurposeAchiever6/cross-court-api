@@ -631,7 +631,16 @@ describe Session do
   describe '#allow_free_booking?' do
     let!(:location) { create(:location) }
     let!(:user) { create(:user) }
-    let!(:session) { create(:session, :daily, time: session_time, location:) }
+    let!(:session) do
+      create(
+        :session,
+        :daily,
+        time: session_time,
+        location:,
+        skill_session:,
+        is_open_club: open_club
+      )
+    end
     let!(:user_subscription) { create(:subscription, user:, product:) }
     let!(:product) { create(:product, no_booking_charge_after_cancellation_window: free_charge) }
 
@@ -639,10 +648,24 @@ describe Session do
     let(:session_time) { current_time + Session::CANCELLATION_PERIOD - 1.minute }
     let(:date) { current_time.to_date }
     let(:free_charge) { true }
+    let(:skill_session) { false }
+    let(:open_club) { false }
 
     subject { session.allow_free_booking?(date, user) }
 
     it { is_expected.to eq(true) }
+
+    context 'when the session is a skill session' do
+      let!(:skill_session) { true }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when the session is open club' do
+      let!(:open_club) { true }
+
+      it { is_expected.to be_falsey }
+    end
 
     context 'when user is nil' do
       let!(:user) { nil }
