@@ -4,7 +4,7 @@ ActiveAdmin.register Location do
   permit_params :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, :description,
                 :max_sessions_booked_per_day, :max_skill_sessions_booked_per_day,
                 :free_session_miles_radius, :late_arrival_minutes, :late_arrival_fee,
-                :sklz_late_arrival_fee,
+                :sklz_late_arrival_fee, :miles_range_radius,
                 :allowed_late_arrivals, images: []
 
   form do |f|
@@ -20,6 +20,8 @@ ActiveAdmin.register Location do
     end
 
     f.inputs 'Location Settings' do
+      f.input :miles_range_radius,
+              hint: 'If outside this radius, a warning message will show up on signup'
       f.input :free_session_miles_radius,
               hint: 'The radius in miles from this location for which users are selected ' \
                     'for a free session'
@@ -91,6 +93,7 @@ ActiveAdmin.register Location do
 
     panel 'Settings' do
       attributes_table_for location do
+        row :miles_range_radius
         row :free_session_miles_radius
         row :max_sessions_booked_per_day do |location|
           location.max_sessions_booked_per_day || 'No restriction'

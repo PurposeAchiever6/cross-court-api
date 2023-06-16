@@ -1,0 +1,5 @@
+{
+  near: @near,
+  nearest_location:
+    @nearest_location ? render(partial: 'info', locals: { location: @nearest_location }) : nil
+}

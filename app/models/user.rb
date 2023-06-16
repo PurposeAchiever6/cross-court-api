@@ -336,7 +336,7 @@ class User < ApplicationRecord
   end
 
   def give_free_session?
-    Location.near(zipcode, :free_session_miles_radius).any?
+    Location.near("#{zipcode}, #{Location::US}", :free_session_miles_radius).any?
   rescue SocketError, Timeout::Error, Geocoder::OverQueryLimitError, Geocoder::RequestDenied,
          Geocoder::InvalidRequest, Geocoder::InvalidApiKey, Geocoder::ServiceUnavailable => e
     Rollbar.error(e)

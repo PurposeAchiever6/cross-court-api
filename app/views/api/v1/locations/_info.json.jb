@@ -9,7 +9,8 @@ json = {
   description: location.description,
   state: location.state,
   time_zone: location.time_zone,
-  late_arrival_minutes: location.late_arrival_minutes
+  late_arrival_minutes: location.late_arrival_minutes,
+  miles_range_radius: location.miles_range_radius
 }
 
 if location.images.attached?

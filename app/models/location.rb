@@ -22,6 +22,7 @@
 #  late_arrival_fee                  :integer          default(10)
 #  allowed_late_arrivals             :integer          default(2)
 #  sklz_late_arrival_fee             :integer          default(0)
+#  miles_range_radius                :decimal(, )
 #
 # Indexes
 #
@@ -35,6 +36,8 @@ class Location < ApplicationRecord
     VT VA WA WV WI WY
   ].freeze
 
+  US = 'US'.freeze
+
   GOOGLE_MAPS_BASE_URL = 'https://www.google.com/maps/search/?api=1&query='.freeze
 
   has_paper_trail
@@ -47,10 +50,11 @@ class Location < ApplicationRecord
             :free_session_miles_radius, :late_arrival_fee, :sklz_late_arrival_fee,
             :late_arrival_minutes, :allowed_late_arrivals, presence: true
 
+  geocoded_by :full_address, latitude: :lat, longitude: :lng
   reverse_geocoded_by :lat, :lng
 
   def full_address
-    "#{address}, #{city} #{state} #{zipcode}"
+    [address, city, state, US].compact.join(', ')
   end
 
   def google_maps_link
