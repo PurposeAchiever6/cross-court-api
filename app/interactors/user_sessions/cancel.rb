@@ -129,7 +129,7 @@ module UserSessions
         end
       when :credits_without_expiration
         user.increment(:credits_without_expiration, session_cost_credits)
-      else
+      when :credits
         user.increment(:credits, session_cost_credits)
       end
     end

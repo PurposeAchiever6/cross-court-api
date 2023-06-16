@@ -13,5 +13,6 @@
   scouting: user_session.scouting,
   is_first_session: user_session.first_session,
   is_free_session: user_session.is_free_session,
-  survey_answered: user_session.session_survey.present?
+  survey_answered: user_session.session_survey.present?,
+  credit_used_type: user_session.credit_used_type
 }

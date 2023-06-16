@@ -10,5 +10,6 @@
   is_first_session: user_session.first_session,
   is_free_session: user_session.is_free_session,
   assigned_team: user_session.assigned_team,
+  credit_used_type: user_session.credit_used_type,
   user: render(partial: 'api/v1/users/short_info', locals: { user: user_session.user })
 }

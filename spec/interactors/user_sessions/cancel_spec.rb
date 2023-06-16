@@ -129,6 +129,16 @@ describe UserSessions::Cancel do
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     end
 
+    context 'when user session credit used was nil because it was a free booking' do
+      let(:credit_used_type) { nil }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+    end
+
     context 'when user session credit used was from season pass credits' do
       let(:credit_used_type) { :credits_without_expiration }
 
