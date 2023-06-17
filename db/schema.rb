@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_10_163501) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_222318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -261,7 +261,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_163501) do
     t.text "description"
     t.string "waitlist_priority"
     t.bigint "promo_code_id"
-    t.boolean "no_booking_charge_after_cancellation_window", default: false
+    t.boolean "no_booking_charge_feature", default: false
+    t.integer "no_booking_charge_feature_hours", default: 3
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
     t.index ["promo_code_id"], name: "index_products_on_promo_code_id"

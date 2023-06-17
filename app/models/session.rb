@@ -424,9 +424,13 @@ class Session < ApplicationRecord
   end
 
   def allow_free_booking?(date, user)
+    user_subscription_product = user&.active_subscription&.product
+
+    return false unless user_subscription_product
+
     normal_session? \
-      && user&.active_subscription&.product&.no_booking_charge_after_cancellation_window \
-        && remaining_time(date) < CANCELLATION_PERIOD \
+      && user_subscription_product.no_booking_charge_feature \
+        && remaining_time(date) < user_subscription_product.no_booking_charge_feature_hours.hours \
           && reservations_count(date) <= RESERVATIONS_LIMIT_FOR_NO_CHARGE
   end
 

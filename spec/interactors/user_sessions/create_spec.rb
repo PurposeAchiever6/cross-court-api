@@ -351,13 +351,13 @@ describe UserSessions::Create do
     end
 
     context 'when the session allows free booking' do
-      let(:session_time) { time_now + Session::CANCELLATION_PERIOD - 1.minute }
+      let(:session_time) { time_now + product.no_booking_charge_feature_hours.hours - 1.minute }
 
       let!(:product) do
         create(
           :product,
           product_type: :recurring,
-          no_booking_charge_after_cancellation_window: true
+          no_booking_charge_feature: true
         )
       end
 

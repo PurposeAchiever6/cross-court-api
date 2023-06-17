@@ -6,7 +6,7 @@ ActiveAdmin.register Product do
                 :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
                 :free_pauses_per_year, :highlighted, :highlights, :free_jersey_rental,
                 :free_towel_rental, :description, :waitlist_priority, :promo_code_id,
-                :no_booking_charge_after_cancellation_window
+                :no_booking_charge_feature, :no_booking_charge_feature_hours
 
   filter :name
   filter :product_type
@@ -54,8 +54,8 @@ ActiveAdmin.register Product do
     column :promo_code do |product|
       product.recurring? ? product.promo_code : 'N/A'
     end
-    column :no_booking_charge_after_cancellation_window do |product|
-      product.recurring? ? product.no_booking_charge_after_cancellation_window : 'N/A'
+    column :no_booking_charge_feature do |product|
+      product.recurring? ? product.no_booking_charge_feature : 'N/A'
     end
     column :season_pass
     column :scouting
@@ -100,14 +100,17 @@ ActiveAdmin.register Product do
       f.input :product_type, input_html: { disabled: persisted }
       f.input :available_for
       f.input :season_pass
-      f.input :no_booking_charge_after_cancellation_window,
-              label: 'No booking charge after cancellation window and less than ' \
-                     "#{Session::RESERVATIONS_LIMIT_FOR_NO_CHARGE + 1} sign ups"
       f.input :scouting
       f.input :highlighted
       f.input :highlights
       f.input :free_jersey_rental
       f.input :free_towel_rental
+      f.input :no_booking_charge_feature,
+              wrapper_html: { class: 'mb-4' },
+              label: 'Members can book with no cost sessions with less than ' \
+                     "#{Session::RESERVATIONS_LIMIT_FOR_NO_CHARGE + 1} sign ups and " \
+                     '"no booking charge feature hours" hours before session starts'
+      f.input :no_booking_charge_feature_hours
       f.input :name
       f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits
@@ -165,13 +168,18 @@ ActiveAdmin.register Product do
       row :available_for do |product|
         product.available_for.humanize
       end
-      row :no_booking_charge_after_cancellation_window
       row :season_pass
       row :scouting
       row :highlighted
       row :highlights
       row :free_jersey_rental
       row :free_towel_rental
+      row :no_booking_charge_feature do |product|
+        product.recurring? ? product.no_booking_charge_feature : 'N/A'
+      end
+      row :no_booking_charge_feature_hours do |product|
+        product.recurring? ? product.no_booking_charge_feature_hours : 'N/A'
+      end
       row :waitlist_priority
       row :label
       row :order_number

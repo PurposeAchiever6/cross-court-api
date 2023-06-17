@@ -642,10 +642,10 @@ describe Session do
       )
     end
     let!(:user_subscription) { create(:subscription, user:, product:) }
-    let!(:product) { create(:product, no_booking_charge_after_cancellation_window: free_charge) }
+    let!(:product) { create(:product, no_booking_charge_feature: free_charge) }
 
     let(:current_time) { Time.zone.local_to_utc(Time.current.in_time_zone(location.time_zone)) }
-    let(:session_time) { current_time + Session::CANCELLATION_PERIOD - 1.minute }
+    let(:session_time) { current_time + product.no_booking_charge_feature_hours.hours - 1.minute }
     let(:date) { current_time.to_date }
     let(:free_charge) { true }
     let(:skill_session) { false }
