@@ -70,5 +70,31 @@ describe Sessions::SendNoChargeSessionJob do
 
       it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
     end
+
+    context 'when user has already reserved the session' do
+      let!(:user_session) do
+        create(
+          :user_session,
+          user:,
+          session:,
+          date:,
+          state:
+        )
+      end
+
+      let(:state) { %i[reserved confirmed].sample }
+
+      it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
+
+      context 'when the reservation has been canceled' do
+        let(:state) { :canceled }
+
+        it 'sends no charge session email' do
+          expect { subject }.to have_enqueued_job(
+            ActionMailer::MailDeliveryJob
+          ).with('SessionMailer', 'no_charge_session', anything, anything)
+        end
+      end
+    end
   end
 end

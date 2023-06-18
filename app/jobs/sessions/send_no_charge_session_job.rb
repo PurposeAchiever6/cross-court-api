@@ -23,6 +23,8 @@ module Sessions
                 .where(subscriptions: { status: :active })
                 .where(products: { id: product.id })
                 .find_each do |user|
+              next if user.not_canceled_user_session?(session, date)
+
               SessionMailer.with(
                 session_id: session.id,
                 user_id: user.id,
