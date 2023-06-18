@@ -5,10 +5,8 @@ ActiveAdmin.register User do
                 :is_referee, :is_sem, :image, :confirmed_at, :zipcode, :skill_rating,
                 :drop_in_expiration_date, :credits, :subscription_credits, :scouting_credits,
                 :credits_without_expiration, :subscription_skill_session_credits, :private_access,
-                :birthday, :cc_cash, :reserve_team, :instagram_username, :flagged,
-                :is_coach, :gender, :bio, :weight, :height, :competitive_basketball_activity,
-                :current_basketball_activity, :position, :work_occupation, :work_company,
-                :work_industry, :links_raw
+                :birthday, :cc_cash, :reserve_team, :instagram_username, :flagged, :is_coach,
+                :gender, :bio, :work_occupation, :work_company, :work_industry, :links_raw
 
   includes active_subscription: :product
 
@@ -24,7 +22,6 @@ ActiveAdmin.register User do
   filter :is_coach
   filter :private_access
   filter :skill_rating
-  filter :main_goal, as: :select, collection: Goal.pluck(:description)
   filter :utm_source
   filter :utm_medium
   filter :utm_campaign
@@ -118,11 +115,6 @@ ActiveAdmin.register User do
       f.input :reserve_team
       f.input :flagged
       f.input :bio, as: :text
-      f.input :weight
-      f.input :height
-      f.input :competitive_basketball_activity
-      f.input :current_basketball_activity
-      f.input :position
       f.input :work_occupation
       f.input :work_company
       f.input :work_industry
@@ -168,10 +160,6 @@ ActiveAdmin.register User do
         row :email
         row :first_name
         row :last_name
-        row :weight
-        row :height do
-          user.formatted_height
-        end
         row :gender do
           user.gender&.humanize
         end
@@ -209,21 +197,6 @@ ActiveAdmin.register User do
         end
         row :skill_rating
         row :bio
-        row :competitive_basketball_activity
-        row :current_basketball_activity
-        row :position do
-          user.position&.humanize
-        end
-        row :goals do
-          if user.goals
-            ul class: 'm-0 p-0 ml-4' do
-              user.goals.each do |goal|
-                li goal
-              end
-            end
-          end
-        end
-        row :main_goal
         row 'User Sessions' do
           link_to 'Link to User Sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
         end

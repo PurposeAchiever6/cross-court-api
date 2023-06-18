@@ -2,11 +2,7 @@ module Api
   module V1
     class UsersController < Api::V1::ApiUserController
       skip_before_action :authenticate_user!,
-                         only: %i[
-                           resend_confirmation_instructions
-                           update_personal_info
-                           send_membership_handbook
-                         ]
+                         only: %i[resend_confirmation_instructions send_membership_handbook]
 
       def show; end
 
@@ -27,14 +23,6 @@ module Api
         skill_rating = skill_rating_params[:skill_rating]
 
         Users::UpdateSkillRating.call(user: current_user, skill_rating:)
-
-        head :ok
-      end
-
-      def update_personal_info
-        personal_info = personal_info_params
-
-        Users::UpdatePersonalInfo.call(user:, personal_info:)
 
         head :ok
       end
@@ -98,18 +86,6 @@ module Api
 
       def skill_rating_params
         params.require(:user).permit(:skill_rating)
-      end
-
-      def personal_info_params
-        params.require(:personal_info).permit(
-          :weight,
-          :height,
-          :competitive_basketball_activity,
-          :current_basketball_activity,
-          :position,
-          :main_goal,
-          goals: []
-        )
       end
 
       def requested_attributes_params

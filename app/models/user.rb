@@ -42,22 +42,15 @@
 #  birthday                                :date
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
-#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  bio                                     :string
 #  credits_without_expiration              :integer          default(0)
+#  bio                                     :string
 #  scouting_credits                        :integer          default(0)
-#  weight                                  :integer
-#  height                                  :integer
-#  competitive_basketball_activity         :string
-#  current_basketball_activity             :string
-#  position                                :string
-#  goals                                   :string           is an Array
-#  main_goal                               :string
 #  apply_cc_cash_to_subscription           :boolean          default(FALSE)
 #  signup_state                            :integer          default("created")
 #  work_occupation                         :string
@@ -129,14 +122,6 @@ class User < ApplicationRecord
     female: 1,
     other: 2
   }, _prefix: true
-
-  enum position: {
-    point_guard: 'point_guard',
-    shooting_guard: 'shooting_guard',
-    small_forward: 'small_forward',
-    power_forward: 'power_forward',
-    center: 'center'
-  }
 
   has_one :last_checked_in_user_session,
           -> { checked_in.order(date: :desc) },
@@ -384,16 +369,6 @@ class User < ApplicationRecord
     subscriptions.count == 1 &&
       (1.month.ago.beginning_of_day..Time.zone.today.end_of_day)
         .cover?(active_subscription&.created_at)
-  end
-
-  def formatted_height
-    return unless height
-
-    single_quote = '’'
-    double_quote = '”'
-    height_string = height.to_s
-
-    "#{height_string.first}#{single_quote}#{height_string.last(2)}#{double_quote}"
   end
 
   private

@@ -1,5 +1,0 @@
-{
-  id: goal.id,
-  category: goal.category,
-  description: goal.description
-}

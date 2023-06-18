@@ -11,7 +11,6 @@
       <th>Instagram</th>
       <th>New Member</th>
       <th>First Session</th>
-      <th>Main Goal</th>
       <th>Status</th>
       <th>Membership</th>
       <th>Skill Level</th>
@@ -71,9 +70,6 @@
               </td>
               <td class='align-middle'>
                 <%= status_tag first_time %>
-              </td>
-              <td class='align-middle max-w-100'>
-                <%= first_time ? user.main_goal : '' %>
               </td>
               <td class='align-middle'>
                 <%= status_tag user_session.state %>

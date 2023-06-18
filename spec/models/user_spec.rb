@@ -42,22 +42,15 @@
 #  birthday                                :date
 #  cc_cash                                 :decimal(, )      default(0.0)
 #  reserve_team                            :boolean          default(FALSE)
+#  subscription_skill_session_credits      :integer          default(0)
 #  instagram_username                      :string
 #  first_time_subscription_credits_used_at :datetime
-#  subscription_skill_session_credits      :integer          default(0)
 #  flagged                                 :boolean          default(FALSE)
 #  is_coach                                :boolean          default(FALSE), not null
 #  gender                                  :integer
-#  bio                                     :string
 #  credits_without_expiration              :integer          default(0)
+#  bio                                     :string
 #  scouting_credits                        :integer          default(0)
-#  weight                                  :integer
-#  height                                  :integer
-#  competitive_basketball_activity         :string
-#  current_basketball_activity             :string
-#  position                                :string
-#  goals                                   :string           is an Array
-#  main_goal                               :string
 #  apply_cc_cash_to_subscription           :boolean          default(FALSE)
 #  signup_state                            :integer          default("created")
 #  work_occupation                         :string

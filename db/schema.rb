@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_16_222318) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_18_183111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -106,13 +106,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_222318) do
   end
 
   create_table "gallery_photos", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "goals", force: :cascade do |t|
-    t.integer "category", null: false
-    t.string "description", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -604,13 +597,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_222318) do
     t.integer "credits_without_expiration", default: 0
     t.string "bio"
     t.integer "scouting_credits", default: 0
-    t.integer "weight"
-    t.integer "height"
-    t.string "competitive_basketball_activity"
-    t.string "current_basketball_activity"
-    t.string "position"
-    t.string "goals", array: true
-    t.string "main_goal"
     t.boolean "apply_cc_cash_to_subscription", default: false
     t.integer "signup_state", default: 0
     t.string "work_occupation"
