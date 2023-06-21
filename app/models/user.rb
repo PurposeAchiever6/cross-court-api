@@ -340,7 +340,7 @@ class User < ApplicationRecord
   rescue SocketError, Timeout::Error, Geocoder::OverQueryLimitError, Geocoder::RequestDenied,
          Geocoder::InvalidRequest, Geocoder::InvalidApiKey, Geocoder::ServiceUnavailable => e
     Rollbar.error(e)
-    true
+    false
   end
 
   def reserve_any_session?
