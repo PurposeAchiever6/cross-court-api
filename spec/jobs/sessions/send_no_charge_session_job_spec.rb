@@ -4,7 +4,18 @@ describe Sessions::SendNoChargeSessionJob do
   describe '#perform' do
     let!(:user) { create(:user) }
     let!(:location) { create(:location) }
-    let!(:session) { create(:session, :daily, time: session_time, location:) }
+    let!(:session) do
+      create(
+        :session,
+        :daily,
+        time: session_time,
+        location:,
+        skill_session:,
+        is_open_club: open_club,
+        is_private:,
+        coming_soon:
+      )
+    end
     let!(:user_subscription) { create(:subscription, user:, product:) }
     let!(:product) { create(:product, no_booking_charge_feature: free_charge) }
 
@@ -15,6 +26,10 @@ describe Sessions::SendNoChargeSessionJob do
     let(:session_time) { current_time + product.no_booking_charge_feature_hours.hours }
     let(:date) { current_time.to_date }
     let(:free_charge) { true }
+    let(:skill_session) { false }
+    let(:open_club) { false }
+    let(:is_private) { false }
+    let(:coming_soon) { false }
 
     subject { Sessions::SendNoChargeSessionJob.perform_now }
 
@@ -55,6 +70,30 @@ describe Sessions::SendNoChargeSessionJob do
           current_time + product.no_booking_charge_feature_hours.hours - 1.hour
         ].sample
       end
+
+      it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
+    end
+
+    context 'when the session is a skill session' do
+      let!(:skill_session) { true }
+
+      it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
+    end
+
+    context 'when the session is open club' do
+      let!(:open_club) { true }
+
+      it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
+    end
+
+    context 'when the session is private' do
+      let!(:is_private) { true }
+
+      it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
+    end
+
+    context 'when the session is coming soon' do
+      let!(:coming_soon) { true }
 
       it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
     end

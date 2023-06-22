@@ -638,7 +638,9 @@ describe Session do
         time: session_time,
         location:,
         skill_session:,
-        is_open_club: open_club
+        is_open_club: open_club,
+        is_private:,
+        coming_soon:
       )
     end
     let!(:user_subscription) { create(:subscription, user:, product:) }
@@ -650,6 +652,8 @@ describe Session do
     let(:free_charge) { true }
     let(:skill_session) { false }
     let(:open_club) { false }
+    let(:is_private) { false }
+    let(:coming_soon) { false }
 
     subject { session.allow_free_booking?(date, user) }
 
@@ -663,6 +667,18 @@ describe Session do
 
     context 'when the session is open club' do
       let!(:open_club) { true }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when the session is private' do
+      let!(:is_private) { true }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when the session is coming soon' do
+      let!(:coming_soon) { true }
 
       it { is_expected.to be_falsey }
     end

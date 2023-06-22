@@ -121,7 +121,10 @@ class Session < ApplicationRecord
   scope :visible_for, ->(user) { where(is_private: false) unless user&.private_access }
   scope :not_open_club, -> { where(is_open_club: false) }
   scope :not_skill_sessions, -> { where(skill_session: false) }
+  scope :not_private, -> { where(is_private: false) }
+  scope :not_coming_soon, -> { where(coming_soon: false) }
   scope :normal_sessions, -> { not_open_club.not_skill_sessions }
+  scope :eligible_for_free_booking, -> { normal_sessions.not_coming_soon.not_private }
 
   scope :for_range, (lambda do |start_date, end_date|
     where('start_time >= ? AND start_time <= ?', start_date, end_date)
@@ -423,12 +426,16 @@ class Session < ApplicationRecord
     skill_session? ? location_sklz_late_arrival_fee : location_late_arrival_fee
   end
 
+  def eligible_for_free_booking?
+    normal_session? && !is_private && !coming_soon
+  end
+
   def allow_free_booking?(date, user)
     user_subscription_product = user&.active_subscription&.product
 
     return false unless user_subscription_product
 
-    normal_session? \
+    eligible_for_free_booking? \
       && user_subscription_product.no_booking_charge_feature \
         && remaining_time(date) < user_subscription_product.no_booking_charge_feature_hours.hours \
           && reservations_count(date) <= RESERVATIONS_LIMIT_FOR_NO_CHARGE

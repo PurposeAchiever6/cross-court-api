@@ -11,9 +11,9 @@ module Sessions
         products_with_no_booking_charge_feature.each do |product|
           sessions = location.sessions
                              .includes(:session_exceptions)
+                             .eligible_for_free_booking
                              .for_range(date, date)
                              .in_hours(product.no_booking_charge_feature_hours)
-                             .normal_sessions
                              .flat_map { |session| session.calendar_events(date, date) }
 
           sessions.each do |session|
