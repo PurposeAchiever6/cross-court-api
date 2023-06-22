@@ -308,7 +308,7 @@ ActiveAdmin.register User do
   end
 
   member_action :history do
-    versions = User.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    versions = User.find(params[:id]).versions.reorder(created_at: :desc).limit(30)
     render 'admin/shared/history', locals: { versions: }
   end
 

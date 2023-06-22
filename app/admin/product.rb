@@ -275,7 +275,7 @@ ActiveAdmin.register Product do
   end
 
   member_action :history do
-    versions = Product.find(params[:id]).versions.reorder(created_at: :desc).last(30)
+    versions = Product.find(params[:id]).versions.reorder(created_at: :desc).limit(30)
     render 'admin/shared/history', locals: { versions: }
   end
 end
