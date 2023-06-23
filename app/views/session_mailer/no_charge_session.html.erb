@@ -26,7 +26,7 @@
       <br />
       <br />
       <%= link_to 'Link to session reservation',
-                  @session.frontend_details_url(@date),
+                  "#{@session.frontend_details_url(@date)}?fromFreeBooking=true",
                   target: '_blank',
                   rel: 'noreferrer',
                   style: 'color: #9999FF;' %>
