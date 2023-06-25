@@ -117,7 +117,7 @@ describe UserSessions::Create do
 
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
-      it { expect(subject.user_session.credit_used_type).to eq('credits') }
+      it { expect(subject.user_session.credit_used_type).to eq('no_credit_required') }
     end
 
     context 'when the session costs 2 credits' do
@@ -338,7 +338,7 @@ describe UserSessions::Create do
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
-      it { expect(subject.user_session.credit_used_type).to eq(nil) }
+      it { expect(subject.user_session.credit_used_type).to eq('not_charge_user_credit') }
 
       context 'when user does not have any credit' do
         let(:credits) { 0 }
@@ -346,7 +346,7 @@ describe UserSessions::Create do
         it { expect { subject }.to change(UserSession, :count).by(1) }
         it { expect { subject }.not_to change { user.reload.credits } }
         it { expect { subject }.not_to change { user.reload.subscription_credits } }
-        it { expect(subject.user_session.credit_used_type).to eq(nil) }
+        it { expect(subject.user_session.credit_used_type).to eq('not_charge_user_credit') }
       end
     end
 
@@ -366,7 +366,7 @@ describe UserSessions::Create do
       it { expect { subject }.to change(UserSession, :count).by(1) }
       it { expect { subject }.not_to change { user.reload.credits } }
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
-      it { expect(subject.user_session.credit_used_type).to eq(nil) }
+      it { expect(subject.user_session.credit_used_type).to eq('allow_free_booking') }
 
       context 'when user does not have any credit' do
         let(:credits) { 0 }
@@ -374,7 +374,7 @@ describe UserSessions::Create do
         it { expect { subject }.to change(UserSession, :count).by(1) }
         it { expect { subject }.not_to change { user.reload.credits } }
         it { expect { subject }.not_to change { user.reload.subscription_credits } }
-        it { expect(subject.user_session.credit_used_type).to eq(nil) }
+        it { expect(subject.user_session.credit_used_type).to eq('allow_free_booking') }
       end
     end
 

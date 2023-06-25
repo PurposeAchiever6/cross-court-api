@@ -39,7 +39,10 @@ class UserSession < ApplicationRecord
   enum credit_used_type: { credits: 0,
                            subscription_credits: 1,
                            subscription_skill_session_credits: 2,
-                           credits_without_expiration: 3 }
+                           credits_without_expiration: 3,
+                           not_charge_user_credit: 4,
+                           no_credit_required: 5,
+                           allow_free_booking: 6 }
 
   alias_attribute :checked, :checked_in # This is to make the checked_in filter work in the admin
 

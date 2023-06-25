@@ -173,6 +173,7 @@ Metrics/CyclomaticComplexity:
     - app/interactors/user_sessions/cancel.rb
     - app/models/subscription.rb
     - app/interactors/session_guests/validations.rb
+    - app/interactors/user_sessions/consume_credit.rb
 
 Metrics/MethodLength:
   CountComments: false # count full line comments?

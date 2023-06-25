@@ -10,9 +10,14 @@ module UserSessions
       session = user_session.session
       date = user_session.date
 
-      not_charge_user_credit ||= session.allow_free_booking?(date, user)
+      session_allow_free_booking = session.allow_free_booking?(date, user)
+      session_no_credit_required = session.cost_credits.zero?
 
-      unless user_has_credits?(user, session, not_charge_user_credit)
+      free_session = not_charge_user_credit \
+                     || session_allow_free_booking \
+                     || session_no_credit_required
+
+      unless user_has_credits?(user, session, free_session)
         raise NotEnoughCreditsException, I18n.t('api.errors.user_sessions.not_enough_credits')
       end
 
@@ -25,12 +30,18 @@ module UserSessions
         user_session.first_session = true
       end
 
-      unless not_charge_user_credit
-        if session.skill_session?
-          decrement_user_skill_session_credit(user, session, user_session)
-        else
-          decrement_user_session_credit(user, session, user_session)
+      if free_session
+        if not_charge_user_credit
+          user_session.credit_used_type = :not_charge_user_credit
+        elsif session_allow_free_booking
+          user_session.credit_used_type = :allow_free_booking
+        elsif session_no_credit_required
+          user_session.credit_used_type = :no_credit_required
         end
+      elsif session.skill_session?
+        decrement_user_skill_session_credit(user, session, user_session)
+      else
+        decrement_user_session_credit(user, session, user_session)
       end
 
       first_time_subscription_credits_used_sms(user)
@@ -41,8 +52,8 @@ module UserSessions
 
     private
 
-    def user_has_credits?(user, session, not_charge_user_credit)
-      return true if not_charge_user_credit
+    def user_has_credits?(user, session, free_session)
+      return true if free_session
 
       session_cost_credits = session.cost_credits
 

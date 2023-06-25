@@ -129,8 +129,28 @@ describe UserSessions::Cancel do
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
     end
 
-    context 'when user session credit used was nil because it was a free booking' do
-      let(:credit_used_type) { nil }
+    context 'when the session reservation was made with not_charge_user_credit' do
+      let(:credit_used_type) { :not_charge_user_credit }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+    end
+
+    context 'when session reservation was made by a free booking' do
+      let(:credit_used_type) { :allow_free_booking }
+
+      it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+      it { expect { subject }.not_to change { user.reload.credits } }
+      it { expect { subject }.not_to change { user.reload.credits_without_expiration } }
+      it { expect { subject }.not_to change { user.reload.subscription_credits } }
+      it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
+    end
+
+    context 'when the session reservation was made with cost credits in zero' do
+      let(:credit_used_type) { :no_credit_required }
 
       it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
       it { expect { subject }.not_to change { user.reload.credits } }
