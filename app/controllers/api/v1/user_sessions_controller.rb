@@ -30,13 +30,6 @@ module Api
         UserSessions::Cancel.call(user_session:)
       end
 
-      def confirm
-        ActiveRecord::Base.transaction do
-          confirmed_user_session = UserSessionConfirmed.new(user_session)
-          confirmed_user_session.save!
-        end
-      end
-
       private
 
       def user_sessions
