@@ -407,7 +407,7 @@ ActiveAdmin.register User do
         return redirect_to admin_user_path(id: user.id)
       end
 
-      referral_promo_code.validate!(user, product, true)
+      referral_promo_code.validate!(user, product)
 
       if promo_code
         PromoCodes::CreateUserPromoCode.call(

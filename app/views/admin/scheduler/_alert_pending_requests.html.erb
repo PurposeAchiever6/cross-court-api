@@ -1,10 +1,12 @@
 <%
-  if current_admin_user.can?(
-    Permission.ability_resource_name(Permission::MANAGE, SubscriptionCancellationRequest.name)
-  ) && (pending_subscription_cancellation_requests > 0 || pending_user_update_requests > 0)
+  show_pending_subscription_cancellation_requests = pending_subscription_cancellation_requests > 0 && current_admin_user.can?(Permission.ability_resource_name(Permission::MANAGE, SubscriptionCancellationRequest.name))
+  show_pending_referral_cash_payments = pending_referral_cash_payments > 0 && current_admin_user.can?(Permission.ability_resource_name(Permission::MANAGE, ReferralCashPayment.name))
+  show_pending_user_update_requests = pending_user_update_requests > 0 && current_admin_user.can?(Permission.ability_resource_name(Permission::MANAGE, UserUpdateRequest.name))
 %>
+
+<% if show_pending_subscription_cancellation_requests || show_pending_referral_cash_payments || show_pending_user_update_requests %>
   <div class='mb-6'>
-    <% if pending_subscription_cancellation_requests > 0 %>
+    <% if show_pending_subscription_cancellation_requests %>
       <div class='flash flash_warning'>
         There are <%= pending_subscription_cancellation_requests %> pending membership
         cancellation requests to review. Please take some action
@@ -12,7 +14,15 @@
       </div>
     <% end %>
 
-    <% if pending_user_update_requests > 0 %>
+    <% if show_pending_referral_cash_payments %>
+      <div class='flash flash_warning'>
+        There are <%= pending_referral_cash_payments %> pending referral cash payments
+        to review. Please take some action
+        <%= link_to 'here', admin_referral_cash_payments_path %>.
+      </div>
+    <% end %>
+
+    <% if show_pending_user_update_requests %>
       <div class='flash flash_warning'>
         There are <%= pending_user_update_requests %> pending user update requests to review.
         Please take some action <%= link_to 'here', admin_user_update_requests_path %>.

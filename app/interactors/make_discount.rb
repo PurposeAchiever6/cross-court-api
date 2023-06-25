@@ -11,11 +11,9 @@ class MakeDiscount
 
     return if promo_code.blank?
 
-    if promo_code.still_valid?(user, product)
-      context.amount = promo_code.apply_discount(product_price)
-      context.discount = promo_code.discount_amount(product_price)
-    else
-      context.fail!(message: I18n.t('api.errors.promo_code.invalid'))
-    end
+    promo_code.validate!(user, product)
+
+    context.amount = promo_code.apply_discount(product_price)
+    context.discount = promo_code.discount_amount(product_price)
   end
 end

@@ -13,7 +13,8 @@
   }
   &.confirmed,
   &.approved,
-  &.success {
+  &.success,
+  &.paid {
     background: #7ebe88;
   }
   &.refunded {

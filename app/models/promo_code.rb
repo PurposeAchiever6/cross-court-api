@@ -127,7 +127,7 @@ class PromoCode < ApplicationRecord
     products.any? { |current_product| current_product == product }
   end
 
-  def validate!(user, product, from_admin = false)
+  def validate!(user, product)
     raise PromoCodeInvalidException unless for_product?(product)
 
     if expired? || max_times_used?
@@ -138,7 +138,7 @@ class PromoCode < ApplicationRecord
       raise PromoCodeInvalidException, I18n.t('api.errors.promo_code.already_used')
     end
 
-    if !from_admin && max_checked_in_sessions_by_user?(user)
+    if max_checked_in_sessions_by_user?(user)
       raise PromoCodeInvalidException, I18n.t(
         'api.errors.promo_code.max_checked_in_sessions',
         user_max_checked_in_sessions: (user_max_checked_in_sessions + 1).ordinalize

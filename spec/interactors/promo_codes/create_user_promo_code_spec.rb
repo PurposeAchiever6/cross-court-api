@@ -53,6 +53,9 @@ describe PromoCodes::CreateUserPromoCode do
       let!(:promo_code_user) { create(:user, cc_cash:) }
       let(:use) { 'referral' }
       let(:cc_cash) { 0 }
+      let(:referral_cash) { ['0', nil].sample }
+
+      before { ENV['REFERRAL_CASH'] = referral_cash }
 
       it 'updates promo code user cc cash' do
         expect {
@@ -71,6 +74,8 @@ describe PromoCodes::CreateUserPromoCode do
         )
       end
 
+      it { expect { subject }.not_to change(ReferralCashPayment, :count) }
+
       context 'when promo code user already has some cc cash' do
         let(:cc_cash) { 15 }
 
@@ -87,6 +92,21 @@ describe PromoCodes::CreateUserPromoCode do
         let(:referral_cc_cash) { 0 }
 
         it { expect { subject }.not_to change { promo_code_user.reload.cc_cash } }
+      end
+
+      context 'when REFERRAL_CASH env var is positive' do
+        let(:referral_cash) { rand(1..50).to_s }
+
+        it { expect { subject }.to change(ReferralCashPayment, :count).by(1) }
+
+        it 'creates a ReferralCashPayment with correct data' do
+          subject
+          expect(ReferralCashPayment.last.status).to eq('pending')
+          expect(ReferralCashPayment.last.amount).to eq(referral_cash.to_i)
+          expect(ReferralCashPayment.last.referral).to eq(promo_code_user)
+          expect(ReferralCashPayment.last.referred).to eq(user)
+          expect(ReferralCashPayment.last.user_promo_code).to eq(UserPromoCode.last)
+        end
       end
     end
   end

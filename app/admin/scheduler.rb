@@ -14,6 +14,7 @@ ActiveAdmin.register_page 'Scheduler' do
 
     render partial: 'alert_pending_requests', locals: {
       pending_subscription_cancellation_requests: SubscriptionCancellationRequest.pending.count,
+      pending_referral_cash_payments: ReferralCashPayment.pending.count,
       pending_user_update_requests: UserUpdateRequest.pending.count
     }
 

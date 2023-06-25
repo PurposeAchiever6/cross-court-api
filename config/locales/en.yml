@@ -76,6 +76,8 @@ en:
         not_pending: The request status should be pending
       subscription_cancellation_requests:
         not_pending: The cancellation request status should be pending
+      referral_cash_payments:
+        not_pending: The referral payment status should be pending
       sessions:
         full: "Session is full"
         is_open_club: "Can not reserve session for Office Hours"

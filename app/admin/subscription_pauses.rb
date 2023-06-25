@@ -1,5 +1,5 @@
 ActiveAdmin.register SubscriptionPause do
-  menu label: 'Membership Pauses', parent: 'Users', priority: 5
+  menu label: 'Membership Pauses', parent: 'Users', priority: 6
   actions :index, :show
   includes subscription: :user
 

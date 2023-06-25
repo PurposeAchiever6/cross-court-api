@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_18_183111) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_24_210415) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -243,8 +243,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_183111) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "max_rollover_credits"
     t.integer "skill_session_credits", default: 0
+    t.integer "max_rollover_credits"
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.integer "free_pauses_per_year", default: 0
@@ -290,6 +290,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_183111) do
     t.index ["code"], name: "index_promo_codes_on_code", unique: true
     t.index ["use"], name: "index_promo_codes_on_use"
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
+  end
+
+  create_table "referral_cash_payments", force: :cascade do |t|
+    t.bigint "referral_id"
+    t.bigint "referred_id"
+    t.bigint "user_promo_code_id"
+    t.integer "status"
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["referral_id"], name: "index_referral_cash_payments_on_referral_id"
+    t.index ["referred_id"], name: "index_referral_cash_payments_on_referred_id"
+    t.index ["status"], name: "index_referral_cash_payments_on_status"
+    t.index ["user_promo_code_id"], name: "index_referral_cash_payments_on_user_promo_code_id"
   end
 
   create_table "role_permissions", force: :cascade do |t|
@@ -589,14 +603,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_183111) do
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
     t.boolean "reserve_team", default: false
+    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
-    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.string "bio"
     t.integer "credits_without_expiration", default: 0
+    t.string "bio"
     t.integer "scouting_credits", default: 0
     t.boolean "apply_cc_cash_to_subscription", default: false
     t.integer "signup_state", default: 0
