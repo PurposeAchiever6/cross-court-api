@@ -16,18 +16,10 @@ describe SessionGuests::Add do
 
     before { ENV['MAX_REDEMPTIONS_BY_GUEST'] = '1' }
 
-    let!(:session) do
-      create(
-        :session,
-        guests_allowed:,
-        guests_allowed_per_user:
-      )
-    end
+    let!(:session) { create(:session, guests_allowed:, guests_allowed_per_user:) }
     let!(:user_session) { create(:user_session, session:) }
 
-    subject do
-      SessionGuests::Add.call(user_session:, guest_info:)
-    end
+    subject { SessionGuests::Add.call(user_session:, guest_info:) }
 
     it { expect { subject }.to change(SessionGuest, :count).by(1) }
 
@@ -55,6 +47,14 @@ describe SessionGuests::Add do
           I18n.t('api.errors.session_guests.guests_not_allowed')
         )
       end
+
+      it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
+    end
+
+    context 'when the session is already full' do
+      let!(:user_sessions) { create_list(:user_session, session.max_capacity - 1, session:) }
+
+      it { expect { subject }.to raise_error(SessionGuestsException, 'Session is full') }
 
       it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
     end

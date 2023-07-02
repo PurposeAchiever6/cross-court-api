@@ -193,6 +193,13 @@ describe UserSessions::Create do
         it { expect { subject rescue nil }.not_to change(UserSession, :count) }
         it { expect { subject }.to raise_error(FullSessionException, 'Session is full') }
       end
+
+      context 'when session has guests' do
+        let!(:guest) { create(:session_guest, user_session: user_sessions.first) }
+
+        it { expect { subject rescue nil }.not_to change(UserSession, :count) }
+        it { expect { subject }.to raise_error(FullSessionException, 'Session is full') }
+      end
     end
 
     context 'when there are no more spots for first timers' do

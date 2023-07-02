@@ -6,6 +6,7 @@ module SessionGuests
       user_session = context.user_session
       guest_info = context.guest_info
       session = user_session.session
+      date = user_session.date
 
       guests_allowed = session.guests_allowed
       guests_allowed_per_user = session.guests_allowed_per_user
@@ -15,12 +16,9 @@ module SessionGuests
         raise SessionGuestsException, I18n.t('api.errors.session_guests.guests_not_allowed')
       end
 
-      user_sessions_ids = session.user_sessions.by_date(user_session.date).ids
-      sessions_guests_count = SessionGuest.where(
-        user_session_id: user_sessions_ids
-      ).not_canceled.count
+      raise SessionGuestsException, I18n.t('api.errors.sessions.full') if session.full?(date)
 
-      if sessions_guests_count >= guests_allowed
+      if session.guests_count(date) >= guests_allowed
         raise SessionGuestsException,
               I18n.t('api.errors.session_guests.max_guests_reached_for_session')
       end

@@ -3,5 +3,10 @@
     partial: 'api/v1/user_sessions/short_info_with_user',
     collection: @user_sessions,
     as: :user_session
+  ),
+  guests: render(
+    partial: 'api/v1/session_guests/info',
+    collection: @guests,
+    as: :session_guest
   )
 }

@@ -343,7 +343,7 @@ ActiveAdmin.register Session do
 
       if resource.guests_allowed?
         panel 'Guests' do
-          guests = resource.guests(date).not_canceled.includes(user_session: :user)
+          guests = resource.not_canceled_guests(date).includes(user_session: :user)
           render partial: 'guests', locals: { guests: }
         end
       end

@@ -328,6 +328,27 @@ describe Session do
       end
     end
 
+    context 'when the session has guests' do
+      let!(:guest) { create(:session_guest, state: guest_state, user_session: user_session_1) }
+      let(:guest_state) { %i[reserved confirmed].sample }
+
+      before { user_session_2.destroy! }
+
+      it { is_expected.to eq(true) }
+
+      context 'when there are spots available' do
+        before { user_session_3.destroy! }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'when session guest has been cancelled' do
+        let(:guest_state) { :canceled }
+
+        it { is_expected.to eq(false) }
+      end
+    end
+
     context 'when the session is open club' do
       let(:open_club) { true }
       let(:max_capacity) { nil }
@@ -407,6 +428,24 @@ describe Session do
         let(:open_club) { true }
 
         it { is_expected.to be_nil }
+      end
+    end
+
+    context 'when the session has guests' do
+      let!(:guest) { create(:session_guest, state: guest_state, user_session: user_session_1) }
+      let(:guest_state) { %i[reserved confirmed].sample }
+
+      before do
+        user_session_2.destroy!
+        user_session_3.destroy!
+      end
+
+      it { is_expected.to eq(1) }
+
+      context 'when session guest has been cancelled' do
+        let(:guest_state) { :canceled }
+
+        it { is_expected.to eq(2) }
       end
     end
   end

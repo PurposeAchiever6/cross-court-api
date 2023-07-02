@@ -192,7 +192,11 @@ class Session < ApplicationRecord
         attributes[:skill_level] = skill_level if association_cached?(:skill_level)
         attributes[:products] = products if association_cached?(:products)
 
-        Session.new(attributes)
+        Session.new(attributes).tap do |instance|
+          # These new session instances should behave like persisted records so we can
+          # use the `has_many through` relationships.
+          instance.instance_variable_set('@new_record', false)
+        end
       end
     end
   end
@@ -210,7 +214,7 @@ class Session < ApplicationRecord
   end
 
   def reservations_count(date)
-    not_canceled_reservations(date).count
+    not_canceled_reservations(date).count + guests_count(date)
   end
 
   def not_canceled_reservations(date)
@@ -248,7 +252,7 @@ class Session < ApplicationRecord
     return false if open_club?
 
     reservations = not_canceled_reservations(date)
-    session_max_capacity = reservations.length >= max_capacity
+    session_max_capacity = reservations.length + guests_count(date) >= max_capacity
 
     return true if session_max_capacity
     return false unless max_first_timers && user&.first_timer?
@@ -260,8 +264,7 @@ class Session < ApplicationRecord
   def spots_left(date)
     return if open_club?
 
-    reservations = not_canceled_reservations(date)
-    total_spots_left = max_capacity - reservations.length
+    total_spots_left = max_capacity - reservations_count(date)
 
     total_spots_left.positive? ? total_spots_left : 0
   end
@@ -272,6 +275,14 @@ class Session < ApplicationRecord
 
   def guests(date)
     session_guests.by_date(date)
+  end
+
+  def not_canceled_guests(date)
+    guests(date).not_canceled
+  end
+
+  def guests_count(date)
+    not_canceled_guests(date).count
   end
 
   def votes(date)

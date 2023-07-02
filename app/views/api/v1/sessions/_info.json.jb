@@ -29,6 +29,7 @@ json = {
   ),
   past: session.past?(date),
   spots_left:,
+  guests_count: session.guests_count(date),
   max_capacity: session.max_capacity,
   on_waitlist:,
   referee: {

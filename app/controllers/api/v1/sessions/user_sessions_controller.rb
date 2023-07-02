@@ -5,12 +5,14 @@ module Api
         skip_before_action :authenticate_user!, only: :index
 
         def index
-          @user_sessions =
-            Session.find(params[:session_id])
-                   .not_canceled_reservations(date)
-                   .where(checked_in:)
-                   .includes(:session, user: { image_attachment: :blob })
-                   .order(:created_at)
+          session = Session.find(params[:session_id])
+
+          @user_sessions = session.not_canceled_reservations(date)
+                                  .where(checked_in:)
+                                  .includes(:session, user: { image_attachment: :blob })
+                                  .order(:created_at)
+
+          @guests = session.not_canceled_guests(date).sorted_by_full_name
         end
 
         def create
@@ -35,6 +37,7 @@ module Api
 
         def date
           date = params[:date]
+
           return Time.zone.today unless date
 
           Date.strptime(date, '%d/%m/%Y')
