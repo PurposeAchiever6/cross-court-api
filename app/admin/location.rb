@@ -3,9 +3,10 @@ ActiveAdmin.register Location do
 
   permit_params :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state, :description,
                 :max_sessions_booked_per_day, :max_skill_sessions_booked_per_day,
-                :free_session_miles_radius, :late_arrival_minutes, :late_arrival_fee,
-                :sklz_late_arrival_fee, :miles_range_radius,
-                :allowed_late_arrivals, images: []
+                :free_session_miles_radius, :allowed_late_arrivals,
+                :late_arrival_minutes, :late_arrival_fee, :sklz_late_arrival_fee,
+                :miles_range_radius, :late_cancellation_fee, :late_cancellation_reimburse_credit,
+                images: []
 
   form do |f|
     f.inputs 'Location Details' do
@@ -42,6 +43,11 @@ ActiveAdmin.register Location do
       f.input :sklz_late_arrival_fee,
               hint: 'Cost of the late arrival fee for SKLZ sessions. If set to zero, users ' \
                     'will not be charged on late check ins'
+      f.input :late_cancellation_fee,
+              hint: 'Cost of the late cancellation fee for sessions. If set to zero, users ' \
+                    'will not be charged on late cancellations'
+      f.input :late_cancellation_reimburse_credit,
+              label: 'Should user credit be refunded on late cancellations?'
     end
 
     f.inputs 'Location Address' do
@@ -103,8 +109,10 @@ ActiveAdmin.register Location do
         end
         row :allowed_late_arrivals
         row :late_arrival_minutes
-        row :late_arrival_fee
-        row :sklz_late_arrival_fee
+        number_row :late_arrival_fee, as: :currency
+        number_row :sklz_late_arrival_fee, as: :currency
+        number_row :late_cancellation_fee, as: :currency
+        row :late_cancellation_reimburse_credit
       end
     end
   end
