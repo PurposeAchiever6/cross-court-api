@@ -43,6 +43,11 @@ Rails.application.routes.draw do
         resources :products, only: :index
         resources :user_sessions, only: :index do
           put :cancel
+          put :self_check_in, on: :collection
+          get :for_self_check_in, on: :collection
+        end
+        resources :self_check_ins, only: [] do
+          get :qr_data, on: :collection
         end
         resources :payments, only: %i[create index] do
           put :create_free_session_intent, on: :collection

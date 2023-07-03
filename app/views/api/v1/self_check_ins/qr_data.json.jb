@@ -1,0 +1,4 @@
+{
+  data: @data,
+  refresh_time_ms: @refresh_time_ms
+}

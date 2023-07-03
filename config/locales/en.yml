@@ -26,7 +26,7 @@ en:
       not_found: "Couldn't find the record"
       missing_param: "A required param is missing"
       invalid_content_type: "Invalid content type header"
-      unauthorized: "User is not sem"
+      unauthorized: "User not authorized to perform this action"
       user_sessions:
         invalid_date: "Invalid date"
         invalid_confirmation_date: "Can't confirm this session"
@@ -43,6 +43,8 @@ en:
         own_usage: "Can not use your own code"
         no_first_subscription: "Promo code only valid for new members"
         max_checked_in_sessions: "Promo code only valid before %{user_max_checked_in_sessions} session"
+      self_check_in:
+        qr_invalid: "Invalid or expired QR code"
       subscriptions:
         user_has_active: "User already has an active subscription"
         is_not_active: "The subscription is not active"

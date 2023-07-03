@@ -67,7 +67,10 @@ describe UserSessions::Create do
     let(:subject_args) { { user:, session:, date: } }
     let(:created_user_session) { UserSession.last }
 
-    before { allow_any_instance_of(Slack::Notifier).to receive(:ping) }
+    before do
+      stub_const('Session::RESERVATIONS_LIMIT_FOR_NO_CHARGE', 11)
+      allow_any_instance_of(Slack::Notifier).to receive(:ping)
+    end
 
     subject do
       UserSessions::Create.call(subject_args)

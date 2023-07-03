@@ -35,7 +35,7 @@ describe 'GET api/v1/sem/sessions/:id' do
 
     it 'returns error' do
       subject
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end
