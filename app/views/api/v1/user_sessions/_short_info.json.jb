@@ -10,6 +10,7 @@
   is_first_session: user_session.first_session,
   is_free_session: user_session.is_free_session,
   credit_used_type: user_session.credit_used_type,
+  credit_used_type_was_free: user_session.credit_used_type_was_free?,
   session_guests: render(
     partial: 'api/v1/session_guests/info',
     collection: user_session.session_guests.not_canceled, as: :session_guest

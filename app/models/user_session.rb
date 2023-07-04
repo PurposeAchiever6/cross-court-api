@@ -185,6 +185,10 @@ class UserSession < ApplicationRecord
     "#{user_full_name}: #{date_when_format} - #{time.strftime(Session::TIME_FORMAT)}"
   end
 
+  def credit_used_type_was_free?
+    %w[not_charge_user_credit allow_free_booking no_credit_required].include?(credit_used_type)
+  end
+
   private
 
   def user_valid_age

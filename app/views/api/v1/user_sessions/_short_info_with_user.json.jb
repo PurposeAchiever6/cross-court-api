@@ -11,5 +11,6 @@
   is_free_session: user_session.is_free_session,
   assigned_team: user_session.assigned_team,
   credit_used_type: user_session.credit_used_type,
+  credit_used_type_was_free: user_session.credit_used_type_was_free?,
   user: render(partial: 'api/v1/users/short_info', locals: { user: user_session.user })
 }
