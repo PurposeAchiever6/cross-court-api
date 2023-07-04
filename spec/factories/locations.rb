@@ -41,5 +41,7 @@ FactoryBot.define do
     zipcode { Faker::Address.zip_code }
     description { Faker::Lorem.paragraph }
     free_session_miles_radius { rand(10) }
+    late_cancellation_fee { 10 }
+    late_cancellation_reimburse_credit { false }
   end
 end

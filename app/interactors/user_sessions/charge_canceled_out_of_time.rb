@@ -4,6 +4,7 @@ module UserSessions
 
     def call
       user_session = context.user_session
+      location = user_session.session.location
       user = user_session.user
 
       return if user_session.in_cancellation_time?
@@ -11,7 +12,7 @@ module UserSessions
       amount_to_charge = if user_session.is_free_session
                            ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'].to_f
                          else
-                           ENV['CANCELED_OUT_OF_TIME_PRICE'].to_f
+                           location.late_cancellation_fee
                          end
 
       context.amount_charged = amount_to_charge

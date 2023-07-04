@@ -11,6 +11,7 @@ module UserSessions
       is_free_session = user_session.is_free_session
       in_cancellation_time = user_session.in_cancellation_time?
       session = user_session.session
+      location = session.location
       shooting_machine_reservations = user_session.shooting_machine_reservations
 
       user_session.state = :canceled
@@ -28,7 +29,10 @@ module UserSessions
 
       return if session.is_open_club?
 
-      if from_session_canceled || in_cancellation_time || is_free_session
+      reimburse_credit = from_session_canceled || in_cancellation_time || is_free_session ||
+                         location.late_cancellation_reimburse_credit
+
+      if reimburse_credit
         # On free session we reimburse user credits because we charge them a fee
         increment_user_credit(user, session, user_session)
         user.free_session_state = :claimed if is_free_session

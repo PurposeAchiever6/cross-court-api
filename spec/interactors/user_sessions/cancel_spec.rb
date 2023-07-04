@@ -2,7 +2,11 @@ require 'rails_helper'
 
 describe UserSessions::Cancel do
   describe '.call' do
-    let!(:location) { create(:location) }
+    let(:late_cancellation_fee) { rand(1..10) }
+    let(:late_cancellation_reimburse_credit) { false }
+    let!(:location) do
+      create(:location, late_cancellation_fee:, late_cancellation_reimburse_credit:)
+    end
     let!(:session) do
       create(:session, :daily, location:, time: session_time, is_open_club:, cost_credits:)
     end
@@ -212,11 +216,9 @@ describe UserSessions::Cancel do
     context 'when cancellation is not in time' do
       let(:session_time) { time_now + Session::CANCELLATION_PERIOD - 1.minute }
       let(:free_session_cancel_fee) { rand(1_000).to_s }
-      let(:late_cancel_fee) { rand(1_000).to_s }
 
       before do
         ENV['FREE_SESSION_CANCELED_OUT_OF_TIME_PRICE'] = free_session_cancel_fee
-        ENV['CANCELED_OUT_OF_TIME_PRICE'] = late_cancel_fee
         allow(StripeService).to receive(:fetch_payment_methods).and_return([true])
         allow(StripeService).to receive(:charge).and_return(double(id: rand(1_000)))
       end
@@ -230,7 +232,7 @@ describe UserSessions::Cancel do
         expect(StripeService).to receive(:charge).with(
           user,
           payment_method.stripe_id,
-          late_cancel_fee.to_f,
+          late_cancellation_fee.to_f,
           'Session canceled out of time fee'
         )
         subject
@@ -248,9 +250,18 @@ describe UserSessions::Cancel do
           ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
           user.id,
           user_session_id: user_session.id,
-          amount_charged: late_cancel_fee.to_f,
+          amount_charged: late_cancellation_fee.to_f,
           unlimited_credits: 'false'
         )
+      end
+
+      context 'when late_cancellation_reimburse_credit is true' do
+        let(:late_cancellation_reimburse_credit) { true }
+
+        it { expect { subject }.to change { user_session.reload.state }.to('canceled') }
+        it { expect { subject }.to change { user_session.reload.credit_reimbursed }.to(true) }
+        it { expect { subject }.to change { user.reload.credits }.by(1) }
+        it { expect { subject }.not_to change { user.reload.free_session_state } }
       end
 
       context 'when is free session' do
@@ -296,7 +307,7 @@ describe UserSessions::Cancel do
             ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
             user.id,
             user_session_id: user_session.id,
-            amount_charged: late_cancel_fee.to_f,
+            amount_charged: late_cancellation_fee,
             unlimited_credits: 'true'
           )
         end
