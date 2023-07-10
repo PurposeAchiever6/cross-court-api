@@ -1,0 +1,5 @@
+<%= form_with url: create_payment_method_admin_user_path(id: @user.id) do %>
+  <div class="stripe-error-js hidden bg-red-200 rounded p-2 mb-4"></div>
+  <div id="stripe-payment-method" class="max-w-lg mb-5"></div>
+  <%= submit_tag 'Add Payment Method' %>
+<% end %>

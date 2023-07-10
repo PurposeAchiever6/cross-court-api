@@ -192,6 +192,14 @@ class User < ApplicationRecord
   validates :phone_number,
             presence: true,
             unless: :signup_state_created?
+  validates :gender,
+            presence: true,
+            unless: :signup_state_created?,
+            on: :create
+  validates :birthday,
+            presence: true,
+            unless: :signup_state_created?,
+            on: :create
   validates :zipcode,
             presence: true,
             length: { maximum: 5 },
@@ -213,9 +221,8 @@ class User < ApplicationRecord
   before_validation :init_uid
   before_save :normalize_instagram_username
   after_update :update_external_records, :create_referral_code
-  after_destroy :delete_stripe_customer,
-                :delete_stripe_promo_code
-  after_rollback :delete_stripe_customer, on: :create
+  after_destroy :delete_stripe_customer, :delete_stripe_promo_code
+  after_rollback :delete_stripe_customer, :delete_stripe_promo_code, on: :create
 
   delegate :current_period_start,
            :current_period_end,
@@ -374,7 +381,9 @@ class User < ApplicationRecord
   private
 
   def password_required?
-    false # overwrite devise requirement
+    # Overwrite devise requirement.
+    # It should only be required if we are creating a new record through activeadmin
+    new_record? && !signup_state_created?
   end
 
   def uses_email?

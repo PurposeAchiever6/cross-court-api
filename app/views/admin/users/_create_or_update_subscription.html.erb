@@ -3,7 +3,9 @@
     <%= user.active_subscription ? 'Update' : 'Create' %> Membership
   </div>
   <% if payment_methods.empty? %>
-    <p>User doesn't have any payment method available.</p>
+    <p class="inline-block mr-1">User doesn't have any payment method available.</p>
+    <%= link_to 'Add payment method',
+                new_payment_method_admin_user_path(id: user.id) %>
   <% else %>
     <%
       filtered_products = products.select do |product|

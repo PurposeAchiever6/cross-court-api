@@ -1,0 +1,49 @@
+const STRIPE_PAYMENT_METHOD_ID = "stripe-payment-method";
+
+const initializePaymentMethodForm = (stripe) => {
+  const elements = stripe.elements();
+  const $form = $(`#${STRIPE_PAYMENT_METHOD_ID}`).closest("form");
+
+  const card = elements.create("card", { hidePostalCode: true });
+  card.mount(`#${STRIPE_PAYMENT_METHOD_ID}`);
+
+  card.on("change", ({ error }) => {
+    const $errorContainer = $form.find(".stripe-error-js");
+
+    if (error) {
+      $errorContainer.show();
+      $errorContainer.html(error.message);
+    } else {
+      $errorContainer.hide();
+      $errorContainer.html("");
+    }
+  });
+
+  $form.on("submit", async (e) => {
+    e.preventDefault();
+
+    const $submit = $form.find("input[type='submit']");
+    $submit.prop("disabled", true);
+    $submit.addClass("disabled");
+
+    const { paymentMethod, error } = await stripe.createPaymentMethod({ type: "card", card });
+
+    if (error) {
+      $submit.prop("disabled", false);
+      $submit.removeClass("disabled");
+    } else {
+      $form.append(
+        $('<input type="hidden" name="payment_method[stripe_id]"/>').val(paymentMethod.id),
+      );
+      $form.unbind().submit();
+    }
+  });
+};
+
+$(document).ready(function () {
+  const stripe = Stripe("<%= ENV.fetch('STRIPE_PUBLISHABLE_KEY') %>");
+
+  if ($(`#${STRIPE_PAYMENT_METHOD_ID}`).length > 0) {
+    initializePaymentMethodForm(stripe);
+  }
+});

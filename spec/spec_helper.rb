@@ -34,9 +34,13 @@ RSpec.configure do |config|
 
   config.before :each do
     Sidekiq::Worker.clear_all
+
+    ENV['STRIPE_PUBLISHABLE_KEY'] = 'stripe-publishable-key'
+
     allow(SonarService).to receive(:add_update_customer)
     allow(Stripe::Coupon).to receive(:create).and_return(double(id: 'coupon-id'))
     allow(Stripe::PromotionCode).to receive(:create).and_return(double(id: 'promo-id'))
+
     ActionMailer::Base.deliveries.clear
   end
 end

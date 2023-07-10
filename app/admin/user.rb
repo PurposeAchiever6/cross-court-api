@@ -307,6 +307,31 @@ ActiveAdmin.register User do
     end
   end
 
+  controller do
+    def create
+      ActiveRecord::Base.transaction do
+        @user = User.new(
+          permitted_params[:user].merge(
+            utm_source: :admin,
+            skill_rating: 1,
+            signup_state: :completed,
+            confirmed_at: Time.zone.now
+          )
+        )
+
+        if @user.save
+          Users::CreateExternalIntegrations.call(user: @user)
+          redirect_to admin_user_path(id: @user.id), notice: 'User was created successfully'
+        else
+          render :new
+        end
+      end
+    rescue StandardError => e
+      flash.now[:error] = e.message
+      render :new
+    end
+  end
+
   member_action :history do
     versions = User.find(params[:id]).versions.reorder(created_at: :desc).limit(30)
     render 'admin/shared/history', locals: { versions: }
@@ -471,6 +496,26 @@ ActiveAdmin.register User do
     redirect_to admin_user_path(user.id)
   rescue StandardError => e
     flash[:error] = e.message
+    redirect_to admin_user_path(id: params[:id])
+  end
+
+  member_action :new_payment_method, method: :get do
+    @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = 'User does not exist'
+    redirect_to admin_users_path
+  end
+
+  member_action :create_payment_method, method: :post do
+    user = User.find(params[:id])
+    payment_method_stripe_id = params[:payment_method][:stripe_id]
+
+    Users::CreatePaymentMethod.call(user:, payment_method_stripe_id:)
+
+    flash[:notice] = 'Payment method added successfully'
+  rescue StandardError => e
+    flash[:error] = e.message
+  ensure
     redirect_to admin_user_path(id: params[:id])
   end
 end
