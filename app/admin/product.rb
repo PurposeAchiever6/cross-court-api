@@ -6,7 +6,8 @@ ActiveAdmin.register Product do
                 :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
                 :free_pauses_per_year, :highlighted, :highlights, :free_jersey_rental,
                 :free_towel_rental, :description, :waitlist_priority, :promo_code_id,
-                :no_booking_charge_feature, :no_booking_charge_feature_hours
+                :no_booking_charge_feature, :no_booking_charge_feature_hours,
+                :no_booking_charge_feature_priority
 
   filter :name
   filter :product_type
@@ -111,6 +112,8 @@ ActiveAdmin.register Product do
                      "#{Session::RESERVATIONS_LIMIT_FOR_NO_CHARGE + 1} sign ups and " \
                      '"no booking charge feature hours" hours before session starts'
       f.input :no_booking_charge_feature_hours
+      f.input :no_booking_charge_feature_priority,
+              hint: 'This will be used for the Compare Memberships Table on the frontend'
       f.input :name
       f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits
@@ -179,6 +182,9 @@ ActiveAdmin.register Product do
       end
       row :no_booking_charge_feature_hours do |product|
         product.recurring? ? product.no_booking_charge_feature_hours : 'N/A'
+      end
+      row :no_booking_charge_feature_priority do |product|
+        product.recurring? ? product.no_booking_charge_feature_priority : 'N/A'
       end
       row :waitlist_priority
       row :label

@@ -32,6 +32,7 @@
 #  promo_code_id                          :bigint
 #  no_booking_charge_feature              :boolean          default(FALSE)
 #  no_booking_charge_feature_hours        :integer          default(3)
+#  no_booking_charge_feature_priority     :string
 #
 # Indexes
 #

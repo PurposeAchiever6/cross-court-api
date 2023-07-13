@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_03_202932) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_000514) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -245,8 +245,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_03_202932) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "max_rollover_credits"
     t.integer "skill_session_credits", default: 0
+    t.integer "max_rollover_credits"
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.integer "free_pauses_per_year", default: 0
@@ -259,6 +259,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_03_202932) do
     t.bigint "promo_code_id"
     t.boolean "no_booking_charge_feature", default: false
     t.integer "no_booking_charge_feature_hours", default: 3
+    t.string "no_booking_charge_feature_priority"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
     t.index ["promo_code_id"], name: "index_products_on_promo_code_id"
@@ -605,14 +606,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_03_202932) do
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
     t.boolean "reserve_team", default: false
+    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
-    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.string "bio"
     t.integer "credits_without_expiration", default: 0
+    t.string "bio"
     t.integer "scouting_credits", default: 0
     t.boolean "apply_cc_cash_to_subscription", default: false
     t.integer "signup_state", default: 0

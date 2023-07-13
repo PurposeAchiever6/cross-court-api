@@ -21,6 +21,8 @@ json = {
   free_towel_rental: product.free_towel_rental,
   description: product.description,
   waitlist_priority: product.waitlist_priority,
+  no_booking_charge_feature: product.no_booking_charge_feature,
+  no_booking_charge_feature_priority: product.no_booking_charge_feature_priority,
   promo_code: nil
 }
 
