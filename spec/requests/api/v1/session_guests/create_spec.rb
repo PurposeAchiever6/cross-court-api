@@ -43,6 +43,12 @@ describe 'POST api/v1/session_guests' do
 
   it { expect { subject }.to have_enqueued_job(::Sonar::SendMessageJob) }
 
+  it {
+    expect {
+      subject
+    }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactAndAddToListJob)
+  }
+
   context 'when guests_allowed is not set' do
     let(:guests_allowed) { nil }
 

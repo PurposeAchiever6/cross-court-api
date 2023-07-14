@@ -146,11 +146,11 @@ class ActiveCampaignService
         field_values: [
           {
             field: mapped_contact_fields[::ActiveCampaign::Contact::Field::CREDITS],
-            value: user.credits
+            value: user.credits || 0
           },
           {
             field: mapped_contact_fields[::ActiveCampaign::Contact::Field::SUBSCRIPTION_CREDITS],
-            value: user.unlimited_credits? ? 'Unlimited' : user.subscription_credits
+            value: user.unlimited_credits? ? 'Unlimited' : user.subscription_credits || 0
           },
           {
             field: mapped_contact_fields[::ActiveCampaign::Contact::Field::BIRTHDAY],
