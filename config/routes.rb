@@ -68,6 +68,7 @@ Rails.application.routes.draw do
         resources :subscriptions, except: %i[show new edit] do
           member do
             post :reactivate
+            post :remove_cancel_at_next_period_end
             post :payment_method, action: :change_payment_method
             put :pause
             put :cancel_pause
@@ -75,6 +76,7 @@ Rails.application.routes.draw do
           end
           collection do
             post :request_cancellation
+            post :cancel_request_cancellation
             get :preview_prorate
           end
         end

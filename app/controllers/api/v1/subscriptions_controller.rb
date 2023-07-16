@@ -70,11 +70,28 @@ module Api
         @subscription = result.subscription
       end
 
+      def remove_cancel_at_next_period_end
+        Subscriptions::RemoveScheduledCancellation.call(
+          subscription:
+        )
+
+        @subscription = subscription
+      end
+
       def request_cancellation
-        Subscriptions::CreateCancellationRequest.call(
+        result = Subscriptions::CreateCancellationRequest.call(
           subscription_cancellation_request_params.merge(user: current_user)
         )
-        head :no_content
+
+        @subscription = result.subscription
+      end
+
+      def cancel_request_cancellation
+        result = Subscriptions::CancelCancellationRequest.call(
+          user: current_user
+        )
+
+        @subscription = result.subscription
       end
 
       def pause

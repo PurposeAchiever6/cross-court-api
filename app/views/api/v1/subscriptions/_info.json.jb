@@ -4,6 +4,8 @@
   current_period_start: subscription&.current_period_start&.iso8601,
   current_period_end: subscription&.current_period_end&.iso8601,
   canceled: subscription.cancel_at_period_end,
+  cancel_at_next_period_end: subscription.cancel_at_next_period_end?,
+  requested_cancellation: subscription.requested_cancellation?,
   paused: subscription.paused?,
   paused_from: subscription.upcoming_or_actual_subscription_pause&.paused_from&.iso8601,
   paused_until: subscription.upcoming_or_actual_subscription_pause&.paused_until&.iso8601,

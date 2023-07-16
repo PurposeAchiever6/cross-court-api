@@ -1,0 +1,3 @@
+{
+  subscription: render(partial: 'info', locals: { subscription: @subscription })
+}

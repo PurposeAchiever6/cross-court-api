@@ -14,6 +14,13 @@
                    data: { disable_with: 'Loading...',
                            confirm: 'Are you sure you want to remove the membership ' \
                                     'scheduled cancellation?' } %>
+  <% elsif user.active_subscription_requested_cancellation? %>
+    <div>
+      The user has already requested a cancellation.
+      Please see the request cancellation
+      <%= link_to 'here',
+                  admin_subscription_cancellation_requests_path(q: { user_id_eq: user.id }) %>
+    </div>
   <% else %>
     <%= button_tag 'Cancel At Current Period End',
                    type: :submit,

@@ -116,4 +116,8 @@ class Subscription < ApplicationRecord
       && mark_cancel_at_period_end_at >= current_period_start + 1.month \
         && mark_cancel_at_period_end_at <= current_period_end + 1.month
   end
+
+  def requested_cancellation?
+    SubscriptionCancellationRequest.pending.for_user(user_id).exists?
+  end
 end

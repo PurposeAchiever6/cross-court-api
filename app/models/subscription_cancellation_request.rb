@@ -23,7 +23,8 @@ class SubscriptionCancellationRequest < ApplicationRecord
     ignored: 1,
     cancel_at_current_period_end: 2,
     cancel_at_next_month_period_end: 3,
-    cancel_immediately: 4
+    cancel_immediately: 4,
+    cancel_by_user: 5
   }
 
   belongs_to :user
@@ -31,6 +32,7 @@ class SubscriptionCancellationRequest < ApplicationRecord
   delegate :url_helpers, to: 'Rails.application.routes'
 
   scope :addressed, -> { not_pending }
+  scope :for_user, ->(user) { where(user:) }
 
   def url
     url_helpers.admin_subscription_cancellation_request_url(id, host: ENV.fetch('SERVER_URL', nil))

@@ -26,9 +26,13 @@
       <label class="font-semibold mr-1">Cancel at current period end:</label>
       <%= status_tag user.active_subscription_cancel_at_period_end? %>
     </div>
-    <div class="mb-6">
+    <div class="mb-2">
       <label class="font-semibold mr-1">Cancel at next period end:</label>
       <%= status_tag user.active_subscription_cancel_at_next_period_end? %>
+    </div>
+    <div class="mb-6">
+      <label class="font-semibold mr-1">Cancel requested:</label>
+      <%= status_tag user.active_subscription_requested_cancellation? %>
     </div>
     <%= render 'active_subscription_actions', user: user %>
   <% end %>
