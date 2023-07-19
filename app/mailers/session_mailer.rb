@@ -4,7 +4,8 @@ class SessionMailer < ApplicationMailer
     return unless @user_session
 
     event = @user_session.create_ics_event
-    @location = @user_session.session.location
+    @session = @user_session.session
+    @location = @session.location
     @user = @user_session.user
     attachments[I18n.t('mailer.session.add_to_calendar')] = {
       mime_type: 'text/calendar',

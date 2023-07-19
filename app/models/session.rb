@@ -458,6 +458,14 @@ class Session < ApplicationRecord
     "#{front_end_url}/session/#{id}/#{formatted_date}"
   end
 
+  def experience_name
+    return 'Office Hours' if is_open_club
+
+    return 'SKLZ Session' if skill_session
+
+    'Session'
+  end
+
   private
 
   def remaining_time(date)

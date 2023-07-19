@@ -219,6 +219,12 @@ describe UserSessions::Create do
       it { expect { subject }.not_to change { user.reload.subscription_credits } }
       it { expect { subject }.not_to change { user.reload.subscription_skill_session_credits } }
 
+      it 'sends session booked email' do
+        expect { subject }.to have_enqueued_job(
+          ActionMailer::MailDeliveryJob
+        ).with('SessionMailer', 'session_booked', anything, anything)
+      end
+
       context 'when user reserves a shooting machine' do
         let!(:payment_method) { create(:payment_method, user:, default: true) }
         let!(:shooting_machine) { create(:shooting_machine, session:) }

@@ -20,6 +20,7 @@ module UserSessions
     organize UserSessions::OpenClubValidations,
              UserSessions::ValidateDate,
              ShootingMachineReservations::Create,
-             UserSessions::AutoConfirm
+             UserSessions::AutoConfirm,
+             UserSessions::SendBookedEmail
   end
 end
