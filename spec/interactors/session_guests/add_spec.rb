@@ -2,12 +2,13 @@ require 'rails_helper'
 
 describe SessionGuests::Add do
   describe '.call' do
+    let(:guest_email) { 'mike@mail.com' }
     let(:guest_info) do
       {
         first_name: 'Mike',
         last_name: 'Lopez',
         phone_number: '+11342214334',
-        email: 'mike@mail.com'
+        email: guest_email
       }
     end
 
@@ -47,6 +48,19 @@ describe SessionGuests::Add do
           I18n.t('api.errors.session_guests.guests_not_allowed')
         )
       end
+
+      it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
+    end
+
+    context 'when the guest is already an user' do
+      let!(:user) { create(:user) }
+      let(:guest_email) { user.email }
+
+      it {
+        expect {
+          subject
+        }.to raise_error(SessionGuestsException, 'Guest is already registered as an user')
+      }
 
       it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
     end

@@ -96,6 +96,7 @@ en:
       waitlists:
         user_not_in_waitlist: "The user is not in the waitlist"
       session_guests:
+        user_already_registered: "Guest is already registered as an user"
         generic_error: "There was an error when adding the session guest"
         guests_not_allowed: "Guests are not allowed for this session"
         max_guests_reached_for_user: "You have reached the maximum number of guests allowed for this session"

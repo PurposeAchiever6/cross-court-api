@@ -136,6 +136,7 @@ class ActiveCampaignService
 
   def contact_payload(user)
     birthday = user.birthday
+    guest = user.new_record?
 
     {
       contact: {
@@ -155,6 +156,10 @@ class ActiveCampaignService
           {
             field: mapped_contact_fields[::ActiveCampaign::Contact::Field::BIRTHDAY],
             value: birthday ? birthday.strftime('%Y-%m-%d') : ''
+          },
+          {
+            field: mapped_contact_fields[::ActiveCampaign::Contact::Field::GUEST],
+            value: guest.to_s
           }
         ]
       }
