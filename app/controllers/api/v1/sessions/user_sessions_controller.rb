@@ -12,7 +12,7 @@ module Api
                                   .includes(:session, user: { image_attachment: :blob })
                                   .order(:created_at)
 
-          @guests = session.not_canceled_guests(date).sorted_by_full_name
+          @guests = session.not_canceled_guests(date).where(checked_in:).sorted_by_full_name
         end
 
         def create

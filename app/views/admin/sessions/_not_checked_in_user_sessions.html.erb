@@ -18,7 +18,7 @@
       <th></th>
       <th></th>
     </tr>
-    <%= form_with url: update_user_sessions_admin_session_path(id: resource.id,date: date),
+    <%= form_with url: update_user_sessions_admin_session_path(id: resource.id, date: date),
                   local: true do %>
       <% user_sessions.each do |user_session| %>
         <% user = user_session.user %>
@@ -148,7 +148,7 @@
         </tr>
       <% end %>
       <tr>
-        <td class="text-center" colspan='11'>
+        <td class="text-center" colspan='12'>
           <%= submit_tag 'Update All', class: 'w-1/5 mt-4', data: { disable_with: 'Loading...' } %>
         </td>
       </tr>

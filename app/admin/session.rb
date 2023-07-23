@@ -344,7 +344,8 @@ ActiveAdmin.register Session do
       if resource.guests_allowed?
         panel 'Guests' do
           guests = resource.not_canceled_guests(date).includes(user_session: :user)
-          render partial: 'guests', locals: { guests: }
+          render partial: 'guests',
+                 locals: { date:, guests: }
         end
       end
 
@@ -513,6 +514,32 @@ ActiveAdmin.register Session do
       flash[:notice] = 'Users sessions updated successfully'
     end
 
+    redirect_to admin_session_path(id: session_id, date:)
+  end
+
+  member_action :update_session_guests, method: :post do
+    session_id = params[:id]
+    date = params[:date]
+    session_guests = params[:session_guests]
+
+    ActiveRecord::Base.transaction do
+      session_guests.each do |session_guests_params|
+        session_guest = SessionGuest.find(session_guests_params[:id])
+        checked_in = session_guests_params[:checked_in] == 'true'
+        assigned_team = session_guests_params[:assigned_team]
+
+        SessionGuests::CheckIn.call(
+          session_guest:,
+          checked_in:,
+          assigned_team:
+        )
+      end
+    end
+
+    redirect_to admin_session_path(id: session_id, date:),
+                notice: 'Session guests updated successfully'
+  rescue StandardError => e
+    flash[:error] = e.message
     redirect_to admin_session_path(id: session_id, date:)
   end
 

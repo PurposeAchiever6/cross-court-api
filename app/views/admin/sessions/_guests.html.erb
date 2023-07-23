@@ -10,24 +10,54 @@
       <th>Email</th>
       <th>Access Code</th>
       <th>Invited By</th>
+      <th></th>
+      <th></th>
     </tr>
-    <% guests.each do |guest| %>
+    <%= form_with url: update_session_guests_admin_session_path(id: resource.id, date: date),
+                  local: true do %>
+      <% guests.each do |guest| %>
+        <%= hidden_field_tag 'session_guests[][id]', guest.id %>
+        <tr>
+          <td class='align-middle'>
+            <%= guest.full_name %>
+          </td>
+          <td class='align-middle'>
+            <%= guest.phone_number %>
+          </td>
+          <td class='align-middle'>
+            <%= guest.email %>
+          </td>
+          <td class='align-middle'>
+            <%= guest.access_code %>
+          </td>
+          <td class='align-middle'>
+            <%= link_to guest.user_session.user_full_name,
+                        admin_user_path(guest.user_session.user_id) %>
+          </td>
+          <td class='align-middle'>
+            <div class='flex items-center'>
+              <%= check_box_tag 'session_guests[][checked_in]',
+                                true,
+                                guest.checked_in,
+                                id: "checked_in-#{guest.id}",
+                                class: 'mr-1' %>
+              <%= label_tag("checked_in-#{guest.id}", 'Check In Guest') %>
+            </div>
+          </td>
+          <td class='align-middle'>
+            <div class='flex items-center'>
+              <%= label_tag :assigned_team, 'Assign team:', class: 'mr-2' %>
+              <%= select_tag 'session_guests[][assigned_team]',
+                             options_for_select(['light', 'dark'], guest.assigned_team),
+                             id: "user_sessions__assigned_team-#{guest.id}",
+                             include_blank: true %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
       <tr>
-        <td class='align-middle'>
-          <%= guest.full_name %>
-        </td>
-        <td class='align-middle'>
-          <%= guest.phone_number %>
-        </td>
-        <td class='align-middle'>
-          <%= guest.email %>
-        </td>
-        <td class='align-middle'>
-          <%= guest.access_code %>
-        </td>
-        <td class='align-middle'>
-          <%= link_to guest.user_session.user_full_name,
-                      admin_user_path(guest.user_session.user_id) %>
+        <td class="text-center" colspan='7'>
+          <%= submit_tag 'Update All', class: 'w-1/5 mt-4', data: { disable_with: 'Loading...' } %>
         </td>
       </tr>
     <% end %>

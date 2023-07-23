@@ -12,6 +12,8 @@
 #  user_session_id :bigint
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  checked_in      :boolean          default(FALSE)
+#  assigned_team   :string
 #
 # Indexes
 #
