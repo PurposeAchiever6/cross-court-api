@@ -163,33 +163,7 @@
   <tbody>
     <tr>
       <td>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-          <tbody>
-            <tr>
-              <td>
-                <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; background-color: #000; border-radius: 0; width: 630px; margin: 0 auto;" width="630">
-                  <tbody>
-                    <tr>
-                      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; padding-bottom: 15px; padding-left: 15px; padding-right: 15px; padding-top: 15px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
-                        <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-                          <tr>
-                            <td class="pad" style="width:100%;padding-right:0px;padding-left:10px;padding-top:10px;">
-                              <div align="left" class="alignment" style="line-height:10px">
-                                <a href=<%= ENV['FRONTENT_URL'] %> style="outline:none" tabindex="-1" target="_blank">
-                                  <img src="https://content.app-us1.com/OvYpm/2023/07/06/62e4bfe3-693f-4123-ae02-da82d3538d7e.png" style="height: auto; display: block; border: 0; max-width: 80px; width: 100%;" width="80"/>
-                                </a>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <%= render 'shared/mails/top_left_logo' %>
         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
           <tbody>
             <tr>
@@ -237,7 +211,7 @@
                                 <div class="" style="font-size: 12px; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 21.6px; color: #ffffff; line-height: 1.8;">
                                   <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 28.8px;">
                                     <span style="font-size:16px;">
-                                      Hey <%= @user.first_name.capitalize %>, great news, your <%= @session.experience_name %> at Crosscourt <%= @location.name %> is booked for <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %>. See you soon!
+                                      Hey <%= @user.first_name.titleize %>, great news, your <%= @session.experience_name %> at Crosscourt <%= @location.name %> is booked for <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> on <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %>. See you soon!
                                     </span>
                                   </p>
                                   <p>
@@ -331,188 +305,7 @@
             </tr>
           </tbody>
         </table>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5 mobile_hide" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-          <tbody>
-            <tr>
-              <td>
-                <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; background-color: #000; width: 630px; margin: 0 auto;" width="630">
-                  <tbody>
-                    <tr>
-                      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; background-color: #ffffff; border-left: 30px solid #000000; border-top: 30px solid #000000; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-right: 0px; border-bottom: 0px;" width="25%">
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-                          <tr>
-                            <td class="pad">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:right;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;"><strong>WHEN</strong></p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                      <td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; background-color: #ffffff; border-right: 30px solid #000000; border-top: 30px solid #000000; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-bottom: 0px; border-left: 0px;" width="75%">
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-                          <tr>
-                            <td class="pad">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <strong>
-                                    <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %>
-                                  </strong>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-                          <tr>
-                            <td class="pad">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> - <%= (@user_session.time + @session.duration_minutes.minutes).strftime(Session::TIME_FORMAT).upcase %>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-6 desktop_hide" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-hide: all; max-height: 0; display: none; overflow: hidden;" width="100%">
-          <tbody>
-            <tr>
-              <td>
-                <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-hide: all; max-height: 0; display: none; overflow: hidden; color: #000; background-color: #000; width: 630px; margin: 0 auto;" width="630">
-                  <tbody>
-                    <tr>
-                      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; background-color: #ffffff; border-left: 30px solid #000000; border-right: 30px solid #000000; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-bottom: 0px;" width="100%">
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word; mso-hide: all; max-height: 0; display: none; overflow: hidden;" width="100%">
-                          <tr>
-                            <td class="pad" style="padding-left:20px;padding-right:20px;">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <strong>
-                                    <%= @user_session.date.strftime(Session::MONTH_NAME_FORMAT) %>
-                                  </strong>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word; mso-hide: all; max-height: 0; display: none; overflow: hidden;" width="100%">
-                          <tr>
-                            <td class="pad" style="padding-left:20px;padding-right:20px;">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <%= @user_session.time.strftime(Session::TIME_FORMAT).upcase %> - <%= (@user_session.time + @session.duration_minutes.minutes).strftime(Session::TIME_FORMAT).upcase %>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7 mobile_hide" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-          <tbody>
-            <tr>
-              <td>
-                <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; background-color: #000; width: 630px; margin: 0 auto;" width="630">
-                  <tbody>
-                    <tr>
-                      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; background-color: #ffffff; border-left: 30px solid #000000; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px;" width="25%">
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-                          <tr>
-                            <td class="pad">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:right;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;"><strong>WHERE</strong></p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                      <td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; background-color: #ffffff; border-right: 30px solid #000000; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-bottom: 0px; border-left: 0px;" width="75%">
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-                          <tr>
-                            <td class="pad">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <strong>
-                                    <%= @location.name %>
-                                  </strong>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-                          <tr>
-                            <td class="pad">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <%= @location.full_address %>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8 desktop_hide" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-hide: all; max-height: 0; display: none; overflow: hidden;" width="100%">
-          <tbody>
-            <tr>
-              <td>
-                <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-hide: all; max-height: 0; display: none; overflow: hidden; color: #000; background-color: #000; width: 630px; margin: 0 auto;" width="630">
-                  <tbody>
-                    <tr>
-                      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; background-color: #ffffff; border-left: 30px solid #000000; border-right: 30px solid #000000; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-bottom: 0px;" width="100%">
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word; mso-hide: all; max-height: 0; display: none; overflow: hidden;" width="100%">
-                          <tr>
-                            <td class="pad" style="padding-left:20px;padding-right:20px;">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <strong>
-                                    <%= @location.name %>
-                                  </strong>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                        <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word; mso-hide: all; max-height: 0; display: none; overflow: hidden;" width="100%">
-                          <tr>
-                            <td class="pad" style="padding-left:20px;padding-right:20px;">
-                              <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;">
-                                  <%= @location.full_address %>
-                                </p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <%= render 'shared/mails/session_info', user_session: @user_session, session: @session, location: @location %>
         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-9" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
           <tbody>
             <tr>
@@ -525,7 +318,7 @@
                           <tr>
                             <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
                               <div style="color:#101112;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-                                <p style="margin: 0;"><strong>Please note: </strong>Plan to arrive at the club at least 20 minutes before your session starts.</p>
+                                <p style="margin: 0;"><strong>Please note:</strong> Plan to arrive at the club at least 20 minutes before your session starts.</p>
                               </div>
                             </td>
                           </tr>
@@ -637,71 +430,7 @@
               </tr>
             </tbody>
           </table>
-          <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-12" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-            <tbody>
-              <tr>
-                <td>
-                  <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; background-color: #0f0f1a; width: 630px; margin: 0 auto;" width="630">
-                    <tbody>
-                      <tr>
-                        <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; border-left: 30px solid #000000; border-top: 20px solid #000000; padding-bottom: 20px; padding-left: 20px; padding-right: 20px; padding-top: 20px; vertical-align: middle; border-right: 0px; border-bottom: 0px;" width="75%">
-                          <table border="0" cellpadding="0" cellspacing="0" class="heading_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-                            <tr>
-                              <td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
-                                <h2 style="margin: 0; color: #ffffff; direction: ltr; font-family: Verdana, Geneva, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Where to park.</span></h2>
-                              </td>
-                            </tr>
-                          </table>
-                          <table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-                            <tr>
-                              <td class="pad" style="padding-right:20px;">
-                                <div style="color:#9999ff;direction:ltr;font-family:Verdana, Geneva, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
-                                  <p style="margin: 0;"><span style="color: #ffffff;">There is a gated parking lot attached to the club. Please pull all the way forward to avoid blocking the driveway. Additional parking can be found in the back.</span></p>
-                                </div>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                        <td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; border-right: 30px solid #000000; border-top: 20px solid #000000; padding-right: 48px; vertical-align: middle; border-bottom: 0px; border-left: 0px;" width="25%">
-                          <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1 mobile_hide" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-                            <tr>
-                              <td class="pad" style="padding-left:5px;width:100%;padding-right:0px;">
-                                <div align="center" class="alignment" style="line-height:10px"><img src="https://content.app-us1.com/OvYpm/2023/07/06/9553640f-bd44-4422-8397-e3b8feb39d0c.png" style="height: auto; display: block; border: 0; max-width: 68px; width: 100%;" width="68"/></div>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-13" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-            <tbody>
-              <tr>
-                <td>
-                  <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; background-color: #000; width: 630px; margin: 0 auto;" width="630">
-                    <tbody>
-                      <tr>
-                        <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; font-weight: 400; border-left: 30px solid #000000; border-right: 30px solid #000000; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-bottom: 0px;" width="100%">
-                          <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-                            <tr>
-                              <td class="pad" style="width:100%;">
-                                <div align="center" class="alignment" style="line-height:10px"><img alt="I'm an image" src="https://content.app-us1.com/OvYpm/2023/07/06/f16a189f-e30a-47e8-8d31-1efbe6185dcd.png" style="height: auto; display: block; border: 0; max-width: 570px; width: 100%;" title="I'm an image" width="570"/></div>
-                              </td>
-                            </tr>
-                          </table>
-                          <div class="spacer_block block-2" style="height:60px;line-height:60px;font-size:1px;"> </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <%= render 'shared/mails/where_to_park' %>
         <% end %>
         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-14" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
           <tbody>
@@ -726,7 +455,7 @@
                             <td class="pad">
                               <div class="levelOne" style="margin-left: 0;">
                                 <ol class="leftList" start="1" style="margin-top: 0; margin-bottom: 0; padding: 0; padding-left: 20px; color: #fff; direction: ltr; letter-spacing: 0; text-align: left; mso-line-height-alt: 24px; font-family: Verdana,Geneva,sans-serif; font-size: 16px; font-weight: 400; line-height: 150%; list-style-type: decimal;">
-                                  <li style="text-align: left; margin-bottom: 0;">Canceling your session (done through “My Account”) within <%= ENV['CANCELLATION_PERIOD'] %> hours before session start time will result in a $<%= @location.late_cancellation_fee %> penalty <%= @location.late_cancellation_reimburse_credit ? '' : 'and a lost credit'%>. Canceling before the <%= ENV['CANCELLATION_PERIOD'] %> hours will return the credit to your account at no fee.</li>
+                                  <li style="text-align: left; margin-bottom: 0;">Canceling your session (done through “My Account”) within <%= ENV['CANCELLATION_PERIOD'] %> hours before session start time will result in a $<%= @location.late_cancellation_fee %> penalty<%= @location.late_cancellation_reimburse_credit ? '' : ' and a lost credit'%>. Canceling before the <%= ENV['CANCELLATION_PERIOD'] %> hours will return the credit to your account at no fee.</li>
                                   <li style="text-align: left; margin-bottom: 0;">Arriving at your session <%= @location.late_arrival_minutes %> minutes after session start time will result in a $<%= @location.late_arrival_fee %> penalty. Please note: You receive 3 unpenalized late arrivals before being charged.</li>
                                   <li style="text-align: left; margin-bottom: 0;">No-showing to your session without canceling ahead of time will result in a $<%= ENV['NO_SHOW_UP_FEE'] %> penalty and lost session credit.</li>
                                 </ol>

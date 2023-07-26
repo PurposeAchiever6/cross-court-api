@@ -26,6 +26,12 @@ describe SessionGuests::Add do
 
     it { expect { subject }.to have_enqueued_job(::Sonar::SendMessageJob) }
 
+    it 'sends session guest booked email' do
+      expect { subject }.to have_enqueued_job(
+        ActionMailer::MailDeliveryJob
+      ).with('SessionMailer', 'guest_session_booked', anything, anything)
+    end
+
     it 'has the expected data' do
       subject
       session_guest = SessionGuest.last

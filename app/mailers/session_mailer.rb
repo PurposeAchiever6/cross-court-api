@@ -1,8 +1,6 @@
 class SessionMailer < ApplicationMailer
   def session_booked
-    @user_session = UserSession.find_by(id: params[:user_session_id])
-    return unless @user_session
-
+    @user_session = UserSession.find(params[:user_session_id])
     event = @user_session.create_ics_event
     @session = @user_session.session
     @location = @session.location
@@ -12,6 +10,24 @@ class SessionMailer < ApplicationMailer
       content: event.export
     }
     mail(to: @user_session.user_email, subject: I18n.t('mailer.session.booked'))
+  end
+
+  def guest_session_booked
+    @session_guest = SessionGuest.find(params[:session_guest_id])
+    @user_session = @session_guest.user_session
+    event = @user_session.create_ics_event
+    @session = @user_session.session
+    @location = @session.location
+    @user = User.new(
+      first_name: @session_guest.first_name,
+      last_name: @session_guest.last_name,
+      email: @session_guest.email
+    )
+    attachments[I18n.t('mailer.session.add_to_calendar')] = {
+      mime_type: 'text/calendar',
+      content: event.export
+    }
+    mail(to: @user.email, subject: I18n.t('mailer.session.booked'))
   end
 
   def checked_in_session_notice

@@ -4,11 +4,13 @@ module UserSessions
 
     around do |interactor|
       ActiveRecord::Base.transaction do
+        user = context.user
         user_session = UserSession.create!(
+          user:,
           session: context.session,
-          user: context.user,
           date: context.date,
-          goal: context.goal
+          goal: context.goal,
+          first_session: user.user_sessions.reserved_or_confirmed.count.zero?
         )
 
         context.user_session = user_session

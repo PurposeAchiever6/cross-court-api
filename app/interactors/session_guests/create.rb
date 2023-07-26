@@ -25,6 +25,8 @@ module SessionGuests
 
       ::ActiveCampaign::CreateUpdateContactAndAddToListJob.perform_later(nil, guest_attrs)
 
+      SessionMailer.with(session_guest_id: session_guest.id).guest_session_booked.deliver_later
+
       ::Sonar::SendMessageJob.perform_later(
         guest_phone_number,
         I18n.t(

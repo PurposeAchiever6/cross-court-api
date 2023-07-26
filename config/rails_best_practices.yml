@@ -13,7 +13,7 @@ IsolateSeedDataCheck:
       ],
   }
 KeepFindersOnTheirOwnModelCheck: {}
-LawOfDemeterCheck: { ignored_files: ["db/migrate", "app/jobs/users/inactive_members_job.rb", "app/services/active_campaign_service.rb"] }
+LawOfDemeterCheck: { ignored_files: ["db/migrate", "app/jobs/users/inactive_members_job.rb", "app/services/active_campaign_service.rb", "app/views/session_mailer/guest_session_booked.html.erb"] }
 #LongLineCheck: { max_line_length: 80 }
 MoveCodeIntoControllerCheck: {}
 MoveCodeIntoHelperCheck: { array_count: 3 }
