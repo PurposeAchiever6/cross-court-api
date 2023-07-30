@@ -151,6 +151,9 @@ en:
       inactive_first_timer_user: >
         %{name} (phone: %{phone}) has played his *first free session %{last_session_days_ago} day(s) ago*
         and didn't rebook or bought a membership.
+      member_with_credits_left: >
+        %{name} on the membership %{subscription_name} has only used %{credits_used} credits this
+        month (2 weeks before billing period end). Feel free to reach out at %{phone} or %{email}.
       season_pass_purchased: >
         %{name} has *purchased a season pass* (%{product_name})
       subscription_canceled: >

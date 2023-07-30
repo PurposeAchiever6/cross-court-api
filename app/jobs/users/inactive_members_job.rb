@@ -8,10 +8,20 @@ module Users
         :last_checked_in_user_session,
         active_subscription: :product
       ).members.find_each do |user|
+        send_credits_left_reminder = send_credits_left_reminder?(user)
+        product = user.active_subscription.product
+
+        if send_credits_left_reminder
+          SlackService.new(user).member_with_credits_left(
+            subscription_name: product.name,
+            credits_used: product.credits - user.subscription_credits
+          )
+        end
+
         next if user.first_future_user_session
         next unless user.last_checked_in_user_session
 
-        if send_credits_left_reminder?(user)
+        if send_credits_left_reminder
           SonarService.send_message(
             user,
             I18n.t('notifier.sonar.subscription_credits_left_reminder',

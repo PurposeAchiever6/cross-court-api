@@ -49,6 +49,10 @@ class SlackService
     notify_inactive('notifier.slack.inactive_first_timer_user', options)
   end
 
+  def member_with_credits_left(options = {})
+    notify_inactive('notifier.slack.member_with_credits_left', options)
+  end
+
   def season_pass_purchased(product)
     notify_product('notifier.slack.season_pass_purchased', product)
   end
@@ -122,7 +126,8 @@ class SlackService
   def notify_inactive(i18n_message, options = {})
     options = {
       name: user.full_name,
-      phone: user.phone_number
+      phone: user.phone_number,
+      email: user.email
     }.merge(options)
 
     notify(I18n.t(i18n_message, **options), channel: ENV.fetch('SLACK_CHANNEL_CHURN', nil))

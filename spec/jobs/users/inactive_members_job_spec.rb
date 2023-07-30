@@ -50,12 +50,23 @@ describe Users::InactiveMembersJob do
     before do
       user.update!(subscription_credits: user_subscription_credits)
       allow(SendSonar).to receive(:message_customer)
+      allow_any_instance_of(Slack::Notifier).to receive(:ping)
     end
 
     subject { described_class.perform_now }
 
     it 'sends credits left reminder message' do
       expect(SonarService).to receive(:send_message).with(user, credits_left_reminder_msg).once
+      subject
+    end
+
+    it 'sends member credits left slack message' do
+      expect_any_instance_of(SlackService).to receive(
+        :member_with_credits_left
+      ).with(
+        subscription_name: product.name,
+        credits_used: product.credits - user_subscription_credits
+      )
       subject
     end
 
