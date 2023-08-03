@@ -34,6 +34,7 @@ module UserSessions
         user
       )
     rescue ActiveCampaignException
+      Rollbar.error(e)
     end
   end
 end

@@ -24,11 +24,15 @@ module Sessions
                   ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN
                 end
 
-        active_campaign_service.create_deal(event, user)
+        begin
+          active_campaign_service.create_deal(event, user)
 
-        send_time_to_re_up(user)
-        send_drop_in_re_up(user, user_session)
-        send_checked_in_session_notice(user) if user.active_subscription
+          send_time_to_re_up(user)
+          send_drop_in_re_up(user, user_session)
+          send_checked_in_session_notice(user) if user.active_subscription
+        rescue ActiveCampaignException
+          Rollbar.error(e)
+        end
       end
     end
 

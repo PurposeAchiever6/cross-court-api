@@ -3,6 +3,7 @@ module ActiveCampaign
     module Event
       ACCOUNT_CONFIRMATION = 'Account Confirmation'.freeze
       ACCOUNT_CREATION = 'Account Creation'.freeze
+      AT_RISK_MEMBERS = 'At Risk Members'.freeze
       CANCELLED_MEMBERSHIP = 'Cancelled Membership'.freeze
       DROP_IN_RE_UP = 'Drop in Re Up'.freeze
       DROP_IN_SESSION_EXPIRE_SOON = 'Drop in Session Expire Soon'.freeze

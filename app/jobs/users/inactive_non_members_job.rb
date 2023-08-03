@@ -39,6 +39,7 @@ module Users
           SlackService.new(user).inactive_user
         end
       rescue ActiveCampaignException
+        Rollbar.error(e)
         next
       end
     end

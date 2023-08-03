@@ -51,6 +51,9 @@ describe Users::InactiveMembersJob do
       user.update!(subscription_credits: user_subscription_credits)
       allow(SendSonar).to receive(:message_customer)
       allow_any_instance_of(Slack::Notifier).to receive(:ping)
+      ActiveCampaignMocker.new(
+        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+      ).mock
     end
 
     subject { described_class.perform_now }
@@ -66,6 +69,13 @@ describe Users::InactiveMembersJob do
       ).with(
         subscription_name: product.name,
         credits_used: product.credits - user_subscription_credits
+      )
+      subject
+    end
+
+    it 'creates Active Campaign deal' do
+      expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).with(
+        ::ActiveCampaign::Deal::Event::AT_RISK_MEMBERS, user
       )
       subject
     end

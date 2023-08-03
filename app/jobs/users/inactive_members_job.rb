@@ -16,6 +16,7 @@ module Users
             subscription_name: product.name,
             credits_used: product.credits - user.subscription_credits
           )
+          create_risk_member_deal(user)
         end
 
         next if user.first_future_user_session
@@ -51,6 +52,17 @@ module Users
 
     def send_book_reminder?(user)
       1.week.ago.to_date == user.last_checked_in_user_session.date && user.credits?
+    end
+
+    def create_risk_member_deal(user)
+      ActiveCampaignService.new(
+        pipeline_name: ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+      ).create_deal(
+        ActiveCampaign::Deal::Event::AT_RISK_MEMBERS,
+        user
+      )
+    rescue ActiveCampaignException
+      Rollbar.error(e)
     end
   end
 end
