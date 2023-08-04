@@ -23,6 +23,7 @@ module UserSessions
              UserSessions::ValidateDate,
              ShootingMachineReservations::Create,
              UserSessions::AutoConfirm,
-             UserSessions::SendBookedEmail
+             UserSessions::SendBookedEmail,
+             Events::SessionBooked
   end
 end

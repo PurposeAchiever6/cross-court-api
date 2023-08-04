@@ -17,7 +17,7 @@ module Users
         user.save!
       end
 
-      UsersQuery.new.expired_drop_in_credits_in(15.days).each do |user|
+      UsersQuery.new.expired_drop_in_credits_in(25.days).each do |user|
         active_campaign_service.create_deal(
           ::ActiveCampaign::Deal::Event::DROP_IN_SESSION_EXPIRE_SOON,
           user

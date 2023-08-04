@@ -225,6 +225,16 @@ describe UserSessions::Create do
         ).with('SessionMailer', 'session_booked', anything, anything)
       end
 
+      it 'enques ActiveCampaign::CreateDealJob' do
+        expect { subject }.to have_enqueued_job(
+          ::ActiveCampaign::CreateDealJob
+        ).with(
+          ::ActiveCampaign::Deal::Event::SESSION_BOOKED,
+          user.id,
+          user_session_id: anything
+        )
+      end
+
       context 'when user reserves a shooting machine' do
         let!(:payment_method) { create(:payment_method, user:, default: true) }
         let!(:shooting_machine) { create(:shooting_machine, session:) }
