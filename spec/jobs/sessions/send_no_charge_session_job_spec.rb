@@ -13,7 +13,10 @@ describe Sessions::SendNoChargeSessionJob do
         skill_session:,
         is_open_club: open_club,
         is_private:,
-        coming_soon:
+        coming_soon:,
+        allow_auto_enable_guests:,
+        guests_allowed:,
+        guests_allowed_per_user:
       )
     end
     let!(:user_subscription) { create(:subscription, user:, product:) }
@@ -30,6 +33,9 @@ describe Sessions::SendNoChargeSessionJob do
     let(:open_club) { false }
     let(:is_private) { false }
     let(:coming_soon) { false }
+    let(:allow_auto_enable_guests) { false }
+    let(:guests_allowed) { nil }
+    let(:guests_allowed_per_user) { nil }
 
     subject { Sessions::SendNoChargeSessionJob.perform_now }
 
@@ -72,6 +78,28 @@ describe Sessions::SendNoChargeSessionJob do
       end
 
       it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
+    end
+
+    # TODO: Fix this test
+    xcontext 'when the session allows auto enable guests' do
+      let(:allow_auto_enable_guests) { true }
+
+      before do
+        ENV['AUTO_ENABLE_GUESTS_ALLOWED'] = '5'
+        ENV['AUTO_ENABLE_GUESTS_ALLOWED_PER_USER'] = '1'
+      end
+
+      it do
+        expect {
+          subject
+        }.to change { session.reload.guests_allowed }.from(nil).to(5)
+      end
+
+      it do
+        expect {
+          subject
+        }.to change { session.reload.guests_allowed_per_user }.from(nil).to(1)
+      end
     end
 
     context 'when the session is a skill session' do

@@ -19,6 +19,8 @@ module Sessions
           sessions.each do |session|
             next if session.reservations_count(date) > Session::RESERVATIONS_LIMIT_FOR_NO_CHARGE
 
+            auto_enable_guests(session) if session.allow_auto_enable_guests?
+
             User.joins(active_subscription: :product)
                 .where(subscriptions: { status: :active })
                 .where(products: { id: product.id })
@@ -34,6 +36,19 @@ module Sessions
           end
         end
       end
+    end
+
+    def auto_enable_guests(session)
+      guests_allowed = ENV.fetch('AUTO_ENABLE_GUESTS_ALLOWED', '5').to_i
+      guests_allowed_per_user = ENV.fetch('AUTO_ENABLE_GUESTS_ALLOWED_PER_USER', '1').to_i
+
+      session.guests_allowed = guests_allowed if (session.guests_allowed || 0) < guests_allowed
+
+      if (session.guests_allowed_per_user || 0) < guests_allowed_per_user
+        session.guests_allowed_per_user = guests_allowed_per_user
+      end
+
+      session.save! if session.changed?
     end
   end
 end

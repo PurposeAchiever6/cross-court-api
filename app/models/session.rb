@@ -33,6 +33,7 @@
 #  theme_description               :text
 #  cost_credits                    :integer          default(1)
 #  allow_back_to_back_reservations :boolean          default(TRUE)
+#  allow_auto_enable_guests        :boolean          default(FALSE)
 #
 # Indexes
 #

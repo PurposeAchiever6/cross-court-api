@@ -7,7 +7,7 @@ ActiveAdmin.register Session do
                 :theme_title, :theme_subheading, :theme_description,
                 :all_skill_levels_allowed, :allow_back_to_back_reservations, :cc_cash_earned,
                 :default_referee_id, :default_sem_id, :default_coach_id, :guests_allowed,
-                :guests_allowed_per_user, :cost_credits,
+                :guests_allowed_per_user, :cost_credits, :allow_auto_enable_guests,
                 product_ids: [],
                 session_exceptions_attributes: %i[id date _destroy],
                 shooting_machines_attributes: %i[id start_time end_time price _destroy]
@@ -85,6 +85,7 @@ ActiveAdmin.register Session do
     toggle_bool_column :members_only
     toggle_bool_column :coming_soon
     toggle_bool_column :is_private
+    toggle_bool_column :allow_auto_enable_guests
 
     actions unless params['scope'] == 'deleted'
   end
@@ -101,6 +102,7 @@ ActiveAdmin.register Session do
       f.input :coming_soon
       f.input :is_private
       f.input :members_only
+      f.input :allow_auto_enable_guests
       f.input :products,
               collection: Product.recurring.order(price: :asc),
               label: 'Allowed Members',
@@ -214,6 +216,7 @@ ActiveAdmin.register Session do
       row :allow_back_to_back_reservations
       row :coming_soon
       row :is_private
+      row :allow_auto_enable_guests
       row :guests_allowed
       row :guests_allowed_per_user
       row :votes do |session|

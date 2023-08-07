@@ -1,53 +1,309 @@
-<body class='session-booked__body'>
-  <div style='margin:0 auto;'>
-    <a href=<%= ENV['FRONTENT_URL'] %>>
-      <img
-        class='session-booked__header-image'
-        src='https://content.app-us1.com/OvYpm/2021/12/13/52b946bf-11ee-4cd4-ae07-7336e310d05a.png'
-      >
-    </a>
-    <br />
-    <br />
-    <div style='background:#1a1a1a; mix-blend-mode:screen;'>
-      <p style="background:#1a1a1a; mix-blend-mode:difference;">
-        Dear <%= @user.first_name %>,
-        <br />
-        <br />
-        We noticed that the session scheduled on <%= @date.strftime(Session::DAY_MONTH_NAME_FORMAT) %>
-        at <%= @session.time.strftime(Session::TIME_FORMAT) %> at <%= @session.location_name %> could
-        use a couple more players. As a result, we are offering you an opportunity
-        to book this session with no credit required.
-        <br />
-        <br />
-        Please note: we kindly request that the intensity level requirements when booking this
-        particular session are met.
-        <br />
-        <br />
-        To take advantage of this offer, please click the link below:
-        <br />
-        <br />
-        <%= link_to 'Link to session reservation',
-                    "#{@session.frontend_details_url(@date)}?fromFreeBooking=true",
-                    target: '_blank',
-                    rel: 'noreferrer',
-                    style: 'color: white' %>
-        <br />
-        <br />
-        Please note that this offer is valid for a limited time only, and bookings are subject to
-        availability. We encourage you to secure your spot as soon as possible to avoid
-        disappointment.
-        <br />
-        <br />
-        We appreciate your continued support as a <%= @user.active_subscription.name %> member and
-        look forward to seeing you at the session. If you have any questions or require further
-        assistance, please don't hesitate to reach out to our dedicated customer support team.
-        <br />
-        <br />
-        Trust the progress,
-        <br />
-        <br />
-        The Crosscourt Team.
-      </p>
-    </div>
-  </div>
-</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+  <head>
+    <!--[if gte mso 9]>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:AllowPNG/>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
+    <link href="https://fonts.cdnfonts.com/css/shapiro" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Book session for free and add a guest</title>
+    <style type="text/css">
+      .ReadMsgBody {
+      width: 100%;
+      }
+      .ExternalClass {
+      width: 100%;
+      }
+      body, div, p, a, li, td, span {
+      -webkit-text-size-adjust: 100%;
+      }
+      @media only screen and (max-width:480px) {
+      .MainContainer {
+      width: 100% !important;
+      height: auto !important;
+      }
+      .spechide {
+      display: none !important;
+      }
+      .banner img {
+      width: 100% !important;
+      height: auto !important;
+      }
+      . .mob_center_alig {
+      text-align: center!important;
+      }
+      .mob_width_both {
+      width: 20px !important;
+      }
+      .mob_soc_icon {
+      width: 15px !important;
+      }
+      .mob_font_h1 {
+      font-size: 30px !important;
+      line-height: 36px !important;
+      }
+      .mob_font_sub_h1 {
+      font-size: 18px !important;
+      line-height: 22px !important;
+      }
+      .mob_font_body {
+      font-size: 14px !important;
+      line-height: 18px !important;
+      }
+      }
+      @media only screen and (max-width:540px) {
+      .MainContainer {
+      width: 100% !important;
+      height: auto !important;
+      }
+      .spechide {
+      display: none !important;
+      }
+      .banner img {
+      width: 100% !important;
+      height: auto !important;
+      }
+      .mob_center_alig {
+      text-align: center!important;
+      }
+      .mob_width_both {
+      width: 20px !important;
+      }
+      .mob_soc_icon {
+      width: 15px !important;
+      }
+      .mob_font_h1 {
+      font-size: 30px !important;
+      line-height: 36px !important;
+      }
+      .mob_font_sub_h1 {
+      font-size: 18px !important;
+      line-height: 22px !important;
+      }
+      .mob_font_body {
+      font-size: 14px !important;
+      line-height: 18px !important;
+      }
+      }
+    </style>
+    <!--[if mso]>
+    <style> body,table tr,table td,a, span,table.MsoNormalTable {  font-family:Arial, Helvetica, sans-serif !important;  }</style>
+    <!--<![endif]-->
+  </head>
+  <body bgcolor="#ffffff" style="margin:0 0 0 0">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="100%">
+      <tbody>
+        <tr>
+          <td>
+            <table width="700" border="0" cellspacing="0" cellpadding="0" bgcolor="#000000" align="center" style="700px" class="MainContainer">
+              <tbody>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              <tbody>
+                                <tr>
+                                  <td width="50" class="mob_width_both">&nbsp;</td>
+                                  <td>
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                      <tbody>
+                                        <tr>
+                                          <td height="48">&nbsp;</td>
+                                        </tr>
+                                        <!---Logo Start-->
+                                        <tr>
+                                          <td>
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tbody>
+                                                <tr>
+                                                  <td width="88"><a href=<%= ENV['FRONTENT_URL'] %> target="_blank"> <img style="display:block; max-width: 88px; width:88px" src="https://content.app-us1.com/OvYpm/2023/07/06/62e4bfe3-693f-4123-ae02-da82d3538d7e.png" width="88" height="88" alt="Logo" title="" border="0"></a></td>
+                                                  <td>&nbsp;</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                        <!---logo End-->
+                                        <!---Header start-->
+                                        <tr>
+                                          <td height="48">&nbsp;</td>
+                                        </tr>
+                                        <!---Header start-->
+                                        <tr>
+                                          <td>
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tbody>
+                                                <tr>
+                                                  <td align="left" style="font-family: Tahoma, Verdana, sans-serif, Arial; font-size:32px; line-height:38px; font-weight:700; color:#FFFFFF; text-align: left" class="mob_font_h1">Book session for free<%= @session.guests_allowed&.positive? ? ' and add a guest' : '' %>.</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                        <!---Header End-->
+                                        <tr>
+                                          <td height="24">&nbsp;</td>
+                                        </tr>
+                                        <!---Body start-->
+                                        <tr>
+                                          <td align="left" style="font-family: Verdana, sans-serif, Arial; font-size:18px; line-height:26px; font-weight:400; color:#FFFFFF; text-align: left" class="mob_font_body"><span style="font-size: 22px; line-height: 26px;"><strong>Hi <%= @user.first_name %>,</strong></span><br>
+                                            <br>
+                                            We noticed that the session scheduled on <strong><%= @date.strftime(Session::DAY_MONTH_NAME_FORMAT) %>
+                                            at <%= @session.time.strftime(Session::TIME_FORMAT) %> at <%= @session.location_name %></strong> could use a couple more players. <br>
+                                            <br>
+                                            As a result, we are offering you an opportunity to book this session with no credit required<%= @session.guests_allowed&.positive? ? ' and the ability to use a free guest pass' : '' %>.<br>
+                                            <br>
+                                            Please note: we kindly request that the intensity level requirements when booking this particular session are met for all parties. <br>
+                                            <br>
+                                            To take advantage of this offer, click below.
+                                          </td>
+                                        </tr>
+                                        <!---Body End-->
+                                        <tr>
+                                          <td height="48">&nbsp;</td>
+                                        </tr>
+                                        <!---CTA Start-->
+                                        <tr>
+                                          <td width="100%" align="center">
+                                            <div>
+                                              <!--[if mso]>
+                                              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" rel="noopener" target="_blank" href="#" style="height:40px;v-text-anchor:middle;width:100%;" arcsize="0%" stroke="f" fillcolor="#9999FF">
+                                                <w:anchorlock/>
+                                                <center>
+                                                  <![endif]-->
+                                                  <a rel="noopener" href=<%="#{@session.frontend_details_url(@date)}?fromFreeBooking=true"%> target="_blank" rel="noreferrer" style="background-color:#9999FF;border-radius:0px;color:#1A1A1A;display:inline-block;font-size: 18px; font-family:Verdana, Helvetica, Arial, sans-serif;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:100%;-webkit-text-size-adjust:none;">BOOK SESSION</a>
+                                                  <!--[if mso]>
+                                                </center>
+                                              </v:roundrect>
+                                              <![endif]-->
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td height="8"></td>
+                                        </tr>
+                                        <tr>
+                                          <td align="center" style="font-family: Verdana, sans-serif, Arial; font-size:16px; line-height:26px; font-weight:700; color:#FFFFFF;" class="mob_font_body"> No credit required<%= @session.guests_allowed&.positive? ? ' + free guest pass' : '' %></td>
+                                        </tr>
+                                        <!---CTA End-->
+                                        <tr>
+                                          <td height="48">&nbsp;</td>
+                                        </tr>
+                                        <!---Body text start-->
+                                        <tr>
+                                          <td align="left" style="font-family: Verdana, sans-serif, Arial; font-size:18px; line-height:26px; font-weight:400; color:#FFFFFF; text-align: left" class="mob_font_body"> Please note that this offer is valid for a limited time only, and bookings are subject to availability. We encourage you to secure your spot as soon as possible to avoid disappointment. <br>
+                                            <br>
+                                            We appreciate your continued support as a <%= @user.active_subscription.name %> member and look forward to seeing you at the session. If you have any questions or require further assistance, please don't hesitate to reach out to our dedicated customer support team. <br>
+                                            <br>
+                                            Trust the progress, <br>
+                                            The Crosscourt Team
+                                          </td>
+                                        </tr>
+                                        <!---Body text  End-->
+                                        <tr>
+                                          <td height="48">&nbsp;</td>
+                                        </tr>
+                                        <!---footer start-->
+                                        <tr>
+                                          <td bgcolor="#0F0F1A">
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tbody>
+                                                <tr>
+                                                  <td width="48" class="mob_width_both">&nbsp;</td>
+                                                  <td>
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                      <tbody>
+                                                        <tr>
+                                                          <td height="32">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td>
+                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                              <tbody>
+                                                                <tr>
+                                                                  <td>&nbsp;</td>
+                                                                  <td width="150" align="center"><a href=<%= ENV['FRONTENT_URL'] %> target="_blank"> <img style="display:block; max-width: 193px; width: 193px" src="https://content.app-us1.com/OvYpm/2023/08/02/d60fe50c-d811-46fc-8e92-d939aa7eb865.png" width="193" height="22" alt="Crosscourt" title="" border="0"></a></td>
+                                                                  <td>&nbsp;</td>
+                                                                </tr>
+                                                              </tbody>
+                                                            </table>
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td height="24">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td width="502" align="center" class="banner"><a href=<%= ENV['FRONTENT_URL'] %> target="_blank"> <img style="display:block; max-width:502px; width: 502px" src="https://content.app-us1.com/OvYpm/2023/08/02/bdb94f3e-f982-4378-9f8d-a7827ee90577.png" width="502" height="286" alt="Crosscourt" title="" border="0"></a></td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td height="32">&nbsp;</td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </td>
+                                                  <td width="48" class="mob_width_both">&nbsp;</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                        <!---footer End-->
+                                        <tr>
+                                          <td height="48">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                          <td>
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tbody>
+                                                <tr>
+                                                  <td>&nbsp;</td>
+                                                  <td width="128">
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                      <tbody>
+                                                        <tr>
+                                                          <td width="40" align="center"><a href="https://discord.gg/URKE2dVd9P" target="_blank"> <img style="display:block; max-width: 40px; width: 40px" src="https://content.app-us1.com/OvYpm/2023/08/02/8173b07f-146a-438f-a195-bfe922f248a1.png" width="40" height="40" alt="Discord" title="" border="0"></a></td>
+                                                          <td width="48" class="mob_width_both">&nbsp;</td>
+                                                          <td width="40" align="center"><a href="https://www.instagram.com/crosscourt/" target="_blank"> <img style="display:block; max-width: 40px; width: 40px" src="https://content.app-us1.com/OvYpm/2023/08/02/5fc1f13f-dbed-429a-bf1a-5b62f5c27469.png" width="40" height="40" alt="Instagram" title="" border="0"></a></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </td>
+                                                  <td>&nbsp;</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td height="48">&nbsp;</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                  <td width="50" class="mob_width_both">&nbsp;</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

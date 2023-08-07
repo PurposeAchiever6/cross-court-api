@@ -33,6 +33,7 @@
 #  theme_description               :text
 #  cost_credits                    :integer          default(1)
 #  allow_back_to_back_reservations :boolean          default(TRUE)
+#  allow_auto_enable_guests        :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -63,6 +64,7 @@ FactoryBot.define do
     guests_allowed_per_user { nil }
     members_only { false }
     allow_back_to_back_reservations { true }
+    allow_auto_enable_guests { false }
 
     trait :daily do
       recurring { IceCube::Rule.daily }
