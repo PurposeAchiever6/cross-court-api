@@ -61,7 +61,7 @@ module Users
         ActiveCampaign::Deal::Event::AT_RISK_MEMBERS,
         user
       )
-    rescue ActiveCampaignException
+    rescue ActiveCampaignException => e
       Rollbar.error(e)
     end
   end

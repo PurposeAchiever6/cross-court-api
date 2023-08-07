@@ -30,7 +30,7 @@ module Sessions
           send_time_to_re_up(user)
           send_drop_in_re_up(user, user_session)
           send_checked_in_session_notice(user) if user.active_subscription
-        rescue ActiveCampaignException
+        rescue ActiveCampaignException => e
           Rollbar.error(e)
         end
       end

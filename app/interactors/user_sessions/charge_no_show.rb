@@ -33,7 +33,7 @@ module UserSessions
         ::ActiveCampaign::Deal::Event::FREE_SESSION_NO_SHOW,
         user
       )
-    rescue ActiveCampaignException
+    rescue ActiveCampaignException => e
       Rollbar.error(e)
     end
   end

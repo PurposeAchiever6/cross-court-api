@@ -38,7 +38,7 @@ module Users
         when today_date - 1.month
           SlackService.new(user).inactive_user
         end
-      rescue ActiveCampaignException
+      rescue ActiveCampaignException => e
         Rollbar.error(e)
         next
       end
