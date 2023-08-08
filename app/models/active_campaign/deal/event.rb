@@ -22,6 +22,7 @@ module ActiveCampaign
       SESSION_CHECK_IN = 'Session Check In'.freeze
       SESSION_CONFIRMATION = 'Session Confirmation'.freeze
       SESSION_REMINDER_6_HOURS = 'Session Reminder 6 Hours'.freeze
+      SUBMIT_CANCELLATION_REQUEST = 'Submit Cancellation Request'.freeze
       STARTED_CHECKOUT = 'Started Checkout'.freeze
       STAY_IN_THE_LOOP = 'Stay In The Loop'.freeze
       TIME_TO_RE_UP = 'Time To Re Up'.freeze

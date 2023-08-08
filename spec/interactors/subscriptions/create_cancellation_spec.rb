@@ -36,5 +36,11 @@ describe Subscriptions::CreateCancellationRequest do
         ActionMailer::MailDeliveryJob
       ).with('SubscriptionMailer', 'cancellation_request', anything, anything)
     end
+
+    it 'enques ActiveCampaign CreateDealJob' do
+      expect {
+        subject
+      }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default').once
+    end
   end
 end
