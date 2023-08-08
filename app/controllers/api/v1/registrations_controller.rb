@@ -8,7 +8,7 @@ module Api
         ActiveRecord::Base.transaction do
           super do |user|
             Users::CreateExternalIntegrations.call(user:)
-            Users::ResendVerificationEmailJob.set(wait: 24.hours).perform_later(user.id)
+            Users::ResendVerificationEmailJob.set(wait: 48.hours).perform_later(user.id)
           end
         end
       rescue StandardError => e

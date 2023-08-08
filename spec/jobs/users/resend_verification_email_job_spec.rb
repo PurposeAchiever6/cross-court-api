@@ -3,7 +3,9 @@ require 'rails_helper'
 describe Users::ResendVerificationEmailJob do
   describe '#perform' do
     before do
-      ActiveCampaignMocker.new.mock
+      ActiveCampaignMocker.new(
+        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+      ).mock
     end
 
     subject { described_class.perform_now(user.id) }

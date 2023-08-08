@@ -8,8 +8,10 @@ module Users
       return if !user || user.confirmed?
 
       user.send_confirmation_instructions
-      ActiveCampaignService.new.create_deal(
-        ::ActiveCampaign::Deal::Event::RE_CONFIRMATION_INSTRUCTIONS,
+      ActiveCampaignService.new(
+        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+      ).create_deal(
+        ::ActiveCampaign::Deal::Event::DID_NOT_VERIFY_EMAIL,
         user
       )
     end
