@@ -254,8 +254,7 @@ class ActiveCampaignService
            ::ActiveCampaign::Deal::Event::SESSION_REMINDER_6_HOURS,
            ::ActiveCampaign::Deal::Event::SESSION_CONFIRMATION,
            ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_IN_TIME,
-           ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME,
-           ::ActiveCampaign::Deal::Event::FREE_LOADERS
+           ::ActiveCampaign::Deal::Event::SESSION_CANCELLED_OUT_OF_TIME
 
         user_session =
           if args[:user_session_id]
