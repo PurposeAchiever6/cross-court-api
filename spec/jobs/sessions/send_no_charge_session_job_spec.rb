@@ -80,8 +80,7 @@ describe Sessions::SendNoChargeSessionJob do
       it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
     end
 
-    # TODO: Fix this test
-    xcontext 'when the session allows auto enable guests' do
+    context 'when the session allows auto enable guests' do
       let(:allow_auto_enable_guests) { true }
 
       before do

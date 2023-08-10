@@ -17,9 +17,9 @@ module Sessions
                              .flat_map { |session| session.calendar_events(date, date) }
 
           sessions.each do |session|
-            next if session.reservations_count(date) > Session::RESERVATIONS_LIMIT_FOR_NO_CHARGE
-
             auto_enable_guests(session) if session.allow_auto_enable_guests?
+
+            next if session.reservations_count(date) > Session::RESERVATIONS_LIMIT_FOR_NO_CHARGE
 
             User.joins(active_subscription: :product)
                 .where(subscriptions: { status: :active })
@@ -42,13 +42,19 @@ module Sessions
       guests_allowed = ENV.fetch('AUTO_ENABLE_GUESTS_ALLOWED', '5').to_i
       guests_allowed_per_user = ENV.fetch('AUTO_ENABLE_GUESTS_ALLOWED_PER_USER', '1').to_i
 
-      session.guests_allowed = guests_allowed if (session.guests_allowed || 0) < guests_allowed
+      saved_session = Session.find(session.id)
 
-      if (session.guests_allowed_per_user || 0) < guests_allowed_per_user
+      if (saved_session.guests_allowed || 0) < guests_allowed
+        saved_session.guests_allowed = guests_allowed
+        session.guests_allowed = guests_allowed
+      end
+
+      if (saved_session.guests_allowed_per_user || 0) < guests_allowed_per_user
+        saved_session.guests_allowed_per_user = guests_allowed_per_user
         session.guests_allowed_per_user = guests_allowed_per_user
       end
 
-      session.save! if session.changed?
+      saved_session.save! if saved_session.changed?
     end
   end
 end
