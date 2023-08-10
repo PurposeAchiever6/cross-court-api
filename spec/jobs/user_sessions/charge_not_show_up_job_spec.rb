@@ -27,6 +27,7 @@ describe UserSessions::ChargeNotShowUpJob do
         date: la_date.yesterday,
         state: :confirmed,
         is_free_session: true,
+        first_session: true,
         free_session_payment_intent: rand(1_000)
       )
     end
@@ -38,6 +39,7 @@ describe UserSessions::ChargeNotShowUpJob do
         checked_in: false,
         date: la_date.yesterday,
         state: :confirmed,
+        first_session: true,
         is_free_session: false
       )
     end
@@ -76,14 +78,19 @@ describe UserSessions::ChargeNotShowUpJob do
     context 'when is free session' do
       it { expect { subject }.to change { user_session_1.reload.no_show_up_fee_charged }.to(true) }
 
-      it 'calls ActiveCampaign service' do
-        expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).once
-        subject
-      end
-
       it 'calls Stripe service' do
         expect(StripeService).to receive(:confirm_intent).once
         subject
+      end
+    end
+
+    context 'when is first session and user is not member' do
+      let(:first_session) { true }
+
+      it 'calls the Active Campaign service' do
+        expect {
+          subject
+        }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default').twice
       end
     end
 

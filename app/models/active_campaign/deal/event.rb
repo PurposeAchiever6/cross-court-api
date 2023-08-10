@@ -8,9 +8,9 @@ module ActiveCampaign
       DID_NOT_VERIFY_EMAIL = 'Did Not Verify Email'.freeze
       DROP_IN_RE_UP = 'Drop in Re Up'.freeze
       DROP_IN_SESSION_EXPIRE_SOON = 'Drop in Session Expire Soon'.freeze
+      FIRST_DAY_PASS_NO_SHOW = 'First Day Pass No Show'.freeze
       FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze
       FIRST_SESSION_CHECK_IN = 'Free Session Check In'.freeze
-      FREE_SESSION_NO_SHOW = 'Free Session No Show'.freeze
       MEMBERSHIP_PAYMENT_FAILED = 'Membership Payment Failed'.freeze
       NEW_MEMBER = 'New Member'.freeze
       PROMO_CODE_REFERRAL_SUCCESS = 'Promo Code Referral Success'.freeze

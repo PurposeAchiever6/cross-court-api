@@ -9,7 +9,6 @@ module UserSessions
 
       if user_session.is_free_session
         UserSessions::ConfirmFreeSessionIntent.call(user_session:)
-        create_no_show_free_session_deal(user)
       elsif no_show_up_fee.positive?
         Users::Charge.call(
           user:,
@@ -21,20 +20,16 @@ module UserSessions
         )
       end
 
+      if user_session.first_session? && !user.active_subscription
+        ::ActiveCampaign::CreateDealJob.perform_later(
+          ::ActiveCampaign::Deal::Event::FIRST_DAY_PASS_NO_SHOW,
+          user.id,
+          {},
+          ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+        )
+      end
+
       user_session.update!(no_show_up_fee_charged: true)
-    end
-
-    private
-
-    def create_no_show_free_session_deal(user)
-      ActiveCampaignService.new(
-        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
-      ).create_deal(
-        ::ActiveCampaign::Deal::Event::FREE_SESSION_NO_SHOW,
-        user
-      )
-    rescue ActiveCampaignException => e
-      Rollbar.error(e)
     end
   end
 end

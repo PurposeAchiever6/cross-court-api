@@ -3,9 +3,6 @@ require 'rails_helper'
 describe UserSessions::ChargeNoShow do
   describe '.call' do
     before do
-      ActiveCampaignMocker.new(
-        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
-      ).mock
       allow(StripeService).to receive(:confirm_intent)
       allow(StripeService).to receive(:charge).and_return(double(id: rand(1_000)))
     end
@@ -19,6 +16,7 @@ describe UserSessions::ChargeNoShow do
     let!(:user_payment_method) { create(:payment_method, user:, default: true) }
 
     let(:is_free_session) { false }
+    let(:first_session) { false }
 
     let!(:user_session) do
       create(
@@ -29,6 +27,7 @@ describe UserSessions::ChargeNoShow do
         date: la_date.yesterday,
         state: :confirmed,
         is_free_session:,
+        first_session:,
         free_session_payment_intent: rand(1_000)
       )
     end
@@ -40,14 +39,19 @@ describe UserSessions::ChargeNoShow do
 
       it { expect { subject }.to change { user_session.reload.no_show_up_fee_charged }.to(true) }
 
-      it 'calls ActiveCampaign service' do
-        expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).once
-        subject
-      end
-
       it 'calls Stripe service' do
         expect(StripeService).to receive(:confirm_intent).once
         subject
+      end
+    end
+
+    context 'when is first session and user is not member' do
+      let(:first_session) { true }
+
+      it 'calls the Active Campaign service' do
+        expect {
+          subject
+        }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default').once
       end
     end
 

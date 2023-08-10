@@ -7,6 +7,7 @@ describe UserSessions::NoShow do
     let!(:payment_method) { create(:payment_method, user:, default: true) }
     let(:cc_cash) { 0 }
     let(:free_session_payment_intent) { nil }
+    let(:first_session) { false }
     let!(:user) { create(:user, cc_cash:) }
     let!(:user_session) do
       create(
@@ -15,6 +16,7 @@ describe UserSessions::NoShow do
         user:,
         date:,
         is_free_session: free_session,
+        first_session:,
         free_session_payment_intent:
       )
     end
@@ -100,6 +102,16 @@ describe UserSessions::NoShow do
       end
     end
 
+    context 'when is first session and user is not member' do
+      let(:first_session) { true }
+
+      it 'calls the Active Campaign service' do
+        expect {
+          subject
+        }.to have_enqueued_job(::ActiveCampaign::CreateDealJob).on_queue('default').once
+      end
+    end
+
     context 'when is free session' do
       let(:free_session) { true }
       let(:free_session_payment_intent) { rand(1_000) }
@@ -109,11 +121,6 @@ describe UserSessions::NoShow do
           pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
         ).mock
         allow(StripeService).to receive(:confirm_intent)
-      end
-
-      it 'calls ActiveCampaign service' do
-        expect_any_instance_of(ActiveCampaignService).to receive(:create_deal).once
-        subject
       end
 
       it 'calls Stripe service' do

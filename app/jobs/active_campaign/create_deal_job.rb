@@ -7,6 +7,8 @@ module ActiveCampaign
     def perform(event, user_id, args = {}, pipeline_name = ::ActiveCampaign::Deal::Pipeline::EMAILS)
       user = User.find(user_id)
       ActiveCampaignService.new(pipeline_name:).create_deal(event, user, args)
+    rescue ActiveCampaignException => e
+      Rollbar.error(e)
     end
   end
 end
