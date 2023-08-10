@@ -13,6 +13,7 @@ module ActiveCampaign
       FIRST_SESSION_CHECK_IN = 'Free Session Check In'.freeze
       MEMBERSHIP_PAYMENT_FAILED = 'Membership Payment Failed'.freeze
       NEW_MEMBER = 'New Member'.freeze
+      NON_MEMBER_FIRST_DAY_PASS_EXPIRED = 'Non Member First Day Pass Expired'.freeze
       PROMO_CODE_REFERRAL_SUCCESS = 'Promo Code Referral Success'.freeze
       PURCHASE_PLACED = 'Purchase Placed'.freeze
       REFERRAL_SUCCESS = 'Referral Success'.freeze

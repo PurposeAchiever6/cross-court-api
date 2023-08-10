@@ -2,6 +2,8 @@ require 'rails_helper'
 
 describe Users::CreditsExpirationJob do
   describe '#perform' do
+    subject { described_class.perform_now }
+
     let!(:user_1) do
       create(:user,
              credits: 1,
@@ -23,15 +25,47 @@ describe Users::CreditsExpirationJob do
 
     before do
       ActiveCampaignMocker.new.mock
-      described_class.perform_now
+      ActiveCampaignMocker.new(
+        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+      ).mock
     end
 
-    it { expect(user_1.reload.credits).to eq(0) }
-    it { expect(user_1.reload.free_session_state).to eq('expired') }
+    it do
+      subject
+      expect(user_1.reload.credits).to eq(0)
+    end
 
-    it { expect(user_2.reload.credits).to eq(1) }
-    it { expect(user_2.reload.free_session_state).to eq('not_claimed') }
+    it do
+      subject
+      expect(user_1.reload.free_session_state).to eq('expired')
+    end
 
-    it { expect(user_1.reload.credits).to eq(0) }
+    it do
+      subject
+      expect(user_2.reload.credits).to eq(1)
+    end
+
+    it do
+      subject
+      expect(user_2.reload.free_session_state).to eq('not_claimed')
+    end
+
+    # drop in expiration
+    it do
+      subject
+      expect(user_3.reload.credits).to eq(0)
+    end
+
+    context 'when the user has never had a subscription' do
+      it 'calls the service' do
+        expect_any_instance_of(
+          ActiveCampaignService
+        ).to receive(:create_deal)
+         .with(::ActiveCampaign::Deal::Event::NON_MEMBER_FIRST_DAY_PASS_EXPIRED, user_3)
+          .once
+
+        subject
+      end
+    end
   end
 end
