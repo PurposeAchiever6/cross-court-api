@@ -51,6 +51,13 @@ module Api
             error_message: stripe_charge&.failure_message
           )
 
+          ::ActiveCampaign::CreateDealJob.perform_later(
+            ::ActiveCampaign::Deal::Event::MEMBERSHIP_PAYMENT_FAILED,
+            user.id,
+            {},
+            ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+          )
+
           if !subscription.canceled? && !object.next_payment_attempt
             # next_payment_attempt will be nil on the latest attempt
             # in that case we can safely cancel the user subscription

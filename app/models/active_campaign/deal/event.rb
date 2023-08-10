@@ -11,6 +11,7 @@ module ActiveCampaign
       FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze
       FIRST_SESSION_CHECK_IN = 'Free Session Check In'.freeze
       FREE_SESSION_NO_SHOW = 'Free Session No Show'.freeze
+      MEMBERSHIP_PAYMENT_FAILED = 'Membership Payment Failed'.freeze
       NEW_MEMBER = 'New Member'.freeze
       PROMO_CODE_REFERRAL_SUCCESS = 'Promo Code Referral Success'.freeze
       PURCHASE_PLACED = 'Purchase Placed'.freeze
