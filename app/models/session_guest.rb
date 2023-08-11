@@ -21,7 +21,7 @@
 #
 
 class SessionGuest < ApplicationRecord
-  enum state: { reserved: 0, canceled: 1, confirmed: 2 }
+  enum state: { reserved: 0, canceled: 1, confirmed: 2, no_show: 3 }
 
   validates :first_name, :last_name, :phone_number, :email, :access_code, :state, presence: true
 
@@ -33,6 +33,11 @@ class SessionGuest < ApplicationRecord
   scope :for_phone, ->(phone_number) { where(phone_number:) }
   scope :sorted_by_full_name, -> { order('LOWER(first_name) ASC, LOWER(last_name) ASC') }
 
+  scope :for_yesterday, (lambda do
+    joins(user_session: { session: :location })
+      .where('date = (current_timestamp at time zone locations.time_zone)::date - 1')
+  end)
+
   def full_name
     "#{first_name} #{last_name}"
   end
@@ -41,5 +46,13 @@ class SessionGuest < ApplicationRecord
     return if access_code.present?
 
     self.access_code = "#{first_name.first}#{last_name.first}#{SecureRandom.hex(2)}".upcase
+  end
+
+  def first_time?
+    SessionGuest.where(phone_number:).count == 1
+  end
+
+  def user
+    User.where(email:).or(User.where(phone_number:)).first
   end
 end

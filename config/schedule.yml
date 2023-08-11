@@ -8,6 +8,11 @@ charge_no_show_up_players:
   class: "UserSessions::ChargeNotShowUpJob"
   queue: default
 
+guests_no_show_up:
+  cron: "0 13 * * *" # 6 AM LA
+  class: "SessionGuests::NoShowUpJob"
+  queue: default
+
 confirm_unconfirmed_sessions:
   cron: "10 * * * *" # Every hour at minute 10
   class: "UserSessions::ConfirmUnconfirmedJob"

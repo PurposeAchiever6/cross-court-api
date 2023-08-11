@@ -5,8 +5,6 @@ module ActiveCampaign
       ACCOUNT_CREATION = 'Account Creation'.freeze
       AT_RISK_MEMBERS = 'At Risk Members'.freeze
       CANCELLED_MEMBERSHIP = 'Cancelled Membership'.freeze
-      CHECKED_IN_AS_GUEST_FOR_FIRST_TIME_NO_PURCHASE =
-        'Checked In As Guest For First Time No Purchase'.freeze
       DID_NOT_VERIFY_EMAIL = 'Did Not Verify Email'.freeze
       DROP_IN_RE_UP = 'Drop in Re Up'.freeze
       DROP_IN_SESSION_EXPIRE_SOON = 'Drop in Session Expire Soon'.freeze
@@ -14,6 +12,8 @@ module ActiveCampaign
       FIRST_DAY_PASS_NO_SHOW = 'First Day Pass No Show'.freeze
       FIRST_FREE_CREDIT_ADDED = 'First Free Credit Added'.freeze
       FIRST_SESSION_CHECK_IN = 'Free Session Check In'.freeze
+      GUEST_CHECKED_IN_NO_PURCHASE_FIRST_TIME = 'Guest Checked In No Purchase First Time'.freeze
+      GUEST_NO_SHOW_FIRST_TIME = 'Guest No Show First Time'.freeze
       MEMBERSHIP_PAYMENT_FAILED = 'Membership Payment Failed'.freeze
       NEW_MEMBER = 'New Member'.freeze
       NON_MEMBER_FIRST_DAY_PASS_EXPIRED = 'Non Member First Day Pass Expired'.freeze

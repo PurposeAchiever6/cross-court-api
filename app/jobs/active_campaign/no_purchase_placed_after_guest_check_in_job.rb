@@ -7,26 +7,19 @@ module ActiveCampaign
     def perform(session_guest_id)
       session_guest = SessionGuest.find(session_guest_id)
 
-      guest_email = session_guest.email
-      guest_phone_number = session_guest.phone_number
-
-      user = User.where(email: guest_email)
-                 .or(User.where(phone_number: guest_phone_number))
-                 .first
-
-      return if user&.active_subscription&.present?
+      return if session_guest.user&.active_subscription&.present?
 
       temp_user = User.new(
         first_name: session_guest.first_name,
         last_name: session_guest.last_name,
-        phone_number: guest_phone_number,
-        email: guest_email
+        phone_number: session_guest.phone_number,
+        email: session_guest.email
       )
 
       ActiveCampaignService.new(
         pipeline_name: ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
       ).create_deal(
-        ActiveCampaign::Deal::Event::CHECKED_IN_AS_GUEST_FOR_FIRST_TIME_NO_PURCHASE,
+        ActiveCampaign::Deal::Event::GUEST_CHECKED_IN_NO_PURCHASE_FIRST_TIME,
         temp_user
       )
     rescue ActiveCampaignException => e
