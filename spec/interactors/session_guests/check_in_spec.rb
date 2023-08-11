@@ -20,5 +20,26 @@ describe SessionGuests::CheckIn do
         subject
       }.to change { session_guest.reload.assigned_team }.from(nil).to(assigned_team)
     end
+
+    context 'when is the first time invited as a session guest' do
+      it 'enqueues ActiveCampaign::NoPurchasePlacedAfterGuestCheckInJob' do
+        expect {
+          subject
+        }.to have_enqueued_job(::ActiveCampaign::NoPurchasePlacedAfterGuestCheckInJob)
+          .with(session_guest.id)
+          .on_queue('default')
+          .at_least(:once)
+      end
+    end
+
+    context 'when is not the first time invited as a session guest' do
+      before { create(:session_guest, phone_number: session_guest.phone_number) }
+
+      it 'enqueues ActiveCampaign::NoPurchasePlacedAfterGuestCheckInJob' do
+        expect {
+          subject
+        }.not_to have_enqueued_job(::ActiveCampaign::NoPurchasePlacedAfterGuestCheckInJob)
+      end
+    end
   end
 end
