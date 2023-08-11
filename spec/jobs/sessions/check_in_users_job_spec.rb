@@ -107,6 +107,24 @@ describe ::Sessions::CheckInUsersJob do
 
           subject
         end
+
+        context 'when the user has an active subscription' do
+          it {
+            expect {
+              subject
+            }.not_to have_enqueued_job(::ActiveCampaign::NoPurchasePlacedAfterCheckInJob)
+          }
+        end
+
+        context 'when the user does not have an active subscription' do
+          let(:active_subscription) { nil }
+
+          it {
+            expect {
+              subject
+            }.to have_enqueued_job(::ActiveCampaign::NoPurchasePlacedAfterCheckInJob)
+          }
+        end
       end
     end
 

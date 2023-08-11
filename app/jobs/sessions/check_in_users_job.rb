@@ -18,18 +18,20 @@ module Sessions
           checked_in_time: Time.zone.at(checked_in_at)
         )
 
-        event = if user_session.first_session
-                  ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN
-                else
-                  ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN
-                end
+        has_active_subscription = user.active_subscription.present?
+        event = ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN
+
+        if user_session.first_session
+          event = ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN
+          enqueue_no_purchase_placed_job(user) unless has_active_subscription
+        end
 
         begin
           active_campaign_service.create_deal(event, user)
 
           send_time_to_re_up(user)
           send_drop_in_re_up(user, user_session)
-          send_checked_in_session_notice(user) if user.active_subscription
+          send_checked_in_session_notice(user) if has_active_subscription
         rescue ActiveCampaignException => e
           Rollbar.error(e)
         end
@@ -40,6 +42,11 @@ module Sessions
 
     def active_campaign_service
       @active_campaign_service ||= ActiveCampaignService.new
+    end
+
+    def enqueue_no_purchase_placed_job(user)
+      ::ActiveCampaign::NoPurchasePlacedAfterCheckInJob.set(wait: 24.hours)
+                                                       .perform_later(user.id)
     end
 
     def send_time_to_re_up(user)
