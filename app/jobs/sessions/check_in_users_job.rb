@@ -29,7 +29,6 @@ module Sessions
         begin
           active_campaign_service.create_deal(event, user)
 
-          send_time_to_re_up(user)
           send_drop_in_re_up(user, user_session)
           send_checked_in_session_notice(user) if has_active_subscription
         rescue ActiveCampaignException => e
@@ -47,12 +46,6 @@ module Sessions
     def enqueue_no_purchase_placed_job(user)
       ::ActiveCampaign::NoPurchasePlacedAfterCheckInJob.set(wait: 24.hours)
                                                        .perform_later(user.id)
-    end
-
-    def send_time_to_re_up(user)
-      return unless user.subscription_credits.zero? && user.active_subscription.present?
-
-      active_campaign_service.create_deal(::ActiveCampaign::Deal::Event::TIME_TO_RE_UP, user)
     end
 
     def send_drop_in_re_up(user, user_session)

@@ -160,6 +160,10 @@ class ActiveCampaignService
           {
             field: mapped_contact_fields[::ActiveCampaign::Contact::Field::GUEST],
             value: guest.to_s
+          },
+          {
+            field: mapped_contact_fields[::ActiveCampaign::Contact::Field::UTM_SOURCE],
+            value: user.utm_source || 'web'
           }
         ]
       }

@@ -72,10 +72,6 @@ describe ::Sessions::CheckInUsersJob do
             user
           )
           expect(instance).not_to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::TIME_TO_RE_UP,
-            user
-          )
-          expect(instance).not_to receive(:create_deal).with(
             ::ActiveCampaign::Deal::Event::DROP_IN_RE_UP,
             user
           )
@@ -94,10 +90,6 @@ describe ::Sessions::CheckInUsersJob do
           )
           expect(instance).not_to receive(:create_deal).with(
             ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN,
-            user
-          )
-          expect(instance).not_to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::TIME_TO_RE_UP,
             user
           )
           expect(instance).not_to receive(:create_deal).with(
@@ -137,10 +129,6 @@ describe ::Sessions::CheckInUsersJob do
             ::ActiveCampaign::Deal::Event::SESSION_CHECK_IN,
             user
           )
-          expect(instance).to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::TIME_TO_RE_UP,
-            user
-          )
           expect(instance).not_to receive(:create_deal).with(
             ::ActiveCampaign::Deal::Event::FIRST_SESSION_CHECK_IN,
             user
@@ -164,10 +152,6 @@ describe ::Sessions::CheckInUsersJob do
           )
           expect(instance).to receive(:create_deal).with(
             ::ActiveCampaign::Deal::Event::DROP_IN_RE_UP,
-            user
-          )
-          expect(instance).not_to receive(:create_deal).with(
-            ::ActiveCampaign::Deal::Event::TIME_TO_RE_UP,
             user
           )
           expect(instance).not_to receive(:create_deal).with(
