@@ -55,7 +55,8 @@ class Subscription < ApplicationRecord
     active: 'active',
     past_due: 'past_due',
     canceled: 'canceled',
-    paused: 'paused'
+    paused: 'paused',
+    unpaid: 'unpaid'
   }
 
   validates :stripe_id, presence: true
@@ -108,7 +109,7 @@ class Subscription < ApplicationRecord
   end
 
   def no_longer_active?
-    canceled? || past_due? || cancel_at_period_end?
+    canceled? || past_due? || cancel_at_period_end? || unpaid?
   end
 
   def cancel_at_next_period_end?
