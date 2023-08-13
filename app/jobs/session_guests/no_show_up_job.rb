@@ -3,6 +3,10 @@ module SessionGuests
     queue_as :default
 
     def perform
+      active_campaign_service = ActiveCampaignService.new(
+        pipeline_name: ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+      )
+
       SessionGuest.for_yesterday
                   .reserved
                   .find_each do |session_guest|
@@ -18,9 +22,19 @@ module SessionGuests
           email: session_guest.email
         )
 
-        ActiveCampaignService.new(
-          pipeline_name: ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
-        ).create_deal(
+        response = active_campaign_service.create_update_contact(temp_user)
+
+        contact = response['contact']
+        active_campaign_id = contact['id']
+
+        active_campaign_service.add_contact_to_list(
+          ::ActiveCampaign::Contact::List::MASTER_LIST,
+          active_campaign_id
+        )
+
+        temp_user.active_campaign_id = active_campaign_id
+
+        active_campaign_service.create_deal(
           ActiveCampaign::Deal::Event::GUEST_NO_SHOW_FIRST_TIME,
           temp_user
         )
