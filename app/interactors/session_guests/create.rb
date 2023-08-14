@@ -23,7 +23,10 @@ module SessionGuests
 
       session_guest = SessionGuest.create!({ user_session: }.merge!(guest_attrs))
 
-      ::ActiveCampaign::CreateUpdateContactAndAddToListJob.perform_later(nil, guest_attrs)
+      ::ActiveCampaign::CreateUpdateContactAndAddToListJob.perform_later(
+        nil,
+        guest_attrs.merge!({ utm_source: :guest })
+      )
 
       SessionMailer.with(session_guest_id: session_guest.id).guest_session_booked.deliver_later
 
