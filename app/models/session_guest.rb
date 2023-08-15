@@ -32,6 +32,7 @@ class SessionGuest < ApplicationRecord
   scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: }) }
   scope :for_phone, ->(phone_number) { where(phone_number:) }
   scope :sorted_by_full_name, -> { order('LOWER(first_name) ASC, LOWER(last_name) ASC') }
+  scope :not_checked_in, -> { where(checked_in: false) }
 
   scope :for_yesterday, (lambda do
     joins(user_session: { session: :location })

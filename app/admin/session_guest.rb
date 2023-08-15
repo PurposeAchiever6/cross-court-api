@@ -11,6 +11,7 @@ ActiveAdmin.register SessionGuest do
   filter :user_session_id
   filter :access_code
   filter :state, as: :select, collection: SessionGuest.states
+  filter :checked_in
 
   form do |f|
     f.inputs 'Session guest details' do
@@ -34,6 +35,7 @@ ActiveAdmin.register SessionGuest do
     column :last_name
     column :phone_number
     column :email
+    column :checked_in
     column :user_session_id do |session_guest|
       # This needs to be done like this, if not uses devise controller
       link_to session_guest.user_session_id,
@@ -51,6 +53,7 @@ ActiveAdmin.register SessionGuest do
       row :last_name
       row :phone_number
       row :email
+      row :checked_in
       row :user_session_id do |session_guest|
         # This needs to be done like this, if not uses devise controller
         link_to session_guest.user_session_id,

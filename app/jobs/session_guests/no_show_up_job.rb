@@ -9,6 +9,7 @@ module SessionGuests
 
       SessionGuest.for_yesterday
                   .reserved
+                  .not_checked_in
                   .find_each do |session_guest|
         session_guest.update!(state: :no_show)
 
