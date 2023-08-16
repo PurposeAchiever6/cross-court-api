@@ -13,8 +13,11 @@ describe 'POST api/v1/users', type: :request do
   after { Timecop.return }
 
   describe 'POST create' do
-    let(:email) { 'test@test.com' }
-    let(:params) { { user: { email: } } }
+    let(:email) { Faker::Internet.email }
+    let(:first_name) { Faker::Name.first_name }
+    let(:last_name) { Faker::Name.last_name }
+    let(:phone_number) { Faker::PhoneNumber.cell_phone }
+    let(:params) { { user: { email:, first_name:, last_name:, phone_number: } } }
 
     subject { post user_registration_path, params:, as: :json }
 
@@ -32,6 +35,9 @@ describe 'POST api/v1/users', type: :request do
 
       expect(json[:user][:id]).to eq(user.id)
       expect(json[:user][:email]).to eq(user.email)
+      expect(json[:user][:first_name]).to eq(user.first_name)
+      expect(json[:user][:last_name]).to eq(user.last_name)
+      expect(json[:user][:phone_number]).to eq(user.phone_number)
     end
 
     it 'calls the active campaign service' do

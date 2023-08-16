@@ -20,7 +20,10 @@ module Api
 
       def sign_up_params
         params.require(:user)
-              .permit(:email, :utm_source, :utm_medium, :utm_campaign, :utm_term, :utm_content)
+              .permit(
+                :email, :first_name, :last_name, :phone_number, :utm_source, :utm_medium,
+                :utm_campaign, :utm_term, :utm_content
+              )
       end
 
       def render_create_success
