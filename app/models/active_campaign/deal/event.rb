@@ -14,6 +14,7 @@ module ActiveCampaign
       FIRST_SESSION_CHECK_IN = 'Free Session Check In'.freeze
       GUEST_CHECKED_IN_NO_PURCHASE_FIRST_TIME = 'Guest Checked In No Purchase First Time'.freeze
       GUEST_NO_SHOW_FIRST_TIME = 'Guest No Show First Time'.freeze
+      LEAD_MAGNET = 'Lead Magnet'.freeze
       MEMBERSHIP_PAYMENT_FAILED = 'Membership Payment Failed'.freeze
       NEW_MEMBER = 'New Member'.freeze
       NON_MEMBER_FIRST_DAY_PASS_EXPIRED = 'Non Member First Day Pass Expired'.freeze
@@ -28,7 +29,6 @@ module ActiveCampaign
       SESSION_REMINDER_6_HOURS = 'Session Reminder 6 Hours'.freeze
       SUBMIT_CANCELLATION_REQUEST = 'Submit Cancellation Request'.freeze
       STARTED_CHECKOUT = 'Started Checkout'.freeze
-      STAY_IN_THE_LOOP = 'Stay In The Loop'.freeze
     end
   end
 end

@@ -2,18 +2,12 @@ module Api
   module V1
     module ActiveCampaign
       class DealsController < Api::V1::ApiUserController
-        skip_before_action :authenticate_user!, if: :stay_in_the_loop_event?
+        skip_before_action :authenticate_user!, if: :skip_auth?
 
         def create
           active_campaign_service = ActiveCampaignService.new
 
           active_campaign_service.create_deal(event, user, deal[:args])
-          if stay_in_the_loop_event?
-            active_campaign_service.add_contact_to_list(
-              ::ActiveCampaign::Contact::List::MASTER_LIST,
-              user.active_campaign_id
-            )
-          end
 
           head :ok
         end
@@ -29,22 +23,21 @@ module Api
         end
 
         def user
-          if stay_in_the_loop_event?
-            OpenStruct.new(
-              email: deal_params[:email],
-              active_campaign_id: deal_params[:contact_id]
-            )
-          else
-            current_user
-          end
+          return current_user if current_user
+
+          OpenStruct.new(
+            email: deal_params[:email],
+            active_campaign_id: deal_params[:contact_id]
+          )
         end
 
         def event
           deal[:event]
         end
 
-        def stay_in_the_loop_event?
-          event == ::ActiveCampaign::Deal::Event::STAY_IN_THE_LOOP
+        def skip_auth?
+          events = [::ActiveCampaign::Deal::Event::LEAD_MAGNET]
+          events.include?(event)
         end
       end
     end
