@@ -104,7 +104,7 @@ describe Sessions::SendNoChargeSessionJob do
     context 'when the session is a skill session' do
       let!(:skill_session) { true }
 
-      it { expect { subject }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob) }
+      it { expect { subject }.to have_enqueued_job(ActionMailer::MailDeliveryJob) }
     end
 
     context 'when the session is open club' do

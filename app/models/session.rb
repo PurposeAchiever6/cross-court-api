@@ -125,7 +125,7 @@ class Session < ApplicationRecord
   scope :not_private, -> { where(is_private: false) }
   scope :not_coming_soon, -> { where(coming_soon: false) }
   scope :normal_sessions, -> { not_open_club.not_skill_sessions }
-  scope :eligible_for_free_booking, -> { normal_sessions.not_coming_soon.not_private }
+  scope :eligible_for_free_booking, -> { not_open_club.not_coming_soon.not_private }
 
   scope :for_range, (lambda do |start_date, end_date|
     where('start_time >= ? AND start_time <= ?', start_date, end_date)
@@ -439,7 +439,7 @@ class Session < ApplicationRecord
   end
 
   def eligible_for_free_booking?
-    normal_session? && !is_private && !coming_soon
+    !open_club? && !is_private && !coming_soon
   end
 
   def allow_free_booking?(date, user)

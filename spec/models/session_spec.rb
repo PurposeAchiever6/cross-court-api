@@ -702,7 +702,7 @@ describe Session do
     context 'when the session is a skill session' do
       let!(:skill_session) { true }
 
-      it { is_expected.to be_falsey }
+      it { is_expected.to eq(true) }
     end
 
     context 'when the session is open club' do
