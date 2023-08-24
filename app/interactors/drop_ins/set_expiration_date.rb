@@ -5,10 +5,11 @@ module DropIns
     def call
       user = context.user
       product = context.product
+      credits_expiration_days = product.credits_expiration_days
 
-      return if product.season_pass
+      return unless credits_expiration_days
 
-      user.drop_in_expiration_date = Time.zone.today + User::DROP_IN_EXPIRATION_DAYS
+      user.drop_in_expiration_date = Time.zone.today + credits_expiration_days.days
       user.save!
     end
   end

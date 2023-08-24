@@ -20,6 +20,7 @@ $(document).ready(function () {
         $("#product_promo_code_input").show();
         $("#product_no_booking_charge_feature_input").show();
         $("#product_no_booking_charge_feature_hours_input").show();
+        $("#product_credits_expiration_days_input").hide();
       } else {
         $("#product_season_pass_input").show();
         $("#product_price_for_members_input").show();
@@ -37,6 +38,7 @@ $(document).ready(function () {
         $("#product_promo_code_input").hide();
         $("#product_no_booking_charge_feature_input").hide();
         $("#product_no_booking_charge_feature_hours_input").hide();
+        $("#product_credits_expiration_days_input").show();
       }
     })
     .change();

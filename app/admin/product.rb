@@ -7,7 +7,7 @@ ActiveAdmin.register Product do
                 :free_pauses_per_year, :highlighted, :highlights, :free_jersey_rental,
                 :free_towel_rental, :description, :waitlist_priority, :promo_code_id,
                 :no_booking_charge_feature, :no_booking_charge_feature_hours,
-                :no_booking_charge_feature_priority
+                :no_booking_charge_feature_priority, :credits_expiration_days
 
   filter :name
   filter :product_type
@@ -66,7 +66,9 @@ ActiveAdmin.register Product do
     column :memberships_count do |product|
       product.recurring? ? product.memberships_count : 'N/A'
     end
-
+    column :credits_expiration_days do |product|
+      product.recurring? ? 'N/A' : product.credits_expiration_days
+    end
     if params['scope'] == 'deleted'
       column do |product|
         link_to 'Recover', recover_admin_product_path(product), method: :post
@@ -117,6 +119,7 @@ ActiveAdmin.register Product do
       f.input :name
       f.li unlimited_sessions_checkbox, id: 'product-sessions-unlimited-container'
       f.input :credits
+      f.input :credits_expiration_days
       f.input :max_rollover_credits,
               hint: 'Max amount of rolled-over credits. If not set, ' \
                     'all pack credits will be rolled over'
@@ -149,6 +152,9 @@ ActiveAdmin.register Product do
       row :name
       row :credits do |product|
         product.unlimited? ? 'Unlimited' : product.credits
+      end
+      row :credits_expiration_days do |product|
+        product.recurring? ? 'N/A' : product.credits_expiration_days
       end
       if resource.recurring?
         row :skill_session_credits do |product|

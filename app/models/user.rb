@@ -90,7 +90,6 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   FREE_SESSION_EXPIRATION_DAYS = 30.days.freeze
-  DROP_IN_EXPIRATION_DAYS = 30.days.freeze
 
   has_paper_trail ignore: %i[sign_in_count
                              current_sign_in_at
