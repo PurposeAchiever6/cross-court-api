@@ -6,7 +6,7 @@ ActiveAdmin.register Product do
                 :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
                 :free_pauses_per_year, :highlighted, :highlights, :free_jersey_rental,
                 :free_towel_rental, :description, :waitlist_priority, :promo_code_id,
-                :no_booking_charge_feature, :no_booking_charge_feature_hours,
+                :no_booking_charge_feature, :no_booking_charge_feature_hours, :trial,
                 :no_booking_charge_feature_priority, :credits_expiration_days
 
   filter :name
@@ -60,6 +60,7 @@ ActiveAdmin.register Product do
     end
     column :season_pass
     column :scouting
+    column :trial
     column :available_for do |product|
       product.available_for.humanize
     end
@@ -104,6 +105,7 @@ ActiveAdmin.register Product do
       f.input :available_for
       f.input :season_pass
       f.input :scouting
+      f.input :trial
       f.input :highlighted
       f.input :highlights
       f.input :free_jersey_rental
@@ -179,6 +181,7 @@ ActiveAdmin.register Product do
       end
       row :season_pass
       row :scouting
+      row :trial
       row :highlighted
       row :highlights
       row :free_jersey_rental

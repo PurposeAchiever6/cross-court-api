@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_24_194242) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_28_201209) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -261,6 +261,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_194242) do
     t.integer "no_booking_charge_feature_hours", default: 3
     t.string "no_booking_charge_feature_priority"
     t.integer "credits_expiration_days"
+    t.boolean "trial", default: false
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
     t.index ["promo_code_id"], name: "index_products_on_promo_code_id"

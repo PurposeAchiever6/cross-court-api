@@ -34,6 +34,7 @@
 #  no_booking_charge_feature_hours        :integer          default(3)
 #  no_booking_charge_feature_priority     :string
 #  credits_expiration_days                :integer
+#  trial                                  :boolean          default(FALSE)
 #
 # Indexes
 #

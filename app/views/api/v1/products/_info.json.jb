@@ -14,6 +14,7 @@ json = {
   label: product.label,
   season_pass: product.season_pass,
   scouting: product.scouting,
+  trial: product.trial,
   free_pauses_per_year: product.free_pauses_per_year,
   highlighted: product.highlighted,
   highlights: product.highlights,
@@ -23,7 +24,8 @@ json = {
   waitlist_priority: product.waitlist_priority,
   no_booking_charge_feature: product.no_booking_charge_feature,
   no_booking_charge_feature_priority: product.no_booking_charge_feature_priority,
-  promo_code: nil
+  promo_code: nil,
+  credits_expiration_days: product.credits_expiration_days
 }
 
 promo_code = product.promo_code
