@@ -38,6 +38,6 @@ FactoryBot.define do
     end
 
     chargeable_id { chargeable&.id }
-    chargeable_type { chargeable&.to_s }
+    chargeable_type { chargeable&.class&.name }
   end
 end

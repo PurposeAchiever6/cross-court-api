@@ -28,7 +28,7 @@ json = {
   credits_expiration_days: product.credits_expiration_days
 }
 
-promo_code = product.promo_code
+promo_code = product.preference_promo_code(current_user)
 
 if promo_code
   json[:promo_code] = render(

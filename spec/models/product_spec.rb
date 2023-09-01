@@ -152,4 +152,58 @@ describe Product do
       it { is_expected.to eq(price) }
     end
   end
+
+  describe 'preference_promo_code' do
+    let!(:user) { create(:user) }
+    let!(:trial_product) { create(:product, product_type: 'one_time', trial: true) }
+    let(:max_redemptions_by_user) { 1 }
+    let!(:product) { create(:product, product_type: 'recurring') }
+    let!(:promo_code) { create(:promo_code, use: 'general', products: [product]) }
+    let!(:trial_promo_code) do
+      create(
+        :promo_code,
+        use: 'general',
+        products: [trial_product, product],
+        max_redemptions_by_user:
+      )
+    end
+
+    before do
+      trial_product.promo_code = trial_promo_code
+      trial_product.promo_codes << trial_promo_code
+      trial_product.save!
+
+      product.promo_code = promo_code
+      product.promo_codes << promo_code
+      product.save!
+    end
+
+    subject { product.preference_promo_code(user) }
+
+    context 'when user is not present' do
+      let(:user) { nil }
+
+      it { is_expected.to eq(promo_code) }
+    end
+
+    context 'when the user bought a trial within the last week' do
+      let!(:payment) do
+        create(:payment, user:, chargeable: trial_product, created_at: Date.yesterday)
+      end
+
+      it { is_expected.to eq(trial_promo_code) }
+
+      context 'when the promo_code is not valid anymore' do
+        before { create(:user_promo_code, user:, promo_code: trial_promo_code) }
+
+        it { is_expected.to eq(promo_code) }
+      end
+
+      context 'when the user has been a member' do
+        let!(:subscription) { create(:subscription, user:, product:) }
+
+        it { is_expected.to eq(promo_code) }
+      end
+    end
+  end
 end

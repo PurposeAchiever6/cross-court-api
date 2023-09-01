@@ -112,6 +112,24 @@ class Product < ApplicationRecord
     Products::UpdateExistingSubscriptionsPriceJob.perform_later(id) if update_existing_subscriptions
   end
 
+  def preference_promo_code(user)
+    return promo_code unless user
+
+    last_week_purchases = user.payments
+                              .where('created_at >= ?', 1.week.ago)
+                              .where(chargeable_type: Product.to_s)
+
+    trial_product = Product.where(id: last_week_purchases.pluck(:chargeable_id), trial: true).last
+
+    trial_promo_code = trial_product&.promo_code
+
+    if user.never_been_a_member? && trial_promo_code&.still_valid?(user, self)
+      return trial_promo_code
+    end
+
+    promo_code
+  end
+
   private
 
   def apply_price_for_first_timers_no_free_session?(user)

@@ -52,9 +52,7 @@ ActiveAdmin.register Product do
     column :product_type do |product|
       product.product_type.humanize
     end
-    column :promo_code do |product|
-      product.recurring? ? product.promo_code : 'N/A'
-    end
+    column :promo_code
     column :no_booking_charge_feature do |product|
       product.recurring? ? product.no_booking_charge_feature : 'N/A'
     end
