@@ -28,9 +28,10 @@ class SessionGuest < ApplicationRecord
   belongs_to :user_session
 
   before_validation :create_access_code
+  before_save :normalize_phone_number
 
   scope :by_date, ->(date) { joins(:user_session).where(user_sessions: { date: }) }
-  scope :for_phone, ->(phone_number) { where(phone_number:) }
+  scope :for_phone, ->(phone_number) { where(phone_number: phone_number_normalized(phone_number)) }
   scope :sorted_by_full_name, -> { order('LOWER(first_name) ASC, LOWER(last_name) ASC') }
   scope :not_checked_in, -> { where(checked_in: false) }
 
@@ -38,6 +39,10 @@ class SessionGuest < ApplicationRecord
     joins(user_session: { session: :location })
       .where('date = (current_timestamp at time zone locations.time_zone)::date - 1')
   end)
+
+  def self.phone_number_normalized(phone_number)
+    phone_number.scan(/\d/).join
+  end
 
   def full_name
     "#{first_name} #{last_name}"
@@ -55,5 +60,13 @@ class SessionGuest < ApplicationRecord
 
   def user
     User.where(email:).or(User.where(phone_number:)).first
+  end
+
+  private
+
+  def normalize_phone_number
+    return if phone_number.blank?
+
+    self.phone_number = self.class.phone_number_normalized(phone_number)
   end
 end

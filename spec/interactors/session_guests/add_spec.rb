@@ -7,7 +7,7 @@ describe SessionGuests::Add do
       {
         first_name: 'Mike',
         last_name: 'Lopez',
-        phone_number: '+11342214334',
+        phone_number: '+1 (134) 221-4334',
         email: guest_email
       }
     end
@@ -38,7 +38,7 @@ describe SessionGuests::Add do
 
       expect(session_guest.first_name).to eq('Mike')
       expect(session_guest.last_name).to eq('Lopez')
-      expect(session_guest.phone_number).to eq('+11342214334')
+      expect(session_guest.phone_number).to eq('11342214334')
       expect(session_guest.email).to eq('mike@mail.com')
       expect(session_guest.state).to eq('reserved')
     end
