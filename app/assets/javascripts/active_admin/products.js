@@ -17,7 +17,6 @@ $(document).ready(function () {
         $("#product_free_jersey_rental_input").show();
         $("#product_free_towel_rental_input").show();
         $("#product_waitlist_priority_input").show();
-        $("#product_promo_code_input").show();
         $("#product_no_booking_charge_feature_input").show();
         $("#product_no_booking_charge_feature_hours_input").show();
         $("#product_credits_expiration_days_input").hide();
@@ -35,7 +34,6 @@ $(document).ready(function () {
         $("#product_free_jersey_rental_input").hide();
         $("#product_free_towel_rental_input").hide();
         $("#product_waitlist_priority_input").hide();
-        $("#product_promo_code_input").hide();
         $("#product_no_booking_charge_feature_input").hide();
         $("#product_no_booking_charge_feature_hours_input").hide();
         $("#product_credits_expiration_days_input").show();

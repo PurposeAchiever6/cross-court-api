@@ -199,9 +199,7 @@ ActiveAdmin.register Product do
       row :memberships_count do |product|
         product.recurring? ? product.memberships_count : 'N/A'
       end
-      row :promo_code do |product|
-        product.recurring? ? product.promo_code : 'N/A'
-      end
+      row :promo_code
       row :image do |product|
         image_tag polymorphic_url(product.image), class: 'max-w-200' if product.image.attached?
       end
