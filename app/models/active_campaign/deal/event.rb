@@ -20,6 +20,7 @@ module ActiveCampaign
       NON_MEMBER_FIRST_DAY_PASS_EXPIRED = 'Non Member First Day Pass Expired'.freeze
       PROMO_CODE_REFERRAL_SUCCESS = 'Promo Code Referral Success'.freeze
       PURCHASE_PLACED = 'Purchase Placed'.freeze
+      PURCHASED_TRIAL = 'Purchased Trial'.freeze
       REFERRAL_SUCCESS = 'Referral Success'.freeze
       SESSION_BOOKED = 'Session Booked'.freeze
       SESSION_CANCELLED_IN_TIME = 'Session Cancelled In Time'.freeze
