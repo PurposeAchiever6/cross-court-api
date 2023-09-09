@@ -52,7 +52,7 @@ describe Users::InactiveMembersJob do
       allow(SendSonar).to receive(:message_customer)
       allow_any_instance_of(Slack::Notifier).to receive(:ping)
       ActiveCampaignMocker.new(
-        pipeline_name: ::ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+        pipeline_name: ::ActiveCampaign::Deal::Pipeline::EMAILS
       ).mock
     end
 

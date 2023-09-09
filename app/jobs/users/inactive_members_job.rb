@@ -56,7 +56,7 @@ module Users
 
     def create_risk_member_deal(user)
       ActiveCampaignService.new(
-        pipeline_name: ActiveCampaign::Deal::Pipeline::CROSSCOURT_MEMBERSHIP_FUNNEL
+        pipeline_name: ActiveCampaign::Deal::Pipeline::EMAILS
       ).create_deal(
         ActiveCampaign::Deal::Event::AT_RISK_MEMBERS,
         user
