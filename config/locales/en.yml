@@ -194,10 +194,10 @@ en:
         note the cancellation window has passed so no refunds beyond this point. If you need
         to cancel, you're able to at %{frontend_url} %{invite_friend}
       session_auto_confirmed_first_timers: >
-        Hey %{name}! You’re signed up for today’s %{time} session at CC%{location}. For the best
-        first experience, please arrive at least 20 minutes prior to session start time. Also note
-        the cancellation window has passed so no refunds beyond this point. If you need
-        to cancel, you're able to at %{frontend_url} %{invite_friend}
+        Hey %{name}, this is Rene with Crosscourt. You’re signed up for today’s %{time} session
+        at CC%{location}. Your check in time today is 45 minutes before session starts
+        so we can walk through some things before tip off. Please reach out if you are
+        running late. Thanks!
       unreadable_text: "Sorry, we couldn’t process your response"
       no_more_sonar_confirmation: "Session confirmation is not longer needed. Thanks!"
       no_more_sonar_cancellation: "If you need to cancel, please do it through %{frontend_url} Thanks!"
@@ -209,12 +209,10 @@ en:
         Please reach out if you are running late. If you need to cancel, you're able to
         at %{frontend_url} %{invite_friend}
       today_reminder_first_timers: >
-        Hey %{name}! Remember you’re signed up for today’s %{time} session at CC%{location}. For the
-        best first experience, please arrive at least 20 minutes prior to session start time. Also
-        note the cancellation window closes %{cancellation_period_hours} hrs before tip off and your
-        spot may be lost or given up if you arrive more than 10 minutes after session start time.
-        Please reach out if you are running late. If you need to cancel, you're able to
-        at %{frontend_url} %{invite_friend}
+        Hey %{name}, this is Rene with Crosscourt. Remember you’re signed up for today’s %{time}
+        session at CC%{location}. Your check in time today is 45 minutes before session
+        starts so we can walk through some things before tip off. Please reach out if you are
+        running late. Thanks!
       survey_reminder: >
         Hey %{name}! Thanks for coming out to Crosscourt. If you have a second, we'd appreciate
         your feedback. %{survey_link}
