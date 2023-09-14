@@ -18,12 +18,11 @@
 #  referral_cc_cash                       :decimal(, )      default(0.0)
 #  price_for_first_timers_no_free_session :decimal(10, 2)
 #  available_for                          :integer          default("everyone")
-#  max_rollover_credits                   :integer
 #  skill_session_credits                  :integer          default(0)
+#  max_rollover_credits                   :integer
 #  season_pass                            :boolean          default(FALSE)
 #  scouting                               :boolean          default(FALSE)
 #  free_pauses_per_year                   :integer          default(0)
-#  highlighted                            :boolean          default(FALSE)
 #  highlights                             :boolean          default(FALSE)
 #  free_jersey_rental                     :boolean          default(FALSE)
 #  free_towel_rental                      :boolean          default(FALSE)
@@ -35,6 +34,7 @@
 #  no_booking_charge_feature_priority     :string
 #  credits_expiration_days                :integer
 #  trial                                  :boolean          default(FALSE)
+#  frontend_theme                         :integer          default("dark")
 #
 # Indexes
 #
@@ -51,6 +51,7 @@ class Product < ApplicationRecord
 
   enum product_type: { one_time: 0, recurring: 1 }
   enum available_for: { everyone: 0, reserve_team: 1 }
+  enum frontend_theme: { dark: 0, white: 1, highlighted: 2 }, _suffix: true
 
   belongs_to :promo_code, optional: true
 
@@ -62,7 +63,13 @@ class Product < ApplicationRecord
   has_many :promo_codes, through: :products_promo_codes
   has_many :session_allowed_products, dependent: :destroy
 
-  validates :name, :credits, :order_number, presence: true
+  validates :name,
+            :credits,
+            :order_number,
+            :product_type,
+            :available_for,
+            :frontend_theme,
+            presence: true
   validates :skill_session_credits, presence: true, if: -> { recurring? }
   validates :no_booking_charge_feature_hours,
             numericality: { only_integer: true,

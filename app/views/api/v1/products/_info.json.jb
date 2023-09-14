@@ -16,7 +16,7 @@ json = {
   scouting: product.scouting,
   trial: product.trial,
   free_pauses_per_year: product.free_pauses_per_year,
-  highlighted: product.highlighted,
+  frontend_theme: product.frontend_theme,
   highlights: product.highlights,
   free_jersey_rental: product.free_jersey_rental,
   free_towel_rental: product.free_towel_rental,

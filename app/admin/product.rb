@@ -4,7 +4,7 @@ ActiveAdmin.register Product do
   permit_params :name, :credits, :skill_session_credits, :price, :price_for_members, :order_number,
                 :image, :label, :referral_cc_cash, :product_type, :max_rollover_credits,
                 :price_for_first_timers_no_free_session, :available_for, :season_pass, :scouting,
-                :free_pauses_per_year, :highlighted, :highlights, :free_jersey_rental,
+                :free_pauses_per_year, :frontend_theme, :highlights, :free_jersey_rental,
                 :free_towel_rental, :description, :waitlist_priority, :promo_code_id,
                 :no_booking_charge_feature, :no_booking_charge_feature_hours, :trial,
                 :no_booking_charge_feature_priority, :credits_expiration_days
@@ -104,7 +104,7 @@ ActiveAdmin.register Product do
       f.input :season_pass
       f.input :scouting
       f.input :trial
-      f.input :highlighted
+      f.input :frontend_theme
       f.input :highlights
       f.input :free_jersey_rental
       f.input :free_towel_rental
@@ -180,7 +180,7 @@ ActiveAdmin.register Product do
       row :season_pass
       row :scouting
       row :trial
-      row :highlighted
+      row :frontend_theme
       row :highlights
       row :free_jersey_rental
       row :free_towel_rental
