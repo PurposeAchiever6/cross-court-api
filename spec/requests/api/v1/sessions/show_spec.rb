@@ -9,6 +9,10 @@ describe 'GET api/v1/locations/:location_id/sessions/:id', type: :request do
   let!(:today)    { la_time.to_date }
   let!(:tomorrow) { today.tomorrow }
 
+  before :each do
+    host! ENV.fetch('SERVER_URL')
+  end
+
   subject do
     get api_v1_session_path(location_id: location.id, id: session.id, date: today),
         headers: auth_headers,

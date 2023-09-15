@@ -1,4 +1,4 @@
-json = {
+{
   id: user.id,
   email: user.email,
   first_name: user.first_name,
@@ -8,9 +8,6 @@ json = {
   work_company: user.work_company,
   work_industry: user.work_industry,
   instagram_profile: user.instagram_profile,
-  links: user.links
+  links: user.links,
+  image_url: user.profile_image_url
 }
-
-json[:image_url] = polymorphic_url(user.image) if user.image.attached?
-
-json

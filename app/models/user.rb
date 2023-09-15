@@ -88,6 +88,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   include DeviseTokenAuth::Concerns::User
+  include Rails.application.routes.url_helpers
 
   FREE_SESSION_EXPIRATION_DAYS = 30.days.freeze
 
@@ -171,7 +172,9 @@ class User < ApplicationRecord
   has_many :late_arrivals, dependent: :destroy
   has_many :session_surveys, dependent: :nullify
 
-  has_one_attached :image, dependent: :destroy
+  has_one_attached :image, dependent: :destroy do |attachable|
+    attachable.variant :thumb, resize_to_limit: [200, 200]
+  end
 
   validates :uid, uniqueness: { scope: :provider }
   validates :password, confirmation: true
@@ -376,6 +379,16 @@ class User < ApplicationRecord
     subscriptions.count == 1 &&
       (1.month.ago.beginning_of_day..Time.zone.today.end_of_day)
         .cover?(active_subscription&.created_at)
+  end
+
+  def profile_image_url
+    return unless image.attached?
+
+    if %i[test local].include?(Rails.application.config.active_storage.service)
+      return polymorphic_url(image, host: ENV.fetch('SERVER_URL'))
+    end
+
+    image.variant(:thumb).processed.url
   end
 
   private

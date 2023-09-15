@@ -7,6 +7,10 @@ describe 'GET api/v1/gallery_photos' do
 
   before { get api_v1_gallery_photos_path, headers: auth_headers, as: :json }
 
+  before :each do
+    host! ENV.fetch('SERVER_URL')
+  end
+
   it 'returns success' do
     expect(response).to have_http_status(:success)
   end

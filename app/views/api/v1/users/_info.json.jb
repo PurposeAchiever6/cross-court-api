@@ -23,7 +23,7 @@ if user.last_checked_in_user_session
   )
 end
 
-json = {
+{
   id: user.id,
   email: user.email,
   first_name: user.first_name,
@@ -55,7 +55,7 @@ json = {
   max_cc_cash_subscription_discount: ENV.fetch('MAX_CC_CASH_SUBSCRIPTION_DISCOUNT', '15'),
   active_subscription: user_active_subscription,
   last_checked_in_user_session:,
-  image_url: nil,
+  image_url: user.profile_image_url,
   default_payment_method:,
   reserve_team: user.reserve_team,
   instagram_username: user.instagram_username,
@@ -71,7 +71,3 @@ json = {
   work_industry: user.work_industry,
   links: user.links
 }
-
-json[:image_url] = polymorphic_url(user.image) if user.image.attached?
-
-json

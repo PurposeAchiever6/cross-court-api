@@ -37,21 +37,24 @@ json = {
     first_name: referee&.first_name,
     bio: referee&.bio,
     instagram_username: referee&.instagram_username,
-    instagram_profile: referee&.instagram_profile
+    instagram_profile: referee&.instagram_profile,
+    image_url: referee&.profile_image_url
   },
   sem: {
     full_name: sem&.full_name,
     first_name: sem&.first_name,
     bio: sem&.bio,
     instagram_username: sem&.instagram_username,
-    instagram_profile: sem&.instagram_profile
+    instagram_profile: sem&.instagram_profile,
+    image_url: sem&.profile_image_url
   },
   coach: {
     full_name: coach&.full_name,
     first_name: coach&.first_name,
     bio: coach&.bio,
     instagram_username: coach&.instagram_username,
-    instagram_profile: coach&.instagram_profile
+    instagram_profile: coach&.instagram_profile,
+    image_url: coach&.profile_image_url
   },
   shooting_machines: render(
     partial: 'api/v1/shooting_machines/info',
@@ -62,10 +65,6 @@ json = {
   location: render(partial: 'api/v1/locations/info', locals: { location: session.location }),
   skill_level: nil
 }
-
-json[:referee][:image_url] = polymorphic_url(referee.image) if referee&.image&.attached?
-json[:sem][:image_url] = polymorphic_url(sem.image) if sem&.image&.attached?
-json[:coach][:image_url] = polymorphic_url(coach.image) if coach&.image&.attached?
 
 if user_session.present?
   json[:reserved] = true

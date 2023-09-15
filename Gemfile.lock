@@ -237,6 +237,9 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_cube (0.16.4)
+    image_processing (1.12.2)
+      mini_magick (>= 4.9.5, < 5)
+      ruby-vips (>= 2.0.17, < 3)
     inherited_resources (1.13.1)
       actionpack (>= 5.2, < 7.1)
       has_scope (~> 0.6)
@@ -283,6 +286,7 @@ GEM
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
+    mini_magick (4.12.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.1)
     minitest (5.17.0)
@@ -441,6 +445,8 @@ GEM
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
     ruby-progressbar (1.11.0)
+    ruby-vips (2.1.4)
+      ffi (~> 1.12)
     ruby2_keywords (0.0.5)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -549,6 +555,7 @@ DEPENDENCIES
   geocoder
   haml-rails
   httparty
+  image_processing
   interactor
   jb
   json
