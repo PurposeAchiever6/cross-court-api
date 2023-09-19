@@ -8,10 +8,15 @@
 4. `bundle install`
 5. Generate a secret key with `rake secret` and paste this value into the `application.yml`.
 6. `rake db:create`
-7. `rake db:migrate`
-8. `rspec` and make sure all tests pass
-9. `rails s`
-10. You can now try your REST services!
+7. **Before running `rake db:migrate`, make sure to comment out certain lines in your models:**
+   - In `SkillLevel` model, comment the `has_paper_trail` sentence.
+   - In `Session` model, comment the `acts_as_paranoid` sentence.
+8. `rake db:migrate`
+9. Ensure that any previously commented lines in your models are uncommented after running `rake db:migrate`.
+10. `rspec` and make sure all tests pass
+11. `rails s`
+12. You can now try your REST services!
+
 
 ## Documentation
 

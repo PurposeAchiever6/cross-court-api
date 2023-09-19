@@ -606,8 +606,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_223500) do
     t.integer "subscription_credits", default: 0, null: false
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
-    t.boolean "private_access", default: false
     t.integer "active_campaign_id"
+    t.boolean "private_access", default: false
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
     t.boolean "reserve_team", default: false
