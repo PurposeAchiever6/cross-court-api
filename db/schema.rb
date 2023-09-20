@@ -245,8 +245,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_223500) do
     t.decimal "referral_cc_cash", default: "0.0"
     t.decimal "price_for_first_timers_no_free_session", precision: 10, scale: 2
     t.integer "available_for", default: 0
-    t.integer "skill_session_credits", default: 0
     t.integer "max_rollover_credits"
+    t.integer "skill_session_credits", default: 0
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.integer "free_pauses_per_year", default: 0
@@ -606,19 +606,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_223500) do
     t.integer "subscription_credits", default: 0, null: false
     t.decimal "skill_rating", precision: 2, scale: 1
     t.date "drop_in_expiration_date"
-    t.integer "active_campaign_id"
     t.boolean "private_access", default: false
+    t.integer "active_campaign_id"
     t.date "birthday"
     t.decimal "cc_cash", default: "0.0"
     t.boolean "reserve_team", default: false
-    t.integer "subscription_skill_session_credits", default: 0
     t.string "instagram_username"
     t.datetime "first_time_subscription_credits_used_at", precision: nil
+    t.integer "subscription_skill_session_credits", default: 0
     t.boolean "flagged", default: false
     t.boolean "is_coach", default: false, null: false
     t.integer "gender"
-    t.integer "credits_without_expiration", default: 0
     t.string "bio"
+    t.integer "credits_without_expiration", default: 0
     t.integer "scouting_credits", default: 0
     t.boolean "apply_cc_cash_to_subscription", default: false
     t.integer "signup_state", default: 0

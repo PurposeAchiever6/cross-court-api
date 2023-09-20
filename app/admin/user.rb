@@ -181,7 +181,12 @@ ActiveAdmin.register User do
           if user.links
             ul class: 'm-0 p-0 ml-4' do
               user.links.each do |link|
-                li link_to(link, link, target: '_blank', rel: 'noopener')
+                url = if link.starts_with?('http://') || link.starts_with?('https://')
+                        link
+                      else
+                        "https://#{link}"
+                      end
+                li link_to(link, url, target: '_blank', rel: 'noopener')
               end
             end
           end

@@ -62,4 +62,8 @@ class Location < ApplicationRecord
   def google_maps_link
     "#{GOOGLE_MAPS_BASE_URL}#{full_address}".split.join('+')
   end
+
+  def self_check_in_url
+    "#{ENV.fetch('FRONTENT_URL', '')}/locations/#{id}/self-check-in"
+  end
 end

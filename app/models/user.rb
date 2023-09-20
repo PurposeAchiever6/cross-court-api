@@ -221,7 +221,7 @@ class User < ApplicationRecord
   scope :employees, -> { referees.or(sems).or(coaches) }
 
   before_validation :init_uid
-  before_save :normalize_instagram_username
+  before_save :normalize_instagram_username, :normalize_links
   after_update :update_external_records, :create_referral_code
   after_destroy :delete_stripe_customer, :delete_stripe_promo_code
   after_rollback :delete_stripe_customer, :delete_stripe_promo_code, on: :create
@@ -244,25 +244,11 @@ class User < ApplicationRecord
   end
 
   def links_raw
-    links&.join(',')
+    links&.join(', ')
   end
 
   def links_raw=(values)
-    if values.blank?
-      self.links = []
-      return
-    end
-
-    new_links = values.split(',').map do |value|
-      new_value = value.strip
-      if new_value.starts_with?('http://') || new_value.starts_with?('https://')
-        new_value
-      else
-        "https://#{new_value}"
-      end
-    end
-
-    self.links = new_links
+    self.links = values.split(',').map(&:strip)
   end
 
   def employee?
@@ -485,5 +471,23 @@ class User < ApplicationRecord
 
     username = instagram_username.starts_with?('@') ? instagram_username : "@#{instagram_username}"
     self.instagram_username = username.downcase
+  end
+
+  def normalize_links
+    if links.blank?
+      self.links = []
+      return
+    end
+
+    new_links = links.map do |value|
+      new_value = value
+      if new_value.starts_with?('http://') || new_value.starts_with?('https://')
+        new_value
+      else
+        "https://#{new_value}"
+      end
+    end
+
+    self.links = new_links
   end
 end

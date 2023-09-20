@@ -95,6 +95,9 @@ ActiveAdmin.register Location do
           end
         end
       end
+      row 'Self Check-In URL' do |location|
+        link_to 'Link', location.self_check_in_url, target: '_blank', rel: 'noopener'
+      end
     end
 
     panel 'Settings' do

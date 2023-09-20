@@ -12,7 +12,7 @@ describe 'PUT api/v1/user/', type: :request do
   let(:work_occupation) { 'Manager' }
   let(:work_company) { 'Nestle' }
   let(:work_industry) { 'Food' }
-  let(:links) { ['www.fb.com/123', 'www.twitter.com/123'] }
+  let(:links) { ['https://www.fb.com/123', 'https://www.twitter.com/123'] }
 
   let(:params) do
     {
