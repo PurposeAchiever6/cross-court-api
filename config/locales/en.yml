@@ -96,12 +96,13 @@ en:
       waitlists:
         user_not_in_waitlist: "The user is not in the waitlist"
       session_guests:
-        user_already_registered: "Guest is already registered as an user"
-        generic_error: "There was an error when adding the session guest"
-        guests_not_allowed: "Guests are not allowed for this session"
-        max_guests_reached_for_user: "You have reached the maximum number of guests allowed for this session"
-        max_guests_reached_for_session: "This session has reached the maximum number of guests allowed"
-        max_redemptions_by_guest_reached: "The guest has reached the maximum number of invites"
+        only_for_members: Only members can add guests to a session
+        user_already_registered: Guest is already registered as an user
+        generic_error: There was an error when adding the session guest
+        guests_not_allowed: Guests are not allowed for this session
+        max_guests_reached_for_user: You have reached the maximum number of guests allowed for this session
+        max_guests_reached_for_session: This session has reached the maximum number of guests allowed
+        max_redemptions_by_guest_reached: The guest has reached the maximum number of invites
       shooting_machines:
         already_reserved: The shooting machine has already been reserved
         invalid_session: The session does not support a shooting machine

@@ -17,8 +17,10 @@ describe SessionGuests::Add do
 
     before { ENV['MAX_REDEMPTIONS_BY_GUEST'] = '1' }
 
+    let!(:user) { create(:user) }
     let!(:session) { create(:session, guests_allowed:, guests_allowed_per_user:) }
-    let!(:user_session) { create(:user_session, session:) }
+    let!(:user_session) { create(:user_session, user:, session:) }
+    let!(:subscription) { create(:subscription, user:) }
 
     subject { SessionGuests::Add.call(user_session:, guest_info:) }
 
@@ -43,10 +45,22 @@ describe SessionGuests::Add do
       expect(session_guest.state).to eq('reserved')
     end
 
+    context 'when the user is not a member' do
+      let!(:subscription) { create(:subscription, user:, status: :canceled) }
+
+      it 'raises SessionGuestsException' do
+        expect {
+          subject
+        }.to raise_error(SessionGuestsException, 'Only members can add guests to a session')
+      end
+
+      it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
+    end
+
     context 'when guests_allowed is not set' do
       let(:guests_allowed) { nil }
 
-      it do
+      it 'raises SessionGuestsException' do
         expect {
           subject
         }.to raise_error(
@@ -62,11 +76,11 @@ describe SessionGuests::Add do
       let!(:user) { create(:user) }
       let(:guest_email) { user.email }
 
-      it {
+      it 'raises SessionGuestsException' do
         expect {
           subject
         }.to raise_error(SessionGuestsException, 'Guest is already registered as an user')
-      }
+      end
 
       it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
     end
@@ -83,7 +97,7 @@ describe SessionGuests::Add do
       let!(:another_user_session) { create(:user_session, session:) }
       let!(:session_guest) { create(:session_guest, user_session: another_user_session) }
 
-      it do
+      it 'raises SessionGuestsException' do
         expect {
           subject
         }.to raise_error(
@@ -99,7 +113,7 @@ describe SessionGuests::Add do
       let(:guests_allowed) { 2 }
       let!(:session_guest) { create(:session_guest, user_session:) }
 
-      it do
+      it 'raises SessionGuestsException' do
         expect {
           subject
         }.to raise_error(
@@ -116,7 +130,7 @@ describe SessionGuests::Add do
       let(:state) { %i[reserved confirmed].sample }
       let!(:session_guest) { create(:session_guest, phone_number: '+11342214334', state:) }
 
-      it do
+      it 'raises SessionGuestsException' do
         expect {
           subject
         }.to raise_error(

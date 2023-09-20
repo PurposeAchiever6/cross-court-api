@@ -4,6 +4,7 @@ module SessionGuests
 
     def call
       user_session = context.user_session
+      user = user_session.user
       guest_info = context.guest_info
       session = user_session.session
       date = user_session.date
@@ -14,6 +15,10 @@ module SessionGuests
 
       phone_number = guest_info[:phone_number].strip
       email = guest_info[:email].strip
+
+      unless user.active_subscription
+        raise SessionGuestsException, I18n.t('api.errors.session_guests.only_for_members')
+      end
 
       if User.where(email:).or(User.where(phone_number:)).exists?
         raise SessionGuestsException, I18n.t('api.errors.session_guests.user_already_registered')

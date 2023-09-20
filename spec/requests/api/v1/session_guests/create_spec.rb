@@ -25,6 +25,7 @@ describe 'POST api/v1/session_guests' do
 
   let!(:user) { create(:user) }
   let!(:user_session) { create(:user_session, session:, user:) }
+  let!(:subscription) { create(:subscription, user:) }
 
   let(:params) do
     { guest_info:, user_session_id: user_session.id }
@@ -43,11 +44,22 @@ describe 'POST api/v1/session_guests' do
 
   it { expect { subject }.to have_enqueued_job(::Sonar::SendMessageJob) }
 
-  it {
+  it do
     expect {
       subject
     }.to have_enqueued_job(::ActiveCampaign::CreateUpdateContactAndAddToListJob)
-  }
+  end
+
+  context 'when the user is not a member' do
+    let!(:subscription) { create(:subscription, user:, status: :canceled) }
+
+    it 'returns bad_request' do
+      subject
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it { expect { subject rescue nil }.not_to change(SessionGuest, :count) }
+  end
 
   context 'when guests_allowed is not set' do
     let(:guests_allowed) { nil }
