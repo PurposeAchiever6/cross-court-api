@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_12_223500) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_20_204901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -631,6 +631,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_223500) do
     t.string "utm_campaign"
     t.string "utm_term"
     t.string "utm_content"
+    t.text "team_notes"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true

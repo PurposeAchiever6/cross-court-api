@@ -62,6 +62,7 @@
 #  utm_campaign                            :string
 #  utm_term                                :string
 #  utm_content                             :string
+#  team_notes                              :text
 #
 # Indexes
 #

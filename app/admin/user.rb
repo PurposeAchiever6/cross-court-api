@@ -6,7 +6,8 @@ ActiveAdmin.register User do
                 :drop_in_expiration_date, :credits, :subscription_credits, :scouting_credits,
                 :credits_without_expiration, :subscription_skill_session_credits, :private_access,
                 :birthday, :cc_cash, :reserve_team, :instagram_username, :flagged, :is_coach,
-                :gender, :bio, :work_occupation, :work_company, :work_industry, :links_raw
+                :gender, :bio, :work_occupation, :work_company, :work_industry, :links_raw,
+                :team_notes
 
   includes active_subscription: :product
 
@@ -115,6 +116,7 @@ ActiveAdmin.register User do
       f.input :reserve_team
       f.input :flagged
       f.input :bio, as: :text
+      f.input :team_notes
       f.input :work_occupation
       f.input :work_company
       f.input :work_industry
@@ -202,6 +204,7 @@ ActiveAdmin.register User do
         end
         row :skill_rating
         row :bio
+        row :team_notes
         row 'User Sessions' do
           link_to 'Link to User Sessions', admin_user_sessions_path(q: { user_id_eq: user.id })
         end

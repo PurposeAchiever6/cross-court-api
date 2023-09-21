@@ -130,6 +130,21 @@
                 </div>
               </td>
             </tr>
+            <% if user.team_notes? && !user.active_subscription %>
+              <tr>
+                <td colspan='2'></td>
+                <td colspan='10'>
+                  <div class='-mt-2 border-solid border-b border-t-0 border-l-0 border-r-0 border-gray-300'>
+                    <label class='font-bold'>
+                      Notes:
+                    </label>
+                    <div class='max-w-2xl'>
+                      <%= simple_format user.team_notes, { class: 'mb-2' }, wrapper_tag: 'div' %>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
           <% end %>
         </tbody>
       <% end %>
