@@ -46,6 +46,7 @@ class Location < ApplicationRecord
   acts_as_paranoid
 
   has_many :sessions
+  has_many :location_notes, dependent: :destroy
   has_many_attached :images, dependent: :purge_now
 
   validates :name, :address, :lat, :lng, :city, :zipcode, :time_zone, :state,
@@ -65,5 +66,9 @@ class Location < ApplicationRecord
 
   def self_check_in_url
     "#{ENV.fetch('FRONTENT_URL', '')}/locations/#{id}/self-check-in"
+  end
+
+  def notes(date)
+    location_notes.for_date(date)
   end
 end

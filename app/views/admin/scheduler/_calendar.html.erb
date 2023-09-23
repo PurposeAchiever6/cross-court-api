@@ -2,7 +2,7 @@
   <%= form_with url: admin_scheduler_path, method: :get, local: true, class: 'mb-5' do %>
     <%= label_tag :location, 'Filter by location:', class: 'mr-2' %>
     <%= select_tag :location,
-                  options_from_collection_for_select(locations, 'id', 'name', selected_location),
+                  options_from_collection_for_select(locations, 'id', 'name', selected_location.id),
                   include_blank: true,
                   class: 'w-40' %>
     <%= submit_tag 'Filter', class: 'ml-4' %>
@@ -10,6 +10,7 @@
 
   <%= month_calendar events: sessions do |date, events| %>
     <%
+      selected_location_has_notes = selected_location.notes(date).exists?
       filtered_events = events.select do |event|
         validations = event.recurring[:validations]
         next(true) unless validations
@@ -25,6 +26,24 @@
       <div class='mb-4'>
         <strong><%= date.day %></strong>
       </div>
+
+      <% if selected_location_has_notes || !date.past? %>
+        <div class='flex justify-between items-center bg-gray-300 p-1 mb-4'>
+          <div>
+            <% if selected_location_has_notes %>
+              <%= link_to 'Show Notes', admin_location_notes_path(q: { location_id_eq: selected_location.id,
+                                                                       date_eq: date}) %>
+            <% end %>
+          </div>
+          <div>
+            <% unless date.past? %>
+              <%= link_to 'Add Note',
+                          new_admin_location_note_path(location_note: { location_id: selected_location.id,
+                                                                        date: }) %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
 
       <% filtered_events.each do |event| %>
         <div>

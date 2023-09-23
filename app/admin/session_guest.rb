@@ -1,5 +1,5 @@
 ActiveAdmin.register SessionGuest do
-  menu label: 'Session Guests', parent: 'Sessions', priority: 4
+  menu label: 'Session Guests', parent: 'Sessions', priority: 5
 
   permit_params :first_name, :last_name, :phone_number, :email, :user_session_id, :access_code,
                 :state

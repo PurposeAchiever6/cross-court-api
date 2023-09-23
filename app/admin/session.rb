@@ -1,5 +1,5 @@
 ActiveAdmin.register Session do
-  menu label: 'Sessions', parent: 'Sessions', priority: 2
+  menu label: 'Sessions', parent: 'Sessions', priority: 3
 
   permit_params :location_id, :start_time, :end_time, :recurring, :time, :skill_level_id,
                 :is_private, :is_open_club, :coming_soon, :women_only, :skill_session,

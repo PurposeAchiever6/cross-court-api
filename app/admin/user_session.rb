@@ -1,5 +1,5 @@
 ActiveAdmin.register UserSession do
-  menu label: 'User Sessions', parent: 'Sessions', priority: 3
+  menu label: 'User Sessions', parent: 'Sessions', priority: 4
 
   config.sort_order = ''
   actions :index, :destroy, :show

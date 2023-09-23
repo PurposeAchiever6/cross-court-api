@@ -22,7 +22,7 @@ ActiveAdmin.register_page 'Scheduler' do
       render partial: 'calendar', locals: {
         sessions: SessionDecorator.decorate_collection(sessions),
         locations: Location.all,
-        selected_location: location.id
+        selected_location: location
       }
     end
 
