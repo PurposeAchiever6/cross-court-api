@@ -378,6 +378,12 @@ class User < ApplicationRecord
     image.variant(:thumb).processed.url
   end
 
+  def trial?
+    product_payments = payments.products
+
+    never_been_a_member? && product_payments.one? && product_payments.first.chargeable.trial?
+  end
+
   private
 
   def password_required?

@@ -37,6 +37,8 @@ class Payment < ApplicationRecord
   delegate :email, :phone_number, to: :user, prefix: true
   delegate :name, to: :product, prefix: true
 
+  scope :products, -> { where(chargeable_type: Product.to_s) }
+
   def total_amount
     amount + discount + cc_cash
   end

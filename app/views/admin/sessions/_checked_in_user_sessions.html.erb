@@ -11,10 +11,10 @@
       <th>Instagram</th>
       <th>New Member</th>
       <th>First Session</th>
+      <th>Trial</th>
       <th>Status</th>
       <th>Membership</th>
       <th>Skill Level</th>
-      <th></th>
       <th></th>
       <th></th>
     </tr>
@@ -70,6 +70,9 @@
               </td>
               <td class='align-middle'>
                 <%= status_tag first_time %>
+              </td>
+              <td class='align-middle'>
+                <%= user.trial? ? "#{user.payments.products.last.chargeable.credits - user.credits} / #{user.payments.products.last.chargeable.credits}" : 'No' %>
               </td>
               <td class='align-middle'>
                 <%= status_tag user_session.state %>

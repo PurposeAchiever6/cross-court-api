@@ -77,6 +77,7 @@ class Product < ApplicationRecord
                             less_than_or_equal_to: Session::CANCELLATION_PERIOD.to_i / 3600 }
 
   scope :no_booking_charge_feature, -> { where(no_booking_charge_feature: true) }
+  scope :trials, -> { where(trial: true) }
 
   def self.for_user(user)
     user&.reserve_team ? Product.reserve_team.or(Product.one_time) : Product.everyone
@@ -122,9 +123,7 @@ class Product < ApplicationRecord
   def preference_promo_code(user)
     return promo_code unless user
 
-    last_week_purchases = user.payments
-                              .where('created_at >= ?', 1.week.ago)
-                              .where(chargeable_type: Product.to_s)
+    last_week_purchases = user.payments.products.where('created_at >= ?', 1.week.ago)
 
     trial_product = Product.where(id: last_week_purchases.pluck(:chargeable_id), trial: true).last
 
