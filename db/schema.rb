@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
+ActiveRecord::Schema[7.0].define(version: 0) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -126,17 +126,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["title"], name: "index_legals_on_title"
-  end
-
-  create_table "location_notes", force: :cascade do |t|
-    t.text "notes"
-    t.date "date"
-    t.bigint "admin_user_id"
-    t.bigint "location_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["admin_user_id"], name: "index_location_notes_on_admin_user_id"
-    t.index ["location_id"], name: "index_location_notes_on_location_id"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -261,6 +250,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
     t.boolean "season_pass", default: false
     t.boolean "scouting", default: false
     t.integer "free_pauses_per_year", default: 0
+    t.boolean "highlighted", default: false
     t.boolean "highlights", default: false
     t.boolean "free_jersey_rental", default: false
     t.boolean "free_towel_rental", default: false
@@ -272,7 +262,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
     t.string "no_booking_charge_feature_priority"
     t.integer "credits_expiration_days"
     t.boolean "trial", default: false
-    t.integer "frontend_theme", default: 0
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
     t.index ["product_type"], name: "index_products_on_product_type"
     t.index ["promo_code_id"], name: "index_products_on_promo_code_id"
@@ -308,6 +297,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
     t.index ["user_id"], name: "index_promo_codes_on_user_id"
   end
 
+  create_table "purchases", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "user_id"
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "credits", null: false
+    t.string "name", null: false
+    t.decimal "discount", precision: 10, scale: 2, default: "0.0", null: false
+    t.index ["product_id"], name: "index_purchases_on_product_id"
+    t.index ["user_id"], name: "index_purchases_on_user_id"
+  end
+
+  create_table "referee_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "session_id"
+    t.date "date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "state", default: 0, null: false
+    t.index ["session_id"], name: "index_referee_sessions_on_session_id"
+    t.index ["user_id", "session_id", "date"], name: "index_referee_sessions_on_user_id_and_session_id_and_date", unique: true
+    t.index ["user_id"], name: "index_referee_sessions_on_user_id"
+  end
+
   create_table "referral_cash_payments", force: :cascade do |t|
     t.bigint "referral_id"
     t.bigint "referred_id"
@@ -339,6 +353,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
     t.index ["name"], name: "index_roles_on_name", unique: true
   end
 
+  create_table "sem_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "session_id"
+    t.date "date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "state", default: 0, null: false
+    t.index ["session_id"], name: "index_sem_sessions_on_session_id"
+    t.index ["user_id", "session_id", "date"], name: "index_sem_sessions_on_user_id_and_session_id_and_date", unique: true
+    t.index ["user_id"], name: "index_sem_sessions_on_user_id"
+  end
+
   create_table "session_allowed_products", force: :cascade do |t|
     t.bigint "session_id"
     t.bigint "product_id"
@@ -368,6 +394,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
     t.boolean "checked_in", default: false
     t.string "assigned_team"
     t.index ["user_session_id"], name: "index_session_guests_on_user_session_id"
+  end
+
+  create_table "session_survey_answers", force: :cascade do |t|
+    t.string "answer"
+    t.bigint "session_survey_question_id"
+    t.bigint "user_session_id"
+    t.index ["session_survey_question_id"], name: "index_session_survey_answers_on_session_survey_question_id"
+    t.index ["user_session_id"], name: "index_session_survey_answers_on_user_session_id"
+  end
+
+  create_table "session_survey_questions", force: :cascade do |t|
+    t.string "question", null: false
+    t.boolean "is_enabled", default: true
+    t.boolean "is_mandatory", default: false
   end
 
   create_table "session_surveys", force: :cascade do |t|
@@ -642,7 +682,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_162949) do
     t.string "utm_campaign"
     t.string "utm_term"
     t.string "utm_content"
-    t.text "team_notes"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["drop_in_expiration_date"], name: "index_users_on_drop_in_expiration_date"
     t.index ["email"], name: "index_users_on_email", unique: true
